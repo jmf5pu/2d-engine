@@ -18,5 +18,6 @@ typedef struct time_state
 } Time_State;
 
 void time_init(u32 frame_rate);
-
+void time_update(void);
+void time_update_late(void);
 #endif

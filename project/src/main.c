@@ -28,6 +28,7 @@ static void input_handle(void)
 
 int main(int argc, char *argv[])
 {
+
     time_init(60);
     config_init();
     render_init();

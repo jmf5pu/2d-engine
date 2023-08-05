@@ -96,6 +96,5 @@ void config_key_bind(Input_Key key, const char *key_name)
     {
         ERROR_RETURN("Invalid scan code when binding key: %s\n", key_name)
     }
-
     global.config.keybinds[key] = scan_code;
 }
