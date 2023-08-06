@@ -1,10 +1,9 @@
-#ifndef PHYSICS_H
-#define PHYSICS_H
+#pragma once
 
+#include <stdbool.h>
 #include <linmath.h>
 #include "types.h"
 
-// axis-aligned bounding box, rectangle that cannot rotate
 typedef struct aabb
 {
     vec2 position;
@@ -22,5 +21,4 @@ void physics_init(void);
 void physics_update(void);
 usize physics_body_create(vec2 position, vec2 size);
 Body *physics_body_get(usize index);
-
-#endif
+bool physics_point_intersect_aabb(vec2 point, AABB aabb);
