@@ -18,13 +18,16 @@ SDL_Window *render_init_window(u32 width, u32 height)
         ERROR_EXIT("Could not init SDL: %s\n", SDL_GetError());
     }
 
+    // Hide the cursor
+    SDL_ShowCursor(SDL_DISABLE);
+
     SDL_Window *window = SDL_CreateWindow(
         "MyGame",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        800,
-        600,
-        SDL_WINDOW_OPENGL);
+        0,
+        0,
+        SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP);
 
     if (!window)
     {
