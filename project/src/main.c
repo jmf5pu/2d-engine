@@ -12,6 +12,7 @@
 #include "engine/physics.h"
 #include "engine/util.h"
 #include "engine/entity.h"
+#include "engine/camera.h"
 
 typedef enum collision_layer
 {
@@ -32,31 +33,35 @@ static void input_handle(Body *body_player)
     }
 
     f32 velx = 0;
-    f32 vely = body_player->velocity[1];
+    f32 vely = 0; // body_player->velocity[1];
 
     if (global.input.right)
     {
-        velx += 1000;
+        velx += 10; // 1000;
     }
 
     if (global.input.left)
     {
-        velx -= 1000;
+        velx -= 10; // 1000;
     }
 
-    if (global.input.up && player_is_grounded)
+    if (global.input.up) // && player_is_grounded)
     {
-        player_is_grounded = false;
-        vely = 4000;
+        // player_is_grounded = false;
+        vely += 10; // 4000;
     }
 
     if (global.input.down)
     {
-        vely -= 800;
+        vely -= 10; // 800;
     }
 
-    body_player->velocity[0] = velx;
-    body_player->velocity[1] = vely;
+    camera_update((vec2){velx, vely});
+    velx = 0;
+    vely = 0;
+
+    // body_player->velocity[0] = velx;
+    // body_player->velocity[1] = vely;
 }
 
 void player_on_hit(Body *self, Body *other, Hit hit)
@@ -95,13 +100,14 @@ int main(int argc, char *argv[])
     render_init();
     physics_init();
     entity_init();
+    camera_init();
 
     SDL_ShowCursor(false);
 
     u8 enemy_mask = COLLISION_LAYER_PLAYER | COLLISION_LAYER_TERRIAN;
     u8 player_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRIAN;
 
-    usize player_id = entity_create((vec2){100, 100}, (vec2){100, 100}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    usize player_id = entity_create((vec2){250, 250}, (vec2){100, 100}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
 
     f32 width = global.render.width;
     f32 height = global.render.height;

@@ -21,6 +21,18 @@ void physics_init(void)
     tick_rate = 1.f / iterations;
 }
 
+// returns all bodies
+Array_List *get_all_bodies(void)
+{
+    return state.body_list;
+}
+
+// returns all static bodies
+Array_List *get_all_static_bodies(void)
+{
+    return state.static_body_list;
+}
+
 static void update_sweep_result(Hit *result, usize other_id, AABB a, AABB b, vec2 velocity, u8 a_collision_mask, u8 b_collision_layer)
 {
     if ((a_collision_mask & b_collision_layer) == 0)
