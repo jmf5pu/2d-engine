@@ -33,35 +33,62 @@ static void input_handle(Body *body_player)
     }
 
     f32 velx = 0;
-    f32 vely = 0; // body_player->velocity[1];
+    f32 vely = 0;
 
     if (global.input.right)
     {
-        velx += 10; // 1000;
+        velx += 1000;
     }
 
     if (global.input.left)
     {
-        velx -= 10; // 1000;
+        velx -= 1000;
     }
 
-    if (global.input.up) // && player_is_grounded)
+    if (global.input.up)
     {
-        // player_is_grounded = false;
-        vely += 10; // 4000;
+        vely += 1000;
     }
 
     if (global.input.down)
     {
-        vely -= 10; // 800;
+        vely -= 1000;
+    }
+    // camera_update((vec2){velx, vely});
+
+    body_player->velocity[0] = velx;
+    body_player->velocity[1] = vely;
+}
+
+static void handle_camera(Body *body_player, int buffer)
+{
+    // updates the camera based on the player's position
+    float position_x = body_player->aabb.position[0];
+    float position_y = body_player->aabb.position[1];
+
+    // check if we have breached left buffer, if so, correct camera
+    if (position_x - buffer <= 0)
+    {
+        camera_update((vec2){fabsf(position_x - buffer), 0});
     }
 
-    camera_update((vec2){velx, vely});
-    velx = 0;
-    vely = 0;
+    // check right buffer
+    if (position_x + buffer >= global.render.width)
+    {
+        camera_update((vec2){(-1 * fabsf(position_x - (global.render.width - buffer))), 0});
+    }
 
-    // body_player->velocity[0] = velx;
-    // body_player->velocity[1] = vely;
+    // check top buffer
+    if (position_y + buffer >= global.render.height)
+    {
+        camera_update((vec2){0, -1 * fabsf(position_y - (global.render.height - buffer))});
+    }
+
+    // check bottom buffer
+    if (position_y - buffer <= 0)
+    {
+        camera_update((vec2){0, fabsf(position_y - buffer)});
+    }
 }
 
 void player_on_hit(Body *self, Body *other, Hit hit)
@@ -150,6 +177,7 @@ int main(int argc, char *argv[])
         input_update();
         input_handle(body_player);
         physics_update();
+        handle_camera(body_player, 200);
 
         render_begin();
 
