@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
     u8 enemy_mask = COLLISION_LAYER_PLAYER | COLLISION_LAYER_TERRIAN;
     u8 player_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRIAN;
 
-    usize player_id = entity_create((vec2){100, 200}, (vec2){24, 24}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    usize player_id = entity_create((vec2){100, 200}, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
 
     i32 window_width, window_height;
     SDL_GetWindowSize(window, &window_width, &window_height);
@@ -120,22 +120,30 @@ int main(int argc, char *argv[])
     usize entity_a_id = entity_create((vec2){200, 200}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, NULL, enemy_on_hit_static);
     usize entity_b_id = entity_create((vec2){300, 300}, (vec2){25, 25}, (vec2){400, 0}, 0, enemy_mask, NULL, enemy_on_hit_static);
 
-    Sprite_Sheet sprite_sheet_player;
-    render_sprite_sheet_init(&sprite_sheet_player, "assets/player.png", 24, 24);
+    Sprite_Sheet sprite_sheet_soldier_running;
+    Sprite_Sheet sprite_sheet_soldier_idle;
 
-    usize adef_player_walk_id = animation_definition_create(
-        &sprite_sheet_player,
-        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1},
-        (u8[]){0, 0, 0, 0, 0, 0, 0},
-        (u8[]){1, 2, 3, 4, 5, 6, 7},
-        7);
+    render_sprite_sheet_init(&sprite_sheet_soldier_running, "assets/soldier_1_m16_running.png", 42, 42);
+    render_sprite_sheet_init(&sprite_sheet_soldier_idle, "assets/soldier_1_m16_idle.png", 42, 42);
 
-    usize adef_player_idle_id = animation_definition_create(&sprite_sheet_player, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    usize anim_player_walk_id = animation_create(adef_player_walk_id, true);
-    usize anim_player_idle_id = animation_create(adef_player_idle_id, false);
+    usize adef_solder_running_id = animation_definition_create(
+        &sprite_sheet_soldier_running,
+        (f32[]){0.1, 0.1, 0.1, 0.1},
+        (u8[]){0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4},
+        4);
+    usize adef_soldier_idle_id = animation_definition_create(
+        &sprite_sheet_soldier_idle,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+
+    usize anim_soldier_running_id = animation_create(adef_solder_running_id, true);
+    usize anim_soldier_idle_id = animation_create(adef_soldier_idle_id, false);
 
     Entity *player = entity_get(player_id);
-    player->animation_id = anim_player_idle_id;
+    player->animation_id = adef_soldier_idle_id;
 
     while (!should_quit)
     {
@@ -160,11 +168,11 @@ int main(int argc, char *argv[])
 
         if (body_player->velocity[0] != 0)
         {
-            player->animation_id = anim_player_walk_id;
+            player->animation_id = anim_soldier_running_id;
         }
         else
         {
-            player->animation_id = anim_player_idle_id;
+            player->animation_id = anim_soldier_idle_id;
         }
 
         Static_Body *static_body_a = physics_static_body_get(static_body_a_id);
@@ -190,7 +198,7 @@ int main(int argc, char *argv[])
         render_aabb((f32 *)physics_body_get(entity_get(entity_a_id)->body_id), WHITE);
         render_aabb((f32 *)physics_body_get(entity_get(entity_b_id)->body_id), WHITE);
 
-        // render animated entities TODO: figure out why only 2 (?) frames are showing
+        // render animated entities
         for (usize i = 0; i < entity_count(); ++i)
         {
             Entity *entity = entity_get(i);
@@ -219,9 +227,8 @@ int main(int argc, char *argv[])
                 anim->is_flipped = false;
             }
             render_sprite_sheet_frame(adef->sprite_sheet, aframe->row, aframe->column, body->aabb.position, anim->is_flipped);
+            render_end(window, adef->sprite_sheet->texture_id);
         }
-
-        render_end(window, sprite_sheet_player.texture_id);
 
         player_color[0] = 0;
         player_color[2] = 1;
