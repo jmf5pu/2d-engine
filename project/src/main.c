@@ -26,15 +26,70 @@ static bool should_quit = false;
 vec4 player_color = {0, 1, 1, 1};
 bool player_is_grounded = false;
 
-static void input_handle(Body *body_player)
+Sprite_Sheet sprite_sheet_soldier_running_side;
+Sprite_Sheet sprite_sheet_soldier_idle_side;
+Sprite_Sheet sprite_sheet_soldier_idle_back;
+Sprite_Sheet sprite_sheet_soldier_idle_front;
+
+static usize adef_solder_running_side_id;
+static usize adef_soldier_idle_side_id;
+static usize adef_soldier_idle_back_id;
+static usize adef_soldier_idle_front_id;
+
+static usize anim_soldier_running_side_id;
+static usize anim_soldier_idle_side_id;
+static usize anim_soldier_idle_back_id;
+static usize anim_soldier_idle_front_id;
+
+// performs render_sprite_sheet_init, animation_defintion_create, and animation_create for all sprite sheets
+static void init_all_anims()
 {
+    render_sprite_sheet_init(&sprite_sheet_soldier_running_side, "assets/soldier_1_m16_running_side.png", 42, 42);
+    render_sprite_sheet_init(&sprite_sheet_soldier_idle_side, "assets/soldier_1_m16_idle_side.png", 42, 42);
+    render_sprite_sheet_init(&sprite_sheet_soldier_idle_back, "assets/soldier_1_m16_idle_back.png", 42, 42);
+    render_sprite_sheet_init(&sprite_sheet_soldier_idle_front, "assets/soldier_1_m16_idle_front.png", 42, 42);
+
+    adef_solder_running_side_id = animation_definition_create(
+        &sprite_sheet_soldier_running_side,
+        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1},
+        (u8[]){0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5},
+        5);
+    adef_soldier_idle_side_id = animation_definition_create(
+        &sprite_sheet_soldier_idle_side,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    adef_soldier_idle_back_id = animation_definition_create(
+        &sprite_sheet_soldier_idle_back,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    adef_soldier_idle_front_id = animation_definition_create(
+        &sprite_sheet_soldier_idle_front,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_soldier_running_side_id = animation_create(adef_solder_running_side_id, true);
+    anim_soldier_idle_side_id = animation_create(adef_soldier_idle_side_id, false);
+    anim_soldier_idle_back_id = animation_create(adef_soldier_idle_back_id, false);
+    anim_soldier_idle_front_id = animation_create(adef_soldier_idle_front_id, false);
+}
+
+static void input_handle(Entity *player_entity)
+{
+    Body *player_body = physics_body_get(player_entity->body_id);
+
     if (global.input.escape)
     {
         should_quit = true;
     }
 
     f32 velx = 0;
-    f32 vely = body_player->velocity[1];
+    f32 vely = 0;
 
     if (global.input.right)
     {
@@ -46,19 +101,18 @@ static void input_handle(Body *body_player)
         velx -= 100;
     }
 
-    if (global.input.up && player_is_grounded)
+    if (global.input.up)
     {
-        player_is_grounded = false;
-        vely = 2000;
+        vely += 100;
     }
 
-    // if (global.input.down)
-    // {
-    //     vely -= 800;
-    // }
+    if (global.input.down)
+    {
+        vely -= 100;
+    }
 
-    body_player->velocity[0] = velx;
-    body_player->velocity[1] = vely;
+    player_body->velocity[0] = velx;
+    player_body->velocity[1] = vely;
 }
 
 void player_on_hit(Body *self, Body *other, Hit hit)
@@ -97,7 +151,8 @@ int main(int argc, char *argv[])
     SDL_Window *window = render_init();
     physics_init();
     entity_init();
-    animation_init();
+    animation_init(); // creates animation storage
+    init_all_anims(); // initiatilizes all our animations
 
     SDL_ShowCursor(false);
 
@@ -120,30 +175,8 @@ int main(int argc, char *argv[])
     usize entity_a_id = entity_create((vec2){200, 200}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, NULL, enemy_on_hit_static);
     usize entity_b_id = entity_create((vec2){300, 300}, (vec2){25, 25}, (vec2){400, 0}, 0, enemy_mask, NULL, enemy_on_hit_static);
 
-    Sprite_Sheet sprite_sheet_soldier_running;
-    Sprite_Sheet sprite_sheet_soldier_idle;
-
-    render_sprite_sheet_init(&sprite_sheet_soldier_running, "assets/soldier_1_m16_running.png", 42, 42);
-    render_sprite_sheet_init(&sprite_sheet_soldier_idle, "assets/soldier_1_m16_idle.png", 42, 42);
-
-    usize adef_solder_running_id = animation_definition_create(
-        &sprite_sheet_soldier_running,
-        (f32[]){0.1, 0.1, 0.1, 0.1},
-        (u8[]){0, 0, 0, 0},
-        (u8[]){1, 2, 3, 4},
-        4);
-    usize adef_soldier_idle_id = animation_definition_create(
-        &sprite_sheet_soldier_idle,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){0},
-        1);
-
-    usize anim_soldier_running_id = animation_create(adef_solder_running_id, true);
-    usize anim_soldier_idle_id = animation_create(adef_soldier_idle_id, false);
-
     Entity *player = entity_get(player_id);
-    player->animation_id = adef_soldier_idle_id;
+    player->animation_id = anim_soldier_idle_side_id;
 
     while (!should_quit)
     {
@@ -168,11 +201,19 @@ int main(int argc, char *argv[])
 
         if (body_player->velocity[0] != 0)
         {
-            player->animation_id = anim_soldier_running_id;
+            player->animation_id = anim_soldier_running_side_id;
+        }
+        else if (body_player->velocity[1] > 0)
+        {
+            player->animation_id = anim_soldier_idle_back_id;
+        }
+        else if (body_player->velocity[1] < 0)
+        {
+            player->animation_id = anim_soldier_idle_front_id;
         }
         else
         {
-            player->animation_id = anim_soldier_idle_id;
+            player->animation_id = anim_soldier_idle_side_id;
         }
 
         Static_Body *static_body_a = physics_static_body_get(static_body_a_id);
@@ -182,7 +223,7 @@ int main(int argc, char *argv[])
         Static_Body *static_body_e = physics_static_body_get(static_body_e_id);
 
         input_update();
-        input_handle(body_player);
+        input_handle(player);
         physics_update();
         animation_update(global.time.delta);
 
