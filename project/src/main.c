@@ -15,31 +15,40 @@
 #include "engine/render.h"
 #include "engine/animation.h"
 
+static bool should_quit = false;
+static bool bullet_shot = false;
+
 typedef enum collision_layer
 {
     COLLISION_LAYER_PLAYER = 1,
     COLLISION_LAYER_ENEMY = 1 << 1,
     COLLISION_LAYER_TERRIAN = 1 << 2,
+    COLLISION_LAYER_BULLET = 1 << 3,
 } Collision_Layer;
 
-static bool should_quit = false;
-vec4 player_color = {0, 1, 1, 1};
-bool player_is_grounded = false;
+// collision masks
+const u8 enemy_mask = COLLISION_LAYER_PLAYER | COLLISION_LAYER_TERRIAN;
+const u8 player_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRIAN;
+const u8 bullet_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRIAN;
 
+// sprite sheets and anim defs and ids
 Sprite_Sheet sprite_sheet_soldier_running_side;
 Sprite_Sheet sprite_sheet_soldier_idle_side;
 Sprite_Sheet sprite_sheet_soldier_idle_back;
 Sprite_Sheet sprite_sheet_soldier_idle_front;
+Sprite_Sheet sprite_sheet_bullet;
 
 static usize adef_solder_running_side_id;
 static usize adef_soldier_idle_side_id;
 static usize adef_soldier_idle_back_id;
 static usize adef_soldier_idle_front_id;
+static usize adef_bullet_id;
 
 static usize anim_soldier_running_side_id;
 static usize anim_soldier_idle_side_id;
 static usize anim_soldier_idle_back_id;
 static usize anim_soldier_idle_front_id;
+static usize anim_bullet_id;
 
 // performs render_sprite_sheet_init, animation_defintion_create, and animation_create for all sprite sheets
 static void init_all_anims()
@@ -48,6 +57,7 @@ static void init_all_anims()
     render_sprite_sheet_init(&sprite_sheet_soldier_idle_side, "assets/soldier_1_m16_idle_side.png", 42, 42);
     render_sprite_sheet_init(&sprite_sheet_soldier_idle_back, "assets/soldier_1_m16_idle_back.png", 42, 42);
     render_sprite_sheet_init(&sprite_sheet_soldier_idle_front, "assets/soldier_1_m16_idle_front.png", 42, 42);
+    render_sprite_sheet_init(&sprite_sheet_bullet, "assets/bullet_1.png", 5, 5);
 
     adef_solder_running_side_id = animation_definition_create(
         &sprite_sheet_soldier_running_side,
@@ -73,77 +83,85 @@ static void init_all_anims()
         (u8[]){0},
         (u8[]){0},
         1);
+    adef_bullet_id = animation_definition_create(
+        &sprite_sheet_bullet,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
     anim_soldier_running_side_id = animation_create(adef_solder_running_side_id, true);
     anim_soldier_idle_side_id = animation_create(adef_soldier_idle_side_id, false);
     anim_soldier_idle_back_id = animation_create(adef_soldier_idle_back_id, false);
     anim_soldier_idle_front_id = animation_create(adef_soldier_idle_front_id, false);
+    anim_bullet_id = animation_create(adef_bullet_id, false);
 }
 
-static void input_handle(Entity *player_entity)
-{
-    Body *player_body = physics_body_get(player_entity->body_id);
-
-    if (global.input.escape)
-    {
-        should_quit = true;
-    }
-
-    f32 velx = 0;
-    f32 vely = 0;
-
-    if (global.input.right)
-    {
-        velx += 100;
-    }
-
-    if (global.input.left)
-    {
-        velx -= 100;
-    }
-
-    if (global.input.up)
-    {
-        vely += 100;
-    }
-
-    if (global.input.down)
-    {
-        vely -= 100;
-    }
-
-    player_body->velocity[0] = velx;
-    player_body->velocity[1] = vely;
-}
-
+// player helpers
 void player_on_hit(Body *self, Body *other, Hit hit)
 {
     if (other->collision_layer = COLLISION_LAYER_ENEMY)
     {
-        player_color[0] = 1;
-        player_color[2] = 0;
     }
 }
 
 void player_on_hit_static(Body *self, Static_Body *other, Hit hit)
 {
-    if (hit.normal[1] > 0)
-    {
-        player_is_grounded = true;
-    }
+    return;
 }
 
+// enemy helper
 void enemy_on_hit_static(Body *self, Static_Body *other, Hit hit)
 {
-    if (hit.normal[0] > 0)
+    return;
+}
+
+// bullet helpers
+void bullet_on_hit_static(Body *self, Static_Body *other, Hit hit)
+{
+    return;
+}
+
+// handle player inputs
+static void input_handle(Entity *player_entity)
+{
+    Body *player_body = physics_body_get(player_entity->body_id);
+
+    // handle exit
+    if (global.input.escape)
     {
-        self->velocity[0] = 400;
+        should_quit = true;
     }
-    if (hit.normal[0] < 0)
+
+    // handle player movement:
+    f32 velx = 0;
+    f32 vely = 0;
+    if (global.input.right)
     {
-        self->velocity[0] = -400;
+        velx += 100;
+    }
+    if (global.input.left)
+    {
+        velx -= 100;
+    }
+    if (global.input.up)
+    {
+        vely += 100;
+    }
+    if (global.input.down)
+    {
+        vely -= 100;
+    }
+    player_body->velocity[0] = velx;
+    player_body->velocity[1] = vely;
+
+    // handle shooting
+    if (global.input.space == KS_PRESSED && global.input.space != KS_HELD && !bullet_shot)
+    {
+        bullet_shot = true;
     }
 }
 
+// main game loop
 int main(int argc, char *argv[])
 {
     time_init(60);
@@ -155,9 +173,6 @@ int main(int argc, char *argv[])
     init_all_anims(); // initiatilizes all our animations
 
     SDL_ShowCursor(false);
-
-    u8 enemy_mask = COLLISION_LAYER_PLAYER | COLLISION_LAYER_TERRIAN;
-    u8 player_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRIAN;
 
     usize player_id = entity_create((vec2){100, 200}, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
 
@@ -174,9 +189,9 @@ int main(int argc, char *argv[])
 
     usize entity_a_id = entity_create((vec2){200, 200}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, NULL, enemy_on_hit_static);
     usize entity_b_id = entity_create((vec2){300, 300}, (vec2){25, 25}, (vec2){400, 0}, 0, enemy_mask, NULL, enemy_on_hit_static);
-
+    usize entity_bullet_id = entity_create((vec2){400, 200}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_BULLET, bullet_mask, NULL, bullet_on_hit_static);
     Entity *player = entity_get(player_id);
-    player->animation_id = anim_soldier_idle_side_id;
+    Entity *bullet = entity_get(entity_bullet_id);
 
     while (!should_quit)
     {
@@ -201,7 +216,8 @@ int main(int argc, char *argv[])
 
         if (body_player->velocity[0] != 0)
         {
-            player->animation_id = anim_soldier_running_side_id;
+            // TODO: fill with running side id
+            // player->animation_id = anim_soldier_running_side_id;
         }
         else if (body_player->velocity[1] > 0)
         {
@@ -234,7 +250,11 @@ int main(int argc, char *argv[])
         render_aabb((f32 *)static_body_c, WHITE);
         render_aabb((f32 *)static_body_d, WHITE);
         render_aabb((f32 *)static_body_e, WHITE);
-        render_aabb((f32 *)body_player, player_color);
+        // render_aabb((f32 *)body_player, WHITE);
+
+        // put box around bullet for debugging
+        render_aabb((f32 *)physics_body_get(bullet->body_id), YELLOW);
+        // bullet->animation_id = anim_soldier_running_side_id;
 
         render_aabb((f32 *)physics_body_get(entity_get(entity_a_id)->body_id), WHITE);
         render_aabb((f32 *)physics_body_get(entity_get(entity_b_id)->body_id), WHITE);
@@ -270,9 +290,6 @@ int main(int argc, char *argv[])
             render_sprite_sheet_frame(adef->sprite_sheet, aframe->row, aframe->column, body->aabb.position, anim->is_flipped);
             render_end(window, adef->sprite_sheet->texture_id);
         }
-
-        player_color[0] = 0;
-        player_color[2] = 1;
 
         time_update_late();
     }
