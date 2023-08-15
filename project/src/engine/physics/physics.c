@@ -202,6 +202,11 @@ Body *physics_body_get(usize index)
     return array_list_get(state.body_list, index);
 }
 
+void physics_body_destroy(usize index)
+{
+    array_list_remove(state.body_list, index, "Destroying physics body");
+}
+
 usize physics_static_body_create(vec2 position, vec2 size, u8 collision_layer)
 {
     Static_Body static_body = {

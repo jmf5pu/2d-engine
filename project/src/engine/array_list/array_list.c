@@ -51,11 +51,11 @@ void *array_list_get(Array_List *list, usize index)
 {
     if (index >= list->len)
     {
-        ERROR_RETURN(NULL, "Index out of bounds\n");
+        ERROR_RETURN(NULL, "Index out of bounds (get)\n");
     }
     return (u8 *)list->items + index * list->item_size;
 }
-u8 array_list_remove(Array_List *list, usize index)
+u8 array_list_remove(Array_List *list, usize index, char *description)
 {
     if (list->len == 0) // TODO: replace this with switch logic?
     {
@@ -63,7 +63,7 @@ u8 array_list_remove(Array_List *list, usize index)
     }
     if (index >= list->len)
     {
-        ERROR_RETURN(1, "Index out of bounds\n");
+        ERROR_RETURN(1, "Index out of bounds (remove)\n");
     }
     if (list->len == 1)
     {
@@ -76,6 +76,6 @@ u8 array_list_remove(Array_List *list, usize index)
     u8 *item_ptr = (u8 *)list->items + index * list->item_size;
     u8 *end_ptr = (u8 *)list->items + list->len * list->item_size;
     memcpy(item_ptr, end_ptr, list->item_size);
-
+    printf(description);
     return 0;
 }

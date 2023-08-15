@@ -1,5 +1,7 @@
 #include "../array_list.h"
 #include "../entity.h"
+#include "../physics.h"
+#include "../animation.h"
 
 static Array_List *entity_list;
 
@@ -22,6 +24,16 @@ usize entity_create(vec2 position, vec2 size, vec2 velocity, u8 collision_layer,
 Entity *entity_get(usize id)
 {
     return array_list_get(entity_list, id);
+}
+
+// decrements length of entity list, marks as inactive, then destroys body, animation, and self respectively
+void entity_destroy(usize id)
+{
+    Entity *entity = entity_get(id);
+    entity->is_active = false;
+    physics_body_destroy(entity->body_id);
+    animation_destroy(entity->animation_id);
+    array_list_remove(entity_list, id, "Destroying entity");
 }
 
 usize entity_count()

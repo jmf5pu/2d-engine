@@ -10,6 +10,7 @@ static const char *CONFIG_DEFAULT =
     "right = D\n"
     "up = W\n"
     "down = S\n"
+    "space = Space\n"
     "escape = Escape\n"
     "\n";
 
@@ -57,6 +58,7 @@ static void load_controls(const char *config_buffer)
     config_key_bind(INPUT_KEY_RIGHT, config_get_value(config_buffer, "right"));
     config_key_bind(INPUT_KEY_UP, config_get_value(config_buffer, "up"));
     config_key_bind(INPUT_KEY_DOWN, config_get_value(config_buffer, "down"));
+    config_key_bind(INPUT_KEY_SPACE, config_get_value(config_buffer, "space"));
     config_key_bind(INPUT_KEY_ESCAPE, config_get_value(config_buffer, "escape"));
 }
 
