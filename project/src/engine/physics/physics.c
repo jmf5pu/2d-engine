@@ -188,6 +188,7 @@ usize physics_body_create(vec2 position, vec2 size, vec2 velocity, u8 collision_
         .collision_mask = collision_mask,
         .on_hit = on_hit,
         .on_hit_static = on_hit_static,
+        .is_active = true,
     };
 
     if (array_list_append(state.body_list, &body) == (usize)-1)

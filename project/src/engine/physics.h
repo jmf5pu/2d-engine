@@ -27,6 +27,7 @@ typedef struct body
     On_Hit_Static on_hit_static;
     u8 collision_layer;
     u8 collision_mask;
+    bool is_active;
 } Body;
 
 typedef struct static_body

@@ -32,7 +32,7 @@ void entity_destroy(usize id)
     Entity *entity = entity_get(id);
     entity->is_active = false;
     physics_body_destroy(entity->body_id);
-    animation_destroy(entity->animation_id);
+    // animation_destroy(entity->animation_id); TODO: figure out why this sometimes causes failures
     array_list_remove(entity_list, id, "Destroying entity");
 }
 

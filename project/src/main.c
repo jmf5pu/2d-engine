@@ -97,6 +97,45 @@ static void init_all_anims()
     anim_bullet_id = animation_create(adef_bullet_id, false);
 }
 
+// on hit methods
+void player_on_hit(Body *self, Body *other, Hit hit)
+{
+    if (other->collision_layer = COLLISION_LAYER_ENEMY)
+    {
+    }
+}
+
+void player_on_hit_static(Body *self, Static_Body *other, Hit hit)
+{
+    if (hit.normal[1] > 0)
+    {
+    }
+}
+
+void bullet_on_hit(Body *self, Body *other, Hit hit)
+{
+    // mark for body (and entity) for destruction
+    self->is_active = false;
+}
+
+void bullet_on_hit_static(Body *self, Static_Body *other, Hit hit)
+{
+    // mark for body (and entity) for destruction
+    self->is_active = false;
+}
+
+void enemy_on_hit_static(Body *self, Static_Body *other, Hit hit)
+{
+    if (hit.normal[0] > 0)
+    {
+        self->velocity[0] = 400;
+    }
+    if (hit.normal[0] < 0)
+    {
+        self->velocity[0] = -400;
+    }
+}
+
 static void input_handle(Entity *player_entity)
 {
     Body *player_body = physics_body_get(player_entity->body_id);
@@ -132,52 +171,23 @@ static void input_handle(Entity *player_entity)
     {
         // TODO: pull all this to a helper method
         // create bullet entity, define animation
-        usize bullet_entity_id = entity_create((vec2){player_body->aabb.position[0] + 25, player_body->aabb.position[1]}, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, NULL, NULL);
+        usize bullet_entity_id = entity_create((vec2){player_body->aabb.position[0] + 25, player_body->aabb.position[1]}, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
+        printf("\nstep 1\n");
         Entity *bullet_entity = entity_get(bullet_entity_id);
+        printf("step 2\n");
+
         bullet_entity->animation_id = anim_bullet_id;
 
         // set bullet velocity
         Body *bullet_body = physics_body_get(bullet_entity->body_id);
+        printf("step 3\n");
+
         bullet_body->velocity[0] = 800;
         bullet_body->velocity[1] = 0; // TODO: remove this, already set to 0
     }
 
     player_body->velocity[0] = velx;
     player_body->velocity[1] = vely;
-}
-
-void player_on_hit(Body *self, Body *other, Hit hit)
-{
-    if (other->collision_layer = COLLISION_LAYER_ENEMY)
-    {
-    }
-}
-
-void player_on_hit_static(Body *self, Static_Body *other, Hit hit)
-{
-    if (hit.normal[1] > 0)
-    {
-    }
-}
-
-void bullet_on_hit(Body *self, Body *other, Hit hit)
-{
-}
-
-void bullet_on_static(Body *self, Static_Body *other, Hit hit)
-{
-}
-
-void enemy_on_hit_static(Body *self, Static_Body *other, Hit hit)
-{
-    if (hit.normal[0] > 0)
-    {
-        self->velocity[0] = 400;
-    }
-    if (hit.normal[0] < 0)
-    {
-        self->velocity[0] = -400;
-    }
 }
 
 int main(int argc, char *argv[])
@@ -209,7 +219,6 @@ int main(int argc, char *argv[])
     // init player
     usize player_id = entity_create((vec2){100, 200}, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
     Entity *player = entity_get(player_id);
-    player->animation_id = anim_soldier_idle_side_id;
 
     while (!should_quit)
     {
@@ -270,19 +279,22 @@ int main(int argc, char *argv[])
 
         render_aabb((f32 *)physics_body_get(entity_get(entity_a_id)->body_id), WHITE);
         render_aabb((f32 *)physics_body_get(entity_get(entity_b_id)->body_id), WHITE);
-
-        entity_destroy(player_id);
-        printf("entity_count: %d", entity_count());
         // render animated entities
         for (usize i = 0; i < entity_count(); ++i)
         {
             Entity *entity = entity_get(i);
 
+            // TODO: getter bug somewhere in here
             if (!entity->is_active)
             {
+                entity_destroy(i);
                 continue;
             }
-
+            if (!physics_body_get(entity->body_id)->is_active)
+            {
+                entity_destroy(i);
+                continue;
+            }
             if (entity->animation_id == (usize)-1)
             {
                 continue;

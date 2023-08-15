@@ -51,10 +51,51 @@ void *array_list_get(Array_List *list, usize index)
 {
     if (index >= list->len)
     {
-        ERROR_RETURN(NULL, "Index out of bounds (get)\n");
+        ERROR_RETURN(NULL, "Index out of bounds (get) [list->len: %d] [index: %d]\n", list->len, index);
     }
     return (u8 *)list->items + index * list->item_size;
 }
+
+// u8 array_list_remove(Array_List *list, usize index, char *description)
+// {
+//     if (list->len == 0)
+//     {
+//         ERROR_RETURN(1, "List is empty\n");
+//     }
+//     if (index >= list->len)
+//     {
+//         ERROR_RETURN(1, "Index out of bounds (remove)\n");
+//     }
+
+//     if (list->len == 1)
+//     {
+//         free(list->items); // Free the memory when removing the last element
+//         list->len = 0;
+//         return 0;
+//     }
+
+//     u8 *item_ptr = (u8 *)list->items + index * list->item_size;
+//     u8 *next_ptr = (u8 *)list->items + (index + 1) * list->item_size;
+
+//     // Shift elements after the removed one
+//     memmove(item_ptr, next_ptr, (list->len - index - 1) * list->item_size);
+
+//     --list->len;
+
+//     // Reallocate memory to release the extra space
+//     void *new_items = realloc(list->items, list->len * list->item_size);
+//     if (new_items == NULL)
+//     {
+//         // Handle realloc failure
+//         ERROR_RETURN(1, "Memory reallocation error\n");
+//     }
+//     list->items = new_items;
+
+//     printf("%s", description);
+
+//     return 0;
+// }
+
 u8 array_list_remove(Array_List *list, usize index, char *description)
 {
     if (list->len == 0) // TODO: replace this with switch logic?
