@@ -42,7 +42,7 @@ usize animation_create(usize animation_definition_id, bool does_loop)
         ERROR_EXIT("Animation Definition with id %zu not found.", animation_definition_id);
     }
 
-    // try to find free slot first
+    // Try to find free slot first.
     for (usize i = 0; i < animation_storage->len; ++i)
     {
         Animation *animation = array_list_get(animation_storage, i);
@@ -60,9 +60,9 @@ usize animation_create(usize animation_definition_id, bool does_loop)
 
     Animation *animation = array_list_get(animation_storage, id);
 
-    // Other fields default to 0 when using field dot syntax
+    // Other fields default to 0 when using field dot syntax.
     *animation = (Animation){
-        .definition = adef,
+        .animation_definition_id = animation_definition_id,
         .does_loop = does_loop,
         .is_active = true,
     };
@@ -83,21 +83,18 @@ Animation *animation_get(usize id)
 
 void animation_update(f32 dt)
 {
-    // needs to be called on every frame, advances the animation
     for (usize i = 0; i < animation_storage->len; ++i)
     {
-        // for each frame decrease the frame animation time
         Animation *animation = array_list_get(animation_storage, i);
-        Animation_Definition *adef = animation->definition;
+        Animation_Definition *adef = array_list_get(animation_definition_storage, animation->animation_definition_id);
         animation->current_frame_time -= dt;
 
-        // if current frame time goes to 0, go to the next frame in the animation
         if (animation->current_frame_time <= 0)
         {
             animation->current_frame_index += 1;
 
-            // Keep looping or stay on the last frame
-            if (animation->current_frame_index == animation->definition->frame_count)
+            // Loop or stay on last frame.
+            if (animation->current_frame_index == adef->frame_count)
             {
                 if (animation->does_loop)
                 {
@@ -109,8 +106,14 @@ void animation_update(f32 dt)
                 }
             }
 
-            // set current frame time to the duration of the new frame
             animation->current_frame_time = adef->frames[animation->current_frame_index].duration;
         }
     }
+}
+
+void animation_render(Animation *animation, vec2 position, vec4 color, u32 texture_slots[8])
+{
+    Animation_Definition *adef = array_list_get(animation_definition_storage, animation->animation_definition_id);
+    Animation_Frame *aframe = &adef->frames[animation->current_frame_index];
+    render_sprite_sheet_frame(adef->sprite_sheet, aframe->row, aframe->column, position, animation->is_flipped, color, texture_slots);
 }

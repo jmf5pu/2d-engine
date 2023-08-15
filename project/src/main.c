@@ -22,9 +22,9 @@ typedef enum collision_layer
     COLLISION_LAYER_TERRIAN = 1 << 2,
 } Collision_Layer;
 
+static u32 texture_slots[8] = {0};
+
 static bool should_quit = false;
-vec4 player_color = {0, 1, 1, 1};
-bool player_is_grounded = false;
 
 Sprite_Sheet sprite_sheet_soldier_running_side;
 Sprite_Sheet sprite_sheet_soldier_idle_side;
@@ -119,8 +119,6 @@ void player_on_hit(Body *self, Body *other, Hit hit)
 {
     if (other->collision_layer = COLLISION_LAYER_ENEMY)
     {
-        player_color[0] = 1;
-        player_color[2] = 0;
     }
 }
 
@@ -128,7 +126,6 @@ void player_on_hit_static(Body *self, Static_Body *other, Hit hit)
 {
     if (hit.normal[1] > 0)
     {
-        player_is_grounded = true;
     }
 }
 
@@ -234,7 +231,7 @@ int main(int argc, char *argv[])
         render_aabb((f32 *)static_body_c, WHITE);
         render_aabb((f32 *)static_body_d, WHITE);
         render_aabb((f32 *)static_body_e, WHITE);
-        render_aabb((f32 *)body_player, player_color);
+        render_aabb((f32 *)body_player, WHITE);
 
         render_aabb((f32 *)physics_body_get(entity_get(entity_a_id)->body_id), WHITE);
         render_aabb((f32 *)physics_body_get(entity_get(entity_b_id)->body_id), WHITE);
@@ -256,8 +253,6 @@ int main(int argc, char *argv[])
 
             Body *body = physics_body_get(entity->body_id);
             Animation *anim = animation_get(entity->animation_id);
-            Animation_Definition *adef = anim->definition;
-            Animation_Frame *aframe = &adef->frames[anim->current_frame_index];
 
             if (body->velocity[0] < 0)
             {
@@ -267,12 +262,10 @@ int main(int argc, char *argv[])
             {
                 anim->is_flipped = false;
             }
-            render_sprite_sheet_frame(adef->sprite_sheet, aframe->row, aframe->column, body->aabb.position, anim->is_flipped);
-            render_end(window, adef->sprite_sheet->texture_id);
+            animation_render(anim, body->aabb.position, WHITE, texture_slots);
         }
 
-        player_color[0] = 0;
-        player_color[2] = 1;
+        render_end(window, texture_slots);
 
         time_update_late();
     }
