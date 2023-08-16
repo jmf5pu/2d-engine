@@ -36,7 +36,7 @@ usize animation_definition_create(Sprite_Sheet *sprite_sheet, f32 *durations, u8
 usize animation_create(usize animation_definition_id, bool does_loop)
 {
     usize id = animation_storage->len;
-    Animation_Definition *adef = array_list_get(animation_definition_storage, animation_definition_id);
+    Animation_Definition *adef = array_list_get(animation_definition_storage, animation_definition_id, "animation definition creation");
     if (adef == NULL)
     {
         ERROR_EXIT("Animation Definition with id %zu not found.", animation_definition_id);
@@ -45,7 +45,7 @@ usize animation_create(usize animation_definition_id, bool does_loop)
     // Try to find free slot first.
     for (usize i = 0; i < animation_storage->len; ++i)
     {
-        Animation *animation = array_list_get(animation_storage, i);
+        Animation *animation = array_list_get(animation_storage, i, "animation_create trying to find first free slot");
         if (!animation->is_active)
         {
             id = i;
@@ -58,7 +58,7 @@ usize animation_create(usize animation_definition_id, bool does_loop)
         array_list_append(animation_storage, &(Animation){0});
     }
 
-    Animation *animation = array_list_get(animation_storage, id);
+    Animation *animation = array_list_get(animation_storage, id, "animation_create trying to find first free slot");
 
     // Other fields default to 0 when using field dot syntax.
     *animation = (Animation){
@@ -72,22 +72,22 @@ usize animation_create(usize animation_definition_id, bool does_loop)
 
 void animation_destroy(usize id)
 {
-    Animation *animation = array_list_get(animation_storage, id);
+    Animation *animation = array_list_get(animation_storage, id, "called by animation_destroy");
     animation->is_active = false;
     array_list_remove(animation_storage, id, "Destroying animation");
 }
 
 Animation *animation_get(usize id)
 {
-    return array_list_get(animation_storage, id);
+    return array_list_get(animation_storage, id, "called by animation_get");
 }
 
 void animation_update(f32 dt)
 {
     for (usize i = 0; i < animation_storage->len; ++i)
     {
-        Animation *animation = array_list_get(animation_storage, i);
-        Animation_Definition *adef = array_list_get(animation_definition_storage, animation->animation_definition_id);
+        Animation *animation = array_list_get(animation_storage, i, "called by animation_update");
+        Animation_Definition *adef = array_list_get(animation_definition_storage, animation->animation_definition_id, "called by animation_get (adef)");
         animation->current_frame_time -= dt;
 
         if (animation->current_frame_time <= 0)
@@ -114,7 +114,7 @@ void animation_update(f32 dt)
 
 void animation_render(Animation *animation, vec2 position, vec4 color, u32 texture_slots[8])
 {
-    Animation_Definition *adef = array_list_get(animation_definition_storage, animation->animation_definition_id);
+    Animation_Definition *adef = array_list_get(animation_definition_storage, animation->animation_definition_id, "animation_render");
     Animation_Frame *aframe = &adef->frames[animation->current_frame_index];
     render_sprite_sheet_frame(adef->sprite_sheet, aframe->row, aframe->column, position, animation->is_flipped, color, texture_slots);
 }

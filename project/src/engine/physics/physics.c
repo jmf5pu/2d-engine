@@ -153,7 +153,7 @@ void physics_update(void)
 
     for (u32 i = 0; i < state.body_list->len; ++i)
     {
-        body = array_list_get(state.body_list, i);
+        body = array_list_get(state.body_list, i, "physics_update");
 
         body->velocity[1] += state.gravity;
         if (state.terminal_velocity > body->velocity[1])
@@ -200,12 +200,14 @@ usize physics_body_create(vec2 position, vec2 size, vec2 velocity, u8 collision_
 
 Body *physics_body_get(usize index)
 {
-    return array_list_get(state.body_list, index);
+    return array_list_get(state.body_list, index, "physics_body_get");
 }
 
 void physics_body_destroy(usize index)
 {
+    printf("physics_body_destroy state.body_list len (before): %d\n", state.body_list->len);
     array_list_remove(state.body_list, index, "Destroying physics body");
+    printf("physics_body_destroy state.body_list len (after): %d\n", state.body_list->len);
 }
 
 usize physics_static_body_create(vec2 position, vec2 size, u8 collision_layer)
@@ -227,7 +229,7 @@ usize physics_static_body_create(vec2 position, vec2 size, u8 collision_layer)
 
 Static_Body *physics_static_body_get(usize index)
 {
-    return array_list_get(state.static_body_list, index);
+    return array_list_get(state.static_body_list, index, "physics_static_body_get");
 }
 
 // gets the minimium and maximum position of the aabb

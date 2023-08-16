@@ -47,11 +47,13 @@ usize array_list_append(Array_List *list, void *item)
     return index;
 }
 
-void *array_list_get(Array_List *list, usize index)
+void *array_list_get(Array_List *list, usize index, char *description)
 {
-    if (index >= list->len)
+    // TODO: fix error here: Description: called by animation_get [list->len: 5] [index: 0] Index out of bounds(get)
+    if ((u32)index >= (u32)list->len)
     {
-        ERROR_RETURN(NULL, "Index out of bounds (get) [list->len: %d] [index: %d]\n", list->len, index);
+        printf("Description: %s [list->len: %d] [index: %d]\n", description, list->len, index);
+        ERROR_RETURN(NULL, "Index out of bounds (get)");
     }
     return (u8 *)list->items + index * list->item_size;
 }
@@ -117,6 +119,6 @@ u8 array_list_remove(Array_List *list, usize index, char *description)
     u8 *item_ptr = (u8 *)list->items + index * list->item_size;
     u8 *end_ptr = (u8 *)list->items + list->len * list->item_size;
     memcpy(item_ptr, end_ptr, list->item_size);
-    printf(description);
+    printf("%s\n", description);
     return 0;
 }

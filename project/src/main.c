@@ -14,6 +14,7 @@
 #include "engine/entity.h"
 #include "engine/render.h"
 #include "engine/animation.h"
+#include "engine/array_list.h"
 
 typedef enum collision_layer
 {
@@ -29,7 +30,7 @@ const u8 player_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRIAN;
 const u8 bullet_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRIAN;
 
 static u32 texture_slots[8] = {0};
-
+static Array_List *entities_to_delete;
 static bool should_quit = false;
 
 Sprite_Sheet sprite_sheet_soldier_running_side;
@@ -172,15 +173,12 @@ static void input_handle(Entity *player_entity)
         // TODO: pull all this to a helper method
         // create bullet entity, define animation
         usize bullet_entity_id = entity_create((vec2){player_body->aabb.position[0] + 25, player_body->aabb.position[1]}, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
-        printf("\nstep 1\n");
         Entity *bullet_entity = entity_get(bullet_entity_id);
-        printf("step 2\n");
 
         bullet_entity->animation_id = anim_bullet_id;
 
         // set bullet velocity
         Body *bullet_body = physics_body_get(bullet_entity->body_id);
-        printf("step 3\n");
 
         bullet_body->velocity[0] = 800;
         bullet_body->velocity[1] = 0; // TODO: remove this, already set to 0
@@ -220,6 +218,10 @@ int main(int argc, char *argv[])
     usize player_id = entity_create((vec2){100, 200}, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
     Entity *player = entity_get(player_id);
 
+    // main loop's array lists
+    entities_to_delete = array_list_create(sizeof(struct Entity *), 0);
+
+    // main loop
     while (!should_quit)
     {
         time_update();
@@ -239,7 +241,9 @@ int main(int argc, char *argv[])
         }
 
         Entity *player = entity_get(player_id);
+
         Body *body_player = physics_body_get(player->body_id);
+        printf("got player body\n");
 
         if (body_player->velocity[0] != 0)
         {
@@ -264,6 +268,8 @@ int main(int argc, char *argv[])
         Static_Body *static_body_d = physics_static_body_get(static_body_d_id);
         Static_Body *static_body_e = physics_static_body_get(static_body_e_id);
 
+        printf("got static bodies\n");
+
         input_update();
         input_handle(player);
         physics_update();
@@ -277,29 +283,38 @@ int main(int argc, char *argv[])
         render_aabb((f32 *)static_body_d, WHITE);
         render_aabb((f32 *)static_body_e, WHITE);
 
-        render_aabb((f32 *)physics_body_get(entity_get(entity_a_id)->body_id), WHITE);
-        render_aabb((f32 *)physics_body_get(entity_get(entity_b_id)->body_id), WHITE);
-        // render animated entities
-        for (usize i = 0; i < entity_count(); ++i)
+        // render_aabb((f32 *)physics_body_get(entity_get(entity_a_id)->body_id), WHITE);
+        // render_aabb((f32 *)physics_body_get(entity_get(entity_b_id)->body_id), WHITE);
+
+        printf("beginning to count entities\n");
+
+        // render animated entities, check if any are marked for deletion (not active OR body is not active)
+        // TODO: instantiate a list of all things marked for deletion
+        printf("entity_count (start): %d\n", entity_count());
+        u64 num_entities = (u64)entity_count(); // MUST be usize, because (usize) - 1 is used for comparisons later on
+        for (usize i = 0; i < num_entities; ++i)
         {
+            printf("index: %d\n", i);
             Entity *entity = entity_get(i);
 
-            // TODO: getter bug somewhere in here
+            // check if entity or corresponding body is inactive
             if (!entity->is_active)
             {
-                entity_destroy(i);
+                array_list_append(entities_to_delete, entity);
                 continue;
             }
-            if (!physics_body_get(entity->body_id)->is_active)
+            printf("right before physics_body_get \n");
+            if (!physics_body_get(entity->body_id)->is_active) // issue is entity->body_id != i
             {
-                entity_destroy(i);
+                printf("storing address: %p\n", *entity);
+                usize result_index = array_list_append(entities_to_delete, entity);
+                printf("added address: %p\n", *(Entity *)array_list_get(entities_to_delete, result_index, "getting entity to delete"));
                 continue;
             }
-            if (entity->animation_id == (usize)-1)
+            if (entity->animation_id == (u64)-1)
             {
                 continue;
             }
-
             Body *body = physics_body_get(entity->body_id);
             Animation *anim = animation_get(entity->animation_id);
 
@@ -313,6 +328,25 @@ int main(int argc, char *argv[])
             }
             animation_render(anim, body->aabb.position, WHITE, texture_slots);
         }
+
+        // destroy all the inactive entities
+
+        // TODO:
+        // The issue here is that we need to delete the entities by ID, but each
+        // time we delete an entity, the id will change for the rest
+        usize num_inactive_entities = entities_to_delete->len;
+        printf("num_inactive_entities (start): %d\n", num_inactive_entities);
+        for (usize i = 0; i < num_inactive_entities; ++i)
+        {
+            Entity *entity_to_delete = (Entity *)array_list_get(entities_to_delete, i, "getting entity to delete");
+            printf("deleting address: %p\n", entity_to_delete);
+            usize id_to_delete = entity_get_id(entity_to_delete);
+            entity_destroy(entity_get(id_to_delete)); // also destroys its corresponding body
+            array_list_remove(entities_to_delete, i, "Removing reference that has been deleted");
+        }
+        printf("num_inactive_entities (after clearing): %d\n", entities_to_delete->len);
+
+        printf("entity_count (end): %d\n", entity_count());
 
         render_end(window, texture_slots);
 
