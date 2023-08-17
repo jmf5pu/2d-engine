@@ -176,26 +176,43 @@ void physics_update(void)
     }
 }
 
-usize physics_body_create(vec2 position, vec2 size, vec2 velocity, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static)
+Body *physics_body_create(vec2 position, vec2 size, vec2 velocity, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static)
 {
-    Body body = {
-        .aabb = {
-            .position = {position[0], position[1]},
-            .half_size = {size[0] * 0.5, size[1] * 0.5},
-        },
-        .velocity = {velocity[0], velocity[1]},
-        .collision_layer = collision_layer,
-        .collision_mask = collision_mask,
-        .on_hit = on_hit,
-        .on_hit_static = on_hit_static,
-        .is_active = true,
-    };
+    Body *body = (Body *)malloc(sizeof(Body)); // Allocate memory for the Body struct
 
-    if (array_list_append(state.body_list, &body) == (usize)-1)
+    if (body == NULL)
     {
+        ERROR_EXIT("Memory allocation failed\n");
+    }
+
+    body->aabb.position[0] = position[0];
+    body->aabb.position[1] = position[1];
+    body->aabb.half_size[0] = size[0] * 0.5;
+    body->aabb.half_size[1] = size[1] * 0.5;
+
+    body->velocity[0] = velocity[0];
+    body->velocity[1] = velocity[1];
+
+    body->collision_layer = collision_layer;
+    body->collision_mask = collision_mask;
+
+    body->on_hit = on_hit;
+    body->on_hit_static = on_hit_static;
+
+    body->is_active = true;
+
+    if (array_list_append(state.body_list, body) == (usize)-1)
+    {
+        free(body); // Clean up allocated memory in case of failure
         ERROR_EXIT("Could not append body to list\n");
     }
-    return state.body_list->len - 1;
+    printf("returning body address %p\n", body);
+    return body;
+}
+
+usize physics_body_count()
+{
+    return state.body_list->len;
 }
 
 Body *physics_body_get(usize index)
@@ -203,28 +220,48 @@ Body *physics_body_get(usize index)
     return array_list_get(state.body_list, index, "physics_body_get");
 }
 
-void physics_body_destroy(usize index)
+usize physics_body_get_id(Body *target_body)
 {
-    printf("physics_body_destroy state.body_list len (before): %d\n", state.body_list->len);
-    array_list_remove(state.body_list, index, "Destroying physics body");
-    printf("physics_body_destroy state.body_list len (after): %d\n", state.body_list->len);
+    printf("target_entity address: %p\n", target_body);
+    for (usize i = 0; i < state.body_list->len; ++i)
+    {
+        printf("comparing address: %p\n", physics_body_get(i));
+        if (physics_body_get(i) == target_body)
+        {
+            return i;
+        }
+    }
+    ERROR_RETURN((usize)-1, "Could not find the specified entity in the Array_List\n");
 }
 
-usize physics_static_body_create(vec2 position, vec2 size, u8 collision_layer)
+void physics_body_destroy(usize index)
 {
-    Static_Body static_body = {
-        .aabb = {
-            .position = {position[0], position[1]},
-            .half_size = {size[0] * 0.5, size[1] * 0.5},
-        },
-        .collision_layer = collision_layer,
-    };
+    array_list_remove(state.body_list, index, "Destroying physics body");
+}
 
-    if (array_list_append(state.static_body_list, &static_body) == (usize)-1)
+Static_Body *physics_static_body_create(vec2 position, vec2 size, u8 collision_layer)
+{
+    Static_Body *static_body = (Static_Body *)malloc(sizeof(Static_Body)); // Allocate memory for the Static_Body
+
+    if (static_body == NULL)
     {
+        ERROR_EXIT("Memory allocation failed\n");
+    }
+
+    static_body->aabb.position[0] = position[0];
+    static_body->aabb.position[1] = position[1];
+    static_body->aabb.half_size[0] = size[0] * 0.5;
+    static_body->aabb.half_size[1] = size[1] * 0.5;
+
+    static_body->collision_layer = collision_layer;
+
+    if (array_list_append(state.static_body_list, static_body) == (usize)-1)
+    {
+        free(static_body); // Clean up allocated memory in case of failure
         ERROR_EXIT("Could not append body to list\n");
     }
-    return state.static_body_list->len - 1;
+
+    return static_body;
 }
 
 Static_Body *physics_static_body_get(usize index)
