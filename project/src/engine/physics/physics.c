@@ -206,7 +206,6 @@ Body *physics_body_create(vec2 position, vec2 size, vec2 velocity, u8 collision_
         free(body); // Clean up allocated memory in case of failure
         ERROR_EXIT("Could not append body to list\n");
     }
-    printf("returning body address %p\n", body);
     return body;
 }
 
@@ -222,10 +221,8 @@ Body *physics_body_get(usize index)
 
 usize physics_body_get_id(Body *target_body)
 {
-    printf("target_entity address: %p\n", target_body);
     for (usize i = 0; i < state.body_list->len; ++i)
     {
-        printf("comparing address: %p\n", physics_body_get(i));
         if (physics_body_get(i) == target_body)
         {
             return i;

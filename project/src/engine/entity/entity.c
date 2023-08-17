@@ -21,18 +21,14 @@ Entity *entity_create(vec2 position, vec2 size, vec2 velocity, u8 collision_laye
         ERROR_EXIT("Memory allocation failed\n");
     }
     entity->body = physics_body_create(position, size, velocity, collision_layer, collision_mask, on_hit, on_hit_static);
-    printf("created physics body %p\n", entity->body);
-    entity->animation_id = (usize)-1;
+    entity->animation = NULL;
     entity->is_active = true;
-
-    printf("address created %p\n", entity);
 
     if (array_list_append(entity_list, entity) == (usize)-1)
     {
         free(entity); // Clean up allocated memory in case of failure
         ERROR_EXIT("Could not append body to list\n");
     }
-    printf("address returned %p\n", entity);
 
     return entity;
 }
@@ -44,10 +40,8 @@ Entity *entity_get(usize id)
 
 usize entity_get_id(Entity *target_entity)
 {
-    printf("target_entity address: %p\n", target_entity);
     for (usize i = 0; i < entity_list->len; ++i)
     {
-        printf("comparing address: %p\n", entity_get(i));
         if (entity_get(i) == target_entity)
         {
             return i;

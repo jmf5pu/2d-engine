@@ -54,7 +54,6 @@ usize array_list_append(Array_List *list, void *item)
     usize index = list->len++;
     void **stored_item = (void **)((u8 *)list->items + index * sizeof(void *));
     *stored_item = item;
-    printf("array_list_get result: %p\n", array_list_get(list, index, " in array list append "));
     return index;
 }
 

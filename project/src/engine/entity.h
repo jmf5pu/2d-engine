@@ -5,11 +5,11 @@
 #include <linmath.h>
 #include "physics.h"
 #include "types.h"
-
+#include "animation.h"
 typedef struct entity
 {
     Body *body;
-    usize animation_id;
+    Animation *animation;
     bool is_active;
 } Entity;
 
