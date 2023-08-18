@@ -57,84 +57,9 @@ usize array_list_append(Array_List *list, void *item)
     return index;
 }
 
-// void *array_list_get(Array_List *list, usize index, char *description)
-// {
-//     // TODO: fix error here: Description: called by animation_get [list->len: 5] [index: 0] Index out of bounds(get)
-//     if ((u32)index >= (u32)list->len)
-//     {
-//         printf("Description: %s [list->len: %zd] [index: %zd]\n", description, list->len, index);
-//         ERROR_RETURN(NULL, "Index out of bounds (get)");
-//     }
-//     return (u8 *)list->items + index * list->item_size;
-// }
-
-// usize array_list_append(Array_List *list, void *item)
-// {
-//     printf("address passed %p\n", item);
-//     if (list->len == list->capacity)
-//     {
-//         list->capacity = list->capacity > 0 ? list->capacity * 2 : 1; // fix this, poor implementation to just double memory
-//         void *items = realloc(list->items, list->item_size * list->capacity);
-
-//         if (!items)
-//         {
-//             ERROR_RETURN(-1, "Could not allocate memory for Array_List\n");
-//         }
-
-//         list->items = items;
-//     }
-
-//     usize index = list->len++;
-
-//     memcpy((u8 *)list->items + index * list->item_size, item, list->item_size);
-//     printf("array_list_get result: %p\n", array_list_get(list, index, " in array list append "));
-//     return index;
-// }
-
-// u8 array_list_remove(Array_List *list, usize index, char *description)
-// {
-//     if (list->len == 0)
-//     {
-//         ERROR_RETURN(1, "List is empty\n");
-//     }
-//     if (index >= list->len)
-//     {
-//         ERROR_RETURN(1, "Index out of bounds (remove)\n");
-//     }
-
-//     if (list->len == 1)
-//     {
-//         free(list->items); // Free the memory when removing the last element
-//         list->len = 0;
-//         return 0;
-//     }
-
-//     u8 *item_ptr = (u8 *)list->items + index * list->item_size;
-//     u8 *next_ptr = (u8 *)list->items + (index + 1) * list->item_size;
-
-//     // Shift elements after the removed one
-//     memmove(item_ptr, next_ptr, (list->len - index - 1) * list->item_size);
-
-//     --list->len;
-
-//     // Reallocate memory to release the extra space
-//     void *new_items = realloc(list->items, list->len * list->item_size);
-//     if (new_items == NULL)
-//     {
-//         // Handle realloc failure
-//         ERROR_RETURN(1, "Memory reallocation error\n");
-//     }
-//     list->items = new_items;
-
-//     printf("%s", description);
-
-//     return 0;
-// }
-
-// TODO: update this to actually free the unused memory
 u8 array_list_remove(Array_List *list, usize index, char *description)
 {
-    if (list->len == 0) // TODO: replace this with switch logic?
+    if (list->len == 0)
     {
         ERROR_RETURN(1, "List is empty\n");
     }
@@ -148,11 +73,24 @@ u8 array_list_remove(Array_List *list, usize index, char *description)
         return 0;
     }
 
+    // Calculate the start and end pointers for the elements to be moved
+    u8 *item_ptr = (u8 *)list->items + index * sizeof(void *);
+    u8 *end_ptr = (u8 *)list->items + (list->len - 1) * sizeof(void *);
+
+    // Shift the elements after the removed one
+    memmove(item_ptr, item_ptr + sizeof(void *), (list->len - index - 1) * sizeof(void *));
+
     --list->len;
 
-    u8 *item_ptr = (u8 *)list->items + index * list->item_size;
-    u8 *end_ptr = (u8 *)list->items + list->len * list->item_size;
-    memcpy(item_ptr, end_ptr, list->item_size);
+    void **new_items = realloc(list->items, sizeof(void *) * list->len);
+    if (new_items == NULL)
+    {
+        // Handle realloc failure
+        ERROR_RETURN(1, "Memory reallocation error\n");
+    }
+    list->items = new_items;
+
     printf("%s\n", description);
+
     return 0;
 }

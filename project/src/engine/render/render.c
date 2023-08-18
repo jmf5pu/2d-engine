@@ -250,7 +250,7 @@ void render_quad_line(vec2 pos, vec2 size, vec4 color)
         {pos[0] + size[0] * 0.5, pos[1] + size[1] * 0.5},
         {pos[0] - size[0] * 0.5, pos[1] + size[1] * 0.5},
     };
-
+    // TODO: crashes somewhere in here when entity_destroy() is called in main.c
     render_line_segment(points[0], points[1], color);
     render_line_segment(points[1], points[2], color);
     render_line_segment(points[2], points[3], color);

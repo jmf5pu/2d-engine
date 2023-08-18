@@ -56,9 +56,10 @@ void entity_destroy(Entity *entity)
     usize id = entity_get_id(entity);
     entity->body->is_active = false; // physics bodies for inactive entities should be inactive
     entity->is_active = false;       // probably not even necessary, remove later
-    // physics_body_destroy(entity->body_id);
+    physics_body_destroy(entity->body);
     // animation_destroy(entity->animation_id); TODO: probably not needed
     array_list_remove(entity_list, id, "Destroying entity");
+    free(entity); // free entity memory
 }
 
 usize entity_count()

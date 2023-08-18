@@ -7,13 +7,13 @@
 
 static Physics_State_Internal state;
 
-static u32 iterations = 2; // TODO: set to higher later on
+static u32 iterations = 30; // TODO: set to higher later on
 static f32 tick_rate;
 
 void physics_init(void)
 {
-    state.body_list = array_list_create(sizeof(Body), 0);
-    state.static_body_list = array_list_create(sizeof(Static_Body), 0);
+    state.body_list = array_list_create(sizeof(struct Body *), 0);
+    state.static_body_list = array_list_create(sizeof(struct Static_Body *), 0);
 
     state.gravity = 0;
     state.terminal_velocity = -7000;
@@ -21,7 +21,7 @@ void physics_init(void)
     tick_rate = 1.f / iterations;
 }
 
-static void update_sweep_result(Hit *result, usize other_id, AABB a, AABB b, vec2 velocity, u8 a_collision_mask, u8 b_collision_layer)
+static void update_sweep_result(Hit *result, usize other_id, AABB a, AABB b, vec2 velocity, u8 a_collision_mask, u8 b_collision_layer) // TODO: bug here
 {
     if ((a_collision_mask & b_collision_layer) == 0)
     {
@@ -55,7 +55,7 @@ static void update_sweep_result(Hit *result, usize other_id, AABB a, AABB b, vec
     }
 }
 
-static Hit sweep_static_bodies(Body *body, vec2 velocity)
+static Hit sweep_static_bodies(Body *body, vec2 velocity) // TODO: bug here
 {
     Hit result = {.time = 0xBEEF}; // time set to some large value
 
@@ -155,11 +155,12 @@ void physics_update(void)
     {
         body = array_list_get(state.body_list, i, "physics_update");
 
-        body->velocity[1] += state.gravity;
-        if (state.terminal_velocity > body->velocity[1])
-        {
-            body->velocity[1] = state.terminal_velocity;
-        }
+        // TODO: Don't need this stuff for a top down game
+        // body->velocity[1] += state.gravity;
+        // if (state.terminal_velocity > body->velocity[1])
+        // {
+        //     body->velocity[1] = state.terminal_velocity;
+        // }
 
         // update velocity based on acceleration
         body->velocity[0] += body->acceleration[0];
@@ -192,6 +193,8 @@ Body *physics_body_create(vec2 position, vec2 size, vec2 velocity, u8 collision_
 
     body->velocity[0] = velocity[0];
     body->velocity[1] = velocity[1];
+    body->acceleration[0] = 0;
+    body->acceleration[1] = 0;
 
     body->collision_layer = collision_layer;
     body->collision_mask = collision_mask;
@@ -231,9 +234,11 @@ usize physics_body_get_id(Body *target_body)
     ERROR_RETURN((usize)-1, "Could not find the specified entity in the Array_List\n");
 }
 
-void physics_body_destroy(usize index)
+void physics_body_destroy(Body *body)
 {
-    array_list_remove(state.body_list, index, "Destroying physics body");
+    usize id = physics_body_get_id(body);
+    array_list_remove(state.body_list, id, "Destroying physics body");
+    free(body);
 }
 
 Static_Body *physics_static_body_create(vec2 position, vec2 size, u8 collision_layer)
