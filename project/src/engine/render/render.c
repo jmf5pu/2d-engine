@@ -42,7 +42,7 @@ SDL_Window *render_init(void)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    list_batch = array_list_create(sizeof(Batch_Vertex), 8);
+    list_batch = array_list_create(sizeof(Batch_Vertex *), 8);
 
     stbi_set_flip_vertically_on_load(1);
 
@@ -93,7 +93,33 @@ void render_begin(void)
 static void render_batch(Batch_Vertex *vertices, usize count, u32 texture_ids[8])
 {
     glBindBuffer(GL_ARRAY_BUFFER, vbo_batch);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, count * sizeof(Batch_Vertex), vertices);
+    // Iterate through the list_batch array list and access each Batch_Vertex instance
+
+    // Calculate the total size required for copying all Batch_Vertex instances
+    usize total_size = list_batch->len * sizeof(Batch_Vertex);
+
+    // Allocate memory for a new contiguous buffer to hold all Batch_Vertex instances
+    void *vertex_data = malloc(total_size);
+    if (!vertex_data)
+    {
+        // Handle memory allocation error
+        // ...
+    }
+
+    // Copy all Batch_Vertex instances' data into the new contiguous buffer
+    u8 *destination = (u8 *)vertex_data;
+    for (usize i = 0; i < list_batch->len; ++i)
+    {
+        Batch_Vertex *vertex = array_list_get(list_batch, i, "in render_batch");
+        memcpy(destination, vertex, sizeof(Batch_Vertex));
+        destination += sizeof(Batch_Vertex);
+    }
+
+    // Use glBufferSubData to copy the entire buffer to OpenGL
+    glBufferSubData(GL_ARRAY_BUFFER, 0, total_size, vertex_data);
+
+    // Free the allocated memory for the new buffer
+    free(vertex_data);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_color);
@@ -137,7 +163,7 @@ void render_quad(vec2 pos, vec2 size, vec4 color)
     glBindVertexArray(0);
 }
 
-static void append_quad(vec2 position, vec2 size, vec4 texture_coordinates, vec4 color, f32 texture_slot)
+static void append_quad(vec2 position, vec2 size, vec4 texture_coordinates, vec4 color, f32 texture_slot) // TODO: NEW implementation
 {
     vec4 uvs = {0, 0, 1, 1};
 
@@ -146,33 +172,49 @@ static void append_quad(vec2 position, vec2 size, vec4 texture_coordinates, vec4
         memcpy(uvs, texture_coordinates, sizeof(vec4));
     }
 
-    array_list_append(list_batch, &(Batch_Vertex){
-                                      .position = {position[0], position[1]},
-                                      .uvs = {uvs[0], uvs[1]},
-                                      .color = {color[0], color[1], color[2], color[3]},
-                                      .texture_slot = texture_slot,
-                                  });
+    // Allocate memory for the Batch_Vertex instances
+    Batch_Vertex *vertices[4];
+    for (int i = 0; i < 4; ++i)
+    {
+        vertices[i] = malloc(sizeof(Batch_Vertex));
+        if (!vertices[i])
+        {
+            ERROR_RETURN(NULL, "Could not allocate memory for vertices\n");
+        }
+    }
 
-    array_list_append(list_batch, &(Batch_Vertex){
-                                      .position = {position[0] + size[0], position[1]},
-                                      .uvs = {uvs[2], uvs[1]},
-                                      .color = {color[0], color[1], color[2], color[3]},
-                                      .texture_slot = texture_slot,
-                                  });
+    // Initialize and append each vertex to the list_batch
+    *vertices[0] = (Batch_Vertex){
+        .position = {position[0], position[1]},
+        .uvs = {uvs[0], uvs[1]},
+        .color = {color[0], color[1], color[2], color[3]},
+        .texture_slot = texture_slot,
+    };
+    usize id1 = array_list_append(list_batch, vertices[0]);
 
-    array_list_append(list_batch, &(Batch_Vertex){
-                                      .position = {position[0] + size[0], position[1] + size[1]},
-                                      .uvs = {uvs[2], uvs[3]},
-                                      .color = {color[0], color[1], color[2], color[3]},
-                                      .texture_slot = texture_slot,
-                                  });
+    *vertices[1] = (Batch_Vertex){
+        .position = {position[0] + size[0], position[1]},
+        .uvs = {uvs[2], uvs[1]},
+        .color = {color[0], color[1], color[2], color[3]},
+        .texture_slot = texture_slot,
+    };
+    usize id2 = array_list_append(list_batch, vertices[1]);
 
-    array_list_append(list_batch, &(Batch_Vertex){
-                                      .position = {position[0], position[1] + size[1]},
-                                      .uvs = {uvs[0], uvs[3]},
-                                      .color = {color[0], color[1], color[2], color[3]},
-                                      .texture_slot = texture_slot,
-                                  });
+    *vertices[2] = (Batch_Vertex){
+        .position = {position[0] + size[0], position[1] + size[1]},
+        .uvs = {uvs[2], uvs[3]},
+        .color = {color[0], color[1], color[2], color[3]},
+        .texture_slot = texture_slot,
+    };
+    usize id3 = array_list_append(list_batch, vertices[2]);
+
+    *vertices[3] = (Batch_Vertex){
+        .position = {position[0], position[1] + size[1]},
+        .uvs = {uvs[0], uvs[3]},
+        .color = {color[0], color[1], color[2], color[3]},
+        .texture_slot = texture_slot,
+    };
+    usize id4 = array_list_append(list_batch, vertices[3]);
 }
 
 void render_line_segment(vec2 start, vec2 end, vec4 color)
