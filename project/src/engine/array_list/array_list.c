@@ -25,40 +25,7 @@ Array_List *array_list_create(usize item_size, usize initial_capacity)
     return list;
 }
 
-usize old_array_list_append(Array_List *list, void *item) // TODO: OLD implementation
-{
-    if (list->len == list->capacity)
-    {
-        list->capacity = list->capacity > 0 ? list->capacity * 2 : 1; // fix this, poor implementation to just double memory
-        void *items = realloc(list->items, list->item_size * list->capacity);
-
-        if (!items)
-        {
-            ERROR_RETURN(-1, "Could not allocate memory for Array_List\n");
-        }
-
-        list->items = items;
-    }
-
-    usize index = list->len++;
-
-    memcpy((u8 *)list->items + index * list->item_size, item, list->item_size);
-
-    return index;
-}
-
-void *old_array_list_get(Array_List *list, usize index, char *description)
-{
-    // TODO: fix error here: Description: called by animation_get [list->len: 5] [index: 0] Index out of bounds(get)
-    if ((u32)index >= (u32)list->len)
-    {
-        printf("Description: %s [list->len: %d] [index: %d]\n", description, list->len, index);
-        ERROR_RETURN(NULL, "Index out of bounds (get)");
-    }
-    return (u8 *)list->items + index * list->item_size;
-}
-
-void *array_list_get(Array_List *list, usize index, char *description) // TODO: NEW implementation
+void *array_list_get(Array_List *list, usize index, char *description)
 {
     if ((u32)index >= (u32)list->len)
     {
