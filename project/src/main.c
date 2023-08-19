@@ -16,6 +16,7 @@
 #include "engine/render.h"
 #include "engine/animation.h"
 #include "engine/array_list.h"
+#include "player.h"
 
 typedef enum collision_layer
 {
@@ -37,19 +38,22 @@ Sprite_Sheet sprite_sheet_soldier_running_side;
 Sprite_Sheet sprite_sheet_soldier_idle_side;
 Sprite_Sheet sprite_sheet_soldier_idle_back;
 Sprite_Sheet sprite_sheet_soldier_idle_front;
-Sprite_Sheet sprite_sheet_bullet;
+Sprite_Sheet sprite_sheet_bullet_1_horizontal;
+Sprite_Sheet sprite_sheet_bullet_1_vertical;
 
 static Animation_Definition *adef_soldier_running_side;
 static Animation_Definition *adef_soldier_idle_side;
 static Animation_Definition *adef_soldier_idle_back;
 static Animation_Definition *adef_soldier_idle_front;
-static Animation_Definition *adef_bullet;
+static Animation_Definition *adef_bullet_1_horizontal;
+static Animation_Definition *adef_bullet_1_vertical;
 
 static Animation *anim_soldier_running_side;
 static Animation *anim_soldier_idle_side;
 static Animation *anim_soldier_idle_back;
 static Animation *anim_soldier_idle_front;
-static Animation *anim_bullet;
+static Animation *anim_bullet_1_horizontal;
+static Animation *anim_bullet_1_vertical;
 
 // performs render_sprite_sheet_init, animation_defintion_create, and animation_create for all sprite sheets
 static void init_all_anims()
@@ -58,7 +62,9 @@ static void init_all_anims()
     render_sprite_sheet_init(&sprite_sheet_soldier_idle_side, "assets/soldier_1_m16_idle_side.png", 42, 42);
     render_sprite_sheet_init(&sprite_sheet_soldier_idle_back, "assets/soldier_1_m16_idle_back.png", 42, 42);
     render_sprite_sheet_init(&sprite_sheet_soldier_idle_front, "assets/soldier_1_m16_idle_front.png", 42, 42);
-    render_sprite_sheet_init(&sprite_sheet_bullet, "assets/bullet_1.png", 5, 5);
+    render_sprite_sheet_init(&sprite_sheet_bullet_1_horizontal, "assets/bullet_1_horizontal.png", 5, 5);
+    render_sprite_sheet_init(&sprite_sheet_bullet_1_vertical, "assets/bullet_1_vertical.png", 5, 5);
+
     adef_soldier_running_side = animation_definition_create(
         &sprite_sheet_soldier_running_side,
         (f32[]){0.1, 0.1, 0.1, 0.1, 0.1},
@@ -83,8 +89,14 @@ static void init_all_anims()
         (u8[]){0},
         (u8[]){0},
         1);
-    adef_bullet = animation_definition_create(
-        &sprite_sheet_bullet,
+    adef_bullet_1_horizontal = animation_definition_create(
+        &sprite_sheet_bullet_1_horizontal,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    adef_bullet_1_vertical = animation_definition_create(
+        &sprite_sheet_bullet_1_vertical,
         (f32[]){0},
         (u8[]){0},
         (u8[]){0},
@@ -94,13 +106,14 @@ static void init_all_anims()
     anim_soldier_idle_side = animation_create(adef_soldier_idle_side, false);
     anim_soldier_idle_back = animation_create(adef_soldier_idle_back, false);
     anim_soldier_idle_front = animation_create(adef_soldier_idle_front, false);
-    anim_bullet = animation_create(adef_bullet, false);
+    anim_bullet_1_horizontal = animation_create(adef_bullet_1_horizontal, false);
+    anim_bullet_1_vertical = animation_create(adef_bullet_1_vertical, false);
 }
 
 // on hit methods
 void player_on_hit(Body *self, Body *other, Hit hit)
 {
-    if (other->collision_layer = COLLISION_LAYER_ENEMY)
+    if (other->collision_layer == COLLISION_LAYER_ENEMY)
     {
     }
 }
@@ -133,9 +146,8 @@ void enemy_on_hit_static(Body *self, Static_Body *other, Hit hit)
     }
 }
 
-static void input_handle(Entity *player_entity)
+static void input_handle(Player *player)
 {
-    Body *player_body = player_entity->body;
     if (global.input.escape)
     {
         should_quit = true;
@@ -146,39 +158,90 @@ static void input_handle(Entity *player_entity)
 
     if (global.input.right)
     {
+        player->direction = RIGHT;
         velx += 100;
     }
 
     if (global.input.left)
     {
+        player->direction = LEFT;
         velx -= 100;
     }
 
     if (global.input.up)
     {
+        player->direction = UP;
         vely += 100;
     }
 
     if (global.input.down)
     {
+        player->direction = DOWN;
         vely -= 100;
     }
     if (global.input.space == KS_PRESSED)
     {
         // TODO: pull all this to a helper method
         // create bullet entity, define animation
-        Entity *bullet_entity = entity_create((vec2){player_body->aabb.position[0] + 25, player_body->aabb.position[1]}, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
+        vec2 bullet_position = {player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]};
+        vec2 bullet_velocity = {0, 0};
+        Animation *bullet_anim = anim_bullet_1_horizontal;
+        if (player->direction == UP)
+        {
+            bullet_position[1] += 25;
+            bullet_velocity[1] = 1200;
+            bullet_anim = anim_bullet_1_vertical;
+        }
+        else if (player->direction == RIGHT)
+        {
+            bullet_position[0] += 25;
+            bullet_velocity[0] = 1200;
+        }
+        else if (player->direction == DOWN)
+        {
+            bullet_position[1] -= 25;
+            bullet_velocity[1] = -1200;
+            bullet_anim = anim_bullet_1_vertical;
+        }
+        else if (player->direction == LEFT)
+        {
+            bullet_position[0] -= 25;
+            bullet_velocity[0] = -1200;
+        }
+        else
+        {
+            ERROR_EXIT(NULL, "Player direction not recognized");
+        }
 
-        bullet_entity->animation = anim_bullet;
-
-        // set bullet velocity
-        Body *bullet_body = bullet_entity->body;
-
-        bullet_body->velocity[0] = 800;
-        bullet_body->velocity[1] = 0; // TODO: remove this, already set to 0
+        Entity *bullet = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
+        bullet->animation = bullet_anim;
+        bullet->body->velocity[0] = bullet_velocity[0];
+        bullet->body->velocity[1] = bullet_velocity[1];
     }
-    player_body->velocity[0] = velx;
-    player_body->velocity[1] = vely;
+    player->entity->body->velocity[0] = velx;
+    player->entity->body->velocity[1] = vely;
+}
+
+// updates player animations based on direction
+static void update_player_animations(Player *player)
+{
+    if (player->direction == RIGHT || player->direction == LEFT)
+    {
+        player->entity->animation = anim_soldier_idle_side;
+        player->entity->animation->is_flipped = player->direction == LEFT ? true : false;
+    }
+    else if (player->direction == UP)
+    {
+        player->entity->animation = anim_soldier_idle_back;
+    }
+    else if (player->direction == DOWN)
+    {
+        player->entity->animation = anim_soldier_idle_front;
+    }
+    else
+    {
+        ERROR_EXIT(-1, "Player direction not recognized");
+    }
 }
 
 int main(int argc, char *argv[])
@@ -208,7 +271,12 @@ int main(int argc, char *argv[])
     Entity *entity_b = entity_create((vec2){300, 300}, (vec2){25, 25}, (vec2){400, 0}, 0, enemy_mask, NULL, enemy_on_hit_static);
 
     // init player
-    Entity *player = entity_create((vec2){100, 200}, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    Player player_one =
+        {
+            .entity = entity_create((vec2){100, 200}, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static),
+            .direction = RIGHT,
+            .weapon = RIFLE,
+            .health = 100};
 
     // main loop
     while (!should_quit)
@@ -229,24 +297,9 @@ int main(int argc, char *argv[])
             }
         }
 
-        if (player->body->velocity[0] != 0)
-        {
-            player->animation = anim_soldier_idle_side;
-        }
-        else if (player->body->velocity[1] > 0)
-        {
-            player->animation = anim_soldier_idle_back;
-        }
-        else if (player->body->velocity[1] < 0)
-        {
-            player->animation = anim_soldier_idle_front;
-        }
-        else
-        {
-            player->animation = anim_soldier_idle_side;
-        }
         input_update();
-        input_handle(player);
+        input_handle(&player_one);
+        update_player_animations(&player_one);
         physics_update();
         animation_update(global.time.delta);
         render_begin();
@@ -291,14 +344,14 @@ int main(int argc, char *argv[])
                 continue;
             }
 
-            if (player->body->velocity[0] < 0)
-            {
-                player->animation->is_flipped = true;
-            }
-            else if (player->body->velocity[0] > 0)
-            {
-                player->animation->is_flipped = false;
-            }
+            // if (player_one.entity->body->velocity[0] < 0)
+            // {
+            //     player_one.entity->animation->is_flipped = true;
+            // }
+            // else if (player_one.entity->body->velocity[0] > 0)
+            // {
+            //     player_one.entity->animation->is_flipped = false;
+            // }
             animation_render(entity->animation, entity->body->aabb.position, WHITE, texture_slots);
         }
 
