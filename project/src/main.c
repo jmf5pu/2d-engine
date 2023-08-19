@@ -67,10 +67,10 @@ static void init_all_anims()
 
     adef_soldier_running_side = animation_definition_create(
         &sprite_sheet_soldier_running_side,
-        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1},
-        (u8[]){0, 0, 0, 0, 0},
-        (u8[]){1, 2, 3, 4, 5},
-        5);
+        (f32[]){0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        10);
     adef_soldier_idle_side = animation_definition_create(
         &sprite_sheet_soldier_idle_side,
         (f32[]){0},
@@ -159,25 +159,25 @@ static void input_handle(Player *player)
     if (global.input.right)
     {
         player->direction = RIGHT;
-        velx += 100;
+        velx += 150;
     }
 
     if (global.input.left)
     {
         player->direction = LEFT;
-        velx -= 100;
+        velx -= 150;
     }
 
     if (global.input.up)
     {
         player->direction = UP;
-        vely += 100;
+        vely += 200;
     }
 
     if (global.input.down)
     {
         player->direction = DOWN;
-        vely -= 100;
+        vely -= 200;
     }
     if (global.input.space == KS_PRESSED)
     {
@@ -227,7 +227,7 @@ static void update_player_animations(Player *player)
 {
     if (player->direction == RIGHT || player->direction == LEFT)
     {
-        player->entity->animation = anim_soldier_idle_side;
+        player->entity->animation = player->entity->body->velocity[0] != 0 ? anim_soldier_running_side : anim_soldier_idle_side;
         player->entity->animation->is_flipped = player->direction == LEFT ? true : false;
     }
     else if (player->direction == UP)
