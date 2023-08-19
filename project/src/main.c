@@ -34,49 +34,53 @@ const u8 bullet_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRIAN;
 static u32 texture_slots[8] = {0};
 static bool should_quit = false;
 
-Sprite_Sheet sprite_sheet_soldier_running_side;
 Sprite_Sheet sprite_sheet_soldier_idle_side;
+Sprite_Sheet sprite_sheet_soldier_running_side;
 Sprite_Sheet sprite_sheet_soldier_idle_back;
 Sprite_Sheet sprite_sheet_soldier_idle_front;
+Sprite_Sheet sprite_sheet_soldier_running_front;
 Sprite_Sheet sprite_sheet_bullet_1_horizontal;
 Sprite_Sheet sprite_sheet_bullet_1_vertical;
 
-static Animation_Definition *adef_soldier_running_side;
 static Animation_Definition *adef_soldier_idle_side;
+static Animation_Definition *adef_soldier_running_side;
 static Animation_Definition *adef_soldier_idle_back;
 static Animation_Definition *adef_soldier_idle_front;
+static Animation_Definition *adef_soldier_running_front;
 static Animation_Definition *adef_bullet_1_horizontal;
 static Animation_Definition *adef_bullet_1_vertical;
 
-static Animation *anim_soldier_running_side;
 static Animation *anim_soldier_idle_side;
+static Animation *anim_soldier_running_side;
 static Animation *anim_soldier_idle_back;
 static Animation *anim_soldier_idle_front;
+static Animation *anim_soldier_running_front;
 static Animation *anim_bullet_1_horizontal;
 static Animation *anim_bullet_1_vertical;
 
 // performs render_sprite_sheet_init, animation_defintion_create, and animation_create for all sprite sheets
 static void init_all_anims()
 {
-    render_sprite_sheet_init(&sprite_sheet_soldier_running_side, "assets/soldier_1_m16_running_side.png", 42, 42);
     render_sprite_sheet_init(&sprite_sheet_soldier_idle_side, "assets/soldier_1_m16_idle_side.png", 42, 42);
+    render_sprite_sheet_init(&sprite_sheet_soldier_running_side, "assets/soldier_1_m16_running_side.png", 42, 42);
     render_sprite_sheet_init(&sprite_sheet_soldier_idle_back, "assets/soldier_1_m16_idle_back.png", 42, 42);
     render_sprite_sheet_init(&sprite_sheet_soldier_idle_front, "assets/soldier_1_m16_idle_front.png", 42, 42);
+    render_sprite_sheet_init(&sprite_sheet_soldier_running_front, "assets/soldier_1_m16_running_front.png", 42, 42);
     render_sprite_sheet_init(&sprite_sheet_bullet_1_horizontal, "assets/bullet_1_horizontal.png", 5, 5);
     render_sprite_sheet_init(&sprite_sheet_bullet_1_vertical, "assets/bullet_1_vertical.png", 5, 5);
 
-    adef_soldier_running_side = animation_definition_create(
-        &sprite_sheet_soldier_running_side,
-        (f32[]){0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04},
-        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
-        10);
     adef_soldier_idle_side = animation_definition_create(
         &sprite_sheet_soldier_idle_side,
         (f32[]){0},
         (u8[]){0},
         (u8[]){0},
         1);
+    adef_soldier_running_side = animation_definition_create(
+        &sprite_sheet_soldier_running_side,
+        (f32[]){0.03, 0.03, 0.03, 0.04, 0.03, 0.03, 0.03, 0.03, 0.03, 0.04, 0.03, 0.03},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
+        12);
     adef_soldier_idle_back = animation_definition_create(
         &sprite_sheet_soldier_idle_back,
         (f32[]){0},
@@ -89,6 +93,12 @@ static void init_all_anims()
         (u8[]){0},
         (u8[]){0},
         1);
+    adef_soldier_running_front = animation_definition_create(
+        &sprite_sheet_soldier_running_front,
+        (f32[]){0.04, 0.04, 0.05, 0.04, 0.04, 0.04, 0.05, 0.04},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6, 7, 8},
+        8);
     adef_bullet_1_horizontal = animation_definition_create(
         &sprite_sheet_bullet_1_horizontal,
         (f32[]){0},
@@ -102,10 +112,11 @@ static void init_all_anims()
         (u8[]){0},
         1);
 
-    anim_soldier_running_side = animation_create(adef_soldier_running_side, true);
     anim_soldier_idle_side = animation_create(adef_soldier_idle_side, false);
+    anim_soldier_running_side = animation_create(adef_soldier_running_side, true);
     anim_soldier_idle_back = animation_create(adef_soldier_idle_back, false);
     anim_soldier_idle_front = animation_create(adef_soldier_idle_front, false);
+    anim_soldier_running_front = animation_create(adef_soldier_running_front, true);
     anim_bullet_1_horizontal = animation_create(adef_bullet_1_horizontal, false);
     anim_bullet_1_vertical = animation_create(adef_bullet_1_vertical, false);
 }
@@ -171,13 +182,13 @@ static void input_handle(Player *player)
     if (global.input.up)
     {
         player->direction = UP;
-        vely += 200;
+        vely += 150;
     }
 
     if (global.input.down)
     {
         player->direction = DOWN;
-        vely -= 200;
+        vely -= 150;
     }
     if (global.input.space == KS_PRESSED)
     {
@@ -236,7 +247,7 @@ static void update_player_animations(Player *player)
     }
     else if (player->direction == DOWN)
     {
-        player->entity->animation = anim_soldier_idle_front;
+        player->entity->animation = player->entity->body->velocity[1] != 0 ? anim_soldier_running_front : anim_soldier_idle_front;
     }
     else
     {
