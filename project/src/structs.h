@@ -1,5 +1,5 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef STRUCTS_H
+#define STRUCTS_H
 
 #include "engine/entity.h"
 
@@ -11,16 +11,24 @@ enum Direction
     LEFT
 };
 
-enum Weapon
+enum Weapon_Name
 {
     RIFLE
 };
 
+typedef struct weapon
+{
+    enum Weapon_Name name;
+    u8 capacity;
+    u8 current_capacity;
+    u8 max_fire_rate;
+} Weapon;
+
 typedef struct player
 {
     Entity *entity;
+    Weapon *weapon;
     enum Direction direction;
-    enum Weapon weapon;
     u8 health;
 } Player;
 

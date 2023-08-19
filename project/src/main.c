@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 #include <assert.h>
 
+// engine headers
 #include "engine/global.h"
 #include "engine/config.h"
 #include "engine/input.h"
@@ -16,20 +17,10 @@
 #include "engine/render.h"
 #include "engine/animation.h"
 #include "engine/array_list.h"
-#include "player.h"
 
-typedef enum collision_layer
-{
-    COLLISION_LAYER_PLAYER = 1,
-    COLLISION_LAYER_ENEMY = 1 << 1,
-    COLLISION_LAYER_TERRIAN = 1 << 2,
-    COLLISION_LAYER_BULLET = 1 << 3,
-} Collision_Layer;
-
-// collision masks
-const u8 enemy_mask = COLLISION_LAYER_PLAYER | COLLISION_LAYER_TERRIAN;
-const u8 player_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRIAN;
-const u8 bullet_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRIAN;
+// game specific headers
+#include "structs.h"
+#include "collision_behavior.h"
 
 static u32 texture_slots[8] = {0};
 static bool should_quit = false;
@@ -121,39 +112,47 @@ static void init_all_anims()
     anim_bullet_1_vertical = animation_create(adef_bullet_1_vertical, false);
 }
 
-// on hit methods
-void player_on_hit(Body *self, Body *other, Hit hit)
+handle_player_shooting(Player *player)
 {
-    if (other->collision_layer == COLLISION_LAYER_ENEMY)
+    if (player->weapon->current_capacity > 0) // only generate bullet if weapon is loaded
     {
-    }
-}
+        vec2 bullet_position = {player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]};
+        vec2 bullet_velocity = {0, 0};
+        Animation *bullet_anim = anim_bullet_1_horizontal;
+        if (player->direction == UP)
+        {
+            bullet_position[1] += 25;
+            bullet_velocity[1] = 1200;
+            bullet_anim = anim_bullet_1_vertical;
+        }
+        else if (player->direction == RIGHT)
+        {
+            bullet_position[0] += 25;
+            bullet_velocity[0] = 1200;
+        }
+        else if (player->direction == DOWN)
+        {
+            bullet_position[1] -= 25;
+            bullet_velocity[1] = -1200;
+            bullet_anim = anim_bullet_1_vertical;
+        }
+        else if (player->direction == LEFT)
+        {
+            bullet_position[0] -= 25;
+            bullet_velocity[0] = -1200;
+        }
+        else
+        {
+            ERROR_EXIT(NULL, "Player direction not recognized");
+        }
 
-void player_on_hit_static(Body *self, Static_Body *other, Hit hit)
-{
-}
+        Entity *bullet = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
+        bullet->animation = bullet_anim;
+        bullet->body->velocity[0] = bullet_velocity[0];
+        bullet->body->velocity[1] = bullet_velocity[1];
 
-void bullet_on_hit(Body *self, Body *other, Hit hit)
-{
-    // mark for body (and entity) for destruction
-    self->is_active = false;
-}
-
-void bullet_on_hit_static(Body *self, Static_Body *other, Hit hit)
-{
-    // mark for body (and entity) for destruction
-    self->is_active = false;
-}
-
-void enemy_on_hit_static(Body *self, Static_Body *other, Hit hit)
-{
-    if (hit.normal[0] > 0)
-    {
-        self->velocity[0] = 400;
-    }
-    if (hit.normal[0] < 0)
-    {
-        self->velocity[0] = -400;
+        // decrement weapon capacity
+        player->weapon->current_capacity -= 1;
     }
 }
 
@@ -192,42 +191,8 @@ static void input_handle(Player *player)
     }
     if (global.input.space == KS_PRESSED)
     {
-        // TODO: pull all this to a helper method
-        // create bullet entity, define animation
-        vec2 bullet_position = {player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]};
-        vec2 bullet_velocity = {0, 0};
-        Animation *bullet_anim = anim_bullet_1_horizontal;
-        if (player->direction == UP)
-        {
-            bullet_position[1] += 25;
-            bullet_velocity[1] = 1200;
-            bullet_anim = anim_bullet_1_vertical;
-        }
-        else if (player->direction == RIGHT)
-        {
-            bullet_position[0] += 25;
-            bullet_velocity[0] = 1200;
-        }
-        else if (player->direction == DOWN)
-        {
-            bullet_position[1] -= 25;
-            bullet_velocity[1] = -1200;
-            bullet_anim = anim_bullet_1_vertical;
-        }
-        else if (player->direction == LEFT)
-        {
-            bullet_position[0] -= 25;
-            bullet_velocity[0] = -1200;
-        }
-        else
-        {
-            ERROR_EXIT(NULL, "Player direction not recognized");
-        }
-
-        Entity *bullet = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
-        bullet->animation = bullet_anim;
-        bullet->body->velocity[0] = bullet_velocity[0];
-        bullet->body->velocity[1] = bullet_velocity[1];
+        // handle weapon attribute updates & bullet generation
+        handle_player_shooting(player);
     }
     player->entity->body->velocity[0] = velx;
     player->entity->body->velocity[1] = vely;
@@ -278,16 +243,25 @@ int main(int argc, char *argv[])
     Static_Body *static_body_d = physics_static_body_create((vec2){12.5, height * 0.5 - 12.5}, (vec2){25, height - 25}, COLLISION_LAYER_TERRIAN);
     Static_Body *static_body_e = physics_static_body_create((vec2){width * 0.5, height * 0.5}, (vec2){62.5, 62.5}, COLLISION_LAYER_TERRIAN);
 
-    Entity *entity_a = entity_create((vec2){200, 200}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, NULL, enemy_on_hit_static);
-    Entity *entity_b = entity_create((vec2){300, 300}, (vec2){25, 25}, (vec2){400, 0}, 0, enemy_mask, NULL, enemy_on_hit_static);
+    Entity *entity_a = entity_create((vec2){200, 200}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
+    Entity *entity_b = entity_create((vec2){300, 300}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
+    entity_a->animation = anim_soldier_idle_side;
+    entity_b->animation = anim_soldier_idle_front;
+
+    // init weapon
+    Weapon m16 = {
+        .name = RIFLE,
+        .capacity = 5,
+        .current_capacity = 5,
+        .max_fire_rate = 10,
+    };
 
     // init player
-    Player player_one =
-        {
-            .entity = entity_create((vec2){100, 200}, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static),
-            .direction = RIGHT,
-            .weapon = RIFLE,
-            .health = 100};
+    Player player_one = {
+        .entity = entity_create((vec2){100, 200}, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static),
+        .direction = RIGHT,
+        .weapon = &m16,
+        .health = 100};
 
     // main loop
     while (!should_quit)
@@ -323,8 +297,8 @@ int main(int argc, char *argv[])
         render_aabb((f32 *)static_body_e, WHITE);
 
         // rendering enemies
-        render_aabb((f32 *)(entity_a->body), WHITE);
-        render_aabb((f32 *)(entity_b->body), WHITE);
+        // render_aabb((f32 *)(entity_a->body), WHITE);
+        // render_aabb((f32 *)(entity_b->body), WHITE);
 
         // render animated entities, check if any are marked for deletion (not active OR body is not active)
         usize num_entities = entity_count();
