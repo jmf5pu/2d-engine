@@ -22,6 +22,7 @@
 #include "structs.h"
 #include "collision_behavior.h"
 
+const u8 frame_rate = 30;
 static u32 texture_slots[8] = {0};
 static bool should_quit = false;
 
@@ -32,6 +33,7 @@ Sprite_Sheet p1_sprite_sheet_soldier_idle_back;
 Sprite_Sheet p1_sprite_sheet_soldier_running_back;
 Sprite_Sheet p1_sprite_sheet_soldier_idle_front;
 Sprite_Sheet p1_sprite_sheet_soldier_running_front;
+Sprite_Sheet p1_sprite_sheet_soldier_spawning_side;
 
 static Animation_Definition *p1_adef_soldier_idle_side;
 static Animation_Definition *p1_adef_soldier_running_side;
@@ -39,6 +41,7 @@ static Animation_Definition *p1_adef_soldier_idle_back;
 static Animation_Definition *p1_adef_soldier_running_back;
 static Animation_Definition *p1_adef_soldier_idle_front;
 static Animation_Definition *p1_adef_soldier_running_front;
+static Animation_Definition *p1_adef_soldier_spawning_side;
 
 static Animation *p1_anim_soldier_idle_side;
 static Animation *p1_anim_soldier_running_side;
@@ -46,6 +49,7 @@ static Animation *p1_anim_soldier_idle_back;
 static Animation *p1_anim_soldier_running_back;
 static Animation *p1_anim_soldier_idle_front;
 static Animation *p1_anim_soldier_running_front;
+static Animation *p1_anim_soldier_spawning_side;
 
 // player 2 sprites & anims
 Sprite_Sheet p2_sprite_sheet_soldier_idle_side;
@@ -54,6 +58,7 @@ Sprite_Sheet p2_sprite_sheet_soldier_idle_back;
 Sprite_Sheet p2_sprite_sheet_soldier_running_back;
 Sprite_Sheet p2_sprite_sheet_soldier_idle_front;
 Sprite_Sheet p2_sprite_sheet_soldier_running_front;
+Sprite_Sheet p2_sprite_sheet_soldier_spawning_side;
 
 static Animation_Definition *p2_adef_soldier_idle_side;
 static Animation_Definition *p2_adef_soldier_running_side;
@@ -61,6 +66,7 @@ static Animation_Definition *p2_adef_soldier_idle_back;
 static Animation_Definition *p2_adef_soldier_running_back;
 static Animation_Definition *p2_adef_soldier_idle_front;
 static Animation_Definition *p2_adef_soldier_running_front;
+static Animation_Definition *p2_adef_soldier_spawning_side;
 
 static Animation *p2_anim_soldier_idle_side;
 static Animation *p2_anim_soldier_running_side;
@@ -68,6 +74,7 @@ static Animation *p2_anim_soldier_idle_back;
 static Animation *p2_anim_soldier_running_back;
 static Animation *p2_anim_soldier_idle_front;
 static Animation *p2_anim_soldier_running_front;
+static Animation *p2_anim_soldier_spawning_side;
 
 // bullet sprites & anims
 Sprite_Sheet sprite_sheet_bullet_1_horizontal;
@@ -79,8 +86,13 @@ static Animation_Definition *adef_bullet_1_vertical;
 static Animation *anim_bullet_1_horizontal;
 static Animation *anim_bullet_1_vertical;
 
+// declare players
 static Player player_one;
 static Player player_two;
+
+// init spawn points
+const vec2 spawn_point_one = {100, 200};
+const vec2 spawn_point_two = {150, 200};
 
 Player *get_player_from_body(Body *body)
 {
@@ -101,30 +113,25 @@ Player *get_player_from_body(Body *body)
 void player_on_hit(Body *self, Body *other, Hit hit)
 {
     Player *player = get_player_from_body(self);
-    if (other->collision_layer == COLLISION_LAYER_BULLET && other->is_active)
+    if (other->collision_layer == COLLISION_LAYER_BULLET && other->is_active && self->is_active)
     {
         printf("decrementing %p health from %d to ", player, player->health);
         player->health -= 50;
         printf("%d\n", player->health);
         other->is_active = false; // always mark bullet as inactive
-
-        // check if player is "dead"
-        if (player->health <= 0)
-        {
-            self->is_active = false;
-        }
     }
 }
 // performs render_sprite_sheet_init, animation_defintion_create, and animation_create for all sprite sheets
 static void init_all_anims()
 {
-    // p1 stuff
+    // player_one stuff
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_idle_side, "assets/soldier_1_m16_idle_side.png", 42, 42);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_running_side, "assets/soldier_1_m16_running_side.png", 42, 42);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_idle_back, "assets/soldier_1_m16_idle_back.png", 42, 42);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_running_back, "assets/soldier_1_m16_running_back.png", 42, 42);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_idle_front, "assets/soldier_1_m16_idle_front.png", 42, 42);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_running_front, "assets/soldier_1_m16_running_front.png", 42, 42);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_spawning_side, "assets/soldier_1_spawning_side.png", 42, 42);
 
     p1_adef_soldier_idle_side = animation_definition_create(
         &p1_sprite_sheet_soldier_idle_side,
@@ -162,6 +169,12 @@ static void init_all_anims()
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8},
         8);
+    p1_adef_soldier_spawning_side = animation_definition_create(
+        &p1_sprite_sheet_soldier_spawning_side,
+        (f32[]){0.25, 0.25},
+        (u8[]){0, 0},
+        (u8[]){1, 2},
+        2);
 
     p1_anim_soldier_idle_side = animation_create(p1_adef_soldier_idle_side, false);
     p1_anim_soldier_running_side = animation_create(p1_adef_soldier_running_side, true);
@@ -169,14 +182,16 @@ static void init_all_anims()
     p1_anim_soldier_running_back = animation_create(p1_adef_soldier_running_back, true);
     p1_anim_soldier_idle_front = animation_create(p1_adef_soldier_idle_front, false);
     p1_anim_soldier_running_front = animation_create(p1_adef_soldier_running_front, true);
+    p1_anim_soldier_spawning_side = animation_create(p1_adef_soldier_spawning_side, true);
 
-    // p2 stuff
+    // player_two stuff
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_idle_side, "assets/soldier_1_m16_idle_side.png", 42, 42);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_running_side, "assets/soldier_1_m16_running_side.png", 42, 42);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_idle_back, "assets/soldier_1_m16_idle_back.png", 42, 42);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_running_back, "assets/soldier_1_m16_running_back.png", 42, 42);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_idle_front, "assets/soldier_1_m16_idle_front.png", 42, 42);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_running_front, "assets/soldier_1_m16_running_front.png", 42, 42);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_spawning_side, "assets/soldier_1_spawning_side.png", 42, 42);
 
     p2_adef_soldier_idle_side = animation_definition_create(
         &p2_sprite_sheet_soldier_idle_side,
@@ -198,7 +213,7 @@ static void init_all_anims()
         1);
     p2_adef_soldier_running_back = animation_definition_create(
         &p2_sprite_sheet_soldier_running_back,
-        (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05},
+        (f32[]){0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03},
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
         10);
@@ -210,10 +225,16 @@ static void init_all_anims()
         1);
     p2_adef_soldier_running_front = animation_definition_create(
         &p2_sprite_sheet_soldier_running_front,
-        (f32[]){0.04, 0.04, 0.05, 0.04, 0.04, 0.04, 0.05, 0.04},
+        (f32[]){0.02, 0.02, 0.025, 0.02, 0.02, 0.02, 0.025, 0.02},
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8},
         8);
+    p2_adef_soldier_spawning_side = animation_definition_create(
+        &p2_sprite_sheet_soldier_spawning_side,
+        (f32[]){0.25, 0.25},
+        (u8[]){0, 0},
+        (u8[]){1, 2},
+        2);
 
     p2_anim_soldier_idle_side = animation_create(p2_adef_soldier_idle_side, false);
     p2_anim_soldier_running_side = animation_create(p2_adef_soldier_running_side, true);
@@ -221,6 +242,7 @@ static void init_all_anims()
     p2_anim_soldier_running_back = animation_create(p2_adef_soldier_running_back, true);
     p2_anim_soldier_idle_front = animation_create(p2_adef_soldier_idle_front, false);
     p2_anim_soldier_running_front = animation_create(p2_adef_soldier_running_front, true);
+    p2_anim_soldier_spawning_side = animation_create(p2_adef_soldier_spawning_side, true);
 
     // bullet stuff
     render_sprite_sheet_init(&sprite_sheet_bullet_1_horizontal, "assets/bullet_1_horizontal.png", 5, 5);
@@ -288,10 +310,6 @@ static void input_handle_left_side(Player *player)
 {
     f32 velx = 0;
     f32 vely = 0;
-    if (global.input.escape)
-    {
-        should_quit = true;
-    }
     if (global.input.l_right)
     {
         player->direction = RIGHT;
@@ -363,28 +381,35 @@ static void input_handle_right_side(Player *player)
 // updates player animations based on direction
 static void update_player_animations(Player *player)
 {
-    if (player->direction == RIGHT || player->direction == LEFT)
+    if (player->status == ACTIVE)
     {
-        player->entity->animation = player->entity->body->velocity[0] != 0 ? player->animation_set->side_moving : player->animation_set->side_idle; // anim_soldier_running_side : anim_soldier_idle_side;
-        player->entity->animation->is_flipped = player->direction == LEFT ? true : false;
+        if (player->direction == RIGHT || player->direction == LEFT)
+        {
+            player->entity->animation = player->entity->body->velocity[0] != 0 ? player->animation_set->side_moving : player->animation_set->side_idle; // anim_soldier_running_side : anim_soldier_idle_side;
+            player->entity->animation->is_flipped = player->direction == LEFT ? true : false;
+        }
+        else if (player->direction == UP)
+        {
+            player->entity->animation = player->entity->body->velocity[1] != 0 ? player->animation_set->up_moving : player->animation_set->up_idle; // anim_soldier_running_back : anim_soldier_idle_back;
+        }
+        else if (player->direction == DOWN)
+        {
+            player->entity->animation = player->entity->body->velocity[1] != 0 ? player->animation_set->down_moving : player->animation_set->down_idle; // anim_soldier_running_front : anim_soldier_idle_front;
+        }
+        else
+        {
+            ERROR_EXIT(-1, "Player direction not recognized");
+        }
     }
-    else if (player->direction == UP)
+    else if (player->status == SPAWNING)
     {
-        player->entity->animation = player->entity->body->velocity[1] != 0 ? player->animation_set->up_moving : player->animation_set->up_idle; // anim_soldier_running_back : anim_soldier_idle_back;
-    }
-    else if (player->direction == DOWN)
-    {
-        player->entity->animation = player->entity->body->velocity[1] != 0 ? player->animation_set->down_moving : player->animation_set->down_idle; // anim_soldier_running_front : anim_soldier_idle_front;
-    }
-    else
-    {
-        ERROR_EXIT(-1, "Player direction not recognized");
+        player->entity->animation = player->animation_set->spawning;
     }
 }
 
 int main(int argc, char *argv[])
 {
-    time_init(30);
+    time_init(frame_rate);
     config_init();
     SDL_Window *window = render_init();
     physics_init();
@@ -394,14 +419,15 @@ int main(int argc, char *argv[])
 
     // init player one
     Animation_Set p1_animation_set;
-    player_one.entity = entity_create((vec2){100, 200}, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    player_one.entity = entity_create(spawn_point_one, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
     player_one.animation_set = &(Animation_Set){
         .down_idle = p1_anim_soldier_idle_front,
         .down_moving = p1_anim_soldier_running_front,
         .up_idle = p1_anim_soldier_idle_back,
         .up_moving = p1_anim_soldier_running_back,
         .side_idle = p1_anim_soldier_idle_side,
-        .side_moving = p1_anim_soldier_running_side};
+        .side_moving = p1_anim_soldier_running_side,
+        .spawning = p1_anim_soldier_spawning_side};
     player_one.direction = RIGHT;
     player_one.weapon = &(Weapon){
         .name = RIFLE,
@@ -409,17 +435,22 @@ int main(int argc, char *argv[])
         .current_capacity = 30,
         .max_fire_rate = 10,
     };
+    player_one.status = SPAWNING;
+    player_one.spawn_delay = 5;
+    player_one.spawn_time = 2;
+    player_two.frames_on_status = 0;
     player_one.health = 100;
 
     // init player two
-    player_two.entity = entity_create((vec2){150, 200}, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    player_two.entity = entity_create(spawn_point_two, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
     player_two.animation_set = &(Animation_Set){
         .down_idle = p2_anim_soldier_idle_front,
         .down_moving = p2_anim_soldier_running_front,
         .up_idle = p2_anim_soldier_idle_back,
         .up_moving = p2_anim_soldier_running_back,
         .side_idle = p2_anim_soldier_idle_side,
-        .side_moving = p2_anim_soldier_running_side};
+        .side_moving = p2_anim_soldier_running_side,
+        .spawning = p2_anim_soldier_spawning_side};
     player_two.direction = LEFT;
     player_two.weapon = &(Weapon){
         .name = RIFLE,
@@ -427,6 +458,10 @@ int main(int argc, char *argv[])
         .current_capacity = 30,
         .max_fire_rate = 10,
     };
+    player_two.status = SPAWNING;
+    player_two.spawn_delay = 5;
+    player_two.spawn_time = 2;
+    player_two.frames_on_status = 0;
     player_two.health = 100;
 
     SDL_ShowCursor(false);
@@ -450,10 +485,14 @@ int main(int argc, char *argv[])
     // main loop
     while (!should_quit)
     {
+        // check for game exit
+        if (global.input.escape)
+        {
+            should_quit = true;
+        }
+
         time_update();
-
         SDL_Event event;
-
         while (SDL_PollEvent(&event))
         {
             switch (event.type)
@@ -465,12 +504,17 @@ int main(int argc, char *argv[])
                 break;
             }
         }
-
-        input_update();
+        input_update(); // grab current inputs
 
         // handle left and right player inputs
-        input_handle_left_side(&player_one);
-        input_handle_right_side(&player_two);
+        if (player_one.status == ACTIVE)
+        {
+            input_handle_left_side(&player_one);
+        }
+        if (player_two.status == ACTIVE)
+        {
+            input_handle_right_side(&player_two);
+        }
 
         update_player_animations(&player_one);
         update_player_animations(&player_two);
@@ -521,6 +565,74 @@ int main(int argc, char *argv[])
         }
 
         render_end(window, texture_slots);
+
+        /*
+         * update player statuses for next frame
+         */
+
+        printf("spawning player two delay: %u, waiting until: %u\n", player_two.frames_on_status, (player_two.spawn_delay * global.time.frame_rate));
+        printf("spawning player two time: %u, waiting until: %u\n", player_two.frames_on_status, (player_two.spawn_time * global.time.frame_rate));
+
+        // player one
+        if (player_one.status == INACTIVE && player_one.frames_on_status >= (player_one.spawn_delay * global.time.frame_rate)) // check if spawn delay is up
+        {
+            player_one.status = SPAWNING;
+            player_one.frames_on_status = 0;
+
+            // reset location
+            player_one.entity->body->aabb.position[0] = spawn_point_one[0];
+            player_one.entity->body->aabb.position[1] = spawn_point_one[1];
+
+            // reset health
+            player_one.health = 100;
+
+            // show sprites
+            player_one.entity->is_active = true;
+            player_one.entity->body->is_active = true;
+        }
+        else if (player_one.status == SPAWNING && player_one.frames_on_status >= (player_one.spawn_time * global.time.frame_rate)) // check if spawn time is up
+        {
+            player_one.status = ACTIVE;
+            player_one.frames_on_status = 0;
+        }
+        else if (player_one.health <= 0 && player_one.status == ACTIVE) // check if health is 0
+        {
+            player_one.status = INACTIVE; // TODO: update to dying when animation is added
+            player_one.frames_on_status = 0;
+
+            // hide sprites
+            player_one.entity->is_active = false;
+            player_one.entity->body->is_active = false;
+        }
+
+        // player two
+        if (player_two.status == INACTIVE && player_two.frames_on_status >= (player_two.spawn_delay * global.time.frame_rate))
+        {
+            player_two.status = SPAWNING;
+            player_two.frames_on_status = 0;
+            player_two.entity->body->aabb.position[0] = spawn_point_two[0];
+            player_two.entity->body->aabb.position[1] = spawn_point_two[1];
+            player_two.health = 100;
+            player_two.entity->is_active = true;
+            player_two.entity->body->is_active = true;
+        }
+        else if (player_two.status == SPAWNING && player_two.frames_on_status >= (player_two.spawn_time * global.time.frame_rate))
+        {
+            player_two.status = ACTIVE;
+            player_two.frames_on_status = 0;
+        }
+        else if (player_two.health <= 0 && player_two.status == ACTIVE)
+        {
+            player_two.status = INACTIVE;
+            player_two.frames_on_status = 0;
+            player_two.entity->is_active = false;
+            player_two.entity->body->is_active = false;
+        }
+
+        // update frame counters on both players
+        player_one.frames_on_status++;
+        player_two.frames_on_status++;
+
         time_update_late();
     }
 

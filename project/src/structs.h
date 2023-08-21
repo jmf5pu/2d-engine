@@ -18,6 +18,14 @@ enum Weapon_Name
     RIFLE
 };
 
+enum Player_Status
+{
+    SPAWNING,
+    ACTIVE,
+    DYING,
+    INACTIVE
+};
+
 typedef struct weapon
 {
     enum Weapon_Name name;
@@ -34,6 +42,7 @@ typedef struct animation_set
     Animation *down_moving;
     Animation *side_idle;
     Animation *side_moving;
+    Animation *spawning;
 } Animation_Set;
 
 typedef struct player
@@ -42,6 +51,10 @@ typedef struct player
     Animation_Set *animation_set;
     Weapon *weapon;
     enum Direction direction;
+    enum Player_Status status;
+    u32 spawn_delay;      // time in s from INACTIVE status to SPAWNING status
+    u32 spawn_time;       // time in s from SPAWNING status to ACTIVE status
+    u32 frames_on_status; // # of frames since last status change
     i8 health;
 } Player;
 

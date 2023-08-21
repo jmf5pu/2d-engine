@@ -12,8 +12,10 @@ void player_on_hit_static(Body *self, Static_Body *other, Hit hit)
 void bullet_on_hit(Body *self, Body *other, Hit hit)
 {
     // mark for body (and entity) for destruction
-    self->is_active = false;
-    other->is_active = false;
+    if (other->is_active)
+    {
+        self->is_active = false;
+    }
 }
 
 void bullet_on_hit_static(Body *self, Static_Body *other, Hit hit)
