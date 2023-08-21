@@ -156,40 +156,74 @@ handle_player_shooting(Player *player)
     }
 }
 
-static void input_handle(Player *player)
+static void input_handle_left_side(Player *player)
 {
+    f32 velx = 0;
+    f32 vely = 0;
     if (global.input.escape)
     {
         should_quit = true;
     }
-
-    f32 velx = 0;
-    f32 vely = 0;
-
-    if (global.input.right)
+    if (global.input.l_right)
     {
         player->direction = RIGHT;
         velx += 150;
     }
 
-    if (global.input.left)
+    if (global.input.l_left)
     {
         player->direction = LEFT;
         velx -= 150;
     }
 
-    if (global.input.up)
+    if (global.input.l_up)
     {
         player->direction = UP;
         vely += 150;
     }
 
-    if (global.input.down)
+    if (global.input.l_down)
     {
         player->direction = DOWN;
         vely -= 150;
     }
-    if (global.input.space == KS_PRESSED)
+    if (global.input.l_shoot == KS_PRESSED)
+    {
+        // handle weapon attribute updates & bullet generation
+        handle_player_shooting(player);
+    }
+    player->entity->body->velocity[0] = velx;
+    player->entity->body->velocity[1] = vely;
+}
+
+static void input_handle_right_side(Player *player)
+{
+    f32 velx = 0;
+    f32 vely = 0;
+    if (global.input.r_right)
+    {
+        player->direction = RIGHT;
+        velx += 150;
+    }
+
+    if (global.input.r_left)
+    {
+        player->direction = LEFT;
+        velx -= 150;
+    }
+
+    if (global.input.r_up)
+    {
+        player->direction = UP;
+        vely += 150;
+    }
+
+    if (global.input.r_down)
+    {
+        player->direction = DOWN;
+        vely -= 150;
+    }
+    if (global.input.r_shoot == KS_PRESSED)
     {
         // handle weapon attribute updates & bullet generation
         handle_player_shooting(player);
@@ -244,23 +278,31 @@ int main(int argc, char *argv[])
     Static_Body *static_body_e = physics_static_body_create((vec2){width * 0.5, height * 0.5}, (vec2){62.5, 62.5}, COLLISION_LAYER_TERRIAN);
 
     Entity *entity_a = entity_create((vec2){200, 200}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
-    Entity *entity_b = entity_create((vec2){300, 300}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
+    // Entity *entity_b = entity_create((vec2){300, 300}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
     entity_a->animation = anim_soldier_idle_side;
-    entity_b->animation = anim_soldier_idle_front;
+    // entity_b->animation = anim_soldier_idle_front;
 
-    // init weapon
-    Weapon m16 = {
-        .name = RIFLE,
-        .capacity = 5,
-        .current_capacity = 5,
-        .max_fire_rate = 10,
-    };
-
-    // init player
+    // init players
     Player player_one = {
         .entity = entity_create((vec2){100, 200}, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static),
         .direction = RIGHT,
-        .weapon = &m16,
+        .weapon = &(Weapon){
+            .name = RIFLE,
+            .capacity = 30,
+            .current_capacity = 30,
+            .max_fire_rate = 10,
+        },
+        .health = 100};
+
+    Player player_two = {
+        .entity = entity_create((vec2){100, 200}, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static),
+        .direction = LEFT,
+        .weapon = &(Weapon){
+            .name = RIFLE,
+            .capacity = 30,
+            .current_capacity = 30,
+            .max_fire_rate = 10,
+        },
         .health = 100};
 
     // main loop
@@ -283,8 +325,14 @@ int main(int argc, char *argv[])
         }
 
         input_update();
-        input_handle(&player_one);
+
+        // handle left and right player inputs
+        input_handle_right_side(&player_two);
+        input_handle_left_side(&player_one);
+
         update_player_animations(&player_one);
+        update_player_animations(&player_two);
+
         physics_update();
         animation_update(global.time.delta);
         render_begin();
@@ -329,14 +377,6 @@ int main(int argc, char *argv[])
                 continue;
             }
 
-            // if (player_one.entity->body->velocity[0] < 0)
-            // {
-            //     player_one.entity->animation->is_flipped = true;
-            // }
-            // else if (player_one.entity->body->velocity[0] > 0)
-            // {
-            //     player_one.entity->animation->is_flipped = false;
-            // }
             animation_render(entity->animation, entity->body->aabb.position, WHITE, texture_slots);
         }
 
