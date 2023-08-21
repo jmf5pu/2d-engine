@@ -49,6 +49,42 @@ static Animation *anim_soldier_running_front;
 static Animation *anim_bullet_1_horizontal;
 static Animation *anim_bullet_1_vertical;
 
+static Player player_one;
+static Player player_two;
+
+Player *get_player_from_body(Body *body)
+{
+    if (player_one.entity->body == body)
+    {
+        return &player_one;
+    }
+    else if (player_two.entity->body == body)
+    {
+        return &player_two;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+void player_on_hit(Body *self, Body *other, Hit hit)
+{
+    Player *player = get_player_from_body(self);
+    if (other->collision_layer == COLLISION_LAYER_BULLET && other->is_active)
+    {
+        printf("decrementing %p health from %d to ", player, player->health);
+        player->health -= 50;
+        printf("%d\n", player->health);
+        other->is_active = false; // always mark bullet as inactive
+
+        // check if player is "dead"
+        if (player->health <= 0)
+        {
+            self->is_active = false;
+        }
+    }
+}
 // performs render_sprite_sheet_init, animation_defintion_create, and animation_create for all sprite sheets
 static void init_all_anims()
 {
@@ -112,8 +148,9 @@ static void init_all_anims()
     anim_bullet_1_vertical = animation_create(adef_bullet_1_vertical, false);
 }
 
-handle_player_shooting(Player *player)
+static void handle_player_shooting(Player *player)
 {
+    printf("in handle player shooting\n");
     if (player->weapon->current_capacity > 0) // only generate bullet if weapon is loaded
     {
         vec2 bullet_position = {player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]};
@@ -145,7 +182,6 @@ handle_player_shooting(Player *player)
         {
             ERROR_EXIT(NULL, "Player direction not recognized");
         }
-
         Entity *bullet = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
         bullet->animation = bullet_anim;
         bullet->body->velocity[0] = bullet_velocity[0];
@@ -262,7 +298,28 @@ int main(int argc, char *argv[])
     physics_init();
     entity_init();
     animation_init(); // creates animation storage
-    init_all_anims(); // initiatilizes all our animations
+    init_all_anims(); // initializes all our animations
+
+    // init players
+    player_one.entity = entity_create((vec2){100, 200}, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    player_one.direction = RIGHT;
+    player_one.weapon = &(Weapon){
+        .name = RIFLE,
+        .capacity = 30,
+        .current_capacity = 30,
+        .max_fire_rate = 10,
+    };
+    player_one.health = 100;
+
+    player_two.entity = entity_create((vec2){150, 200}, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    player_two.direction = LEFT;
+    player_two.weapon = &(Weapon){
+        .name = RIFLE,
+        .capacity = 30,
+        .current_capacity = 30,
+        .max_fire_rate = 10,
+    };
+    player_two.health = 100;
 
     SDL_ShowCursor(false);
 
@@ -277,33 +334,10 @@ int main(int argc, char *argv[])
     Static_Body *static_body_d = physics_static_body_create((vec2){12.5, height * 0.5 - 12.5}, (vec2){25, height - 25}, COLLISION_LAYER_TERRIAN);
     Static_Body *static_body_e = physics_static_body_create((vec2){width * 0.5, height * 0.5}, (vec2){62.5, 62.5}, COLLISION_LAYER_TERRIAN);
 
-    Entity *entity_a = entity_create((vec2){200, 200}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
-    // Entity *entity_b = entity_create((vec2){300, 300}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
-    entity_a->animation = anim_soldier_idle_side;
-    // entity_b->animation = anim_soldier_idle_front;
-
-    // init players
-    Player player_one = {
-        .entity = entity_create((vec2){100, 200}, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static),
-        .direction = RIGHT,
-        .weapon = &(Weapon){
-            .name = RIFLE,
-            .capacity = 30,
-            .current_capacity = 30,
-            .max_fire_rate = 10,
-        },
-        .health = 100};
-
-    Player player_two = {
-        .entity = entity_create((vec2){100, 200}, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static),
-        .direction = LEFT,
-        .weapon = &(Weapon){
-            .name = RIFLE,
-            .capacity = 30,
-            .current_capacity = 30,
-            .max_fire_rate = 10,
-        },
-        .health = 100};
+    // Entity *entity_a = entity_create((vec2){200, 200}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
+    //  Entity *entity_b = entity_create((vec2){300, 300}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
+    // entity_a->animation = anim_soldier_idle_side;
+    //  entity_b->animation = anim_soldier_idle_front;
 
     // main loop
     while (!should_quit)
@@ -327,8 +361,8 @@ int main(int argc, char *argv[])
         input_update();
 
         // handle left and right player inputs
-        input_handle_right_side(&player_two);
         input_handle_left_side(&player_one);
+        input_handle_right_side(&player_two);
 
         update_player_animations(&player_one);
         update_player_animations(&player_two);
@@ -349,12 +383,11 @@ int main(int argc, char *argv[])
         // render_aabb((f32 *)(entity_b->body), WHITE);
 
         // render animated entities, check if any are marked for deletion (not active OR body is not active)
-        usize num_entities = entity_count();
-        for (usize i = num_entities - 1; i > 0; --i) // TODO: figure out if it is better to use entity_count() directly here;
+        int num_entities = (int)entity_count();
+        for (int i = num_entities - 1; i >= 0; --i) // TODO: figure out if it is better to use entity_count() directly here;
         {
             Entity *entity = entity_get(i);
             // destroy any entities that are inactive or have physics bodies that are inactive
-
             if (entity == NULL)
             {
                 continue;
@@ -367,7 +400,6 @@ int main(int argc, char *argv[])
 
             if (!entity->is_active || !entity->body->is_active)
             {
-                // entity_destroy(entity);
                 continue;
             }
 
@@ -376,7 +408,6 @@ int main(int argc, char *argv[])
             {
                 continue;
             }
-
             animation_render(entity->animation, entity->body->aabb.position, WHITE, texture_slots);
         }
 

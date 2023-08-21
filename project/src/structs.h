@@ -2,6 +2,7 @@
 #define STRUCTS_H
 
 #include "engine/entity.h"
+#include "engine/types.h"
 
 enum Direction
 {
@@ -19,9 +20,9 @@ enum Weapon_Name
 typedef struct weapon
 {
     enum Weapon_Name name;
-    u8 capacity;
-    u8 current_capacity;
-    u8 max_fire_rate;
+    i8 capacity;
+    i8 current_capacity;
+    i8 max_fire_rate;
 } Weapon;
 
 typedef struct player
@@ -29,7 +30,7 @@ typedef struct player
     Entity *entity;
     Weapon *weapon;
     enum Direction direction;
-    u8 health;
+    i8 health;
 } Player;
 
 #endif

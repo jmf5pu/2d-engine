@@ -6,6 +6,7 @@
 #include "physics.h"
 #include "types.h"
 #include "animation.h"
+
 typedef struct entity
 {
     Body *body;
