@@ -25,30 +25,57 @@
 static u32 texture_slots[8] = {0};
 static bool should_quit = false;
 
-Sprite_Sheet sprite_sheet_soldier_idle_side;
-Sprite_Sheet sprite_sheet_soldier_running_side;
-Sprite_Sheet sprite_sheet_soldier_idle_back;
-Sprite_Sheet sprite_sheet_soldier_running_back;
-Sprite_Sheet sprite_sheet_soldier_idle_front;
-Sprite_Sheet sprite_sheet_soldier_running_front;
+// player 1 sprites & anims
+Sprite_Sheet p1_sprite_sheet_soldier_idle_side;
+Sprite_Sheet p1_sprite_sheet_soldier_running_side;
+Sprite_Sheet p1_sprite_sheet_soldier_idle_back;
+Sprite_Sheet p1_sprite_sheet_soldier_running_back;
+Sprite_Sheet p1_sprite_sheet_soldier_idle_front;
+Sprite_Sheet p1_sprite_sheet_soldier_running_front;
+
+static Animation_Definition *p1_adef_soldier_idle_side;
+static Animation_Definition *p1_adef_soldier_running_side;
+static Animation_Definition *p1_adef_soldier_idle_back;
+static Animation_Definition *p1_adef_soldier_running_back;
+static Animation_Definition *p1_adef_soldier_idle_front;
+static Animation_Definition *p1_adef_soldier_running_front;
+
+static Animation *p1_anim_soldier_idle_side;
+static Animation *p1_anim_soldier_running_side;
+static Animation *p1_anim_soldier_idle_back;
+static Animation *p1_anim_soldier_running_back;
+static Animation *p1_anim_soldier_idle_front;
+static Animation *p1_anim_soldier_running_front;
+
+// player 2 sprites & anims
+Sprite_Sheet p2_sprite_sheet_soldier_idle_side;
+Sprite_Sheet p2_sprite_sheet_soldier_running_side;
+Sprite_Sheet p2_sprite_sheet_soldier_idle_back;
+Sprite_Sheet p2_sprite_sheet_soldier_running_back;
+Sprite_Sheet p2_sprite_sheet_soldier_idle_front;
+Sprite_Sheet p2_sprite_sheet_soldier_running_front;
+
+static Animation_Definition *p2_adef_soldier_idle_side;
+static Animation_Definition *p2_adef_soldier_running_side;
+static Animation_Definition *p2_adef_soldier_idle_back;
+static Animation_Definition *p2_adef_soldier_running_back;
+static Animation_Definition *p2_adef_soldier_idle_front;
+static Animation_Definition *p2_adef_soldier_running_front;
+
+static Animation *p2_anim_soldier_idle_side;
+static Animation *p2_anim_soldier_running_side;
+static Animation *p2_anim_soldier_idle_back;
+static Animation *p2_anim_soldier_running_back;
+static Animation *p2_anim_soldier_idle_front;
+static Animation *p2_anim_soldier_running_front;
+
+// bullet sprites & anims
 Sprite_Sheet sprite_sheet_bullet_1_horizontal;
 Sprite_Sheet sprite_sheet_bullet_1_vertical;
 
-static Animation_Definition *adef_soldier_idle_side;
-static Animation_Definition *adef_soldier_running_side;
-static Animation_Definition *adef_soldier_idle_back;
-static Animation_Definition *adef_soldier_running_back;
-static Animation_Definition *adef_soldier_idle_front;
-static Animation_Definition *adef_soldier_running_front;
 static Animation_Definition *adef_bullet_1_horizontal;
 static Animation_Definition *adef_bullet_1_vertical;
 
-static Animation *anim_soldier_idle_side;
-static Animation *anim_soldier_running_side;
-static Animation *anim_soldier_idle_back;
-static Animation *anim_soldier_running_back;
-static Animation *anim_soldier_idle_front;
-static Animation *anim_soldier_running_front;
 static Animation *anim_bullet_1_horizontal;
 static Animation *anim_bullet_1_vertical;
 
@@ -91,51 +118,113 @@ void player_on_hit(Body *self, Body *other, Hit hit)
 // performs render_sprite_sheet_init, animation_defintion_create, and animation_create for all sprite sheets
 static void init_all_anims()
 {
-    render_sprite_sheet_init(&sprite_sheet_soldier_idle_side, "assets/soldier_1_m16_idle_side.png", 42, 42);
-    render_sprite_sheet_init(&sprite_sheet_soldier_running_side, "assets/soldier_1_m16_running_side.png", 42, 42);
-    render_sprite_sheet_init(&sprite_sheet_soldier_idle_back, "assets/soldier_1_m16_idle_back.png", 42, 42);
-    render_sprite_sheet_init(&sprite_sheet_soldier_running_back, "assets/soldier_1_m16_running_back.png", 42, 42);
-    render_sprite_sheet_init(&sprite_sheet_soldier_idle_front, "assets/soldier_1_m16_idle_front.png", 42, 42);
-    render_sprite_sheet_init(&sprite_sheet_soldier_running_front, "assets/soldier_1_m16_running_front.png", 42, 42);
-    render_sprite_sheet_init(&sprite_sheet_bullet_1_horizontal, "assets/bullet_1_horizontal.png", 5, 5);
-    render_sprite_sheet_init(&sprite_sheet_bullet_1_vertical, "assets/bullet_1_vertical.png", 5, 5);
+    // p1 stuff
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_idle_side, "assets/soldier_1_m16_idle_side.png", 42, 42);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_running_side, "assets/soldier_1_m16_running_side.png", 42, 42);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_idle_back, "assets/soldier_1_m16_idle_back.png", 42, 42);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_running_back, "assets/soldier_1_m16_running_back.png", 42, 42);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_idle_front, "assets/soldier_1_m16_idle_front.png", 42, 42);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_running_front, "assets/soldier_1_m16_running_front.png", 42, 42);
 
-    adef_soldier_idle_side = animation_definition_create(
-        &sprite_sheet_soldier_idle_side,
+    p1_adef_soldier_idle_side = animation_definition_create(
+        &p1_sprite_sheet_soldier_idle_side,
         (f32[]){0},
         (u8[]){0},
         (u8[]){0},
         1);
-    adef_soldier_running_side = animation_definition_create(
-        &sprite_sheet_soldier_running_side,
+    p1_adef_soldier_running_side = animation_definition_create(
+        &p1_sprite_sheet_soldier_running_side,
         (f32[]){0.03, 0.03, 0.03, 0.04, 0.03, 0.03, 0.03, 0.03, 0.03, 0.04, 0.03, 0.03},
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
         12);
-    adef_soldier_idle_back = animation_definition_create(
-        &sprite_sheet_soldier_idle_back,
+    p1_adef_soldier_idle_back = animation_definition_create(
+        &p1_sprite_sheet_soldier_idle_back,
         (f32[]){0},
         (u8[]){0},
         (u8[]){0},
         1);
-    adef_soldier_running_back = animation_definition_create(
-        &sprite_sheet_soldier_running_back,
+    p1_adef_soldier_running_back = animation_definition_create(
+        &p1_sprite_sheet_soldier_running_back,
         (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05},
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
         10);
-    adef_soldier_idle_front = animation_definition_create(
-        &sprite_sheet_soldier_idle_front,
+    p1_adef_soldier_idle_front = animation_definition_create(
+        &p1_sprite_sheet_soldier_idle_front,
         (f32[]){0},
         (u8[]){0},
         (u8[]){0},
         1);
-    adef_soldier_running_front = animation_definition_create(
-        &sprite_sheet_soldier_running_front,
+    p1_adef_soldier_running_front = animation_definition_create(
+        &p1_sprite_sheet_soldier_running_front,
         (f32[]){0.04, 0.04, 0.05, 0.04, 0.04, 0.04, 0.05, 0.04},
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8},
         8);
+
+    p1_anim_soldier_idle_side = animation_create(p1_adef_soldier_idle_side, false);
+    p1_anim_soldier_running_side = animation_create(p1_adef_soldier_running_side, true);
+    p1_anim_soldier_idle_back = animation_create(p1_adef_soldier_idle_back, false);
+    p1_anim_soldier_running_back = animation_create(p1_adef_soldier_running_back, true);
+    p1_anim_soldier_idle_front = animation_create(p1_adef_soldier_idle_front, false);
+    p1_anim_soldier_running_front = animation_create(p1_adef_soldier_running_front, true);
+
+    // p2 stuff
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_idle_side, "assets/soldier_1_m16_idle_side.png", 42, 42);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_running_side, "assets/soldier_1_m16_running_side.png", 42, 42);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_idle_back, "assets/soldier_1_m16_idle_back.png", 42, 42);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_running_back, "assets/soldier_1_m16_running_back.png", 42, 42);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_idle_front, "assets/soldier_1_m16_idle_front.png", 42, 42);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_running_front, "assets/soldier_1_m16_running_front.png", 42, 42);
+
+    p2_adef_soldier_idle_side = animation_definition_create(
+        &p2_sprite_sheet_soldier_idle_side,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    p2_adef_soldier_running_side = animation_definition_create(
+        &p2_sprite_sheet_soldier_running_side,
+        (f32[]){0.03, 0.03, 0.03, 0.04, 0.03, 0.03, 0.03, 0.03, 0.03, 0.04, 0.03, 0.03},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
+        12);
+    p2_adef_soldier_idle_back = animation_definition_create(
+        &p2_sprite_sheet_soldier_idle_back,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    p2_adef_soldier_running_back = animation_definition_create(
+        &p2_sprite_sheet_soldier_running_back,
+        (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        10);
+    p2_adef_soldier_idle_front = animation_definition_create(
+        &p2_sprite_sheet_soldier_idle_front,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    p2_adef_soldier_running_front = animation_definition_create(
+        &p2_sprite_sheet_soldier_running_front,
+        (f32[]){0.04, 0.04, 0.05, 0.04, 0.04, 0.04, 0.05, 0.04},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6, 7, 8},
+        8);
+
+    p2_anim_soldier_idle_side = animation_create(p2_adef_soldier_idle_side, false);
+    p2_anim_soldier_running_side = animation_create(p2_adef_soldier_running_side, true);
+    p2_anim_soldier_idle_back = animation_create(p2_adef_soldier_idle_back, false);
+    p2_anim_soldier_running_back = animation_create(p2_adef_soldier_running_back, true);
+    p2_anim_soldier_idle_front = animation_create(p2_adef_soldier_idle_front, false);
+    p2_anim_soldier_running_front = animation_create(p2_adef_soldier_running_front, true);
+
+    // bullet stuff
+    render_sprite_sheet_init(&sprite_sheet_bullet_1_horizontal, "assets/bullet_1_horizontal.png", 5, 5);
+    render_sprite_sheet_init(&sprite_sheet_bullet_1_vertical, "assets/bullet_1_vertical.png", 5, 5);
     adef_bullet_1_horizontal = animation_definition_create(
         &sprite_sheet_bullet_1_horizontal,
         (f32[]){0},
@@ -148,20 +237,12 @@ static void init_all_anims()
         (u8[]){0},
         (u8[]){0},
         1);
-
-    anim_soldier_idle_side = animation_create(adef_soldier_idle_side, false);
-    anim_soldier_running_side = animation_create(adef_soldier_running_side, true);
-    anim_soldier_idle_back = animation_create(adef_soldier_idle_back, false);
-    anim_soldier_running_back = animation_create(adef_soldier_running_back, true);
-    anim_soldier_idle_front = animation_create(adef_soldier_idle_front, false);
-    anim_soldier_running_front = animation_create(adef_soldier_running_front, true);
     anim_bullet_1_horizontal = animation_create(adef_bullet_1_horizontal, false);
     anim_bullet_1_vertical = animation_create(adef_bullet_1_vertical, false);
 }
 
 static void handle_player_shooting(Player *player)
 {
-    printf("in handle player shooting\n");
     if (player->weapon->current_capacity > 0) // only generate bullet if weapon is loaded
     {
         vec2 bullet_position = {player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]};
@@ -284,16 +365,16 @@ static void update_player_animations(Player *player)
 {
     if (player->direction == RIGHT || player->direction == LEFT)
     {
-        player->entity->animation = player->entity->body->velocity[0] != 0 ? anim_soldier_running_side : anim_soldier_idle_side;
+        player->entity->animation = player->entity->body->velocity[0] != 0 ? player->animation_set->side_moving : player->animation_set->side_idle; // anim_soldier_running_side : anim_soldier_idle_side;
         player->entity->animation->is_flipped = player->direction == LEFT ? true : false;
     }
     else if (player->direction == UP)
     {
-        player->entity->animation = player->entity->body->velocity[1] != 0 ? anim_soldier_running_back : anim_soldier_idle_back;
+        player->entity->animation = player->entity->body->velocity[1] != 0 ? player->animation_set->up_moving : player->animation_set->up_idle; // anim_soldier_running_back : anim_soldier_idle_back;
     }
     else if (player->direction == DOWN)
     {
-        player->entity->animation = player->entity->body->velocity[1] != 0 ? anim_soldier_running_front : anim_soldier_idle_front;
+        player->entity->animation = player->entity->body->velocity[1] != 0 ? player->animation_set->down_moving : player->animation_set->down_idle; // anim_soldier_running_front : anim_soldier_idle_front;
     }
     else
     {
@@ -311,8 +392,16 @@ int main(int argc, char *argv[])
     animation_init(); // creates animation storage
     init_all_anims(); // initializes all our animations
 
-    // init players
+    // init player one
+    Animation_Set p1_animation_set;
     player_one.entity = entity_create((vec2){100, 200}, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    player_one.animation_set = &(Animation_Set){
+        .down_idle = p1_anim_soldier_idle_front,
+        .down_moving = p1_anim_soldier_running_front,
+        .up_idle = p1_anim_soldier_idle_back,
+        .up_moving = p1_anim_soldier_running_back,
+        .side_idle = p1_anim_soldier_idle_side,
+        .side_moving = p1_anim_soldier_running_side};
     player_one.direction = RIGHT;
     player_one.weapon = &(Weapon){
         .name = RIFLE,
@@ -322,7 +411,15 @@ int main(int argc, char *argv[])
     };
     player_one.health = 100;
 
+    // init player two
     player_two.entity = entity_create((vec2){150, 200}, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    player_two.animation_set = &(Animation_Set){
+        .down_idle = p2_anim_soldier_idle_front,
+        .down_moving = p2_anim_soldier_running_front,
+        .up_idle = p2_anim_soldier_idle_back,
+        .up_moving = p2_anim_soldier_running_back,
+        .side_idle = p2_anim_soldier_idle_side,
+        .side_moving = p2_anim_soldier_running_side};
     player_two.direction = LEFT;
     player_two.weapon = &(Weapon){
         .name = RIFLE,

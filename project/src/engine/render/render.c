@@ -327,9 +327,16 @@ void render_sprite_sheet_frame(Sprite_Sheet *sprite_sheet, f32 row, f32 column, 
     vec2 bottom_left = {position[0] - size[0] * 0.5, position[1] - size[1] * 0.5};
 
     i32 texture_slot = try_insert_texture(texture_slots, sprite_sheet->texture_id);
+
+    // check if buffer is full, is so, flush buffer and try again TODO: revisit this, some textures still are shaky
     if (texture_slot == -1)
     {
-        // TODO: Flush buffer
+        memset(texture_slots, 0, sizeof(u32) * 8);
+        i32 texture_slot = try_insert_texture(texture_slots, sprite_sheet->texture_id);
+        if (texture_slot == -1)
+        {
+            printf("couldn't insert texture slot!\n");
+        }
     }
     append_quad(bottom_left, size, uvs, color, (f32)texture_slot);
 }
