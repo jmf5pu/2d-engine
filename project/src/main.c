@@ -28,6 +28,7 @@ static bool should_quit = false;
 Sprite_Sheet sprite_sheet_soldier_idle_side;
 Sprite_Sheet sprite_sheet_soldier_running_side;
 Sprite_Sheet sprite_sheet_soldier_idle_back;
+Sprite_Sheet sprite_sheet_soldier_running_back;
 Sprite_Sheet sprite_sheet_soldier_idle_front;
 Sprite_Sheet sprite_sheet_soldier_running_front;
 Sprite_Sheet sprite_sheet_bullet_1_horizontal;
@@ -36,6 +37,7 @@ Sprite_Sheet sprite_sheet_bullet_1_vertical;
 static Animation_Definition *adef_soldier_idle_side;
 static Animation_Definition *adef_soldier_running_side;
 static Animation_Definition *adef_soldier_idle_back;
+static Animation_Definition *adef_soldier_running_back;
 static Animation_Definition *adef_soldier_idle_front;
 static Animation_Definition *adef_soldier_running_front;
 static Animation_Definition *adef_bullet_1_horizontal;
@@ -44,6 +46,7 @@ static Animation_Definition *adef_bullet_1_vertical;
 static Animation *anim_soldier_idle_side;
 static Animation *anim_soldier_running_side;
 static Animation *anim_soldier_idle_back;
+static Animation *anim_soldier_running_back;
 static Animation *anim_soldier_idle_front;
 static Animation *anim_soldier_running_front;
 static Animation *anim_bullet_1_horizontal;
@@ -91,6 +94,7 @@ static void init_all_anims()
     render_sprite_sheet_init(&sprite_sheet_soldier_idle_side, "assets/soldier_1_m16_idle_side.png", 42, 42);
     render_sprite_sheet_init(&sprite_sheet_soldier_running_side, "assets/soldier_1_m16_running_side.png", 42, 42);
     render_sprite_sheet_init(&sprite_sheet_soldier_idle_back, "assets/soldier_1_m16_idle_back.png", 42, 42);
+    render_sprite_sheet_init(&sprite_sheet_soldier_running_back, "assets/soldier_1_m16_running_back.png", 42, 42);
     render_sprite_sheet_init(&sprite_sheet_soldier_idle_front, "assets/soldier_1_m16_idle_front.png", 42, 42);
     render_sprite_sheet_init(&sprite_sheet_soldier_running_front, "assets/soldier_1_m16_running_front.png", 42, 42);
     render_sprite_sheet_init(&sprite_sheet_bullet_1_horizontal, "assets/bullet_1_horizontal.png", 5, 5);
@@ -114,6 +118,12 @@ static void init_all_anims()
         (u8[]){0},
         (u8[]){0},
         1);
+    adef_soldier_running_back = animation_definition_create(
+        &sprite_sheet_soldier_running_back,
+        (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        10);
     adef_soldier_idle_front = animation_definition_create(
         &sprite_sheet_soldier_idle_front,
         (f32[]){0},
@@ -142,6 +152,7 @@ static void init_all_anims()
     anim_soldier_idle_side = animation_create(adef_soldier_idle_side, false);
     anim_soldier_running_side = animation_create(adef_soldier_running_side, true);
     anim_soldier_idle_back = animation_create(adef_soldier_idle_back, false);
+    anim_soldier_running_back = animation_create(adef_soldier_running_back, true);
     anim_soldier_idle_front = animation_create(adef_soldier_idle_front, false);
     anim_soldier_running_front = animation_create(adef_soldier_running_front, true);
     anim_bullet_1_horizontal = animation_create(adef_bullet_1_horizontal, false);
@@ -278,7 +289,7 @@ static void update_player_animations(Player *player)
     }
     else if (player->direction == UP)
     {
-        player->entity->animation = anim_soldier_idle_back;
+        player->entity->animation = player->entity->body->velocity[1] != 0 ? anim_soldier_running_back : anim_soldier_idle_back;
     }
     else if (player->direction == DOWN)
     {
@@ -387,6 +398,7 @@ int main(int argc, char *argv[])
         for (int i = num_entities - 1; i >= 0; --i) // TODO: figure out if it is better to use entity_count() directly here;
         {
             Entity *entity = entity_get(i);
+
             // destroy any entities that are inactive or have physics bodies that are inactive
             if (entity == NULL)
             {
