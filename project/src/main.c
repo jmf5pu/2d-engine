@@ -22,9 +22,13 @@
 #include "structs.h"
 #include "collision_behavior.h"
 
-const u8 frame_rate = 30;
-static u32 texture_slots[8] = {0};
-static bool should_quit = false;
+const u8 frame_rate = 30;          // frame rate
+static u32 texture_slots[8] = {0}; // texture slots array for batch rendering
+static bool should_quit = false;   // quit flag
+
+// rendering dimensions
+static f32 render_width;
+static f32 render_height;
 
 // player 1 sprites & anims
 Sprite_Sheet p1_sprite_sheet_soldier_idle_side;
@@ -91,6 +95,9 @@ static Animation_Definition *adef_bullet_1_vertical;
 
 static Animation *anim_bullet_1_horizontal;
 static Animation *anim_bullet_1_vertical;
+
+// prop sprites & anims
+Sprite_Sheet sprite_sheet_shipping_container_red;
 
 // declare players
 static Player player_one;
@@ -282,6 +289,9 @@ static void init_all_anims()
         1);
     anim_bullet_1_horizontal = animation_create(adef_bullet_1_horizontal, false);
     anim_bullet_1_vertical = animation_create(adef_bullet_1_vertical, false);
+
+    // props / map stuff
+    render_sprite_sheet_init(&sprite_sheet_shipping_container_red, "assets/shipping_container_red.png", 80, 130);
 }
 
 static void handle_player_shooting(Player *player)
@@ -487,6 +497,12 @@ int main(int argc, char *argv[])
     animation_init(); // creates animation storage
     init_all_anims(); // initializes all our animations
 
+    // get window & render dimensions
+    i32 window_width, window_height;
+    SDL_GetWindowSize(window, &window_width, &window_height);
+    render_width = window_width / render_get_scale();
+    render_height = window_height / render_get_scale();
+
     // init player one
     player_one.entity = entity_create(spawn_point_one, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
     player_one.animation_set = &(Animation_Set){
@@ -539,20 +555,15 @@ int main(int argc, char *argv[])
 
     SDL_ShowCursor(false);
 
-    i32 window_width, window_height;
-    SDL_GetWindowSize(window, &window_width, &window_height);
-    f32 width = window_width / render_get_scale();
-    f32 height = window_height / render_get_scale();
+    Static_Body *static_body_a = physics_static_body_create((vec2){render_width * 0.5 - 12.5, render_height - 12.5}, (vec2){render_width - 25, 25}, COLLISION_LAYER_TERRIAN);
+    Static_Body *static_body_b = physics_static_body_create((vec2){render_width - 12.5, render_height * 0.5 + 12.5}, (vec2){25, render_height - 25}, COLLISION_LAYER_TERRIAN);
+    Static_Body *static_body_c = physics_static_body_create((vec2){render_width * 0.5 + 12.5, 12.5}, (vec2){render_width - 25, 25}, COLLISION_LAYER_TERRIAN);
+    Static_Body *static_body_d = physics_static_body_create((vec2){12.5, render_height * 0.5 - 12.5}, (vec2){25, render_height - 25}, COLLISION_LAYER_TERRIAN);
+    Static_Body *static_body_e = physics_static_body_create((vec2){render_width * 0.5, render_height * 0.5}, (vec2){62.5, 62.5}, COLLISION_LAYER_TERRIAN);
 
-    Static_Body *static_body_a = physics_static_body_create((vec2){width * 0.5 - 12.5, height - 12.5}, (vec2){width - 25, 25}, COLLISION_LAYER_TERRIAN);
-    Static_Body *static_body_b = physics_static_body_create((vec2){width - 12.5, height * 0.5 + 12.5}, (vec2){25, height - 25}, COLLISION_LAYER_TERRIAN);
-    Static_Body *static_body_c = physics_static_body_create((vec2){width * 0.5 + 12.5, 12.5}, (vec2){width - 25, 25}, COLLISION_LAYER_TERRIAN);
-    Static_Body *static_body_d = physics_static_body_create((vec2){12.5, height * 0.5 - 12.5}, (vec2){25, height - 25}, COLLISION_LAYER_TERRIAN);
-    Static_Body *static_body_e = physics_static_body_create((vec2){width * 0.5, height * 0.5}, (vec2){62.5, 62.5}, COLLISION_LAYER_TERRIAN);
-
-    // Entity *entity_a = entity_create((vec2){200, 200}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
+    Entity *entity_a = entity_create((vec2){200, 200}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
     //  Entity *entity_b = entity_create((vec2){300, 300}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
-    // entity_a->animation = anim_soldier_idle_side;
+    entity_a->animation = p1_anim_soldier_dying_side;
     //  entity_b->animation = anim_soldier_idle_front;
 
     // main loop
@@ -601,7 +612,7 @@ int main(int argc, char *argv[])
         render_aabb((f32 *)static_body_b, WHITE);
         render_aabb((f32 *)static_body_c, WHITE);
         render_aabb((f32 *)static_body_d, WHITE);
-        render_aabb((f32 *)static_body_e, WHITE);
+        // render_aabb((f32 *)static_body_e, WHITE);
 
         // rendering enemies
         // render_aabb((f32 *)(entity_a->body), WHITE);
@@ -635,6 +646,7 @@ int main(int argc, char *argv[])
                 continue;
             }
             animation_render(entity->animation, window, entity->body->aabb.position, WHITE, texture_slots);
+            render_sprite_sheet_frame(&sprite_sheet_shipping_container_red, window, 0, 0, (vec2){render_width / 2.0, render_height / 2.0}, false, (vec4){1, 1, 1, 0.2}, texture_slots);
         }
 
         render_end(window, texture_slots);
