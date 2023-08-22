@@ -432,6 +432,51 @@ static void update_player_animations(Player *player)
     }
 }
 
+// updates player statuses based on frame counter associated with each playaer
+static void update_player_status(Player *player)
+{
+    // check if spawn delay is up
+    if (player->status == INACTIVE && player->frames_on_status >= (player->spawn_delay * global.time.frame_rate))
+    {
+        player->status = SPAWNING;
+        player->frames_on_status = 0;
+
+        // TODO: eventually figure out anther way to figure out where spawn point should be
+        // reset location
+        player->entity->body->aabb.position[0] = spawn_point_one[0];
+        player->entity->body->aabb.position[1] = spawn_point_one[1];
+
+        // reset health
+        player->health = 100;
+
+        // show sprites
+        player->entity->is_active = true;
+        player->entity->body->is_active = true;
+    }
+    // check if spawn time is up
+    else if (player->status == SPAWNING && player->frames_on_status >= (player->spawn_time * global.time.frame_rate))
+    {
+        player->status = ACTIVE;
+        player->frames_on_status = 0;
+    }
+    // check if health is 0
+    else if (player->health <= 0 && player->status == ACTIVE)
+    {
+        player->status = DESPAWNING;
+        player->frames_on_status = 0;
+    }
+    // check if death animation is complete
+    else if (player->status == DESPAWNING && player->frames_on_status >= (player->despawn_time * global.time.frame_rate))
+    {
+        player->status = INACTIVE;
+        player->frames_on_status = 0;
+
+        // hide sprites
+        player->entity->is_active = false;
+        player->entity->body->is_active = false;
+    }
+}
+
 int main(int argc, char *argv[])
 {
     time_init(frame_rate);
@@ -594,77 +639,9 @@ int main(int argc, char *argv[])
 
         render_end(window, texture_slots);
 
-        /*
-         * update player statuses for next frame
-         */
-
-        // player one
-        if (player_one.status == INACTIVE && player_one.frames_on_status >= (player_one.spawn_delay * global.time.frame_rate)) // check if spawn delay is up
-        {
-            player_one.status = SPAWNING;
-            player_one.frames_on_status = 0;
-
-            // reset location
-            player_one.entity->body->aabb.position[0] = spawn_point_one[0];
-            player_one.entity->body->aabb.position[1] = spawn_point_one[1];
-
-            // reset health
-            player_one.health = 100;
-
-            // show sprites
-            player_one.entity->is_active = true;
-            player_one.entity->body->is_active = true;
-        }
-        else if (player_one.status == SPAWNING && player_one.frames_on_status >= (player_one.spawn_time * global.time.frame_rate)) // check if spawn time is up
-        {
-            player_one.status = ACTIVE;
-            player_one.frames_on_status = 0;
-        }
-        else if (player_one.health <= 0 && player_one.status == ACTIVE) // check if health is 0
-        {
-            player_one.status = DESPAWNING;
-            player_one.frames_on_status = 0;
-        }
-        else if (player_one.status == DESPAWNING && player_one.frames_on_status >= (player_one.despawn_time * global.time.frame_rate))
-        {
-            player_one.status = INACTIVE;
-            player_one.frames_on_status = 0;
-
-            // hide sprites
-            player_one.entity->is_active = false;
-            player_one.entity->body->is_active = false;
-        }
-
-        // player two
-        if (player_two.status == INACTIVE && player_two.frames_on_status >= (player_two.spawn_delay * global.time.frame_rate))
-        {
-            player_two.status = SPAWNING;
-            player_two.frames_on_status = 0;
-            player_two.entity->body->aabb.position[0] = spawn_point_two[0];
-            player_two.entity->body->aabb.position[1] = spawn_point_two[1];
-            player_two.health = 100;
-            player_two.entity->is_active = true;
-            player_two.entity->body->is_active = true;
-        }
-        else if (player_two.status == SPAWNING && player_two.frames_on_status >= (player_two.spawn_time * global.time.frame_rate))
-        {
-            player_two.status = ACTIVE;
-            player_two.frames_on_status = 0;
-        }
-        else if (player_two.health <= 0 && player_two.status == ACTIVE)
-        {
-            player_two.status = DESPAWNING;
-            player_two.frames_on_status = 0;
-        }
-        else if (player_two.status == DESPAWNING && player_two.frames_on_status >= (player_two.despawn_time * global.time.frame_rate))
-        {
-            player_two.status = INACTIVE;
-            player_two.frames_on_status = 0;
-
-            // hide sprites
-            player_two.entity->is_active = false;
-            player_two.entity->body->is_active = false;
-        }
+        // update each player status
+        update_player_status(&player_one);
+        update_player_status(&player_two);
 
         // update frame counters on both players
         player_one.frames_on_status++;
