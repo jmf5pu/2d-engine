@@ -7,21 +7,21 @@
 
 static Physics_State_Internal state;
 
-static u32 iterations = 2; // TODO: set to higher later on
+static u32 iterations = 30; // TODO: set to higher later on
 static f32 tick_rate;
 
 void physics_init(void)
 {
-    state.body_list = array_list_create(sizeof(Body), 0);
-    state.static_body_list = array_list_create(sizeof(Static_Body), 0);
+    state.body_list = array_list_create(sizeof(struct Body *), 0);
+    state.static_body_list = array_list_create(sizeof(struct Static_Body *), 0);
 
-    state.gravity = -100;
+    state.gravity = 0;
     state.terminal_velocity = -7000;
 
     tick_rate = 1.f / iterations;
 }
 
-static void update_sweep_result(Hit *result, usize other_id, AABB a, AABB b, vec2 velocity, u8 a_collision_mask, u8 b_collision_layer)
+static void update_sweep_result(Hit *result, usize other_id, AABB a, AABB b, vec2 velocity, u8 a_collision_mask, u8 b_collision_layer) // TODO: bug here
 {
     if ((a_collision_mask & b_collision_layer) == 0)
     {
@@ -55,7 +55,7 @@ static void update_sweep_result(Hit *result, usize other_id, AABB a, AABB b, vec
     }
 }
 
-static Hit sweep_static_bodies(Body *body, vec2 velocity)
+static Hit sweep_static_bodies(Body *body, vec2 velocity) // TODO: bug here
 {
     Hit result = {.time = 0xBEEF}; // time set to some large value
 
@@ -153,13 +153,14 @@ void physics_update(void)
 
     for (u32 i = 0; i < state.body_list->len; ++i)
     {
-        body = array_list_get(state.body_list, i);
+        body = array_list_get(state.body_list, i, "physics_update");
 
-        body->velocity[1] += state.gravity;
-        if (state.terminal_velocity > body->velocity[1])
-        {
-            body->velocity[1] = state.terminal_velocity;
-        }
+        // TODO: Don't need this stuff for a top down game
+        // body->velocity[1] += state.gravity;
+        // if (state.terminal_velocity > body->velocity[1])
+        // {
+        //     body->velocity[1] = state.terminal_velocity;
+        // }
 
         // update velocity based on acceleration
         body->velocity[0] += body->acceleration[0];
@@ -176,52 +177,98 @@ void physics_update(void)
     }
 }
 
-usize physics_body_create(vec2 position, vec2 size, vec2 velocity, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static)
+Body *physics_body_create(vec2 position, vec2 size, vec2 velocity, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static)
 {
-    Body body = {
-        .aabb = {
-            .position = {position[0], position[1]},
-            .half_size = {size[0] * 0.5, size[1] * 0.5},
-        },
-        .velocity = {velocity[0], velocity[1]},
-        .collision_layer = collision_layer,
-        .collision_mask = collision_mask,
-        .on_hit = on_hit,
-        .on_hit_static = on_hit_static,
-    };
+    Body *body = (Body *)malloc(sizeof(Body)); // Allocate memory for the Body struct
 
-    if (array_list_append(state.body_list, &body) == (usize)-1)
+    if (body == NULL)
     {
+        ERROR_EXIT("Memory allocation failed\n");
+    }
+
+    body->aabb.position[0] = position[0];
+    body->aabb.position[1] = position[1];
+    body->aabb.half_size[0] = size[0] * 0.5;
+    body->aabb.half_size[1] = size[1] * 0.5;
+
+    body->velocity[0] = velocity[0];
+    body->velocity[1] = velocity[1];
+    body->acceleration[0] = 0;
+    body->acceleration[1] = 0;
+
+    body->collision_layer = collision_layer;
+    body->collision_mask = collision_mask;
+
+    body->on_hit = on_hit;
+    body->on_hit_static = on_hit_static;
+
+    body->is_active = true;
+
+    if (array_list_append(state.body_list, body) == (usize)-1)
+    {
+        free(body); // Clean up allocated memory in case of failure
         ERROR_EXIT("Could not append body to list\n");
     }
-    return state.body_list->len - 1;
+    return body;
+}
+
+usize physics_body_count()
+{
+    return state.body_list->len;
 }
 
 Body *physics_body_get(usize index)
 {
-    return array_list_get(state.body_list, index);
+    return array_list_get(state.body_list, index, "physics_body_get");
 }
 
-usize physics_static_body_create(vec2 position, vec2 size, u8 collision_layer)
+usize physics_body_get_id(Body *target_body)
 {
-    Static_Body static_body = {
-        .aabb = {
-            .position = {position[0], position[1]},
-            .half_size = {size[0] * 0.5, size[1] * 0.5},
-        },
-        .collision_layer = collision_layer,
-    };
-
-    if (array_list_append(state.static_body_list, &static_body) == (usize)-1)
+    for (usize i = 0; i < state.body_list->len; ++i)
     {
+        if (physics_body_get(i) == target_body)
+        {
+            return i;
+        }
+    }
+    ERROR_RETURN((usize)-1, "Could not find the specified entity in the Array_List\n");
+}
+
+void physics_body_destroy(Body *body)
+{
+    usize id = physics_body_get_id(body);
+    array_list_remove(state.body_list, id, "Destroying physics body");
+    free(body);
+}
+
+Static_Body *physics_static_body_create(vec2 position, vec2 size, u8 collision_layer)
+{
+    Static_Body *static_body = (Static_Body *)malloc(sizeof(Static_Body)); // Allocate memory for the Static_Body
+
+    if (static_body == NULL)
+    {
+        ERROR_EXIT("Memory allocation failed\n");
+    }
+
+    static_body->aabb.position[0] = position[0];
+    static_body->aabb.position[1] = position[1];
+    static_body->aabb.half_size[0] = size[0] * 0.5;
+    static_body->aabb.half_size[1] = size[1] * 0.5;
+
+    static_body->collision_layer = collision_layer;
+
+    if (array_list_append(state.static_body_list, static_body) == (usize)-1)
+    {
+        free(static_body); // Clean up allocated memory in case of failure
         ERROR_EXIT("Could not append body to list\n");
     }
-    return state.static_body_list->len - 1;
+
+    return static_body;
 }
 
 Static_Body *physics_static_body_get(usize index)
 {
-    return array_list_get(state.static_body_list, index);
+    return array_list_get(state.static_body_list, index, "physics_static_body_get");
 }
 
 // gets the minimium and maximum position of the aabb
