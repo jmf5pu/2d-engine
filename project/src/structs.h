@@ -22,7 +22,7 @@ enum Player_Status
 {
     SPAWNING,
     ACTIVE,
-    DYING,
+    DESPAWNING,
     INACTIVE
 };
 
@@ -43,6 +43,7 @@ typedef struct animation_set
     Animation *side_idle;
     Animation *side_moving;
     Animation *spawning;
+    Animation *dying;
 } Animation_Set;
 
 typedef struct player
@@ -52,8 +53,9 @@ typedef struct player
     Weapon *weapon;
     enum Direction direction;
     enum Player_Status status;
-    u32 spawn_delay;      // time in s from INACTIVE status to SPAWNING status
-    u32 spawn_time;       // time in s from SPAWNING status to ACTIVE status
+    f32 despawn_time;     // time it takes for animation to complete after health <= 0
+    f32 spawn_delay;      // time in s from INACTIVE status to SPAWNING status
+    f32 spawn_time;       // time in s from SPAWNING status to ACTIVE status
     u32 frames_on_status; // # of frames since last status change
     i8 health;
 } Player;
