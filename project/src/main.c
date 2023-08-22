@@ -634,7 +634,7 @@ int main(int argc, char *argv[])
             {
                 continue;
             }
-            animation_render(entity->animation, entity->body->aabb.position, WHITE, texture_slots);
+            animation_render(entity->animation, window, entity->body->aabb.position, WHITE, texture_slots);
         }
 
         render_end(window, texture_slots);

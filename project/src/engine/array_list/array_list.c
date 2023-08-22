@@ -94,3 +94,14 @@ u8 array_list_remove(Array_List *list, usize index, char *description)
 
     return 0;
 }
+
+void array_list_clear(Array_List *list)
+{
+    for (usize i = 0; i < list->len; ++i)
+    {
+        void *item = array_list_get(list, i, "Clearing ArrayList");
+        free(item);
+    }
+
+    list->len = 0;
+}

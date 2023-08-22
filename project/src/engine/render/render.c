@@ -49,8 +49,10 @@ SDL_Window *render_init(void)
     return window;
 }
 
+// checks if texture id is already present in texture slots array (for reuse)
 static i32 find_texture_slot(u32 texture_slots[8], u32 texture_id)
 {
+    // 1 - 8 because 0 is the reserved for the texture slot
     for (i32 i = 1; i < 8; ++i)
     {
         if (texture_slots[i] == texture_id)
@@ -62,6 +64,7 @@ static i32 find_texture_slot(u32 texture_slots[8], u32 texture_id)
     return -1;
 }
 
+// checks if texture id is already in use or an open slot is present, if so, returns index, returns -1 if buffer is full
 static i32 try_insert_texture(u32 texture_slots[8], u32 texture_id)
 {
     i32 index = find_texture_slot(texture_slots, texture_id);
@@ -70,6 +73,7 @@ static i32 try_insert_texture(u32 texture_slots[8], u32 texture_id)
         return index;
     }
 
+    // 1 - 8 because 0 is the reserved for the texture slot
     for (i32 i = 1; i < 8; ++i)
     {
         if (texture_slots[i] == 0)
@@ -121,9 +125,11 @@ static void render_batch(Batch_Vertex *vertices, usize count, u32 texture_ids[8]
     // Free the allocated memory for the new buffer
     free(vertex_data);
 
+    // bind color texture (always index 0 in texture_ids)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_color);
 
+    // bind 8 textures at a time
     for (u32 i = 1; i < 8; ++i)
     {
         glActiveTexture(GL_TEXTURE0 + i);
@@ -311,7 +317,7 @@ static void calculate_sprite_texture_coordinates(vec4 result, f32 row, f32 colum
     result[3] = y + h;
 }
 
-void render_sprite_sheet_frame(Sprite_Sheet *sprite_sheet, f32 row, f32 column, vec2 position, bool is_flipped, vec4 color, u32 texture_slots[8])
+void render_sprite_sheet_frame(Sprite_Sheet *sprite_sheet, SDL_Window *window, f32 row, f32 column, vec2 position, bool is_flipped, vec4 color, u32 texture_slots[8])
 {
     vec4 uvs;
     calculate_sprite_texture_coordinates(uvs, row, column, sprite_sheet->width, sprite_sheet->height, sprite_sheet->cell_width, sprite_sheet->cell_height);
@@ -328,14 +334,23 @@ void render_sprite_sheet_frame(Sprite_Sheet *sprite_sheet, f32 row, f32 column, 
 
     i32 texture_slot = try_insert_texture(texture_slots, sprite_sheet->texture_id);
 
-    // check if buffer is full, is so, flush buffer and try again TODO: revisit this, some textures still are shaky
+    // check if buffer is full, is so, flush buffer and try again TODO: implement some sort of LRU here
     if (texture_slot == -1)
     {
+        render_end(window, texture_slots); // render all the batched frames before resetting for another write
+        array_list_clear(list_batch);      // free old batch vertices
+
+        // flush texture_slots array
         memset(texture_slots, 0, sizeof(u32) * 8);
-        i32 texture_slot = try_insert_texture(texture_slots, sprite_sheet->texture_id);
+
+        // flush list_batch arraylist
+        void array_list_clear(list_batch);
+
+        // try to insert it again
+        texture_slot = try_insert_texture(texture_slots, sprite_sheet->texture_id);
         if (texture_slot == -1)
         {
-            printf("couldn't insert texture slot!\n");
+            // TODO: add warning here
         }
     }
     append_quad(bottom_left, size, uvs, color, (f32)texture_slot);
