@@ -13,7 +13,17 @@ typedef struct batch_vertex
     vec2 uvs;
     vec4 color;
     f32 texture_slot;
+    i32 z_index;
 } Batch_Vertex;
+
+typedef struct quad_vertices
+{
+    Batch_Vertex *v1;
+    Batch_Vertex *v2;
+    Batch_Vertex *v3;
+    Batch_Vertex *v4;
+    i32 z_index;
+} Quad_Vertices;
 
 typedef struct sprite_sheet
 {
@@ -38,6 +48,6 @@ void render_aabb(f32 *aabb, vec4 color);
 f32 render_get_scale();
 
 void render_sprite_sheet_init(Sprite_Sheet *sprite_sheet, const char *path, f32 cell_width, f32 cell_height);
-void render_sprite_sheet_frame(Sprite_Sheet *sprite_sheet, SDL_Window *window, f32 row, f32 column, vec2 position, bool is_flipped, vec4 color, u32 texture_slots[8]);
+void render_sprite_sheet_frame(Sprite_Sheet *sprite_sheet, SDL_Window *window, f32 row, f32 column, vec2 position, i32 z_index, bool is_flipped, vec4 color, u32 texture_slots[8]);
 
 #endif

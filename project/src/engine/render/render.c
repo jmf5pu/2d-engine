@@ -86,6 +86,14 @@ static i32 try_insert_texture(u32 texture_slots[8], u32 texture_id)
     return -1;
 }
 
+// used to sort by z index before rendering
+static int compare_vertices(const void *a, const void *b)
+{
+    const Batch_Vertex *vertex_a = *(const Batch_Vertex **)a;
+    const Batch_Vertex *vertex_b = *(const Batch_Vertex **)b;
+    return (vertex_a->z_index > vertex_b->z_index) - (vertex_a->z_index < vertex_b->z_index);
+}
+
 void render_begin(void)
 {
     glClearColor(0.88, 0.1, 0.1, 1);
@@ -99,6 +107,8 @@ static void render_batch(Batch_Vertex *vertices, usize count, u32 texture_ids[8]
     glBindBuffer(GL_ARRAY_BUFFER, vbo_batch);
     // Iterate through the list_batch array list and access each Batch_Vertex instance
 
+    qsort(list_batch->items, list_batch->len, sizeof(Batch_Vertex *), compare_vertices);
+
     // Calculate the total size required for copying all Batch_Vertex instances
     usize total_size = list_batch->len * sizeof(Batch_Vertex);
 
@@ -106,7 +116,7 @@ static void render_batch(Batch_Vertex *vertices, usize count, u32 texture_ids[8]
     void *vertex_data = malloc(total_size);
     if (!vertex_data)
     {
-        // Handle memory allocation error
+        // TODO: Handle memory allocation error
         // ...
     }
 
@@ -118,7 +128,6 @@ static void render_batch(Batch_Vertex *vertices, usize count, u32 texture_ids[8]
         memcpy(destination, vertex, sizeof(Batch_Vertex));
         destination += sizeof(Batch_Vertex);
     }
-
     // Use glBufferSubData to copy the entire buffer to OpenGL
     glBufferSubData(GL_ARRAY_BUFFER, 0, total_size, vertex_data);
 
@@ -169,7 +178,7 @@ void render_quad(vec2 pos, vec2 size, vec4 color)
     glBindVertexArray(0);
 }
 
-static void append_quad(vec2 position, vec2 size, vec4 texture_coordinates, vec4 color, f32 texture_slot) // TODO: NEW implementation
+static void append_quad(vec2 position, vec2 size, vec4 texture_coordinates, i32 z_index, vec4 color, f32 texture_slot)
 {
     vec4 uvs = {0, 0, 1, 1};
 
@@ -195,6 +204,7 @@ static void append_quad(vec2 position, vec2 size, vec4 texture_coordinates, vec4
         .uvs = {uvs[0], uvs[1]},
         .color = {color[0], color[1], color[2], color[3]},
         .texture_slot = texture_slot,
+        .z_index = z_index * 10,
     };
     usize id1 = array_list_append(list_batch, vertices[0]);
 
@@ -203,6 +213,7 @@ static void append_quad(vec2 position, vec2 size, vec4 texture_coordinates, vec4
         .uvs = {uvs[2], uvs[1]},
         .color = {color[0], color[1], color[2], color[3]},
         .texture_slot = texture_slot,
+        .z_index = (z_index * 10) + 1,
     };
     usize id2 = array_list_append(list_batch, vertices[1]);
 
@@ -211,6 +222,7 @@ static void append_quad(vec2 position, vec2 size, vec4 texture_coordinates, vec4
         .uvs = {uvs[2], uvs[3]},
         .color = {color[0], color[1], color[2], color[3]},
         .texture_slot = texture_slot,
+        .z_index = (z_index * 10) + 2,
     };
     usize id3 = array_list_append(list_batch, vertices[2]);
 
@@ -219,6 +231,7 @@ static void append_quad(vec2 position, vec2 size, vec4 texture_coordinates, vec4
         .uvs = {uvs[0], uvs[3]},
         .color = {color[0], color[1], color[2], color[3]},
         .texture_slot = texture_slot,
+        .z_index = (z_index * 10) + 3,
     };
     usize id4 = array_list_append(list_batch, vertices[3]);
 }
@@ -317,7 +330,7 @@ static void calculate_sprite_texture_coordinates(vec4 result, f32 row, f32 colum
     result[3] = y + h;
 }
 
-void render_sprite_sheet_frame(Sprite_Sheet *sprite_sheet, SDL_Window *window, f32 row, f32 column, vec2 position, bool is_flipped, vec4 color, u32 texture_slots[8])
+void render_sprite_sheet_frame(Sprite_Sheet *sprite_sheet, SDL_Window *window, f32 row, f32 column, vec2 position, i32 z_index, bool is_flipped, vec4 color, u32 texture_slots[8])
 {
     vec4 uvs;
     calculate_sprite_texture_coordinates(uvs, row, column, sprite_sheet->width, sprite_sheet->height, sprite_sheet->cell_width, sprite_sheet->cell_height);
@@ -353,5 +366,5 @@ void render_sprite_sheet_frame(Sprite_Sheet *sprite_sheet, SDL_Window *window, f
             // TODO: add warning here
         }
     }
-    append_quad(bottom_left, size, uvs, color, (f32)texture_slot);
+    append_quad(bottom_left, size, uvs, z_index, color, (f32)texture_slot);
 }

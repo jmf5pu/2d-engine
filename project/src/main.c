@@ -561,9 +561,9 @@ int main(int argc, char *argv[])
     Static_Body *static_body_d = physics_static_body_create((vec2){12.5, render_height * 0.5 - 12.5}, (vec2){25, render_height - 25}, COLLISION_LAYER_TERRIAN);
     Static_Body *static_body_e = physics_static_body_create((vec2){render_width * 0.5, render_height * 0.5}, (vec2){62.5, 62.5}, COLLISION_LAYER_TERRIAN);
 
-    Entity *entity_a = entity_create((vec2){200, 200}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
+    // Entity *entity_a = entity_create((vec2){200, 200}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
     //  Entity *entity_b = entity_create((vec2){300, 300}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
-    entity_a->animation = p1_anim_soldier_dying_side;
+    // entity_a->animation = p1_anim_soldier_dying_side;
     //  entity_b->animation = anim_soldier_idle_front;
 
     // main loop
@@ -614,6 +614,9 @@ int main(int argc, char *argv[])
         render_aabb((f32 *)static_body_d, WHITE);
         // render_aabb((f32 *)static_body_e, WHITE);
 
+        // render map
+        render_sprite_sheet_frame(&sprite_sheet_shipping_container_red, window, 0, 0, (vec2){render_width / 2.0, render_height / 2.0}, -1, false, WHITE, texture_slots);
+
         // rendering enemies
         // render_aabb((f32 *)(entity_a->body), WHITE);
         // render_aabb((f32 *)(entity_b->body), WHITE);
@@ -645,8 +648,9 @@ int main(int argc, char *argv[])
             {
                 continue;
             }
-            animation_render(entity->animation, window, entity->body->aabb.position, WHITE, texture_slots);
-            render_sprite_sheet_frame(&sprite_sheet_shipping_container_red, window, 0, 0, (vec2){render_width / 2.0, render_height / 2.0}, false, (vec4){1, 1, 1, 0.2}, texture_slots);
+
+            // TODO: debug overlaps - order here seems to affect this
+            animation_render(entity->animation, window, entity->body->aabb.position, i + 1, WHITE, texture_slots);
         }
 
         render_end(window, texture_slots);
