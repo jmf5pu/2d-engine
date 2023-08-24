@@ -14,6 +14,8 @@ typedef struct batch_vertex
     vec4 color;
     f32 texture_slot;
     i32 z_index;
+    u32 quad_id;    // Identifier of the quad
+    u32 vertex_idx; // Index of the vertex within the quad (0 to 3)
 } Batch_Vertex;
 
 typedef struct quad_vertices

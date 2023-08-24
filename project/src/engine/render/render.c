@@ -9,6 +9,7 @@
 #include "../util.h"
 #include "render_internal.h"
 
+static usize quad_id_counter = 0;
 static f32 window_width = 1280;
 static f32 window_height = 720;
 static f32 render_width = 640;
@@ -86,12 +87,17 @@ static i32 try_insert_texture(u32 texture_slots[8], u32 texture_id)
     return -1;
 }
 
-// used to sort by z index before rendering
+// used to sort by z_index. Compares z_index first, then quad_id, and finally vertex_idx to maintain ordering within quads
 static int compare_vertices(const void *a, const void *b)
 {
     const Batch_Vertex *vertex_a = *(const Batch_Vertex **)a;
     const Batch_Vertex *vertex_b = *(const Batch_Vertex **)b;
-    return (vertex_a->z_index > vertex_b->z_index) - (vertex_a->z_index < vertex_b->z_index);
+
+    if (vertex_a->z_index != vertex_b->z_index)
+        return (vertex_a->z_index > vertex_b->z_index) - (vertex_a->z_index < vertex_b->z_index);
+    if (vertex_a->quad_id != vertex_b->quad_id)
+        return (vertex_a->quad_id > vertex_b->quad_id) - (vertex_a->quad_id < vertex_b->quad_id);
+    return (vertex_a->vertex_idx > vertex_b->vertex_idx) - (vertex_a->vertex_idx < vertex_b->vertex_idx);
 }
 
 void render_begin(void)
@@ -198,14 +204,17 @@ static void append_quad(vec2 position, vec2 size, vec4 texture_coordinates, i32 
         }
     }
 
+    usize quad_id = quad_id_counter++;
+
     // Initialize and append each vertex to the list_batch
     *vertices[0] = (Batch_Vertex){
         .position = {position[0], position[1]},
         .uvs = {uvs[0], uvs[1]},
         .color = {color[0], color[1], color[2], color[3]},
         .texture_slot = texture_slot,
-        .z_index = z_index * 10,
-    };
+        .z_index = z_index,
+        .quad_id = quad_id,
+        .vertex_idx = 0};
     usize id1 = array_list_append(list_batch, vertices[0]);
 
     *vertices[1] = (Batch_Vertex){
@@ -213,8 +222,9 @@ static void append_quad(vec2 position, vec2 size, vec4 texture_coordinates, i32 
         .uvs = {uvs[2], uvs[1]},
         .color = {color[0], color[1], color[2], color[3]},
         .texture_slot = texture_slot,
-        .z_index = (z_index * 10) + 1,
-    };
+        .z_index = z_index,
+        .quad_id = quad_id,
+        .vertex_idx = 1};
     usize id2 = array_list_append(list_batch, vertices[1]);
 
     *vertices[2] = (Batch_Vertex){
@@ -222,8 +232,9 @@ static void append_quad(vec2 position, vec2 size, vec4 texture_coordinates, i32 
         .uvs = {uvs[2], uvs[3]},
         .color = {color[0], color[1], color[2], color[3]},
         .texture_slot = texture_slot,
-        .z_index = (z_index * 10) + 2,
-    };
+        .z_index = z_index,
+        .quad_id = quad_id,
+        .vertex_idx = 2};
     usize id3 = array_list_append(list_batch, vertices[2]);
 
     *vertices[3] = (Batch_Vertex){
@@ -231,8 +242,9 @@ static void append_quad(vec2 position, vec2 size, vec4 texture_coordinates, i32 
         .uvs = {uvs[0], uvs[3]},
         .color = {color[0], color[1], color[2], color[3]},
         .texture_slot = texture_slot,
-        .z_index = (z_index * 10) + 3,
-    };
+        .z_index = z_index,
+        .quad_id = quad_id,
+        .vertex_idx = 3};
     usize id4 = array_list_append(list_batch, vertices[3]);
 }
 

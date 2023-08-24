@@ -615,7 +615,7 @@ int main(int argc, char *argv[])
         // render_aabb((f32 *)static_body_e, WHITE);
 
         // render map
-        render_sprite_sheet_frame(&sprite_sheet_shipping_container_red, window, 0, 0, (vec2){render_width / 2.0, render_height / 2.0}, -1, false, WHITE, texture_slots);
+        render_sprite_sheet_frame(&sprite_sheet_shipping_container_red, window, 0, 0, (vec2){render_width / 2.0, render_height / 2.0}, 3, false, WHITE, texture_slots);
 
         // rendering enemies
         // render_aabb((f32 *)(entity_a->body), WHITE);
@@ -650,7 +650,7 @@ int main(int argc, char *argv[])
             }
 
             // TODO: debug overlaps - order here seems to affect this
-            animation_render(entity->animation, window, entity->body->aabb.position, i + 1, WHITE, texture_slots);
+            animation_render(entity->animation, window, entity->body->aabb.position, 1, WHITE, texture_slots);
         }
 
         render_end(window, texture_slots);
