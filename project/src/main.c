@@ -223,7 +223,7 @@ static void init_all_anims()
         1);
     p1_adef_soldier_running_front = animation_definition_create(
         &p1_sprite_sheet_soldier_running_front,
-        (f32[]){0.04, 0.04, 0.05, 0.04, 0.04, 0.04, 0.05, 0.04},
+        (f32[]){0.03, 0.03, 0.04, 0.03, 0.03, 0.03, 0.04, 0.03},
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8},
         8);
@@ -235,7 +235,7 @@ static void init_all_anims()
         2);
     p1_adef_soldier_dying_side = animation_definition_create(
         &p1_sprite_sheet_soldier_dying_side,
-        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.25, 0.25, 0.25, 0.25, 0.25},
+        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.75, 0.5, 0.5, 0.5, 0.5},
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
         10);
@@ -279,7 +279,7 @@ static void init_all_anims()
         1);
     p2_adef_soldier_running_back = animation_definition_create(
         &p2_sprite_sheet_soldier_running_back,
-        (f32[]){0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03},
+        (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05},
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
         10);
@@ -291,7 +291,7 @@ static void init_all_anims()
         1);
     p2_adef_soldier_running_front = animation_definition_create(
         &p2_sprite_sheet_soldier_running_front,
-        (f32[]){0.02, 0.02, 0.025, 0.02, 0.02, 0.02, 0.025, 0.02},
+        (f32[]){0.03, 0.03, 0.04, 0.03, 0.03, 0.03, 0.04, 0.03},
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8},
         8);
@@ -304,7 +304,7 @@ static void init_all_anims()
 
     p2_adef_soldier_dying_side = animation_definition_create(
         &p2_sprite_sheet_soldier_dying_side,
-        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.25, 0.25, 0.25, 0.25, 0.25},
+        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.75, 0.5, 0.5, 0.5, 0.5},
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
         10);
@@ -505,6 +505,7 @@ static void update_player_animations(Player *player)
     else if (player->status == DESPAWNING)
     {
         player->entity->animation = player->animation_set->dying;
+        printf("death start frame: %u\n", player->entity->animation->current_frame_index);
     }
 }
 
@@ -539,6 +540,7 @@ static void update_player_status(Player *player)
     else if (player->health <= 0 && player->status == ACTIVE)
     {
         player->status = DESPAWNING;
+        player->animation_set->dying->current_frame_index = 0;
         player->frames_on_status = 0;
     }
     // check if death animation is complete
@@ -606,7 +608,7 @@ int main(int argc, char *argv[])
         .ready_to_fire = true,
     };
     player_one.status = SPAWNING;
-    player_one.despawn_time = 1.5;
+    player_one.despawn_time = 2.9;
     player_one.spawn_delay = 5;
     player_one.spawn_time = 2;
     player_two.frames_on_status = 0;
@@ -634,7 +636,7 @@ int main(int argc, char *argv[])
         .ready_to_fire = true,
     };
     player_two.status = SPAWNING;
-    player_two.despawn_time = 1.5;
+    player_two.despawn_time = 2.9;
     player_two.spawn_delay = 5;
     player_two.spawn_time = 2;
     player_two.frames_on_status = 0;
@@ -747,7 +749,6 @@ int main(int argc, char *argv[])
             {
                 continue;
             }
-
             animation_render(entity->animation, window, entity->body->aabb.position, 0, WHITE, texture_slots);
         }
 
