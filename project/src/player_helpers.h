@@ -4,5 +4,6 @@
 #include "structs.h"
 
 void update_player_status(Player *player);
+void update_player_animations(Player *player);
 
 #endif

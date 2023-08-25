@@ -1,5 +1,6 @@
 #include "player_helpers.h"
 #include "engine/global.h"
+#include "engine/util.h"
 
 // updates player statuses based on frame counter associated with each playaer
 void update_player_status(Player *player)
@@ -60,4 +61,37 @@ void update_player_status(Player *player)
     // update all timers
     player->frames_on_status++;
     player->weapon->frames_since_last_shot++;
+}
+
+// updates player animations based on direction
+void update_player_animations(Player *player)
+{
+    if (player->status == ACTIVE)
+    {
+        if (player->direction == RIGHT || player->direction == LEFT)
+        {
+            player->entity->animation = player->entity->body->velocity[0] != 0 ? player->animation_set->side_moving : player->animation_set->side_idle; // anim_soldier_running_side : anim_soldier_idle_side;
+            player->entity->animation->is_flipped = player->direction == LEFT ? true : false;
+        }
+        else if (player->direction == UP)
+        {
+            player->entity->animation = player->entity->body->velocity[1] != 0 ? player->animation_set->up_moving : player->animation_set->up_idle; // anim_soldier_running_back : anim_soldier_idle_back;
+        }
+        else if (player->direction == DOWN)
+        {
+            player->entity->animation = player->entity->body->velocity[1] != 0 ? player->animation_set->down_moving : player->animation_set->down_idle; // anim_soldier_running_front : anim_soldier_idle_front;
+        }
+        else
+        {
+            ERROR_EXIT(-1, "Player direction not recognized");
+        }
+    }
+    else if (player->status == SPAWNING)
+    {
+        player->entity->animation = player->animation_set->spawning;
+    }
+    else if (player->status == DESPAWNING)
+    {
+        player->entity->animation = player->animation_set->dying;
+    }
 }
