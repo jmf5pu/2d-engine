@@ -135,7 +135,7 @@ static void init_map(Map *map)
     sprite_array[1] = shipping_container_red_back;
 
     // init static bodies
-    Static_Body *red_shipping_container_static_body = physics_static_body_create((vec2){320, 165}, (vec2){26, 26}, COLLISION_LAYER_TERRIAN);
+    Static_Body *red_shipping_container_static_body = physics_static_body_create((vec2){322, 165}, (vec2){32, 26}, COLLISION_LAYER_TERRIAN);
 
     map->num_sprites = 2;
     map->num_static_bodies = 1;
@@ -143,25 +143,23 @@ static void init_map(Map *map)
     map->static_bodies = red_shipping_container_static_body;
 }
 
-Sprite_Sheet sprite_sheet_shipping_container_red;
-
 // declare players
-static Player player_one;
-static Player player_two;
+static Player *player_one;
+static Player *player_two;
 
 // init spawn points
 const vec2 spawn_point_one = {100, 200};
 const vec2 spawn_point_two = {550, 200};
 
-Player *get_player_from_body(Body *body)
+Player *get_player_from_body(Player *player_one, Player *player_two, Body *body)
 {
-    if (player_one.entity->body == body)
+    if (player_one->entity->body == body)
     {
-        return &player_one;
+        return player_one;
     }
-    else if (player_two.entity->body == body)
+    else if (player_two->entity->body == body)
     {
-        return &player_two;
+        return player_two;
     }
     else
     {
@@ -171,7 +169,7 @@ Player *get_player_from_body(Body *body)
 
 void player_on_hit(Body *self, Body *other, Hit hit)
 {
-    Player *player = get_player_from_body(self);
+    Player *player = get_player_from_body(player_one, player_two, self);
     if (other->collision_layer == COLLISION_LAYER_BULLET && other->is_active && self->is_active)
     {
         player->health -= 50;
@@ -335,8 +333,6 @@ static void init_all_anims()
         1);
     anim_bullet_1_horizontal = animation_create(adef_bullet_1_horizontal, false);
     anim_bullet_1_vertical = animation_create(adef_bullet_1_vertical, false);
-
-    render_sprite_sheet_init(&sprite_sheet_shipping_container_red, "assets/shipping_container_red.png", 80, 130);
 }
 
 static void handle_player_shooting(Player *player)
@@ -552,8 +548,9 @@ int main(int argc, char *argv[])
     render_height = window_height / render_get_scale();
 
     // init player one
-    player_one.entity = entity_create(spawn_point_one, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
-    player_one.animation_set = &(Animation_Set){
+    player_one = malloc(sizeof(Player));
+    player_one->entity = entity_create(spawn_point_one, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    player_one->animation_set = &(Animation_Set){
         .down_idle = p1_anim_soldier_idle_front,
         .down_moving = p1_anim_soldier_running_front,
         .up_idle = p1_anim_soldier_idle_back,
@@ -562,8 +559,8 @@ int main(int argc, char *argv[])
         .side_moving = p1_anim_soldier_running_side,
         .spawning = p1_anim_soldier_spawning_side,
         .dying = p1_anim_soldier_dying_side};
-    player_one.direction = RIGHT;
-    player_one.weapon = &(Weapon){
+    player_one->direction = RIGHT;
+    player_one->weapon = &(Weapon){
         .name = M16,
         .fire_mode = AUTO,
         .capacity = 30,
@@ -572,17 +569,18 @@ int main(int argc, char *argv[])
         .frames_since_last_shot = 0,
         .ready_to_fire = true,
     };
-    player_one.status = SPAWNING;
-    player_one.despawn_time = 2.9;
-    player_one.spawn_delay = 5;
-    player_one.spawn_time = 2;
-    player_one.frames_on_status = 0;
-    player_one.health = 100;
-    player_one.is_left_player = true;
+    player_one->status = SPAWNING;
+    player_one->despawn_time = 2.9;
+    player_one->spawn_delay = 5;
+    player_one->spawn_time = 2;
+    player_one->frames_on_status = 0;
+    player_one->health = 100;
+    player_one->is_left_player = true;
 
     // init player two
-    player_two.entity = entity_create(spawn_point_two, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
-    player_two.animation_set = &(Animation_Set){
+    player_two = malloc(sizeof(Player));
+    player_two->entity = entity_create(spawn_point_two, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    player_two->animation_set = &(Animation_Set){
         .down_idle = p2_anim_soldier_idle_front,
         .down_moving = p2_anim_soldier_running_front,
         .up_idle = p2_anim_soldier_idle_back,
@@ -591,8 +589,8 @@ int main(int argc, char *argv[])
         .side_moving = p2_anim_soldier_running_side,
         .spawning = p2_anim_soldier_spawning_side,
         .dying = p2_anim_soldier_dying_side};
-    player_two.direction = LEFT;
-    player_two.weapon = &(Weapon){
+    player_two->direction = LEFT;
+    player_two->weapon = &(Weapon){
         .name = M16,
         .fire_mode = SEMI,
         .capacity = 30,
@@ -601,13 +599,13 @@ int main(int argc, char *argv[])
         .frames_since_last_shot = 0,
         .ready_to_fire = true,
     };
-    player_two.status = SPAWNING;
-    player_two.despawn_time = 2.9;
-    player_two.spawn_delay = 5;
-    player_two.spawn_time = 2;
-    player_two.frames_on_status = 0;
-    player_two.health = 100;
-    player_two.is_left_player = false;
+    player_two->status = SPAWNING;
+    player_two->despawn_time = 2.9;
+    player_two->spawn_delay = 5;
+    player_two->spawn_time = 2;
+    player_two->frames_on_status = 0;
+    player_two->health = 100;
+    player_two->is_left_player = false;
 
     SDL_ShowCursor(false);
 
@@ -646,11 +644,11 @@ int main(int argc, char *argv[])
         input_update(); // grab current inputs
 
         // handle player inputs
-        handle_player_input(&player_one);
-        handle_player_input(&player_two);
+        handle_player_input(player_one);
+        handle_player_input(player_two);
 
-        update_player_animations(&player_one);
-        update_player_animations(&player_two);
+        update_player_animations(player_one);
+        update_player_animations(player_two);
 
         physics_update();
         animation_update(global.time.delta);
@@ -661,23 +659,6 @@ int main(int argc, char *argv[])
         render_aabb((f32 *)static_body_b, WHITE);
         render_aabb((f32 *)static_body_c, WHITE);
         render_aabb((f32 *)static_body_d, WHITE);
-
-        // render map sprites
-        for (int i = 0; i < map.num_sprites; i++)
-        {
-            Sprite sprite = map.sprites[i];
-            render_sprite_sheet_frame(sprite.sprite_sheet, window, sprite.row, sprite.column, sprite.position, sprite.z_index, sprite.is_flipped, sprite.color, texture_slots);
-        }
-
-        // render map static bodies
-        for (int i = 0; i < map.num_static_bodies; i++)
-        {
-            Static_Body static_body = map.static_bodies[i];
-            render_aabb(&static_body, WHITE);
-        }
-
-        // render_sprite_sheet_frame(&sprite_sheet_shipping_container_red_back, window, 0, 0, (vec2){200, 150}, -1, false, WHITE, texture_slots);
-        // render_sprite_sheet_frame(&sprite_sheet_shipping_container_red_front, window, 0, 0, (vec2){300, 150}, 1, false, WHITE, texture_slots);
 
         // rendering enemies
         // render_aabb((f32 *)(entity_a->body), WHITE);
@@ -713,11 +694,25 @@ int main(int argc, char *argv[])
             animation_render(entity->animation, window, entity->body->aabb.position, 0, WHITE, texture_slots);
         }
 
+        // render map sprites
+        for (int i = 0; i < map.num_sprites; i++)
+        {
+            Sprite sprite = map.sprites[i];
+            render_sprite_sheet_frame(sprite.sprite_sheet, window, sprite.row, sprite.column, sprite.position, sprite.z_index, sprite.is_flipped, sprite.color, texture_slots);
+        }
+
+        // render map static bodies
+        for (int i = 0; i < map.num_static_bodies; i++)
+        {
+            Static_Body static_body = map.static_bodies[i];
+            render_aabb(&static_body, WHITE);
+        }
+
         render_end(window, texture_slots);
 
         // update each player status
-        update_player_status(&player_one);
-        update_player_status(&player_two);
+        update_player_status(player_one);
+        update_player_status(player_two);
 
         time_update_late();
     }
