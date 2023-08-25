@@ -21,6 +21,7 @@
 // game specific headers
 #include "structs.h"
 #include "collision_behavior.h"
+#include "player_helpers.h"
 
 const u8 frame_rate = 30;          // frame rate
 static u32 texture_slots[8] = {0}; // texture slots array for batch rendering
@@ -148,8 +149,8 @@ static Player *player_one;
 static Player *player_two;
 
 // init spawn points
-const vec2 spawn_point_one = {100, 200};
-const vec2 spawn_point_two = {550, 200};
+static vec2 spawn_point_one = {100, 200};
+static vec2 spawn_point_two = {550, 200};
 
 Player *get_player_from_body(Player *player_one, Player *player_two, Body *body)
 {
@@ -470,63 +471,6 @@ static void update_player_animations(Player *player)
     }
 }
 
-// updates player statuses based on frame counter associated with each playaer
-static void update_player_status(Player *player)
-{
-    // check if spawn delay is up
-    if (player->status == INACTIVE && player->frames_on_status >= (player->spawn_delay * global.time.frame_rate))
-    {
-        player->status = SPAWNING;
-        player->frames_on_status = 0;
-
-        // TODO: eventually figure out anther way to figure out where spawn point should be
-        // reset location
-        player->entity->body->aabb.position[0] = spawn_point_one[0];
-        player->entity->body->aabb.position[1] = spawn_point_one[1];
-
-        // reset health
-        player->health = 100;
-
-        // show sprites
-        player->entity->is_active = true;
-        player->entity->body->is_active = true;
-    }
-    // check if spawn time is up
-    else if (player->status == SPAWNING && player->frames_on_status >= (player->spawn_time * global.time.frame_rate))
-    {
-        player->status = ACTIVE;
-        player->frames_on_status = 0;
-    }
-    // check if health is 0
-    else if (player->health <= 0 && player->status == ACTIVE)
-    {
-        player->status = DESPAWNING;
-        player->animation_set->dying->current_frame_index = 0;
-        player->frames_on_status = 0;
-    }
-    // check if death animation is complete
-    else if (player->status == DESPAWNING && player->frames_on_status >= (player->despawn_time * global.time.frame_rate))
-    {
-        player->status = INACTIVE;
-        player->frames_on_status = 0;
-
-        // hide sprites
-        player->entity->is_active = false;
-        player->entity->body->is_active = false;
-    }
-
-    // update weapon status
-    // printf("fire cooldown: %f, %d\n", (1.0 / (player->weapon->max_fire_rate / 60.0)), global.time.frame_rate);
-    if (!player->weapon->ready_to_fire && player->weapon->frames_since_last_shot >= ((1.0 / (player->weapon->max_fire_rate / 60.0)) * global.time.frame_rate))
-    {
-        player->weapon->ready_to_fire = true;
-    }
-
-    // update all timers
-    player->frames_on_status++;
-    player->weapon->frames_since_last_shot++;
-}
-
 int main(int argc, char *argv[])
 {
     time_init(frame_rate);
@@ -569,6 +513,8 @@ int main(int argc, char *argv[])
         .frames_since_last_shot = 0,
         .ready_to_fire = true,
     };
+    player_one->spawn_point[0] = spawn_point_one[0];
+    player_one->spawn_point[1] = spawn_point_one[1];
     player_one->status = SPAWNING;
     player_one->despawn_time = 2.9;
     player_one->spawn_delay = 5;
@@ -599,6 +545,8 @@ int main(int argc, char *argv[])
         .frames_since_last_shot = 0,
         .ready_to_fire = true,
     };
+    player_two->spawn_point[0] = spawn_point_two[0];
+    player_two->spawn_point[1] = spawn_point_two[1];
     player_two->status = SPAWNING;
     player_two->despawn_time = 2.9;
     player_two->spawn_delay = 5;

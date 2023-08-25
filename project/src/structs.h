@@ -62,6 +62,7 @@ typedef struct player
     Entity *entity;
     Animation_Set *animation_set;
     Weapon *weapon;
+    vec2 spawn_point;
     enum Direction direction;
     enum Player_Status status;
     f32 despawn_time;     // time it takes for animation to complete after health <= 0
