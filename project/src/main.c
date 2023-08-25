@@ -235,7 +235,7 @@ static void init_all_anims()
         2);
     p1_adef_soldier_dying_side = animation_definition_create(
         &p1_sprite_sheet_soldier_dying_side,
-        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.75, 0.5, 0.5, 0.5, 0.5},
+        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.75, 0.5, 0.5, 0.5, 0.75},
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
         10);
@@ -304,7 +304,7 @@ static void init_all_anims()
 
     p2_adef_soldier_dying_side = animation_definition_create(
         &p2_sprite_sheet_soldier_dying_side,
-        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.75, 0.5, 0.5, 0.5, 0.5},
+        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.75, 0.5, 0.5, 0.5, 0.75},
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
         10);
@@ -386,84 +386,50 @@ static void handle_player_shooting(Player *player)
     }
 }
 
-static void input_handle_left_side(Player *player)
+static void handle_player_input(Player *player)
 {
+    if (player->status != ACTIVE) // don't allow inputs on inactive players
+    {
+        return;
+    }
+    Key_State left = player->is_left_player ? global.input.l_left : global.input.r_left;
+    Key_State right = player->is_left_player ? global.input.l_right : global.input.r_right;
+    Key_State up = player->is_left_player ? global.input.l_up : global.input.r_up;
+    Key_State down = player->is_left_player ? global.input.l_down : global.input.r_down;
+    Key_State shoot = player->is_left_player ? global.input.l_shoot : global.input.r_shoot;
+
     f32 velx = 0;
     f32 vely = 0;
-    if (global.input.l_right)
+    if (right)
     {
         player->direction = RIGHT;
         velx += 150;
     }
 
-    if (global.input.l_left)
+    if (left)
     {
         player->direction = LEFT;
         velx -= 150;
     }
 
-    if (global.input.l_up)
+    if (up)
     {
         player->direction = UP;
         vely += 150;
     }
 
-    if (global.input.l_down)
-    {
-        player->direction = DOWN;
-        vely -= 150;
-    }
-    // handle weapon attribute updates & bullet generationm, contingent on fire mode, input, and weapon shot cooldown
-    if (player->weapon->fire_mode == AUTO && global.input.l_shoot == KS_HELD && player->weapon->ready_to_fire)
-    {
-        handle_player_shooting(player);
-    }
-    if (player->weapon->fire_mode == SEMI && global.input.l_shoot == KS_PRESSED && player->weapon->ready_to_fire)
-    {
-        handle_player_shooting(player);
-    }
-    if (player->weapon->fire_mode == BURST)
-    {
-        // TODO: Not implemented
-    }
-    player->entity->body->velocity[0] = velx;
-    player->entity->body->velocity[1] = vely;
-}
-
-static void input_handle_right_side(Player *player)
-{
-    f32 velx = 0;
-    f32 vely = 0;
-    if (global.input.r_right)
-    {
-        player->direction = RIGHT;
-        velx += 150;
-    }
-
-    if (global.input.r_left)
-    {
-        player->direction = LEFT;
-        velx -= 150;
-    }
-
-    if (global.input.r_up)
-    {
-        player->direction = UP;
-        vely += 150;
-    }
-
-    if (global.input.r_down)
+    if (down)
     {
         player->direction = DOWN;
         vely -= 150;
     }
 
     // handle weapon attribute updates & bullet generationm, contingent on fire mode, input, and weapon shot cooldown
-    if (player->weapon->fire_mode == AUTO && global.input.r_shoot == KS_HELD && player->weapon->ready_to_fire)
+    if (player->weapon->fire_mode == AUTO && shoot == KS_HELD && player->weapon->ready_to_fire)
     {
         handle_player_shooting(player);
     }
-    if (player->weapon->fire_mode == SEMI && global.input.r_shoot == KS_PRESSED && player->weapon->ready_to_fire)
+    if (player->weapon->fire_mode == SEMI && shoot == KS_PRESSED && player->weapon->ready_to_fire)
     {
         handle_player_shooting(player);
     }
@@ -505,7 +471,6 @@ static void update_player_animations(Player *player)
     else if (player->status == DESPAWNING)
     {
         player->entity->animation = player->animation_set->dying;
-        printf("death start frame: %u\n", player->entity->animation->current_frame_index);
     }
 }
 
@@ -611,8 +576,9 @@ int main(int argc, char *argv[])
     player_one.despawn_time = 2.9;
     player_one.spawn_delay = 5;
     player_one.spawn_time = 2;
-    player_two.frames_on_status = 0;
+    player_one.frames_on_status = 0;
     player_one.health = 100;
+    player_one.is_left_player = true;
 
     // init player two
     player_two.entity = entity_create(spawn_point_two, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
@@ -641,6 +607,7 @@ int main(int argc, char *argv[])
     player_two.spawn_time = 2;
     player_two.frames_on_status = 0;
     player_two.health = 100;
+    player_two.is_left_player = false;
 
     SDL_ShowCursor(false);
 
@@ -678,15 +645,9 @@ int main(int argc, char *argv[])
         }
         input_update(); // grab current inputs
 
-        // handle left and right player inputs
-        if (player_one.status == ACTIVE)
-        {
-            input_handle_left_side(&player_one);
-        }
-        if (player_two.status == ACTIVE)
-        {
-            input_handle_right_side(&player_two);
-        }
+        // handle player inputs
+        handle_player_input(&player_one);
+        handle_player_input(&player_two);
 
         update_player_animations(&player_one);
         update_player_animations(&player_two);

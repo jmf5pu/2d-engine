@@ -69,6 +69,7 @@ typedef struct player
     f32 spawn_time;       // time in s from SPAWNING status to ACTIVE status
     u32 frames_on_status; // # of frames since last status change
     i8 health;
+    bool is_left_player;
 } Player;
 
 typedef struct map
