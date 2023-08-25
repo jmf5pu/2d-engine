@@ -36,11 +36,23 @@ typedef struct sprite_sheet
     u32 texture_id;
 } Sprite_Sheet;
 
+typedef struct sprite
+{
+    Sprite_Sheet *sprite_sheet;
+    f32 row;
+    f32 column;
+    vec2 position; // 2d position
+    i32 z_index;   // for layering sprites
+    bool is_flipped;
+    vec4 color;
+} Sprite;
+
 #define MAX_BATCH_QUADS 10000
 #define MAX_BATCH_VERTICES 40000
 #define MAX_BATCH_ELEMENTS 60000
 
-SDL_Window *render_init(void);
+SDL_Window *
+render_init(void);
 void render_begin(void);
 void render_end(SDL_Window *window, u32 batch_texture_ids[8]);
 void render_quad(vec2 pos, vec2 state, vec4 color);

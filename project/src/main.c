@@ -96,7 +96,53 @@ static Animation_Definition *adef_bullet_1_vertical;
 static Animation *anim_bullet_1_horizontal;
 static Animation *anim_bullet_1_vertical;
 
-// prop sprites & anims
+// TODO: figure out why these have to be pulled out here
+Sprite_Sheet sprite_sheet_shipping_container_red_front;
+Sprite_Sheet sprite_sheet_shipping_container_red_back;
+// set up map & props
+static void init_map(Map *map)
+{
+    // init sprite sheets
+    render_sprite_sheet_init(&sprite_sheet_shipping_container_red_front, "assets/shipping_container_red_front.png", 52, 63);
+    render_sprite_sheet_init(&sprite_sheet_shipping_container_red_back, "assets/shipping_container_red_back.png", 52, 59);
+
+    Sprite shipping_container_red_front = (Sprite){
+        .sprite_sheet = &sprite_sheet_shipping_container_red_front,
+        .row = 0,
+        .column = 0,
+        .position = {320, 148},
+        .z_index = -1,
+        .is_flipped = false,
+        .color = {1, 1, 1, 1},
+    };
+    Sprite shipping_container_red_back = (Sprite){
+        .sprite_sheet = &sprite_sheet_shipping_container_red_back,
+        .row = 0,
+        .column = 0,
+        .position = {320, 209},
+        .z_index = 1,
+        .is_flipped = false,
+        .color = {1, 1, 1, 1},
+    };
+
+    Sprite *sprite_array = malloc(2 * sizeof(Sprite));
+    if (!sprite_array)
+    {
+        // Handle memory allocation error
+        // ...
+    }
+    sprite_array[0] = shipping_container_red_front;
+    sprite_array[1] = shipping_container_red_back;
+
+    // init static bodies
+    Static_Body *red_shipping_container_static_body = physics_static_body_create((vec2){320, 165}, (vec2){26, 26}, COLLISION_LAYER_TERRIAN);
+
+    map->num_sprites = 2;
+    map->num_static_bodies = 1;
+    map->sprites = sprite_array;
+    map->static_bodies = red_shipping_container_static_body;
+}
+
 Sprite_Sheet sprite_sheet_shipping_container_red;
 
 // declare players
@@ -290,7 +336,6 @@ static void init_all_anims()
     anim_bullet_1_horizontal = animation_create(adef_bullet_1_horizontal, false);
     anim_bullet_1_vertical = animation_create(adef_bullet_1_vertical, false);
 
-    // props / map stuff
     render_sprite_sheet_init(&sprite_sheet_shipping_container_red, "assets/shipping_container_red.png", 80, 130);
 }
 
@@ -497,6 +542,10 @@ int main(int argc, char *argv[])
     animation_init(); // creates animation storage
     init_all_anims(); // initializes all our animations
 
+    // initialize map & props
+    Map map;
+    init_map(&map);
+
     // get window & render dimensions
     i32 window_width, window_height;
     SDL_GetWindowSize(window, &window_width, &window_height);
@@ -559,7 +608,6 @@ int main(int argc, char *argv[])
     Static_Body *static_body_b = physics_static_body_create((vec2){render_width - 12.5, render_height * 0.5 + 12.5}, (vec2){25, render_height - 25}, COLLISION_LAYER_TERRIAN);
     Static_Body *static_body_c = physics_static_body_create((vec2){render_width * 0.5 + 12.5, 12.5}, (vec2){render_width - 25, 25}, COLLISION_LAYER_TERRIAN);
     Static_Body *static_body_d = physics_static_body_create((vec2){12.5, render_height * 0.5 - 12.5}, (vec2){25, render_height - 25}, COLLISION_LAYER_TERRIAN);
-    Static_Body *static_body_e = physics_static_body_create((vec2){render_width * 0.5, render_height * 0.5}, (vec2){62.5, 62.5}, COLLISION_LAYER_TERRIAN);
 
     // Entity *entity_a = entity_create((vec2){200, 200}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
     //  Entity *entity_b = entity_create((vec2){300, 300}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
@@ -612,10 +660,23 @@ int main(int argc, char *argv[])
         render_aabb((f32 *)static_body_b, WHITE);
         render_aabb((f32 *)static_body_c, WHITE);
         render_aabb((f32 *)static_body_d, WHITE);
-        // render_aabb((f32 *)static_body_e, WHITE);
 
-        // render map
-        render_sprite_sheet_frame(&sprite_sheet_shipping_container_red, window, 0, 0, (vec2){render_width / 2.0, render_height / 2.0}, 3, false, WHITE, texture_slots);
+        // render map sprites
+        for (int i = 0; i < map.num_sprites; i++)
+        {
+            Sprite sprite = map.sprites[i];
+            render_sprite_sheet_frame(sprite.sprite_sheet, window, sprite.row, sprite.column, sprite.position, sprite.z_index, sprite.is_flipped, sprite.color, texture_slots);
+        }
+
+        // render map static bodies
+        for (int i = 0; i < map.num_static_bodies; i++)
+        {
+            Static_Body static_body = map.static_bodies[i];
+            render_aabb(&static_body, WHITE);
+        }
+
+        // render_sprite_sheet_frame(&sprite_sheet_shipping_container_red_back, window, 0, 0, (vec2){200, 150}, -1, false, WHITE, texture_slots);
+        // render_sprite_sheet_frame(&sprite_sheet_shipping_container_red_front, window, 0, 0, (vec2){300, 150}, 1, false, WHITE, texture_slots);
 
         // rendering enemies
         // render_aabb((f32 *)(entity_a->body), WHITE);
@@ -649,8 +710,7 @@ int main(int argc, char *argv[])
                 continue;
             }
 
-            // TODO: debug overlaps - order here seems to affect this
-            animation_render(entity->animation, window, entity->body->aabb.position, 1, WHITE, texture_slots);
+            animation_render(entity->animation, window, entity->body->aabb.position, 0, WHITE, texture_slots);
         }
 
         render_end(window, texture_slots);

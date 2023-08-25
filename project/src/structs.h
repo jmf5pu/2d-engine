@@ -4,6 +4,7 @@
 #include "engine/entity.h"
 #include "engine/types.h"
 #include "engine/animation.h"
+#include "engine/render.h"
 
 enum Direction
 {
@@ -59,5 +60,19 @@ typedef struct player
     u32 frames_on_status; // # of frames since last status change
     i8 health;
 } Player;
+
+typedef struct map
+{
+    // these indicate the lengths of their respective arrays
+    usize num_sprites;
+    usize num_static_bodies;
+    usize num_p1_spawns;
+    usize num_p2_spawns;
+
+    Sprite *sprites;               // start of sprites array
+    Static_Body *static_bodies;    // start of static bodies array
+    vec2 *player_one_spawn_points; // player one's spawn points
+    vec2 *player_two_spawn_points; // player two's spawn points
+} Map;
 
 #endif
