@@ -379,6 +379,10 @@ static void handle_player_shooting(Player *player)
 
         // decrement weapon capacity
         player->weapon->current_capacity -= 1;
+
+        // restart rpm timer
+        player->weapon->ready_to_fire = false;
+        player->weapon->frames_since_last_shot = 0;
     }
 }
 
@@ -409,10 +413,18 @@ static void input_handle_left_side(Player *player)
         player->direction = DOWN;
         vely -= 150;
     }
-    if (global.input.l_shoot == KS_PRESSED)
+    // handle weapon attribute updates & bullet generationm, contingent on fire mode, input, and weapon shot cooldown
+    if (player->weapon->fire_mode == AUTO && global.input.l_shoot == KS_HELD && player->weapon->ready_to_fire)
     {
-        // handle weapon attribute updates & bullet generation
         handle_player_shooting(player);
+    }
+    if (player->weapon->fire_mode == SEMI && global.input.l_shoot == KS_PRESSED && player->weapon->ready_to_fire)
+    {
+        handle_player_shooting(player);
+    }
+    if (player->weapon->fire_mode == BURST)
+    {
+        // TODO: Not implemented
     }
     player->entity->body->velocity[0] = velx;
     player->entity->body->velocity[1] = vely;
@@ -445,10 +457,19 @@ static void input_handle_right_side(Player *player)
         player->direction = DOWN;
         vely -= 150;
     }
-    if (global.input.r_shoot == KS_PRESSED)
+
+    // handle weapon attribute updates & bullet generationm, contingent on fire mode, input, and weapon shot cooldown
+    if (player->weapon->fire_mode == AUTO && global.input.r_shoot == KS_HELD && player->weapon->ready_to_fire)
     {
-        // handle weapon attribute updates & bullet generation
         handle_player_shooting(player);
+    }
+    if (player->weapon->fire_mode == SEMI && global.input.r_shoot == KS_PRESSED && player->weapon->ready_to_fire)
+    {
+        handle_player_shooting(player);
+    }
+    if (player->weapon->fire_mode == BURST)
+    {
+        // TODO: Not implemented
     }
     player->entity->body->velocity[0] = velx;
     player->entity->body->velocity[1] = vely;
@@ -530,6 +551,17 @@ static void update_player_status(Player *player)
         player->entity->is_active = false;
         player->entity->body->is_active = false;
     }
+
+    // update weapon status
+    // printf("fire cooldown: %f, %d\n", (1.0 / (player->weapon->max_fire_rate / 60.0)), global.time.frame_rate);
+    if (!player->weapon->ready_to_fire && player->weapon->frames_since_last_shot >= ((1.0 / (player->weapon->max_fire_rate / 60.0)) * global.time.frame_rate))
+    {
+        player->weapon->ready_to_fire = true;
+    }
+
+    // update all timers
+    player->frames_on_status++;
+    player->weapon->frames_since_last_shot++;
 }
 
 int main(int argc, char *argv[])
@@ -565,10 +597,13 @@ int main(int argc, char *argv[])
         .dying = p1_anim_soldier_dying_side};
     player_one.direction = RIGHT;
     player_one.weapon = &(Weapon){
-        .name = RIFLE,
+        .name = M16,
+        .fire_mode = AUTO,
         .capacity = 30,
         .current_capacity = 30,
-        .max_fire_rate = 10,
+        .max_fire_rate = 800,
+        .frames_since_last_shot = 0,
+        .ready_to_fire = true,
     };
     player_one.status = SPAWNING;
     player_one.despawn_time = 1.5;
@@ -590,10 +625,13 @@ int main(int argc, char *argv[])
         .dying = p2_anim_soldier_dying_side};
     player_two.direction = LEFT;
     player_two.weapon = &(Weapon){
-        .name = RIFLE,
+        .name = M16,
+        .fire_mode = SEMI,
         .capacity = 30,
         .current_capacity = 30,
-        .max_fire_rate = 10,
+        .max_fire_rate = 800,
+        .frames_since_last_shot = 0,
+        .ready_to_fire = true,
     };
     player_two.status = SPAWNING;
     player_two.despawn_time = 1.5;
@@ -718,10 +756,6 @@ int main(int argc, char *argv[])
         // update each player status
         update_player_status(&player_one);
         update_player_status(&player_two);
-
-        // update frame counters on both players
-        player_one.frames_on_status++;
-        player_two.frames_on_status++;
 
         time_update_late();
     }

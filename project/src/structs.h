@@ -16,7 +16,14 @@ enum Direction
 
 enum Weapon_Name
 {
-    RIFLE
+    M16
+};
+
+enum Fire_Mode
+{
+    AUTO,
+    SEMI,
+    BURST
 };
 
 enum Player_Status
@@ -30,9 +37,12 @@ enum Player_Status
 typedef struct weapon
 {
     enum Weapon_Name name;
+    enum Fire_Mode fire_mode;
     i8 capacity;
     i8 current_capacity;
-    i8 max_fire_rate;
+    u16 max_fire_rate; // rounds per minute
+    u16 frames_since_last_shot;
+    bool ready_to_fire;
 } Weapon;
 
 typedef struct animation_set
