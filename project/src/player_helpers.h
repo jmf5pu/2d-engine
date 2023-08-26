@@ -4,6 +4,10 @@
 #include "engine/animation.h"
 #include "structs.h"
 
+// declare players
+extern Player *player_one;
+extern Player *player_two;
+
 // player 1 sprites & anims
 Sprite_Sheet p1_sprite_sheet_soldier_idle_side;
 Sprite_Sheet p1_sprite_sheet_soldier_running_side;
@@ -75,5 +79,6 @@ void update_player_status(Player *player);
 void update_player_animations(Player *player);
 void handle_player_shooting(Player *player);
 void handle_player_input(Player *player);
+Player *get_player_from_body(Player *player_one, Player *player_two, Body *body);
 
 #endif

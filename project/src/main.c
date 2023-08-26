@@ -32,39 +32,9 @@ static bool should_quit = false;   // quit flag
 static f32 render_width;
 static f32 render_height;
 
-// declare players
-static Player *player_one;
-static Player *player_two;
-
 // init spawn points
 static vec2 spawn_point_one = {100, 200};
 static vec2 spawn_point_two = {550, 200};
-
-Player *get_player_from_body(Player *player_one, Player *player_two, Body *body)
-{
-    if (player_one->entity->body == body)
-    {
-        return player_one;
-    }
-    else if (player_two->entity->body == body)
-    {
-        return player_two;
-    }
-    else
-    {
-        return NULL;
-    }
-}
-
-void player_on_hit(Body *self, Body *other, Hit hit)
-{
-    Player *player = get_player_from_body(player_one, player_two, self);
-    if (other->collision_layer == COLLISION_LAYER_BULLET && other->is_active && self->is_active)
-    {
-        player->health -= 50;
-        other->is_active = false; // always mark bullet as inactive
-    }
-}
 
 int main(int argc, char *argv[])
 {
@@ -110,7 +80,7 @@ int main(int argc, char *argv[])
     };
     player_one->spawn_point[0] = spawn_point_one[0];
     player_one->spawn_point[1] = spawn_point_one[1];
-    player_one->status = SPAWNING;
+    player_one->status = PLAYER_SPAWNING;
     player_one->despawn_time = 2.9;
     player_one->spawn_delay = 5;
     player_one->spawn_time = 2;
@@ -142,7 +112,7 @@ int main(int argc, char *argv[])
     };
     player_two->spawn_point[0] = spawn_point_two[0];
     player_two->spawn_point[1] = spawn_point_two[1];
-    player_two->status = SPAWNING;
+    player_two->status = PLAYER_SPAWNING;
     player_two->despawn_time = 2.9;
     player_two->spawn_delay = 5;
     player_two->spawn_time = 2;
@@ -259,6 +229,10 @@ int main(int argc, char *argv[])
 
         time_update_late();
     }
+
+    // TODO: free all of the map stuff here
+    free(player_one);
+    free(player_two);
 
     return 0;
 }

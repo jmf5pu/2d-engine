@@ -19,6 +19,11 @@ enum Weapon_Name
     M16
 };
 
+enum Pickup_Name
+{
+    M44_PICKUP
+};
+
 enum Fire_Mode
 {
     AUTO,
@@ -28,10 +33,17 @@ enum Fire_Mode
 
 enum Player_Status
 {
-    SPAWNING,
-    ACTIVE,
-    DESPAWNING,
-    INACTIVE
+    PLAYER_SPAWNING,
+    PLAYER_ACTIVE,
+    PLAYER_DESPAWNING,
+    PLAYER_INACTIVE
+};
+
+enum Pickup_Status
+{
+    PICKUP_ACTIVE,
+    PICKUP_INACTIVE,
+    PICKUP_SPAWNING
 };
 
 typedef struct weapon
@@ -73,15 +85,27 @@ typedef struct player
     bool is_left_player;
 } Player;
 
+typedef struct pickup
+{
+    Entity *entity;
+    enum Pickup_Name name;
+    enum Pickup_Status status;
+    f32 spawn_delay;
+    f32 spawn_time;
+
+} Pickup;
+
 typedef struct map
 {
     // these indicate the lengths of their respective arrays
     usize num_sprites;
+    usize num_pickups;
     usize num_static_bodies;
     usize num_p1_spawns;
     usize num_p2_spawns;
 
     Sprite *sprites;               // start of sprites array
+    Pickup *pickups;               // start of pickups array
     Static_Body *static_bodies;    // start of static bodies array
     vec2 *player_one_spawn_points; // player one's spawn points
     vec2 *player_two_spawn_points; // player two's spawn points

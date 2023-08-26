@@ -3,6 +3,10 @@
 #include "player_helpers.h"
 #include "collision_behavior.h"
 
+// declare players
+Player *player_one;
+Player *player_two;
+
 // sets up animations for players and bullets
 void init_all_anims()
 {
@@ -166,10 +170,10 @@ void init_all_anims()
 void update_player_status(Player *player)
 {
     // check if spawn delay is up
-    if (player->status == INACTIVE && player->frames_on_status >= (player->spawn_delay * global.time.frame_rate))
+    if (player->status == PLAYER_INACTIVE && player->frames_on_status >= (player->spawn_delay * global.time.frame_rate))
     {
         // update status & reset counter
-        player->status = SPAWNING;
+        player->status = PLAYER_SPAWNING;
         player->frames_on_status = 0;
 
         // reset location
@@ -184,15 +188,15 @@ void update_player_status(Player *player)
         player->entity->body->is_active = true;
     }
     // check if spawn time is up
-    else if (player->status == SPAWNING && player->frames_on_status >= (player->spawn_time * global.time.frame_rate))
+    else if (player->status == PLAYER_SPAWNING && player->frames_on_status >= (player->spawn_time * global.time.frame_rate))
     {
-        player->status = ACTIVE;
+        player->status = PLAYER_ACTIVE;
         player->frames_on_status = 0;
     }
     // check if health is 0
-    else if (player->health <= 0 && player->status == ACTIVE)
+    else if (player->health <= 0 && player->status == PLAYER_ACTIVE)
     {
-        player->status = DESPAWNING;
+        player->status = PLAYER_DESPAWNING;
         player->animation_set->dying->current_frame_index = 0;
         player->frames_on_status = 0;
 
@@ -201,9 +205,9 @@ void update_player_status(Player *player)
         player->entity->body->velocity[1] = 0;
     }
     // check if death animation is complete
-    else if (player->status == DESPAWNING && player->frames_on_status >= (player->despawn_time * global.time.frame_rate))
+    else if (player->status == PLAYER_DESPAWNING && player->frames_on_status >= (player->despawn_time * global.time.frame_rate))
     {
-        player->status = INACTIVE;
+        player->status = PLAYER_INACTIVE;
         player->frames_on_status = 0;
 
         // hide sprites
@@ -226,7 +230,7 @@ void update_player_status(Player *player)
 // updates player animations based on direction
 void update_player_animations(Player *player)
 {
-    if (player->status == ACTIVE)
+    if (player->status == PLAYER_ACTIVE)
     {
         if (player->direction == RIGHT || player->direction == LEFT)
         {
@@ -246,11 +250,11 @@ void update_player_animations(Player *player)
             ERROR_EXIT(-1, "Player direction not recognized");
         }
     }
-    else if (player->status == SPAWNING)
+    else if (player->status == PLAYER_SPAWNING)
     {
         player->entity->animation = player->animation_set->spawning;
     }
-    else if (player->status == DESPAWNING)
+    else if (player->status == PLAYER_DESPAWNING)
     {
         player->entity->animation = player->animation_set->dying;
     }
@@ -306,7 +310,7 @@ void handle_player_shooting(Player *player)
 // handles key inputs of players
 void handle_player_input(Player *player)
 {
-    if (player->status != ACTIVE) // don't allow inputs on inactive players
+    if (player->status != PLAYER_ACTIVE) // don't allow inputs on inactive players
     {
         return;
     }
@@ -318,25 +322,27 @@ void handle_player_input(Player *player)
 
     f32 velx = 0;
     f32 vely = 0;
+
+    // 4 directional movement only, no diagonals
     if (right)
     {
         player->direction = RIGHT;
         velx += 150;
     }
 
-    if (left)
+    else if (left)
     {
         player->direction = LEFT;
         velx -= 150;
     }
 
-    if (up)
+    else if (up)
     {
         player->direction = UP;
         vely += 150;
     }
 
-    if (down)
+    else if (down)
     {
         player->direction = DOWN;
         vely -= 150;
@@ -357,4 +363,20 @@ void handle_player_input(Player *player)
     }
     player->entity->body->velocity[0] = velx;
     player->entity->body->velocity[1] = vely;
+}
+
+Player *get_player_from_body(Player *player_one, Player *player_two, Body *body)
+{
+    if (player_one->entity->body == body)
+    {
+        return player_one;
+    }
+    else if (player_two->entity->body == body)
+    {
+        return player_two;
+    }
+    else
+    {
+        return NULL;
+    }
 }
