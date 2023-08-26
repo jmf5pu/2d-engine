@@ -94,6 +94,7 @@ int main(int argc, char *argv[])
         .down_moving = p1_anim_soldier_running_front,
         .up_idle = p1_anim_soldier_idle_back,
         .up_moving = p1_anim_soldier_running_back,
+        .up_right_idle = p1_anim_soldier_up_right_idle,
         .side_idle = p1_anim_soldier_idle_side,
         .side_moving = p1_anim_soldier_running_side,
         .spawning = p1_anim_soldier_spawning_side,
@@ -260,5 +261,7 @@ int main(int argc, char *argv[])
         time_update_late();
     }
 
+    free(player_one);
+    free(player_two);
     return 0;
 }

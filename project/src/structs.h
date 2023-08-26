@@ -11,12 +11,17 @@ enum Direction
     UP,
     RIGHT,
     DOWN,
-    LEFT
+    LEFT,
+    UP_RIGHT,
+    UP_LEFT,
+    DOWN_RIGHT,
+    DOWN_LEFT
 };
 
 enum Weapon_Name
 {
-    M16
+    M16,
+    M44
 };
 
 enum Fire_Mode
@@ -49,8 +54,16 @@ typedef struct animation_set
 {
     Animation *up_idle;
     Animation *up_moving;
+    Animation *up_right_idle;
+    Animation *up_right_moving;
+    Animation *up_left_idle;
+    Animation *up_left_moving;
     Animation *down_idle;
     Animation *down_moving;
+    Animation *down_right_idle;
+    Animation *down_right_moving;
+    Animation *down_left_idle;
+    Animation *down_left_moving;
     Animation *side_idle;
     Animation *side_moving;
     Animation *spawning;

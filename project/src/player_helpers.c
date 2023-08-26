@@ -16,6 +16,8 @@ void init_all_anims()
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_spawning_side, "assets/soldier_1_spawning_side.png", 42, 42);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_up_right_idle, "assets/soldier_1_m16_up_right.png", 42, 42);
+
     p1_adef_soldier_idle_side = animation_definition_create(
         &p1_sprite_sheet_soldier_idle_side,
         (f32[]){0},
@@ -65,6 +67,13 @@ void init_all_anims()
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
         10);
 
+    p1_adef_soldier_up_right_idle = animation_definition_create(
+        &p1_sprite_sheet_soldier_up_right_idle,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+
     p1_anim_soldier_idle_side = animation_create(p1_adef_soldier_idle_side, false);
     p1_anim_soldier_running_side = animation_create(p1_adef_soldier_running_side, true);
     p1_anim_soldier_idle_back = animation_create(p1_adef_soldier_idle_back, false);
@@ -73,6 +82,8 @@ void init_all_anims()
     p1_anim_soldier_running_front = animation_create(p1_adef_soldier_running_front, true);
     p1_anim_soldier_spawning_side = animation_create(p1_adef_soldier_spawning_side, true);
     p1_anim_soldier_dying_side = animation_create(p1_adef_soldier_dying_side, true);
+
+    p1_anim_soldier_up_right_idle = animation_create(p1_adef_soldier_up_right_idle, false);
 
     // player_two stuff
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_idle_side, "assets/soldier_1_m16_idle_side.png", 42, 42);
@@ -241,6 +252,19 @@ void update_player_animations(Player *player)
         {
             player->entity->animation = player->entity->body->velocity[1] != 0 ? player->animation_set->down_moving : player->animation_set->down_idle; // anim_soldier_running_front : anim_soldier_idle_front;
         }
+        else if (player->direction == UP_RIGHT)
+        {
+            player->entity->animation = player->animation_set->up_right_idle;
+        }
+        else if (player->direction == UP_LEFT)
+        {
+        }
+        else if (player->direction == DOWN_RIGHT)
+        {
+        }
+        else if (player->direction == DOWN_LEFT)
+        {
+        }
         else
         {
             ERROR_EXIT(-1, "Player direction not recognized");
@@ -285,10 +309,8 @@ void handle_player_shooting(Player *player)
             bullet_position[0] -= 25;
             bullet_velocity[0] = -1200;
         }
-        else
-        {
-            ERROR_EXIT(NULL, "Player direction not recognized");
-        }
+        // TODO: update with more directions
+
         Entity *bullet = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
         bullet->animation = bullet_anim;
         bullet->body->velocity[0] = bullet_velocity[0];
@@ -318,25 +340,33 @@ void handle_player_input(Player *player)
 
     f32 velx = 0;
     f32 vely = 0;
-    if (right)
+
+    if (up && right)
+    {
+        player->direction = UP_RIGHT;
+        velx += 150;
+        vely += 150;
+    }
+
+    else if (right)
     {
         player->direction = RIGHT;
         velx += 150;
     }
 
-    if (left)
+    else if (left)
     {
         player->direction = LEFT;
         velx -= 150;
     }
 
-    if (up)
+    else if (up)
     {
         player->direction = UP;
         vely += 150;
     }
 
-    if (down)
+    else if (down)
     {
         player->direction = DOWN;
         vely -= 150;
