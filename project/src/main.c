@@ -23,6 +23,7 @@
 #include "collision_behavior.h"
 #include "player_helpers.h"
 #include "map_helpers.h"
+#include "weapon_types.h"
 
 const u8 frame_rate = 30;          // frame rate
 static u32 texture_slots[8] = {0}; // texture slots array for batch rendering
@@ -46,8 +47,10 @@ int main(int argc, char *argv[])
     animation_init(); // creates animation storage
     init_all_anims(); // initializes all our animations
 
+    // define weapon types
+    init_weapon_types();
+
     // initialize map & props
-    Map map;
     init_map(&map);
 
     // get window & render dimensions
@@ -70,11 +73,11 @@ int main(int argc, char *argv[])
         .dying = p1_anim_soldier_dying_side};
     player_one->direction = RIGHT;
     player_one->weapon = &(Weapon){
-        .name = M16,
-        .fire_mode = AUTO,
-        .capacity = 30,
-        .current_capacity = 30,
-        .max_fire_rate = 800,
+        .name = m16.name,
+        .fire_mode = m16.fire_mode,
+        .capacity = m16.capacity,
+        .current_capacity = m16.capacity,
+        .max_fire_rate = m16.max_fire_rate,
         .frames_since_last_shot = 0,
         .ready_to_fire = true,
     };
@@ -102,11 +105,11 @@ int main(int argc, char *argv[])
         .dying = p2_anim_soldier_dying_side};
     player_two->direction = LEFT;
     player_two->weapon = &(Weapon){
-        .name = M16,
-        .fire_mode = SEMI,
-        .capacity = 30,
-        .current_capacity = 30,
-        .max_fire_rate = 800,
+        .name = m16.name,
+        .fire_mode = m16.fire_mode,
+        .capacity = m16.capacity,
+        .current_capacity = m16.capacity,
+        .max_fire_rate = m16.max_fire_rate,
         .frames_since_last_shot = 0,
         .ready_to_fire = true,
     };

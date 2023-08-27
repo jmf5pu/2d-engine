@@ -16,7 +16,8 @@ enum Direction
 
 enum Weapon_Name
 {
-    M16
+    M16,
+    M44
 };
 
 enum Pickup_Name
@@ -46,13 +47,25 @@ enum Pickup_Status
     PICKUP_SPAWNING
 };
 
+// used to define common weapon types
+typedef struct weapon_type
+{
+    enum Weapon_Name name;
+    enum Fire_Mode fire_mode;
+    i8 capacity;
+    u16 max_fire_rate; // rounds per minute
+    i8 damage;
+} Weapon_Type;
+
+// contains weapon info as well as player-specific data
 typedef struct weapon
 {
     enum Weapon_Name name;
     enum Fire_Mode fire_mode;
     i8 capacity;
     i8 current_capacity;
-    u16 max_fire_rate; // rounds per minute
+    u16 max_fire_rate;
+    i8 damage;
     u16 frames_since_last_shot;
     bool ready_to_fire;
 } Weapon;

@@ -1,5 +1,8 @@
 #include "map_helpers.h"
 #include "collision_behavior.h"
+#include "engine./util.h"
+
+Map map;
 
 // set up map & props
 void init_map(Map *map)
@@ -53,7 +56,7 @@ void init_map(Map *map)
     anim_m44_spinning = animation_create(adef_m44_spinning, true);
 
     Pickup m44_pickup = (Pickup){
-        .entity = entity_create((vec2){50, 50}, (vec2){30, 20}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, pickup_on_hit, pickup_on_hit_static),
+        .entity = entity_create((vec2){50, 50}, (vec2){30, 20}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, bullet_mask, pickup_on_hit, pickup_on_hit_static),
         .name = M44_PICKUP,
         .status = PICKUP_ACTIVE,
         .spawn_delay = 10,
@@ -71,4 +74,23 @@ void init_map(Map *map)
     map->sprites = sprite_array;
     map->pickups = pickup_array;
     map->static_bodies = red_shipping_container_static_body;
+}
+
+// returns the pickup associated with a physics body if it exists in the current map, returns NULL if not found
+Pickup *get_pickup_from_body(Body *body)
+{
+    if (!map.pickups)
+    {
+        ERROR_RETURN(1, "Map not yet initialized or initialized incorrectly.")
+    }
+
+    for (int i = 0; i < map.num_pickups; i++)
+    {
+        if (map.pickups[i].entity->body == body)
+        {
+            return &map.pickups[i];
+        }
+    }
+
+    return NULL;
 }
