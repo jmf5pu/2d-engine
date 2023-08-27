@@ -105,6 +105,7 @@ typedef struct pickup
     enum Pickup_Status status;
     f32 spawn_delay;
     f32 spawn_time;
+    u32 frames_on_status;
 
 } Pickup;
 

@@ -228,6 +228,9 @@ int main(int argc, char *argv[])
 
         render_end(window, texture_slots);
 
+        // update map
+        update_map(&map);
+
         // update each player status
         update_player_status(player_one);
         update_player_status(player_two);
@@ -235,7 +238,7 @@ int main(int argc, char *argv[])
         time_update_late();
     }
 
-    // TODO: free all of the map stuff here
+    free_map_attributes(&map);
     free(player_one);
     free(player_two);
 

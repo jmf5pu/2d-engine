@@ -57,6 +57,8 @@ void player_on_hit(Body *self, Body *other, Hit hit)
         }
 
         pickup->entity->body->is_active = false;
+        pickup->status = PICKUP_INACTIVE;
+        pickup->frames_on_status = 0;
         // TODO: implement respawn logic, timer etc
     }
 }

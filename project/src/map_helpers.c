@@ -1,6 +1,7 @@
+#include "engine./util.h"
+#include "engine/global.h"
 #include "map_helpers.h"
 #include "collision_behavior.h"
-#include "engine./util.h"
 
 Map map;
 
@@ -56,12 +57,12 @@ void init_map(Map *map)
     anim_m44_spinning = animation_create(adef_m44_spinning, true);
 
     Pickup m44_pickup = (Pickup){
-        .entity = entity_create((vec2){50, 50}, (vec2){30, 20}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, bullet_mask, pickup_on_hit, pickup_on_hit_static),
+        .entity = entity_create((vec2){340, 75}, (vec2){30, 20}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, bullet_mask, pickup_on_hit, pickup_on_hit_static),
         .name = M44_PICKUP,
         .status = PICKUP_ACTIVE,
-        .spawn_delay = 10,
-        .spawn_time = 0,
-    };
+        .spawn_delay = 5,
+        .spawn_time = 3,
+        .frames_on_status = 0};
     m44_pickup.entity->animation = anim_m44_spinning;
 
     Pickup *pickup_array = malloc(sizeof(Pickup));
@@ -74,6 +75,62 @@ void init_map(Map *map)
     map->sprites = sprite_array;
     map->pickups = pickup_array;
     map->static_bodies = red_shipping_container_static_body;
+}
+
+// updates the status of a pickup, should be called once per frame for each pickup
+void update_pickup_status(Pickup *pickup)
+{
+    // inactive to spawning
+    if (pickup->status == PICKUP_INACTIVE && pickup->frames_on_status >= (pickup->spawn_delay * global.time.frame_rate))
+    {
+        pickup->status = PICKUP_SPAWNING;
+        pickup->entity->body->is_active = true;
+        pickup->frames_on_status = 0;
+    }
+    // spawning to active
+    else if (pickup->status == PICKUP_SPAWNING && pickup->frames_on_status >= (pickup->spawn_time * global.time.frame_rate))
+    {
+        pickup->status = PICKUP_ACTIVE;
+        pickup->frames_on_status = 0;
+    }
+    // active to inactive is handled in player_on_hit in collision_behavior.c
+
+    pickup->frames_on_status++;
+}
+
+// updates pickup animations, should be called once per frame for each pickup
+void update_pickup_animations(Pickup *pickup)
+{
+    if (pickup->status == PICKUP_SPAWNING)
+    {
+    }
+    else if (pickup->status == PICKUP_ACTIVE)
+    {
+        pickup->entity->animation = anim_m44_spinning;
+    }
+}
+
+// updates all pickup statuses and animations, should be called once per frame
+void update_map(Map *map)
+{
+    for (int i = 0; i < map->num_pickups; i++)
+    {
+        update_pickup_status(&map->pickups[i]);
+        update_pickup_animations(&map->pickups[i]);
+    }
+}
+
+// frees all map attributes that used malloc to init
+void free_map_attributes(Map *map)
+{
+    for (int i = 0; i < map->num_sprites; i++)
+    {
+        free(&map->sprites[i]);
+    }
+    for (int i = 0; i < map->num_pickups; i++)
+    {
+        free(&map->pickups[i]);
+    }
 }
 
 // returns the pickup associated with a physics body if it exists in the current map, returns NULL if not found
