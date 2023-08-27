@@ -365,15 +365,15 @@ void handle_player_input(Player *player)
     player->entity->body->velocity[1] = vely;
 }
 
-Player *get_player_from_body(Player *player_one, Player *player_two, Body *body)
+Player *get_player_from_body(Player *player_one, Player *player_two, Body *body, bool return_other_player)
 {
     if (player_one->entity->body == body)
     {
-        return player_one;
+        return !return_other_player ? player_one : player_two;
     }
     else if (player_two->entity->body == body)
     {
-        return player_two;
+        return !return_other_player ? player_two : player_one;
     }
     else
     {

@@ -78,6 +78,7 @@ int main(int argc, char *argv[])
         .capacity = m16.capacity,
         .current_capacity = m16.capacity,
         .max_fire_rate = m16.max_fire_rate,
+        .damage = m16.damage,
         .frames_since_last_shot = 0,
         .ready_to_fire = true,
     };
@@ -110,6 +111,7 @@ int main(int argc, char *argv[])
         .capacity = m16.capacity,
         .current_capacity = m16.capacity,
         .max_fire_rate = m16.max_fire_rate,
+        .damage = m16.damage,
         .frames_since_last_shot = 0,
         .ready_to_fire = true,
     };

@@ -12,11 +12,12 @@ const u8 pickup_mask = COLLISION_LAYER_PLAYER;
 
 void player_on_hit(Body *self, Body *other, Hit hit)
 {
-    Player *player = get_player_from_body(player_one, player_two, self);
+    Player *player = get_player_from_body(player_one, player_two, self, false);
+    Player *other_player = get_player_from_body(player_one, player_two, self, true);
     if (other->collision_layer == COLLISION_LAYER_BULLET && other->is_active && self->is_active)
     {
-        player->health -= 50;     // TODO: attach this value to a bullet struct
-        other->is_active = false; // always mark bullet as inactive
+        player->health -= other_player->weapon->damage; // TODO: eventually may need to attach this value to a bullet struct
+        other->is_active = false;                       // always mark bullet as inactive
     }
 
     else if (other->collision_layer == COLLISION_LAYER_PICKUP && other->is_active && self->is_active)
@@ -29,6 +30,7 @@ void player_on_hit(Body *self, Body *other, Hit hit)
             player->weapon->capacity = m44.capacity;
             player->weapon->current_capacity = m44.capacity;
             player->weapon->max_fire_rate = m44.max_fire_rate;
+            player->weapon->damage = m44.damage;
             player->weapon->frames_since_last_shot = 0;
             player->weapon->ready_to_fire = true;
         }

@@ -15,5 +15,5 @@ void init_weapon_types()
     m44.fire_mode = SEMI;
     m44.capacity = 5;
     m44.max_fire_rate = 20;
-    m44.damage = 80;
+    m44.damage = 100;
 }
