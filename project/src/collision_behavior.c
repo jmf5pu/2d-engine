@@ -25,6 +25,7 @@ void player_on_hit(Body *self, Body *other, Hit hit)
         Pickup *pickup = get_pickup_from_body(other);
         if (pickup->name == M44_PICKUP)
         {
+            // update player weapon
             player->weapon->name = m44.name;
             player->weapon->fire_mode = m44.fire_mode;
             player->weapon->capacity = m44.capacity;
@@ -33,6 +34,26 @@ void player_on_hit(Body *self, Body *other, Hit hit)
             player->weapon->damage = m44.damage;
             player->weapon->frames_since_last_shot = 0;
             player->weapon->ready_to_fire = true;
+
+            // update player animations
+            if (player == player_one)
+            {
+                player->animation_set->down_idle = p1_anim_soldier_1_m44_idle_front;
+                player->animation_set->down_moving = p1_anim_soldier_1_m44_running_front;
+                player->animation_set->up_idle = p1_anim_soldier_1_m44_idle_back;
+                player->animation_set->up_moving = p1_anim_soldier_1_m44_running_back;
+                player->animation_set->side_idle = p1_anim_soldier_1_m44_idle_side;
+                player->animation_set->side_moving = p1_anim_soldier_1_m44_running_side;
+            }
+            else // is player 2
+            {
+                player->animation_set->down_idle = p2_anim_soldier_1_m44_idle_front;
+                player->animation_set->down_moving = p2_anim_soldier_1_m44_running_front;
+                player->animation_set->up_idle = p2_anim_soldier_1_m44_idle_back;
+                player->animation_set->up_moving = p2_anim_soldier_1_m44_running_back;
+                player->animation_set->side_idle = p2_anim_soldier_1_m44_idle_side;
+                player->animation_set->side_moving = p2_anim_soldier_1_m44_running_side;
+            }
         }
 
         pickup->entity->body->is_active = false;
