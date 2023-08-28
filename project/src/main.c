@@ -25,7 +25,7 @@
 #include "map_helpers.h"
 #include "weapon_types.h"
 
-const u8 frame_rate = 30;          // frame rate
+const u8 frame_rate = 60;          // frame rate
 static u32 texture_slots[8] = {0}; // texture slots array for batch rendering
 static bool should_quit = false;   // quit flag
 
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
         .name = m16.name,
         .fire_mode = m16.fire_mode,
         .capacity = m16.capacity,
-        .current_capacity = m16.capacity,
+        .current_capacity = 100,
         .max_fire_rate = m16.max_fire_rate,
         .damage = m16.damage,
         .frames_since_last_shot = 0,
@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
         .name = m16.name,
         .fire_mode = m16.fire_mode,
         .capacity = m16.capacity,
-        .current_capacity = m16.capacity,
+        .current_capacity = 100,
         .max_fire_rate = m16.max_fire_rate,
         .damage = m16.damage,
         .frames_since_last_shot = 0,
@@ -127,10 +127,10 @@ int main(int argc, char *argv[])
 
     SDL_ShowCursor(false);
 
-    Static_Body *static_body_a = physics_static_body_create((vec2){render_width * 0.5 - 12.5, render_height - 12.5}, (vec2){render_width - 25, 25}, COLLISION_LAYER_TERRIAN);
-    Static_Body *static_body_b = physics_static_body_create((vec2){render_width - 12.5, render_height * 0.5 + 12.5}, (vec2){25, render_height - 25}, COLLISION_LAYER_TERRIAN);
-    Static_Body *static_body_c = physics_static_body_create((vec2){render_width * 0.5 + 12.5, 12.5}, (vec2){render_width - 25, 25}, COLLISION_LAYER_TERRIAN);
-    Static_Body *static_body_d = physics_static_body_create((vec2){12.5, render_height * 0.5 - 12.5}, (vec2){25, render_height - 25}, COLLISION_LAYER_TERRIAN);
+    // Static_Body *static_body_a = physics_static_body_create((vec2){render_width * 0.5 - 12.5, render_height - 12.5}, (vec2){render_width - 25, 25}, COLLISION_LAYER_TERRIAN);
+    // Static_Body *static_body_b = physics_static_body_create((vec2){render_width - 12.5, render_height * 0.5 + 12.5}, (vec2){25, render_height - 25}, COLLISION_LAYER_TERRIAN);
+    // Static_Body *static_body_c = physics_static_body_create((vec2){render_width * 0.5 + 12.5, 12.5}, (vec2){render_width - 25, 25}, COLLISION_LAYER_TERRIAN);
+    // Static_Body *static_body_d = physics_static_body_create((vec2){12.5, render_height * 0.5 - 12.5}, (vec2){25, render_height - 25}, COLLISION_LAYER_TERRIAN);
 
     // Entity *entity_a = entity_create((vec2){200, 200}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
     //  Entity *entity_b = entity_create((vec2){300, 300}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
@@ -159,6 +159,10 @@ int main(int argc, char *argv[])
                 break;
             }
         }
+
+        // update map
+        update_map(&map);
+
         input_update(); // grab current inputs
 
         // handle player inputs
@@ -173,10 +177,10 @@ int main(int argc, char *argv[])
         render_begin();
 
         // rendering walls
-        render_aabb((f32 *)static_body_a, WHITE);
-        render_aabb((f32 *)static_body_b, WHITE);
-        render_aabb((f32 *)static_body_c, WHITE);
-        render_aabb((f32 *)static_body_d, WHITE);
+        // render_aabb((f32 *)static_body_a, WHITE);
+        // render_aabb((f32 *)static_body_b, WHITE);
+        // render_aabb((f32 *)static_body_c, WHITE);
+        // render_aabb((f32 *)static_body_d, WHITE);
 
         // rendering enemies
         // render_aabb((f32 *)(entity_a->body), WHITE);
@@ -219,17 +223,13 @@ int main(int argc, char *argv[])
             render_sprite_sheet_frame(sprite.sprite_sheet, window, sprite.row, sprite.column, sprite.position, sprite.z_index, sprite.is_flipped, sprite.color, texture_slots);
         }
 
-        // render map static bodies
-        for (int i = 0; i < map.num_static_bodies; i++)
-        {
-            Static_Body static_body = map.static_bodies[i];
-            render_aabb(&static_body, WHITE);
-        }
+        // uncomment to render map's static bodies
+        // for (int i = 0; i < map.num_static_bodies; i++)
+        // {
+        //     Static_Body static_body = map.static_bodies[i];
+        // }
 
         render_end(window, texture_slots);
-
-        // update map
-        update_map(&map);
 
         // update each player status
         update_player_status(player_one);

@@ -8,12 +8,28 @@ Map map;
 // set up map & props
 void init_map(Map *map)
 {
+    Sprite_Sheet *sprite_sheet_chain_link_fence_horizontal_wide = malloc(sizeof(Sprite_Sheet)); // TODO: bug noticed after adding this sprite to map
     Sprite_Sheet *sprite_sheet_shipping_container_red_front = malloc(sizeof(Sprite_Sheet));
     Sprite_Sheet *sprite_sheet_shipping_container_red_back = malloc(sizeof(Sprite_Sheet));
+    Sprite_Sheet *sprite_sheet_shipping_container_red_front_2 = malloc(sizeof(Sprite_Sheet));
+    Sprite_Sheet *sprite_sheet_shipping_container_red_back_2 = malloc(sizeof(Sprite_Sheet));
 
     // init sprite sheets
+    render_sprite_sheet_init(sprite_sheet_chain_link_fence_horizontal_wide, "assets/chain_link_fence_horizontal_wide.png", 640, 80);
     render_sprite_sheet_init(sprite_sheet_shipping_container_red_front, "assets/shipping_container_red_front.png", 52, 63);
     render_sprite_sheet_init(sprite_sheet_shipping_container_red_back, "assets/shipping_container_red_back.png", 52, 59);
+    render_sprite_sheet_init(sprite_sheet_shipping_container_red_front_2, "assets/shipping_container_red_front.png", 52, 63);
+    render_sprite_sheet_init(sprite_sheet_shipping_container_red_back_2, "assets/shipping_container_red_back.png", 52, 59);
+
+    Sprite chain_link_fence_horizontal_wide = (Sprite){
+        .sprite_sheet = sprite_sheet_chain_link_fence_horizontal_wide,
+        .row = 0,
+        .column = 0,
+        .position = {317, 45},
+        .z_index = 1,
+        .is_flipped = false,
+        .color = {1, 1, 1, 1},
+    };
 
     Sprite shipping_container_red_front = (Sprite){
         .sprite_sheet = sprite_sheet_shipping_container_red_front,
@@ -33,18 +49,44 @@ void init_map(Map *map)
         .is_flipped = false,
         .color = {1, 1, 1, 1},
     };
+    Sprite shipping_container_red_front_2 = (Sprite){
+        .sprite_sheet = sprite_sheet_shipping_container_red_front_2,
+        .row = 0,
+        .column = 0,
+        .position = {400, 148},
+        .z_index = -1,
+        .is_flipped = false,
+        .color = {1, 1, 1, 1},
+    };
+    Sprite shipping_container_red_back_2 = (Sprite){
+        .sprite_sheet = sprite_sheet_shipping_container_red_back_2,
+        .row = 0,
+        .column = 0,
+        .position = {400, 209},
+        .z_index = 1,
+        .is_flipped = false,
+        .color = {1, 1, 1, 1},
+    };
 
-    Sprite *sprite_array = malloc(2 * sizeof(Sprite));
+    Sprite *sprite_array = malloc(5 * sizeof(Sprite));
     if (!sprite_array)
     {
         // Handle memory allocation error
         // ...
     }
-    sprite_array[0] = shipping_container_red_front;
-    sprite_array[1] = shipping_container_red_back;
+    sprite_array[0] = chain_link_fence_horizontal_wide;
+    sprite_array[1] = shipping_container_red_front;
+    sprite_array[2] = shipping_container_red_back;
+    sprite_array[3] = shipping_container_red_front_2;
+    sprite_array[4] = shipping_container_red_back_2;
 
     // init static bodies TODO: will need to create array like above when we have more than 1
+    Static_Body *bottom_fence = physics_static_body_create((vec2){320, 10}, (vec2){640, 3}, COLLISION_LAYER_TERRIAN);
     Static_Body *red_shipping_container_static_body = physics_static_body_create((vec2){322, 165}, (vec2){32, 26}, COLLISION_LAYER_TERRIAN);
+
+    Static_Body *static_body_array = malloc(2 * sizeof(Static_Body));
+    static_body_array[0] = *bottom_fence;
+    static_body_array[1] = *red_shipping_container_static_body;
 
     // init pickups
     render_sprite_sheet_init(&sprite_sheet_m44_spinning, "assets/m44_spinning.png", 30, 20);
@@ -69,12 +111,12 @@ void init_map(Map *map)
     // TODO: handle malloc failure here
     pickup_array[0] = m44_pickup;
 
-    map->num_sprites = 2;
+    map->num_sprites = 5;
     map->num_pickups = 1;
-    map->num_static_bodies = 1;
+    map->num_static_bodies = 2;
     map->sprites = sprite_array;
     map->pickups = pickup_array;
-    map->static_bodies = red_shipping_container_static_body;
+    map->static_bodies = static_body_array;
 }
 
 // updates the status of a pickup, should be called once per frame for each pickup
@@ -131,6 +173,10 @@ void free_map_attributes(Map *map)
     {
         free(&map->pickups[i]);
     }
+
+    free(map->static_bodies);
+    free(map->sprites);
+    free(map->pickups);
 }
 
 // returns the pickup associated with a physics body if it exists in the current map, returns NULL if not found

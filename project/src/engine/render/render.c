@@ -14,7 +14,7 @@ static f32 window_width = 1280;
 static f32 window_height = 720;
 static f32 render_width = 640;
 static f32 render_height = 360;
-static f32 scale = 2;
+static f32 scale = 2; // TODO: change this based on screen size
 
 static u32 vao_quad;
 static u32 vbo_quad;
@@ -246,6 +246,7 @@ static void append_quad(vec2 position, vec2 size, vec4 texture_coordinates, i32 
         .quad_id = quad_id,
         .vertex_idx = 3};
     usize id4 = array_list_append(list_batch, vertices[3]);
+    // TODO: free batch vertexes somewhere
 }
 
 void render_line_segment(vec2 start, vec2 end, vec4 color)
@@ -376,6 +377,7 @@ void render_sprite_sheet_frame(Sprite_Sheet *sprite_sheet, SDL_Window *window, f
         if (texture_slot == -1)
         {
             // TODO: add warning here
+            printf("couldn't insert texture\n");
         }
     }
     append_quad(bottom_left, size, uvs, z_index, color, (f32)texture_slot);
