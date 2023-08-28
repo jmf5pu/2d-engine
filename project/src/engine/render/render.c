@@ -159,8 +159,8 @@ static void render_batch(Batch_Vertex *vertices, usize count, u32 texture_ids[16
 
 void render_end(SDL_Window *window, u32 batch_texture_ids[8])
 {
-    render_batch(list_batch->items, list_batch->len, batch_texture_ids);
-    SDL_GL_SwapWindow(window);
+    render_batch(list_batch->items, list_batch->len, batch_texture_ids); // TODO: add logic to keep repeating this until all textures are written
+    SDL_GL_SwapWindow(window);                                           // updates opengl window
 }
 
 void render_quad(vec2 pos, vec2 size, vec4 color)
@@ -377,6 +377,5 @@ void render_sprite_sheet_frame(Sprite_Sheet *sprite_sheet, SDL_Window *window, f
             printf("couldn't insert texture\n");
         }
     }
-    printf("appending in texture slot %f\n", (f32)texture_slot);
     append_quad(bottom_left, size, uvs, z_index, color, (f32)texture_slot);
 }
