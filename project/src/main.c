@@ -25,9 +25,9 @@
 #include "map_helpers.h"
 #include "weapon_types.h"
 
-const u8 frame_rate = 60;          // frame rate
-static u32 texture_slots[8] = {0}; // texture slots array for batch rendering
-static bool should_quit = false;   // quit flag
+const u8 frame_rate = 60;           // frame rate
+static u32 texture_slots[16] = {0}; // texture slots array for batch rendering
+static bool should_quit = false;    // quit flag
 
 // rendering dimensions
 static f32 render_width;

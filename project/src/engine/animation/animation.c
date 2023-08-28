@@ -131,7 +131,7 @@ void animation_update(f32 dt)
     }
 }
 
-void animation_render(Animation *animation, SDL_Window *window, vec2 position, i32 z_index, vec4 color, u32 texture_slots[8])
+void animation_render(Animation *animation, SDL_Window *window, vec2 position, i32 z_index, vec4 color, u32 texture_slots[16])
 {
     Animation_Definition *adef = animation->animation_definition;
     Animation_Frame *aframe = &adef->frames[animation->current_frame_index];
