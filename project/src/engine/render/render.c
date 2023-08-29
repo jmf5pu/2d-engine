@@ -157,10 +157,11 @@ static void render_batch(Batch_Vertex *vertices, usize count, u32 texture_ids[16
     glDrawElements(GL_TRIANGLES, (count >> 2) * 6, GL_UNSIGNED_INT, NULL);
 }
 
-void render_end(SDL_Window *window, u32 batch_texture_ids[8])
+void render_end(SDL_Window *window, u32 batch_texture_ids[8], bool swap_window)
 {
-    render_batch(list_batch->items, list_batch->len, batch_texture_ids); // TODO: add logic to keep repeating this until all textures are written
-    SDL_GL_SwapWindow(window);                                           // updates opengl window
+    render_batch(list_batch->items, list_batch->len, batch_texture_ids);
+    if (swap_window)
+        SDL_GL_SwapWindow(window); // updates opengl window
 }
 
 void render_quad(vec2 pos, vec2 size, vec4 color)
@@ -363,8 +364,8 @@ void render_sprite_sheet_frame(Sprite_Sheet *sprite_sheet, SDL_Window *window, f
     // check if buffer is full, is so, flush buffer and try again TODO: implement some sort of LRU here
     if (texture_slot == -1)
     {
-        render_end(window, texture_slots); // render all the batched frames before resetting for another write
-        array_list_clear(list_batch);      // free old batch vertices
+        render_end(window, texture_slots, false); // render all the batched frames before resetting for another write
+        array_list_clear(list_batch);             // free old batch vertices
 
         // flush texture_slots array
         memset(texture_slots, 0, sizeof(u32) * 16);

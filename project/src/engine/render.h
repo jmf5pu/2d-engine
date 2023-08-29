@@ -54,7 +54,7 @@ typedef struct sprite
 SDL_Window *
 render_init(void);
 void render_begin(void);
-void render_end(SDL_Window *window, u32 batch_texture_ids[16]);
+void render_end(SDL_Window *window, u32 batch_texture_ids[16], bool swap_window);
 void render_quad(vec2 pos, vec2 state, vec4 color);
 void render_line_segment(vec2 start, vec2 end, vec4 color);
 void render_quad_line(vec2 pos, vec2 size, vec4 color);

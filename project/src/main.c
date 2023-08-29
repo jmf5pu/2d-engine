@@ -229,7 +229,7 @@ int main(int argc, char *argv[])
         //     Static_Body static_body = map.static_bodies[i];
         // }
 
-        render_end(window, texture_slots);
+        render_end(window, texture_slots, true);
 
         // update each player status
         update_player_status(player_one);
