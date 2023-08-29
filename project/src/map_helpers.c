@@ -8,27 +8,26 @@ Map map;
 // set up map & props
 void init_map(Map *map)
 {
+
+    map->num_sprites = 3;
+    map->num_pickups = 1;
+    map->num_static_bodies = 2;
+
     Sprite_Sheet *sprite_sheet_map_1_main_bg = malloc(sizeof(Sprite_Sheet));
     Sprite_Sheet *sprite_sheet_chain_link_fence_horizontal_wide = malloc(sizeof(Sprite_Sheet));
-    Sprite_Sheet *sprite_sheet_shipping_container_red_front = malloc(sizeof(Sprite_Sheet));
-    Sprite_Sheet *sprite_sheet_shipping_container_red_back = malloc(sizeof(Sprite_Sheet));
-    Sprite_Sheet *sprite_sheet_shipping_container_red_front_2 = malloc(sizeof(Sprite_Sheet));
-    Sprite_Sheet *sprite_sheet_shipping_container_red_back_2 = malloc(sizeof(Sprite_Sheet));
+    Sprite_Sheet *sprite_sheet_shipping_containers_red_and_yellow_back = malloc(sizeof(Sprite_Sheet));
 
     // init sprite sheets
     render_sprite_sheet_init(sprite_sheet_map_1_main_bg, "assets/map_1.png", 640, 360);
-    render_sprite_sheet_init(sprite_sheet_chain_link_fence_horizontal_wide, "assets/chain_link_fence_horizontal_wide.png", 640, 80);
-    render_sprite_sheet_init(sprite_sheet_shipping_container_red_front, "assets/shipping_container_red_front.png", 52, 63);
-    render_sprite_sheet_init(sprite_sheet_shipping_container_red_back, "assets/shipping_container_red_back.png", 52, 59);
-    render_sprite_sheet_init(sprite_sheet_shipping_container_red_front_2, "assets/shipping_container_red_front.png", 52, 63);
-    render_sprite_sheet_init(sprite_sheet_shipping_container_red_back_2, "assets/shipping_container_red_back.png", 52, 59);
+    render_sprite_sheet_init(sprite_sheet_chain_link_fence_horizontal_wide, "assets/chain_link_fence_horizontal_wide_no_concrete_barbed_wire.png", 640, 75);
+    render_sprite_sheet_init(sprite_sheet_shipping_containers_red_and_yellow_back, "assets/shipping_containers_red_and_yellow_back.png", 96, 59);
 
     Sprite map_1_main_bg = (Sprite){
         .sprite_sheet = sprite_sheet_map_1_main_bg,
         .row = 0,
         .column = 0,
         .position = {320, 180},
-        .z_index = -2,
+        .z_index = -3,
         .is_flipped = false,
         .color = {1, 1, 1, 1},
     };
@@ -37,32 +36,23 @@ void init_map(Map *map)
         .sprite_sheet = sprite_sheet_chain_link_fence_horizontal_wide,
         .row = 0,
         .column = 0,
-        .position = {317, 45},
-        .z_index = 1,
+        .position = {317, 36},
+        .z_index = -3,
         .is_flipped = false,
         .color = {1, 1, 1, 1},
     };
 
-    Sprite shipping_container_red_front = (Sprite){
-        .sprite_sheet = sprite_sheet_shipping_container_red_front,
+    Sprite shipping_containers_red_and_yellow_back = (Sprite){
+        .sprite_sheet = sprite_sheet_shipping_containers_red_and_yellow_back,
         .row = 0,
         .column = 0,
-        .position = {320, 148},
-        .z_index = -1,
-        .is_flipped = false,
-        .color = {1, 1, 1, 1},
-    };
-    Sprite shipping_container_red_back = (Sprite){
-        .sprite_sheet = sprite_sheet_shipping_container_red_back,
-        .row = 0,
-        .column = 0,
-        .position = {320, 209},
-        .z_index = 1,
+        .position = {244, 224},
+        .z_index = -3,
         .is_flipped = false,
         .color = {1, 1, 1, 1},
     };
 
-    Sprite *sprite_array = malloc(4 * sizeof(Sprite));
+    Sprite *sprite_array = malloc(map->num_sprites * sizeof(Sprite));
     if (!sprite_array)
     {
         // Handle memory allocation error
@@ -71,16 +61,15 @@ void init_map(Map *map)
 
     sprite_array[0] = map_1_main_bg;
     sprite_array[1] = chain_link_fence_horizontal_wide;
-    sprite_array[2] = shipping_container_red_front;
-    sprite_array[3] = shipping_container_red_back;
+    sprite_array[2] = shipping_containers_red_and_yellow_back;
 
     // init static bodies TODO: will need to create array like above when we have more than 1
     Static_Body *bottom_fence = physics_static_body_create((vec2){320, 10}, (vec2){640, 3}, COLLISION_LAYER_TERRIAN);
-    Static_Body *red_shipping_container_static_body = physics_static_body_create((vec2){322, 165}, (vec2){32, 26}, COLLISION_LAYER_TERRIAN);
+    Static_Body *shipping_containers = physics_static_body_create((vec2){322, 165}, (vec2){32, 26}, COLLISION_LAYER_TERRIAN);
 
-    Static_Body *static_body_array = malloc(2 * sizeof(Static_Body));
+    Static_Body *static_body_array = malloc(map->num_static_bodies * sizeof(Static_Body));
     static_body_array[0] = *bottom_fence;
-    static_body_array[1] = *red_shipping_container_static_body;
+    static_body_array[1] = *shipping_containers;
 
     // init pickups
     render_sprite_sheet_init(&sprite_sheet_m44_spinning, "assets/m44_spinning.png", 30, 20);
@@ -101,13 +90,10 @@ void init_map(Map *map)
         .frames_on_status = 0};
     m44_pickup.entity->animation = anim_m44_spinning;
 
-    Pickup *pickup_array = malloc(sizeof(Pickup));
+    Pickup *pickup_array = malloc(map->num_pickups * sizeof(Pickup));
     // TODO: handle malloc failure here
     pickup_array[0] = m44_pickup;
 
-    map->num_sprites = 4;
-    map->num_pickups = 1;
-    map->num_static_bodies = 2;
     map->sprites = sprite_array;
     map->pickups = pickup_array;
     map->static_bodies = static_body_array;

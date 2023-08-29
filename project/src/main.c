@@ -223,10 +223,11 @@ int main(int argc, char *argv[])
             render_sprite_sheet_frame(sprite.sprite_sheet, window, sprite.row, sprite.column, sprite.position, sprite.z_index, sprite.is_flipped, sprite.color, texture_slots);
         }
 
-        // uncomment to render map's static bodies
+        // uncomment and set sprite colors to (vec4){0.9, 0.9, 0.9, 0.9} to view map's static bodies
         // for (int i = 0; i < map.num_static_bodies; i++)
         // {
         //     Static_Body static_body = map.static_bodies[i];
+        //     render_aabb(&static_body, WHITE);
         // }
 
         render_end(window, texture_slots, true);
