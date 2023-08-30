@@ -127,16 +127,6 @@ int main(int argc, char *argv[])
 
     SDL_ShowCursor(false);
 
-    // Static_Body *static_body_a = physics_static_body_create((vec2){render_width * 0.5 - 12.5, render_height - 12.5}, (vec2){render_width - 25, 25}, COLLISION_LAYER_TERRIAN);
-    // Static_Body *static_body_b = physics_static_body_create((vec2){render_width - 12.5, render_height * 0.5 + 12.5}, (vec2){25, render_height - 25}, COLLISION_LAYER_TERRIAN);
-    // Static_Body *static_body_c = physics_static_body_create((vec2){render_width * 0.5 + 12.5, 12.5}, (vec2){render_width - 25, 25}, COLLISION_LAYER_TERRIAN);
-    // Static_Body *static_body_d = physics_static_body_create((vec2){12.5, render_height * 0.5 - 12.5}, (vec2){25, render_height - 25}, COLLISION_LAYER_TERRIAN);
-
-    // Entity *entity_a = entity_create((vec2){200, 200}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
-    //  Entity *entity_b = entity_create((vec2){300, 300}, (vec2){25, 25}, (vec2){400, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
-    // entity_a->animation = p1_anim_soldier_dying_side;
-    //  entity_b->animation = anim_soldier_idle_front;
-
     // main loop
     while (!should_quit)
     {
@@ -176,40 +166,28 @@ int main(int argc, char *argv[])
         animation_update(global.time.delta);
         render_begin();
 
-        // rendering walls
-        // render_aabb((f32 *)static_body_a, WHITE);
-        // render_aabb((f32 *)static_body_b, WHITE);
-        // render_aabb((f32 *)static_body_c, WHITE);
-        // render_aabb((f32 *)static_body_d, WHITE);
-
-        // rendering enemies
-        // render_aabb((f32 *)(entity_a->body), WHITE);
-        // render_aabb((f32 *)(entity_b->body), WHITE);
-
         // render animated entities, check if any are marked for deletion (not active OR body is not active)
         int num_entities = (int)entity_count();
-        for (int i = num_entities - 1; i >= 0; --i) // TODO: figure out if it is better to use entity_count() directly here;
+        for (int i = num_entities - 1; i >= 0; --i)
         {
             Entity *entity = entity_get(i);
 
-            // destroy any entities that are inactive or have physics bodies that are inactive
-            if (entity == NULL)
+            // destroy any entities that are inactive or have physics bodies that are inactive and aren't associated with players or pickups bool is_pickup = false;
+
+            bool is_pickup = false;
+
+            for (int j = 0; j < map.num_pickups; j++)
             {
-                continue;
+                if (entity == map.pickups[j].entity)
+                    is_pickup = true;
+            }
+            if ((!entity->is_active || !entity->body->is_active) && entity != player_one->entity && entity != player_two->entity && !is_pickup)
+            {
+                entity_destroy(entity);
             }
 
-            if (entity->body == NULL)
-            {
-                continue;
-            }
-
-            if (!entity->is_active || !entity->body->is_active)
-            {
-                continue;
-            }
-
-            // skip entities with no associated animations
-            if (entity->animation == NULL)
+            // skip entities with no associated animations, check if players and pickups are inactive
+            if (entity->animation == NULL || !entity->is_active || !entity->body->is_active)
             {
                 continue;
             }

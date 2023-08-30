@@ -58,7 +58,7 @@ void entity_destroy(Entity *entity)
     entity->is_active = false;       // probably not even necessary, remove later
     physics_body_destroy(entity->body);
     // animation_destroy(entity->animation_id); TODO: probably not needed
-    array_list_remove(entity_list, id, "Destroying entity");
+    array_list_remove(entity_list, id);
     free(entity); // free entity memory
 }
 

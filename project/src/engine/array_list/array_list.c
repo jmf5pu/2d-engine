@@ -57,42 +57,40 @@ usize array_list_append(Array_List *list, void *item)
     return index;
 }
 
-u8 array_list_remove(Array_List *list, usize index, char *description)
+void array_list_remove(Array_List *list, usize index)
 {
-    if (list->len == 0)
-    {
-        ERROR_RETURN(1, "List is empty\n");
-    }
     if (index >= list->len)
     {
-        ERROR_RETURN(1, "Index out of bounds (remove)\n");
+        printf("Index out of bounds (remove) [list->len: %zd] [index: %zd]\n", list->len, index);
+        return;
     }
-    if (list->len == 1)
+
+    // Move elements after the removed index one position back
+    for (usize i = index; i < list->len - 1; ++i)
     {
-        list->len = 0;
-        return 0;
+        void **current_item = (void **)((u8 *)list->items + i * sizeof(void *));
+        void **next_item = (void **)((u8 *)list->items + (i + 1) * sizeof(void *));
+        *current_item = *next_item;
     }
 
-    // Calculate the start and end pointers for the elements to be moved
-    u8 *item_ptr = (u8 *)list->items + index * sizeof(void *);
-    u8 *end_ptr = (u8 *)list->items + (list->len - 1) * sizeof(void *);
+    // Update the length of the list
+    list->len--;
 
-    // Shift the elements after the removed one
-    memmove(item_ptr, item_ptr + sizeof(void *), (list->len - index - 1) * sizeof(void *));
-
-    --list->len;
-
-    void **new_items = realloc(list->items, sizeof(void *) * list->len);
-    if (new_items == NULL)
+    // Check if the number of elements is significantly lower than capacity
+    if (list->len < list->capacity / 2)
     {
-        // Handle realloc failure
-        ERROR_RETURN(1, "Memory reallocation error\n");
+        usize new_capacity = list->capacity / 2;
+        if (new_capacity < 1)
+            new_capacity = 1;
+
+        // Reallocate memory to fit the new capacity
+        void **new_items = (void **)realloc(list->items, sizeof(void *) * new_capacity);
+        if (new_items)
+        {
+            list->items = new_items;
+            list->capacity = new_capacity;
+        }
     }
-    list->items = new_items;
-
-    printf("%s\n", description);
-
-    return 0;
 }
 
 void array_list_clear(Array_List *list)

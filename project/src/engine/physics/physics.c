@@ -237,7 +237,7 @@ usize physics_body_get_id(Body *target_body)
 void physics_body_destroy(Body *body)
 {
     usize id = physics_body_get_id(body);
-    array_list_remove(state.body_list, id, "Destroying physics body");
+    array_list_remove(state.body_list, id);
     free(body);
 }
 

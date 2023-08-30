@@ -92,7 +92,7 @@ void animation_destroy(usize id)
 {
     Animation *animation = array_list_get(animation_storage, id, "called by animation_destroy");
     animation->is_active = false;
-    array_list_remove(animation_storage, id, "Destroying animation");
+    array_list_remove(animation_storage, id);
 }
 
 Animation *animation_get(usize id)
