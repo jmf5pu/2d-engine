@@ -1,7 +1,8 @@
 next TODOs:
 * finish implementing a map
+  * add a second pickup (armor?)
   * pull out props to separate sprites
-  * add more pickups
+  * add another weapon (shotgun?)
 * fix players running into their own bullets
 * fix dying animation
 * implement reloading / ammo count
