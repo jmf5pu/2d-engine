@@ -23,7 +23,7 @@ void player_on_hit(Body *self, Body *other, Hit hit)
     else if (other->collision_layer == COLLISION_LAYER_PICKUP && other->is_active && self->is_active)
     {
         Pickup *pickup = get_pickup_from_body(other);
-        if (pickup->name == M44_PICKUP)
+        if (pickup->name == M44_PICKUP && pickup->status == PICKUP_ACTIVE)
         {
             // update player weapon
             player->weapon->name = m44.name;
@@ -59,7 +59,6 @@ void player_on_hit(Body *self, Body *other, Hit hit)
         pickup->entity->body->is_active = false;
         pickup->status = PICKUP_INACTIVE;
         pickup->frames_on_status = 0;
-        // TODO: implement respawn logic, timer etc
     }
 }
 

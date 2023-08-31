@@ -72,28 +72,47 @@ void init_map(Map *map)
     static_body_array[1] = *shipping_containers;
 
     // init pickups
-    render_sprite_sheet_init(&sprite_sheet_m44_spinning, "assets/m44_spinning.png", 30, 20);
-    adef_m44_spinning = animation_definition_create(
-        &sprite_sheet_m44_spinning,
-        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1},
+    Sprite_Sheet *sprite_sheet_m44 = malloc(sizeof(Sprite_Sheet));
+    Sprite_Sheet *sprite_sheet_m44_spawning = malloc(sizeof(Sprite_Sheet));
+    Animation_Definition *adef_m44 = malloc(sizeof(Animation_Definition));
+    Animation_Definition *adef_m44_spawning = malloc(sizeof(Animation_Definition));
+    Animation *anim_m44 = malloc(sizeof(Animation));
+    Animation *anim_m44_spawning = malloc(sizeof(Animation));
+    render_sprite_sheet_init(sprite_sheet_m44, "assets/m44.png", 30, 15);
+    adef_m44 = animation_definition_create(
+        sprite_sheet_m44,
+        (f32[]){0},
         (u8[]){0},
-        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
-        12);
-    anim_m44_spinning = animation_create(adef_m44_spinning, true);
+        (u8[]){1},
+        1);
+    anim_m44 = animation_create(adef_m44, false);
+    render_sprite_sheet_init(sprite_sheet_m44_spawning, "assets/m44_spawning.png", 30, 15);
+    adef_m44_spawning = animation_definition_create(
+        sprite_sheet_m44_spawning,
+        (f32[]){0.25, 0.25},
+        (u8[]){0},
+        (u8[]){1, 2},
+        2);
+    anim_m44_spawning = animation_create(adef_m44_spawning, true);
+
+    Pickup_Animation_Set *m44_pickup_animation_set = malloc(sizeof(Pickup_Animation_Set));
+    m44_pickup_animation_set->active = anim_m44;
+    m44_pickup_animation_set->spawning = anim_m44_spawning;
 
     Pickup m44_pickup = (Pickup){
         .entity = entity_create((vec2){340, 75}, (vec2){30, 20}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, bullet_mask, pickup_on_hit, pickup_on_hit_static),
+        .animation_set = m44_pickup_animation_set,
         .name = M44_PICKUP,
         .status = PICKUP_ACTIVE,
         .spawn_delay = 5,
         .spawn_time = 3,
         .frames_on_status = 0};
-    m44_pickup.entity->animation = anim_m44_spinning;
 
+    m44_pickup.entity->animation = anim_m44;
     Pickup *pickup_array = malloc(map->num_pickups * sizeof(Pickup));
     // TODO: handle malloc failure here
     pickup_array[0] = m44_pickup;
-
+    // populate map struct
     map->sprites = sprite_array;
     map->pickups = pickup_array;
     map->static_bodies = static_body_array;
@@ -105,6 +124,7 @@ void update_pickup_status(Pickup *pickup)
     // inactive to spawning
     if (pickup->status == PICKUP_INACTIVE && pickup->frames_on_status >= (pickup->spawn_delay * global.time.frame_rate))
     {
+
         pickup->status = PICKUP_SPAWNING;
         pickup->entity->body->is_active = true;
         pickup->frames_on_status = 0;
@@ -112,9 +132,11 @@ void update_pickup_status(Pickup *pickup)
     // spawning to active
     else if (pickup->status == PICKUP_SPAWNING && pickup->frames_on_status >= (pickup->spawn_time * global.time.frame_rate))
     {
+
         pickup->status = PICKUP_ACTIVE;
         pickup->frames_on_status = 0;
     }
+
     // active to inactive is handled in player_on_hit in collision_behavior.c
 
     pickup->frames_on_status++;
@@ -125,10 +147,11 @@ void update_pickup_animations(Pickup *pickup)
 {
     if (pickup->status == PICKUP_SPAWNING)
     {
+        pickup->entity->animation = pickup->animation_set->spawning;
     }
     else if (pickup->status == PICKUP_ACTIVE)
     {
-        pickup->entity->animation = anim_m44_spinning;
+        pickup->entity->animation = pickup->animation_set->active;
     }
 }
 

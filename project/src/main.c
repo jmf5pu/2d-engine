@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     // init player one
     player_one = malloc(sizeof(Player));
     player_one->entity = entity_create(spawn_point_one, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
-    player_one->animation_set = &(Animation_Set){
+    player_one->animation_set = &(Player_Animation_Set){
         .down_idle = p1_anim_soldier_1_m16_idle_front,
         .down_moving = p1_anim_soldier_1_m16_running_front,
         .up_idle = p1_anim_soldier_1_m16_idle_back,
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
     // init player two
     player_two = malloc(sizeof(Player));
     player_two->entity = entity_create(spawn_point_two, (vec2){42, 42}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
-    player_two->animation_set = &(Animation_Set){
+    player_two->animation_set = &(Player_Animation_Set){
         .down_idle = p2_anim_soldier_1_m16_idle_front,
         .down_moving = p2_anim_soldier_1_m16_running_front,
         .up_idle = p2_anim_soldier_1_m16_idle_back,

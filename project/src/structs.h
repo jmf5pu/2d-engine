@@ -70,7 +70,7 @@ typedef struct weapon
     bool ready_to_fire;
 } Weapon;
 
-typedef struct animation_set
+typedef struct player_animation_set
 {
     Animation *up_idle;
     Animation *up_moving;
@@ -80,12 +80,18 @@ typedef struct animation_set
     Animation *side_moving;
     Animation *spawning;
     Animation *dying;
-} Animation_Set;
+} Player_Animation_Set;
+
+typedef struct pickup_animation_set
+{
+    Animation *active;
+    Animation *spawning;
+} Pickup_Animation_Set;
 
 typedef struct player
 {
     Entity *entity;
-    Animation_Set *animation_set;
+    Player_Animation_Set *animation_set;
     Weapon *weapon;
     vec2 spawn_point;
     enum Direction direction;
@@ -101,6 +107,7 @@ typedef struct player
 typedef struct pickup
 {
     Entity *entity;
+    Pickup_Animation_Set *animation_set;
     enum Pickup_Name name;
     enum Pickup_Status status;
     f32 spawn_delay;
