@@ -66,7 +66,7 @@ typedef struct weapon
     i8 capacity;
     i8 current_capacity;
     u16 max_fire_rate;
-    i8 damage;
+    i16 damage;
     u16 frames_since_last_shot;
     bool ready_to_fire;
 } Weapon;
@@ -101,7 +101,8 @@ typedef struct player
     f32 spawn_delay;      // time in s from INACTIVE status to SPAWNING status
     f32 spawn_time;       // time in s from SPAWNING status to ACTIVE status
     u32 frames_on_status; // # of frames since last status change
-    i8 health;
+    i16 health;
+    i16 armor;
     bool is_left_player;
 } Player;
 

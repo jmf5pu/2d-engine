@@ -90,6 +90,7 @@ int main(int argc, char *argv[])
     player_one->spawn_time = 2;
     player_one->frames_on_status = 0;
     player_one->health = 100;
+    player_one->armor = 0;
     player_one->is_left_player = true;
 
     // init player two
@@ -123,6 +124,7 @@ int main(int argc, char *argv[])
     player_two->spawn_time = 2;
     player_two->frames_on_status = 0;
     player_two->health = 100;
+    player_two->armor = 0;
     player_two->is_left_player = false;
 
     SDL_ShowCursor(false);

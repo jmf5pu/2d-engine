@@ -2,6 +2,7 @@
 #include "engine/util.h"
 #include "player_helpers.h"
 #include "collision_behavior.h"
+#include "weapon_types.h"
 
 // declare players
 Player *player_one;
@@ -397,7 +398,44 @@ void update_player_status(Player *player)
         player->entity->body->aabb.position[1] = player->spawn_point[1];
 
         // reset health
+        player->armor = 0; // should be 0 anyways??
         player->health = 100;
+
+        // reset player anims to default (may have changed from pickups)
+        if (player == player_one)
+        {
+            player->animation_set->down_idle = p1_anim_soldier_1_m16_idle_front;
+            player->animation_set->down_moving = p1_anim_soldier_1_m16_running_front;
+            player->animation_set->up_idle = p1_anim_soldier_1_m16_idle_back;
+            player->animation_set->up_moving = p1_anim_soldier_1_m16_running_back;
+            player->animation_set->side_idle = p1_anim_soldier_1_m16_idle_side;
+            player->animation_set->side_moving = p1_anim_soldier_1_m16_running_side;
+            player->animation_set->spawning = p1_anim_soldier_1_m16_spawning_side;
+            player->animation_set->dying = p1_anim_soldier_1_m16_dying_side;
+            player_one->direction = RIGHT;
+        }
+        else
+        { // player two
+            player->animation_set->down_idle = p2_anim_soldier_1_m16_idle_front;
+            player->animation_set->down_moving = p2_anim_soldier_1_m16_running_front;
+            player->animation_set->up_idle = p2_anim_soldier_1_m16_idle_back;
+            player->animation_set->up_moving = p2_anim_soldier_1_m16_running_back;
+            player->animation_set->side_idle = p2_anim_soldier_1_m16_idle_side;
+            player->animation_set->side_moving = p2_anim_soldier_1_m16_running_side;
+            player->animation_set->spawning = p2_anim_soldier_1_m16_spawning_side;
+            player->animation_set->dying = p2_anim_soldier_1_m16_dying_side;
+            player_one->direction = LEFT;
+        }
+
+        // reset weapon
+        player->weapon->name = m16.name;
+        player->weapon->fire_mode = m16.fire_mode;
+        player->weapon->capacity = m16.capacity;
+        player->weapon->current_capacity = m16.capacity;
+        player->weapon->max_fire_rate = m16.max_fire_rate;
+        player->weapon->damage = m16.damage;
+        player->weapon->frames_since_last_shot = 0;
+        player->weapon->ready_to_fire = true;
 
         // make player visible
         player->entity->is_active = true;
@@ -581,6 +619,7 @@ void handle_player_input(Player *player)
     player->entity->body->velocity[1] = vely;
 }
 
+// helper to get the player from a body (if associated), used in on_hit helpers
 Player *get_player_from_body(Player *player_one, Player *player_two, Body *body, bool return_other_player)
 {
     if (player_one->entity->body == body)

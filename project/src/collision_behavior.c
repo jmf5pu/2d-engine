@@ -16,8 +16,26 @@ void player_on_hit(Body *self, Body *other, Hit hit)
     Player *other_player = get_player_from_body(player_one, player_two, self, true);
     if (other->collision_layer == COLLISION_LAYER_BULLET && other->is_active && self->is_active)
     {
-        player->health -= other_player->weapon->damage; // TODO: eventually may need to attach this value to a bullet struct
-        other->is_active = false;                       // always mark bullet as inactive
+        i8 bullet_damage = other_player->weapon->damage; // TODO: eventually may need to attach this value to a bullet struct
+        if (player->armor > 0)
+        {
+            // Apply as much damage as possible to the armor
+            if (player->armor >= bullet_damage)
+            {
+                player->armor -= bullet_damage;
+            }
+            else
+            {
+                player->health -= (bullet_damage - player->armor);
+                player->armor = 0;
+            }
+        }
+        else
+        {
+            // If the armor is already 0, apply damage directly to health
+            player->health -= bullet_damage;
+        }
+        other->is_active = false; // always mark bullet as inactive
     }
 
     else if (other->collision_layer == COLLISION_LAYER_PICKUP && other->is_active && self->is_active)
@@ -57,6 +75,7 @@ void player_on_hit(Body *self, Body *other, Hit hit)
         }
         else if (pickup->name == BREWSTER_PICKUP && pickup->status == PICKUP_ACTIVE)
         {
+            // update player anims
             if (player == player_one)
             {
                 player->animation_set->down_idle = p1_anim_soldier_1_m16_brewster_idle_front;
@@ -75,8 +94,12 @@ void player_on_hit(Body *self, Body *other, Hit hit)
                 player->animation_set->side_idle = p2_anim_soldier_1_m16_brewster_idle_side;
                 player->animation_set->side_moving = p2_anim_soldier_1_m16_brewster_running_side;
             }
+
+            // apply armor to player
+            player->armor = 200;
         }
 
+        // deactivate pickup and start respawn timer
         pickup->entity->body->is_active = false;
         pickup->status = PICKUP_INACTIVE;
         pickup->frames_on_status = 0;
