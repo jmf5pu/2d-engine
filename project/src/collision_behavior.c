@@ -47,12 +47,33 @@ void player_on_hit(Body *self, Body *other, Hit hit)
             }
             else // is player 2
             {
-                player->animation_set->down_idle = p2_anim_soldier_1_m44_idle_front;
-                player->animation_set->down_moving = p2_anim_soldier_1_m44_running_front;
-                player->animation_set->up_idle = p2_anim_soldier_1_m44_idle_back;
-                player->animation_set->up_moving = p2_anim_soldier_1_m44_running_back;
-                player->animation_set->side_idle = p2_anim_soldier_1_m44_idle_side;
-                player->animation_set->side_moving = p2_anim_soldier_1_m44_running_side;
+                player->animation_set->down_idle = p1_anim_soldier_1_m44_idle_front;
+                player->animation_set->down_moving = p1_anim_soldier_1_m44_running_front;
+                player->animation_set->up_idle = p1_anim_soldier_1_m44_idle_back;
+                player->animation_set->up_moving = p1_anim_soldier_1_m44_running_back;
+                player->animation_set->side_idle = p1_anim_soldier_1_m44_idle_side;
+                player->animation_set->side_moving = p1_anim_soldier_1_m44_running_side;
+            }
+        }
+        else if (pickup->name == BREWSTER_PICKUP && pickup->status == PICKUP_ACTIVE)
+        {
+            if (player == player_one)
+            {
+                player->animation_set->down_idle = p1_anim_soldier_1_m16_brewster_idle_front;
+                player->animation_set->down_moving = p1_anim_soldier_1_m16_brewster_running_front;
+                player->animation_set->up_idle = p1_anim_soldier_1_m16_brewster_idle_back;
+                player->animation_set->up_moving = p1_anim_soldier_1_m16_brewster_running_back;
+                player->animation_set->side_idle = p1_anim_soldier_1_m16_brewster_idle_side;
+                player->animation_set->side_moving = p1_anim_soldier_1_m16_brewster_running_side;
+            }
+            else
+            {
+                player->animation_set->down_idle = p2_anim_soldier_1_m16_brewster_idle_front;
+                player->animation_set->down_moving = p2_anim_soldier_1_m16_brewster_running_front;
+                player->animation_set->up_idle = p2_anim_soldier_1_m16_brewster_idle_back;
+                player->animation_set->up_moving = p2_anim_soldier_1_m16_brewster_running_back;
+                player->animation_set->side_idle = p2_anim_soldier_1_m16_brewster_idle_side;
+                player->animation_set->side_moving = p2_anim_soldier_1_m16_brewster_running_side;
             }
         }
 

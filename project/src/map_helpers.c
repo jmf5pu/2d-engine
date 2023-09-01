@@ -10,7 +10,7 @@ void init_map(Map *map)
 {
 
     map->num_sprites = 3;
-    map->num_pickups = 1;
+    map->num_pickups = 2;
     map->num_static_bodies = 2;
 
     Sprite_Sheet *sprite_sheet_map_1_main_bg = malloc(sizeof(Sprite_Sheet));
@@ -71,7 +71,13 @@ void init_map(Map *map)
     static_body_array[0] = *bottom_fence;
     static_body_array[1] = *shipping_containers;
 
-    // init pickups
+    /*
+     * initializing pickups
+     */
+
+    Pickup *pickup_array = malloc(map->num_pickups * sizeof(Pickup));
+
+    // m44 pickup
     Sprite_Sheet *sprite_sheet_m44 = malloc(sizeof(Sprite_Sheet));
     Sprite_Sheet *sprite_sheet_m44_spawning = malloc(sizeof(Sprite_Sheet));
     Animation_Definition *adef_m44 = malloc(sizeof(Animation_Definition));
@@ -109,9 +115,49 @@ void init_map(Map *map)
         .frames_on_status = 0};
 
     m44_pickup.entity->animation = anim_m44;
-    Pickup *pickup_array = malloc(map->num_pickups * sizeof(Pickup));
-    // TODO: handle malloc failure here
+
+    // brewster body armor pickup
+    Sprite_Sheet *sprite_sheet_brewster = malloc(sizeof(Sprite_Sheet));
+    Sprite_Sheet *sprite_sheet_brewster_spawning = malloc(sizeof(Sprite_Sheet));
+    Animation_Definition *adef_brewster = malloc(sizeof(Animation_Definition));
+    Animation_Definition *adef_brewster_spawning = malloc(sizeof(Animation_Definition));
+    Animation *anim_brewster = malloc(sizeof(Animation));
+    Animation *anim_brewster_spawning = malloc(sizeof(Animation));
+    render_sprite_sheet_init(sprite_sheet_brewster, "assets/brewster_body_shield.png", 22, 22);
+    adef_brewster = animation_definition_create(
+        sprite_sheet_brewster,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){1},
+        1);
+    anim_brewster = animation_create(adef_brewster, false);
+    render_sprite_sheet_init(sprite_sheet_brewster_spawning, "assets/brewster_body_shield.png", 22, 22);
+    adef_brewster_spawning = animation_definition_create(
+        sprite_sheet_brewster_spawning,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){1},
+        1);
+    anim_brewster_spawning = animation_create(adef_brewster_spawning, false);
+
+    Pickup_Animation_Set *brewster_pickup_animation_set = malloc(sizeof(Pickup_Animation_Set));
+    brewster_pickup_animation_set->active = anim_brewster;
+    brewster_pickup_animation_set->spawning = anim_brewster_spawning;
+
+    Pickup brewster_pickup = (Pickup){
+        .entity = entity_create((vec2){340, 200}, (vec2){22, 22}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, bullet_mask, pickup_on_hit, pickup_on_hit_static),
+        .animation_set = brewster_pickup_animation_set,
+        .name = BREWSTER_PICKUP,
+        .status = PICKUP_ACTIVE,
+        .spawn_delay = 5,
+        .spawn_time = 3,
+        .frames_on_status = 0};
+
+    brewster_pickup.entity->animation = anim_brewster;
+
     pickup_array[0] = m44_pickup;
+    pickup_array[1] = brewster_pickup;
+
     // populate map struct
     map->sprites = sprite_array;
     map->pickups = pickup_array;

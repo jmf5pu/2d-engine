@@ -22,7 +22,8 @@ enum Weapon_Name
 
 enum Pickup_Name
 {
-    M44_PICKUP
+    M44_PICKUP,
+    BREWSTER_PICKUP
 };
 
 enum Fire_Mode
