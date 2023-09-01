@@ -3,7 +3,7 @@ next TODOs:
 * finish implementing a map
   * add a second pickup (armor?)
     * ~~adding animations and anim transitions on pickup~~
-    * add armor attribute to player
+    * ~~add armor attribute to player~~
     * add anims to m44 and dying
   * pull out props to separate sprites
   * make m16 burst fire
