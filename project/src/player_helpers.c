@@ -386,6 +386,7 @@ void init_all_anims()
 // updates player statuses based on frame counter associated with each playaer
 void update_player_status(Player *player)
 {
+
     // check if spawn delay is up
     if (player->status == PLAYER_INACTIVE && player->frames_on_status >= (player->spawn_delay * global.time.frame_rate))
     {
@@ -469,11 +470,25 @@ void update_player_status(Player *player)
         player->entity->body->is_active = false;
     }
 
-    // update weapon status
-    // printf("fire cooldown: %f, %d\n", (1.0 / (player->weapon->max_fire_rate / 60.0)), global.time.frame_rate);
+    // update weapon status (check if weapon is ready to fire again)
     if (!player->weapon->ready_to_fire && player->weapon->frames_since_last_shot >= ((1.0 / (player->weapon->max_fire_rate / 60.0)) * global.time.frame_rate))
     {
-        player->weapon->ready_to_fire = true;
+        if (player->weapon->fire_mode == AUTO || player->weapon->fire_mode == SEMI)
+        {
+            player->weapon->ready_to_fire = true;
+        }
+
+        // need an additional check for burst weapons, is ready to fire if burst shots are left OR if burst delay is complete
+        else if (player->weapon->fire_mode == BURST && (player->weapon->burst_shots_remaining > 0 || (player->weapon->frames_since_last_shot * (1.0 / global.time.frame_rate)) >= player->weapon->burst_delay))
+        {
+            if (player->weapon->burst_shots_remaining == 0 && (player->weapon->frames_since_last_shot * (1.0 / global.time.frame_rate) >= player->weapon->burst_delay))
+            {
+                printf("resetting burst\n");
+                player->weapon->burst_shots_remaining = player->weapon->burst_count; // reset burst
+            }
+            player->weapon->ready_to_fire = true;
+            printf("setting ready_to_fire to true\n");
+        }
     }
 
     // update all timers
@@ -484,6 +499,7 @@ void update_player_status(Player *player)
 // updates player animations based on direction
 void update_player_animations(Player *player)
 {
+
     if (player->status == PLAYER_ACTIVE)
     {
         if (player->direction == RIGHT || player->direction == LEFT)
@@ -516,7 +532,7 @@ void update_player_animations(Player *player)
 
 void handle_player_shooting(Player *player)
 {
-    if (player->weapon->current_capacity > 0) // only generate bullet if weapon is loaded
+    if (player->weapon->current_capacity > 0 && player->weapon->ready_to_fire) // only generate bullet if weapon is loaded
     {
         vec2 bullet_position = {player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]};
         vec2 bullet_velocity = {0, 0};
@@ -524,29 +540,30 @@ void handle_player_shooting(Player *player)
         if (player->direction == UP)
         {
             bullet_position[1] += 25;
-            bullet_velocity[1] = 1200;
+            bullet_velocity[1] = player->weapon->bullet_velocity;
             bullet_anim = anim_bullet_1_vertical;
         }
         else if (player->direction == RIGHT)
         {
             bullet_position[0] += 25;
-            bullet_velocity[0] = 1200;
+            bullet_velocity[0] = player->weapon->bullet_velocity;
         }
         else if (player->direction == DOWN)
         {
             bullet_position[1] -= 25;
-            bullet_velocity[1] = -1200;
+            bullet_velocity[1] = -1 * player->weapon->bullet_velocity;
             bullet_anim = anim_bullet_1_vertical;
         }
         else if (player->direction == LEFT)
         {
             bullet_position[0] -= 25;
-            bullet_velocity[0] = -1200;
+            bullet_velocity[0] = -1 * player->weapon->bullet_velocity;
         }
         else
         {
             ERROR_EXIT(NULL, "Player direction not recognized");
         }
+
         Entity *bullet = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
         bullet->animation = bullet_anim;
         bullet->body->velocity[0] = bullet_velocity[0];
@@ -554,6 +571,11 @@ void handle_player_shooting(Player *player)
 
         // decrement weapon capacity
         player->weapon->current_capacity -= 1;
+
+        if (player->weapon->fire_mode == BURST)
+        {
+            player->weapon->burst_shots_remaining -= 1;
+        }
 
         // restart rpm timer
         player->weapon->ready_to_fire = false;
@@ -603,17 +625,24 @@ void handle_player_input(Player *player)
     }
 
     // handle weapon attribute updates & bullet generationm, contingent on fire mode, input, and weapon shot cooldown
-    if (player->weapon->fire_mode == AUTO && shoot == KS_HELD && player->weapon->ready_to_fire)
+    if (player->weapon->fire_mode == AUTO && shoot == KS_HELD)
     {
         handle_player_shooting(player);
     }
-    if (player->weapon->fire_mode == SEMI && shoot == KS_PRESSED && player->weapon->ready_to_fire)
+    else if (player->weapon->fire_mode == SEMI && shoot == KS_PRESSED)
     {
         handle_player_shooting(player);
     }
-    if (player->weapon->fire_mode == BURST)
+    else if (player->weapon->fire_mode == BURST)
     {
-        // TODO: Not implemented
+        if (player->weapon->burst_shots_remaining == player->weapon->burst_count && shoot == KS_PRESSED)
+        {
+            handle_player_shooting(player);
+        }
+        else if (player->weapon->burst_shots_remaining < player->weapon->burst_count && shoot == KS_HELD)
+        {
+            handle_player_shooting(player);
+        }
     }
     player->entity->body->velocity[0] = velx;
     player->entity->body->velocity[1] = vely;

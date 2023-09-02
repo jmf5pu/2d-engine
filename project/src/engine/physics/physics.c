@@ -7,7 +7,7 @@
 
 static Physics_State_Internal state;
 
-static u32 iterations = 20; // TODO: set to higher later on
+static u32 iterations = 60;
 static f32 tick_rate;
 
 void physics_init(void)

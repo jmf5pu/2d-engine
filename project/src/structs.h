@@ -55,7 +55,10 @@ typedef struct weapon_type
     enum Fire_Mode fire_mode;
     i8 capacity;
     u16 max_fire_rate; // rounds per minute
-    i8 damage;
+    u16 burst_count;   // maximum number of shots in a "burst", both burst attributes will be null if Fire_Mode != BURST
+    f32 burst_delay;   // in seconds
+    i16 damage;
+    i16 bullet_velocity;
 } Weapon_Type;
 
 // contains weapon info as well as player-specific data
@@ -66,7 +69,11 @@ typedef struct weapon
     i8 capacity;
     i8 current_capacity;
     u16 max_fire_rate;
+    i8 burst_shots_remaining;
+    u16 burst_count;
+    f32 burst_delay;
     i16 damage;
+    i16 bullet_velocity;
     u16 frames_since_last_shot;
     bool ready_to_fire;
 } Weapon;

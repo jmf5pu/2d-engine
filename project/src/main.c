@@ -78,7 +78,11 @@ int main(int argc, char *argv[])
         .capacity = m16.capacity,
         .current_capacity = m16.capacity,
         .max_fire_rate = m16.max_fire_rate,
+        .burst_count = m16.burst_count,
+        .burst_delay = m16.burst_delay,
+        .burst_shots_remaining = m16.burst_count,
         .damage = m16.damage,
+        .bullet_velocity = m16.bullet_velocity,
         .frames_since_last_shot = 0,
         .ready_to_fire = true,
     };
@@ -112,7 +116,11 @@ int main(int argc, char *argv[])
         .capacity = m16.capacity,
         .current_capacity = m16.capacity,
         .max_fire_rate = m16.max_fire_rate,
+        .burst_count = m16.burst_count,
+        .burst_delay = m16.burst_delay,
+        .burst_shots_remaining = m16.burst_count,
         .damage = m16.damage,
+        .bullet_velocity = m16.bullet_velocity,
         .frames_since_last_shot = 0,
         .ready_to_fire = true,
     };
@@ -160,6 +168,10 @@ int main(int argc, char *argv[])
         // handle player inputs
         handle_player_input(player_one);
         handle_player_input(player_two);
+
+        // update each player status
+        update_player_status(player_one);
+        update_player_status(player_two);
 
         update_player_animations(player_one);
         update_player_animations(player_two);
@@ -211,10 +223,6 @@ int main(int argc, char *argv[])
         // }
 
         render_end(window, texture_slots, true);
-
-        // update each player status
-        update_player_status(player_one);
-        update_player_status(player_two);
 
         time_update_late();
     }
