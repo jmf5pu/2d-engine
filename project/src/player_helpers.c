@@ -483,11 +483,9 @@ void update_player_status(Player *player)
         {
             if (player->weapon->burst_shots_remaining == 0 && (player->weapon->frames_since_last_shot * (1.0 / global.time.frame_rate) >= player->weapon->burst_delay))
             {
-                printf("resetting burst\n");
                 player->weapon->burst_shots_remaining = player->weapon->burst_count; // reset burst
             }
             player->weapon->ready_to_fire = true;
-            printf("setting ready_to_fire to true\n");
         }
     }
 

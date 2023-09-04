@@ -125,18 +125,23 @@ typedef struct pickup
 
 } Pickup;
 
+typedef struct prop
+{
+    Sprite *sprite;           // sprite to render for this prop
+    i32 layer_threshold;      // if entity is ABOVE this y coordinate, the entity will render BEFORE this prop, and vice-versa
+    Static_Body *static_body; // holds the static body for this prop (null if not applicable)
+} Prop;
+
 typedef struct map
 {
     // these indicate the lengths of their respective arrays
-    usize num_sprites;
     usize num_pickups;
-    usize num_static_bodies;
+    usize num_props;
     usize num_p1_spawns;
     usize num_p2_spawns;
 
-    Sprite *sprites;               // start of sprites array
     Pickup *pickups;               // start of pickups array
-    Static_Body *static_bodies;    // start of static bodies array
+    Prop *props;                   // start of props array
     vec2 *player_one_spawn_points; // player one's spawn points
     vec2 *player_two_spawn_points; // player two's spawn points
 } Map;

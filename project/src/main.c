@@ -25,6 +25,8 @@
 #include "map_helpers.h"
 #include "weapon_types.h"
 
+bool render_static_bodies = false; // set to true for debugging static bodies
+
 const u8 frame_rate = 60;           // frame rate
 static u32 texture_slots[16] = {0}; // texture slots array for batch rendering
 static bool should_quit = false;    // quit flag
@@ -209,18 +211,20 @@ int main(int argc, char *argv[])
         }
 
         // render map sprites
-        for (int i = 0; i < map.num_sprites; i++)
+        for (int i = 0; i < map.num_props; i++)
         {
-            Sprite sprite = map.sprites[i];
-            render_sprite_sheet_frame(sprite.sprite_sheet, window, sprite.row, sprite.column, sprite.position, sprite.z_index, sprite.is_flipped, sprite.color, texture_slots);
-        }
+            Prop prop = map.props[i];
+            prop.sprite->sprite_sheet;
 
-        // uncomment and set sprite colors to (vec4){0.9, 0.9, 0.9, 0.9} to view map's static bodies
-        // for (int i = 0; i < map.num_static_bodies; i++)
-        // {
-        //     Static_Body static_body = map.static_bodies[i];
-        //     render_aabb(&static_body, WHITE);
-        // }
+            // render the sprite render_static_bodies ? (vec4){0.9, 0.9, 0.9, 0.9} : prop.sprite->color
+            render_sprite_sheet_frame(prop.sprite->sprite_sheet, window, prop.sprite->row, prop.sprite->column, prop.sprite->position, prop.sprite->z_index, prop.sprite->is_flipped, prop.sprite->color, texture_slots);
+
+            // render the static body
+            if (prop.static_body && render_static_bodies)
+            {
+                render_aabb(&prop.static_body, WHITE);
+            }
+        }
 
         render_end(window, texture_slots, true);
 

@@ -8,68 +8,84 @@ Map map;
 // set up map & props
 void init_map(Map *map)
 {
-
-    map->num_sprites = 3;
     map->num_pickups = 2;
-    map->num_static_bodies = 2;
+    map->num_props = 3;
 
     Sprite_Sheet *sprite_sheet_map_1_main_bg = malloc(sizeof(Sprite_Sheet));
-    Sprite_Sheet *sprite_sheet_chain_link_fence_horizontal_wide = malloc(sizeof(Sprite_Sheet));
-    Sprite_Sheet *sprite_sheet_shipping_containers_red_and_yellow_back = malloc(sizeof(Sprite_Sheet));
-
-    // init sprite sheets
     render_sprite_sheet_init(sprite_sheet_map_1_main_bg, "assets/map_1.png", 640, 360);
+    Sprite *map_1_main_bg = malloc(sizeof(Sprite));
+    map_1_main_bg->sprite_sheet = sprite_sheet_map_1_main_bg;
+    map_1_main_bg->row = 1;
+    map_1_main_bg->column = 0;
+    map_1_main_bg->position[0] = 320;
+    map_1_main_bg->position[1] = 180;
+    map_1_main_bg->z_index = -3;
+    map_1_main_bg->is_flipped = false;
+    map_1_main_bg->color[0] = 1;
+    map_1_main_bg->color[1] = 1;
+    map_1_main_bg->color[2] = 1;
+    map_1_main_bg->color[3] = 1;
+
+    Sprite_Sheet *sprite_sheet_chain_link_fence_horizontal_wide = malloc(sizeof(Sprite_Sheet));
     render_sprite_sheet_init(sprite_sheet_chain_link_fence_horizontal_wide, "assets/chain_link_fence_horizontal_wide_no_concrete_barbed_wire.png", 640, 75);
+    Sprite *chain_link_fence_horizontal_wide = malloc(sizeof(Sprite));
+    chain_link_fence_horizontal_wide->sprite_sheet = sprite_sheet_chain_link_fence_horizontal_wide;
+    chain_link_fence_horizontal_wide->row = 2;
+    chain_link_fence_horizontal_wide->column = 0;
+    chain_link_fence_horizontal_wide->position[0] = 317;
+    chain_link_fence_horizontal_wide->position[1] = 36;
+    chain_link_fence_horizontal_wide->z_index = -3;
+    chain_link_fence_horizontal_wide->is_flipped = false;
+    chain_link_fence_horizontal_wide->color[0] = 1;
+    chain_link_fence_horizontal_wide->color[1] = 1;
+    chain_link_fence_horizontal_wide->color[2] = 1;
+    chain_link_fence_horizontal_wide->color[3] = 1;
+
+    Sprite_Sheet *sprite_sheet_shipping_containers_red_and_yellow_back = malloc(sizeof(Sprite_Sheet));
     render_sprite_sheet_init(sprite_sheet_shipping_containers_red_and_yellow_back, "assets/shipping_containers_red_and_yellow_back.png", 96, 59);
+    Sprite *shipping_containers_red_and_yellow_back = malloc(sizeof(Sprite));
+    shipping_containers_red_and_yellow_back->sprite_sheet = sprite_sheet_shipping_containers_red_and_yellow_back,
+    shipping_containers_red_and_yellow_back->row = 3,
+    shipping_containers_red_and_yellow_back->column = 0,
+    shipping_containers_red_and_yellow_back->position[0] = 244;
+    shipping_containers_red_and_yellow_back->position[1] = 224,
+    shipping_containers_red_and_yellow_back->z_index = -3,
+    shipping_containers_red_and_yellow_back->is_flipped = false,
+    shipping_containers_red_and_yellow_back->color[0] = 1;
+    shipping_containers_red_and_yellow_back->color[1] = 1;
+    shipping_containers_red_and_yellow_back->color[2] = 1;
+    shipping_containers_red_and_yellow_back->color[3] = 1;
 
-    Sprite map_1_main_bg = (Sprite){
-        .sprite_sheet = sprite_sheet_map_1_main_bg,
-        .row = 0,
-        .column = 0,
-        .position = {320, 180},
-        .z_index = -3,
-        .is_flipped = false,
-        .color = {1, 1, 1, 1},
+    Prop background_prop = (Prop){
+        .sprite = map_1_main_bg,
+        .layer_threshold = INT32_MIN, // this prop should ALWAYS render before (underneath) everything else
+        .static_body = NULL,
     };
 
-    Sprite chain_link_fence_horizontal_wide = (Sprite){
-        .sprite_sheet = sprite_sheet_chain_link_fence_horizontal_wide,
-        .row = 0,
-        .column = 0,
-        .position = {317, 36},
-        .z_index = -3,
-        .is_flipped = false,
-        .color = {1, 1, 1, 1},
+    Prop chain_link_fence_bottom_prop = (Prop){
+        .sprite = chain_link_fence_horizontal_wide,
+        .layer_threshold = 25,
+        .static_body = physics_static_body_create((vec2){320, 10}, (vec2){640, 3}, COLLISION_LAYER_TERRIAN),
     };
 
-    Sprite shipping_containers_red_and_yellow_back = (Sprite){
-        .sprite_sheet = sprite_sheet_shipping_containers_red_and_yellow_back,
-        .row = 0,
-        .column = 0,
-        .position = {244, 224},
-        .z_index = -3,
-        .is_flipped = false,
-        .color = {1, 1, 1, 1},
+    Prop vertical_shipping_containers_prop = (Prop){
+        .sprite = shipping_containers_red_and_yellow_back,
+        .layer_threshold = 150,
+        .static_body = NULL,
     };
 
-    Sprite *sprite_array = malloc(map->num_sprites * sizeof(Sprite));
-    if (!sprite_array)
+    Prop *prop_array = malloc(map->num_props * sizeof(Prop));
+
+    if (!prop_array)
     {
         // Handle memory allocation error
         // ...
     }
 
-    sprite_array[0] = map_1_main_bg;
-    sprite_array[1] = chain_link_fence_horizontal_wide;
-    sprite_array[2] = shipping_containers_red_and_yellow_back;
-
-    // init static bodies TODO: will need to create array like above when we have more than 1
-    Static_Body *bottom_fence = physics_static_body_create((vec2){320, 10}, (vec2){640, 3}, COLLISION_LAYER_TERRIAN);
-    Static_Body *shipping_containers = physics_static_body_create((vec2){322, 165}, (vec2){32, 26}, COLLISION_LAYER_TERRIAN);
-
-    Static_Body *static_body_array = malloc(map->num_static_bodies * sizeof(Static_Body));
-    static_body_array[0] = *bottom_fence;
-    static_body_array[1] = *shipping_containers;
+    // populate prop array
+    prop_array[0] = background_prop;
+    prop_array[1] = chain_link_fence_bottom_prop;
+    prop_array[2] = vertical_shipping_containers_prop;
 
     /*
      * initializing pickups
@@ -159,9 +175,8 @@ void init_map(Map *map)
     pickup_array[1] = brewster_pickup;
 
     // populate map struct
-    map->sprites = sprite_array;
     map->pickups = pickup_array;
-    map->static_bodies = static_body_array;
+    map->props = prop_array;
 }
 
 // updates the status of a pickup, should be called once per frame for each pickup
@@ -214,17 +229,18 @@ void update_map(Map *map)
 // frees all map attributes that used malloc to init
 void free_map_attributes(Map *map)
 {
-    for (int i = 0; i < map->num_sprites; i++)
+    for (int i = 0; i < map->num_props; i++)
     {
-        free(&map->sprites[i]);
+        free(&map->props->sprite);
+        free(&map->props->static_body);
+        free(&map->props[i]);
     }
     for (int i = 0; i < map->num_pickups; i++)
     {
         free(&map->pickups[i]);
     }
 
-    free(map->static_bodies);
-    free(map->sprites);
+    free(map->props);
     free(map->pickups);
 }
 
