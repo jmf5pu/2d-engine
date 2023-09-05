@@ -34,6 +34,13 @@ Sprite_Sheet p1_sprite_sheet_soldier_1_m44_running_front;
 Sprite_Sheet p1_sprite_sheet_soldier_1_m44_spawning_side;
 Sprite_Sheet p1_sprite_sheet_soldier_1_m44_dying_side;
 
+Sprite_Sheet p1_sprite_sheet_soldier_1_m44_brewster_idle_side;
+Sprite_Sheet p1_sprite_sheet_soldier_1_m44_brewster_running_side;
+Sprite_Sheet p1_sprite_sheet_soldier_1_m44_brewster_idle_back;
+Sprite_Sheet p1_sprite_sheet_soldier_1_m44_brewster_running_back;
+Sprite_Sheet p1_sprite_sheet_soldier_1_m44_brewster_idle_front;
+Sprite_Sheet p1_sprite_sheet_soldier_1_m44_brewster_running_front;
+
 Animation_Definition *p1_adef_soldier_1_m16_idle_side;
 Animation_Definition *p1_adef_soldier_1_m16_running_side;
 Animation_Definition *p1_adef_soldier_1_m16_idle_back;
@@ -59,6 +66,13 @@ Animation_Definition *p1_adef_soldier_1_m44_running_front;
 Animation_Definition *p1_adef_soldier_1_m44_spawning_side;
 Animation_Definition *p1_adef_soldier_1_m44_dying_side;
 
+Animation_Definition *p1_adef_soldier_1_m44_brewster_idle_side;
+Animation_Definition *p1_adef_soldier_1_m44_brewster_running_side;
+Animation_Definition *p1_adef_soldier_1_m44_brewster_idle_back;
+Animation_Definition *p1_adef_soldier_1_m44_brewster_running_back;
+Animation_Definition *p1_adef_soldier_1_m44_brewster_idle_front;
+Animation_Definition *p1_adef_soldier_1_m44_brewster_running_front;
+
 Animation *p1_anim_soldier_1_m16_idle_side;
 Animation *p1_anim_soldier_1_m16_running_side;
 Animation *p1_anim_soldier_1_m16_idle_back;
@@ -83,6 +97,13 @@ Animation *p1_anim_soldier_1_m44_idle_front;
 Animation *p1_anim_soldier_1_m44_running_front;
 Animation *p1_anim_soldier_1_m44_spawning_side;
 Animation *p1_anim_soldier_1_m44_dying_side;
+
+Animation *p1_anim_soldier_1_m44_brewster_idle_side;
+Animation *p1_anim_soldier_1_m44_brewster_running_side;
+Animation *p1_anim_soldier_1_m44_brewster_idle_back;
+Animation *p1_anim_soldier_1_m44_brewster_running_back;
+Animation *p1_anim_soldier_1_m44_brewster_idle_front;
+Animation *p1_anim_soldier_1_m44_brewster_running_front;
 
 // player 2 sprites & anims
 Sprite_Sheet p2_sprite_sheet_soldier_1_m16_idle_side;
@@ -110,6 +131,13 @@ Sprite_Sheet p2_sprite_sheet_soldier_1_m44_running_front;
 Sprite_Sheet p2_sprite_sheet_soldier_1_m44_spawning_side;
 Sprite_Sheet p2_sprite_sheet_soldier_1_m44_dying_side;
 
+Sprite_Sheet p2_sprite_sheet_soldier_1_m44_brewster_idle_side;
+Sprite_Sheet p2_sprite_sheet_soldier_1_m44_brewster_running_side;
+Sprite_Sheet p2_sprite_sheet_soldier_1_m44_brewster_idle_back;
+Sprite_Sheet p2_sprite_sheet_soldier_1_m44_brewster_running_back;
+Sprite_Sheet p2_sprite_sheet_soldier_1_m44_brewster_idle_front;
+Sprite_Sheet p2_sprite_sheet_soldier_1_m44_brewster_running_front;
+
 Animation_Definition *p2_adef_soldier_1_m16_idle_side;
 Animation_Definition *p2_adef_soldier_1_m16_running_side;
 Animation_Definition *p2_adef_soldier_1_m16_idle_back;
@@ -135,6 +163,13 @@ Animation_Definition *p2_adef_soldier_1_m44_running_front;
 Animation_Definition *p2_adef_soldier_1_m44_spawning_side;
 Animation_Definition *p2_adef_soldier_1_m44_dying_side;
 
+Animation_Definition *p2_adef_soldier_1_m44_brewster_idle_side;
+Animation_Definition *p2_adef_soldier_1_m44_brewster_running_side;
+Animation_Definition *p2_adef_soldier_1_m44_brewster_idle_back;
+Animation_Definition *p2_adef_soldier_1_m44_brewster_running_back;
+Animation_Definition *p2_adef_soldier_1_m44_brewster_idle_front;
+Animation_Definition *p2_adef_soldier_1_m44_brewster_running_front;
+
 Animation *p2_anim_soldier_1_m16_idle_side;
 Animation *p2_anim_soldier_1_m16_running_side;
 Animation *p2_anim_soldier_1_m16_idle_back;
@@ -159,6 +194,13 @@ Animation *p2_anim_soldier_1_m44_idle_front;
 Animation *p2_anim_soldier_1_m44_running_front;
 Animation *p2_anim_soldier_1_m44_spawning_side;
 Animation *p2_anim_soldier_1_m44_dying_side;
+
+Animation *p2_anim_soldier_1_m44_brewster_idle_side;
+Animation *p2_anim_soldier_1_m44_brewster_running_side;
+Animation *p2_anim_soldier_1_m44_brewster_idle_back;
+Animation *p2_anim_soldier_1_m44_brewster_running_back;
+Animation *p2_anim_soldier_1_m44_brewster_idle_front;
+Animation *p2_anim_soldier_1_m44_brewster_running_front;
 
 // bullet sprites & anims
 Sprite_Sheet sprite_sheet_bullet_1_horizontal;
