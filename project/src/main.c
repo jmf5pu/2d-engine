@@ -207,7 +207,10 @@ int main(int argc, char *argv[])
             {
                 continue;
             }
-            animation_render(entity->animation, window, entity->body->aabb.position, 0, WHITE, texture_slots);
+            animation_render(entity->animation, window, entity->body->aabb.position, 3, WHITE, texture_slots);
+
+            if (render_static_bodies)
+                render_aabb((f32 *)&entity->body->aabb, WHITE);
         }
 
         // render map sprites
@@ -216,9 +219,9 @@ int main(int argc, char *argv[])
             Prop prop = map.props[i];
             prop.sprite->sprite_sheet;
 
-            // render the sprite render_static_bodies ? (vec4){0.9, 0.9, 0.9, 0.9} : prop.sprite->color
-            render_sprite_sheet_frame(prop.sprite->sprite_sheet, window, prop.sprite->row, prop.sprite->column, prop.sprite->position, prop.sprite->z_index, prop.sprite->is_flipped, prop.sprite->color, texture_slots);
-
+            // determine z-index based on player's position respective to the prop
+            bool is_in_front_of_player = (player_one->entity->body->aabb.position[1] - player_one->entity->body->aabb.half_size[1]) > (prop.sprite->position[1] - prop.sprite->half_size[1] + prop.layer_threshold);
+            render_sprite_sheet_frame(prop.sprite->sprite_sheet, window, prop.sprite->row, prop.sprite->column, prop.sprite->position, is_in_front_of_player ? 1 : -1, prop.sprite->is_flipped, render_static_bodies ? (vec4){0.9, 0.9, 0.9, 0.9} : prop.sprite->color, texture_slots);
             // render the static body
             if (prop.static_body && render_static_bodies)
             {

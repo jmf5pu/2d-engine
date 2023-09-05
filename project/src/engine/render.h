@@ -42,7 +42,8 @@ typedef struct sprite
     f32 row;
     f32 column;
     vec2 position; // 2d position
-    i32 z_index;   // for layering sprites
+    vec2 half_size;
+    i32 z_index; // for layering sprites
     bool is_flipped;
     vec4 color;
 } Sprite;

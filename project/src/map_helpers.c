@@ -15,62 +15,65 @@ void init_map(Map *map)
     render_sprite_sheet_init(sprite_sheet_map_1_main_bg, "assets/map_1.png", 640, 360);
     Sprite *map_1_main_bg = malloc(sizeof(Sprite));
     map_1_main_bg->sprite_sheet = sprite_sheet_map_1_main_bg;
-    map_1_main_bg->row = 1;
+    map_1_main_bg->row = 0;
     map_1_main_bg->column = 0;
     map_1_main_bg->position[0] = 320;
     map_1_main_bg->position[1] = 180;
+    map_1_main_bg->half_size[0] = 640;
+    map_1_main_bg->half_size[1] = 360;
     map_1_main_bg->z_index = -3;
     map_1_main_bg->is_flipped = false;
     map_1_main_bg->color[0] = 1;
     map_1_main_bg->color[1] = 1;
     map_1_main_bg->color[2] = 1;
     map_1_main_bg->color[3] = 1;
-
-    Sprite_Sheet *sprite_sheet_chain_link_fence_horizontal_wide = malloc(sizeof(Sprite_Sheet));
-    render_sprite_sheet_init(sprite_sheet_chain_link_fence_horizontal_wide, "assets/chain_link_fence_horizontal_wide_no_concrete_barbed_wire.png", 640, 75);
-    Sprite *chain_link_fence_horizontal_wide = malloc(sizeof(Sprite));
-    chain_link_fence_horizontal_wide->sprite_sheet = sprite_sheet_chain_link_fence_horizontal_wide;
-    chain_link_fence_horizontal_wide->row = 2;
-    chain_link_fence_horizontal_wide->column = 0;
-    chain_link_fence_horizontal_wide->position[0] = 317;
-    chain_link_fence_horizontal_wide->position[1] = 36;
-    chain_link_fence_horizontal_wide->z_index = -3;
-    chain_link_fence_horizontal_wide->is_flipped = false;
-    chain_link_fence_horizontal_wide->color[0] = 1;
-    chain_link_fence_horizontal_wide->color[1] = 1;
-    chain_link_fence_horizontal_wide->color[2] = 1;
-    chain_link_fence_horizontal_wide->color[3] = 1;
-
-    Sprite_Sheet *sprite_sheet_shipping_containers_red_and_yellow_back = malloc(sizeof(Sprite_Sheet));
-    render_sprite_sheet_init(sprite_sheet_shipping_containers_red_and_yellow_back, "assets/shipping_containers_red_and_yellow_back.png", 96, 59);
-    Sprite *shipping_containers_red_and_yellow_back = malloc(sizeof(Sprite));
-    shipping_containers_red_and_yellow_back->sprite_sheet = sprite_sheet_shipping_containers_red_and_yellow_back,
-    shipping_containers_red_and_yellow_back->row = 3,
-    shipping_containers_red_and_yellow_back->column = 0,
-    shipping_containers_red_and_yellow_back->position[0] = 244;
-    shipping_containers_red_and_yellow_back->position[1] = 224,
-    shipping_containers_red_and_yellow_back->z_index = -3,
-    shipping_containers_red_and_yellow_back->is_flipped = false,
-    shipping_containers_red_and_yellow_back->color[0] = 1;
-    shipping_containers_red_and_yellow_back->color[1] = 1;
-    shipping_containers_red_and_yellow_back->color[2] = 1;
-    shipping_containers_red_and_yellow_back->color[3] = 1;
-
     Prop background_prop = (Prop){
         .sprite = map_1_main_bg,
         .layer_threshold = INT32_MIN, // this prop should ALWAYS render before (underneath) everything else
         .static_body = NULL,
     };
 
+    Sprite_Sheet *sprite_sheet_chain_link_fence_horizontal_wide = malloc(sizeof(Sprite_Sheet));
+    render_sprite_sheet_init(sprite_sheet_chain_link_fence_horizontal_wide, "assets/chain_link_fence_horizontal_wide_no_concrete_barbed_wire.png", 640, 75);
+    Sprite *chain_link_fence_horizontal_wide = malloc(sizeof(Sprite));
+    chain_link_fence_horizontal_wide->sprite_sheet = sprite_sheet_chain_link_fence_horizontal_wide;
+    chain_link_fence_horizontal_wide->row = 0;
+    chain_link_fence_horizontal_wide->column = 0;
+    chain_link_fence_horizontal_wide->position[0] = 317;
+    chain_link_fence_horizontal_wide->position[1] = 36;
+    chain_link_fence_horizontal_wide->half_size[0] = 320;
+    chain_link_fence_horizontal_wide->half_size[1] = 37.5;
+    chain_link_fence_horizontal_wide->z_index = -3;
+    chain_link_fence_horizontal_wide->is_flipped = false;
+    chain_link_fence_horizontal_wide->color[0] = 1;
+    chain_link_fence_horizontal_wide->color[1] = 1;
+    chain_link_fence_horizontal_wide->color[2] = 1;
+    chain_link_fence_horizontal_wide->color[3] = 1;
     Prop chain_link_fence_bottom_prop = (Prop){
         .sprite = chain_link_fence_horizontal_wide,
         .layer_threshold = 25,
         .static_body = physics_static_body_create((vec2){320, 10}, (vec2){640, 3}, COLLISION_LAYER_TERRIAN),
     };
 
-    Prop vertical_shipping_containers_prop = (Prop){
-        .sprite = shipping_containers_red_and_yellow_back,
-        .layer_threshold = 150,
+    Sprite_Sheet *sprite_sheet_traffic_cone = malloc(sizeof(Sprite_Sheet));
+    render_sprite_sheet_init(sprite_sheet_traffic_cone, "assets/traffic_cone_square.png", 9, 13);
+    Sprite *traffic_cone = malloc(sizeof(Sprite));
+    traffic_cone->sprite_sheet = sprite_sheet_traffic_cone;
+    traffic_cone->row = 0;
+    traffic_cone->column = 0;
+    traffic_cone->position[0] = 75;
+    traffic_cone->position[1] = 75;
+    traffic_cone->half_size[0] = 4.5;
+    traffic_cone->half_size[1] = 6.5;
+    traffic_cone->z_index = -3;
+    traffic_cone->is_flipped = false;
+    traffic_cone->color[0] = 1;
+    traffic_cone->color[1] = 1;
+    traffic_cone->color[2] = 1;
+    traffic_cone->color[3] = 1;
+    Prop traffic_cone_prop = (Prop){
+        .sprite = traffic_cone,
+        .layer_threshold = 4,
         .static_body = NULL,
     };
 
@@ -85,7 +88,7 @@ void init_map(Map *map)
     // populate prop array
     prop_array[0] = background_prop;
     prop_array[1] = chain_link_fence_bottom_prop;
-    prop_array[2] = vertical_shipping_containers_prop;
+    prop_array[2] = traffic_cone_prop;
 
     /*
      * initializing pickups
