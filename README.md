@@ -4,10 +4,12 @@ next TODOs:
   * add a second pickup (armor?)
     * ~~adding animations and anim transitions on pickup~~
     * ~~add armor attribute to player~~
-    * update original anim (hair)
-    * add anims to m44 and dying
+    * ~~update original anim (hair)~~
+    * ~~add anims to m44~~
+    * add dying anims
   * ~~pull out props to separate sprites~~
   * ~~make m16 burst fire~~
+  * refactor sprites to use string manipulation based on status of the player
   * fix sprite/aabb size for players
   * remove old props from bg sprite
   * add all props that are needed for 1st map
