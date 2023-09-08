@@ -11,7 +11,7 @@ next TODOs:
   * ~~make m16 burst fire~~
   * refactor sprites to use string manipulation based on status of the player
   * fix sprite/aabb size for players
-  * remove old props from bg sprite
+  * ~~remove old props from bg sprite~~
   * add all props that are needed for 1st map
   * add another weapon (shotgun?)
   * fix players running into their own bullets
