@@ -2,6 +2,7 @@
 #include "engine/global.h"
 #include "map_helpers.h"
 #include "collision_behavior.h"
+#include <stdlib.h>
 
 Map map;
 
@@ -21,7 +22,7 @@ void init_map(Map *map)
     map_1_main_bg->position[1] = 180;
     map_1_main_bg->half_size[0] = 640;
     map_1_main_bg->half_size[1] = 360;
-    map_1_main_bg->z_index = -3;
+    map_1_main_bg->z_index = -5;
     map_1_main_bg->is_flipped = false;
     map_1_main_bg->color[0] = 1;
     map_1_main_bg->color[1] = 1;
