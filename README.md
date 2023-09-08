@@ -7,7 +7,6 @@ next TODOs:
     * ~~update original anim (hair)~~
     * ~~add anims to m44~~
     * add dying anims
-    * fix animation bug (one player flips the other)
   * ~~pull out props to separate sprites~~
   * ~~make m16 burst fire~~
   * refactor sprites to use string manipulation based on status of the player
@@ -17,5 +16,6 @@ next TODOs:
   * add another weapon (shotgun?)
   * fix players running into their own bullets
   * fix dying animation
+  * fix animation bug (one player flips the other)
   * implement reloading / ammo count
 * add crouching and 360 deg aiming
