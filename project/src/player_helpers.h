@@ -1,12 +1,19 @@
 #ifndef PLAYER_HELPERS_H
 #define PLAYER_HELPERS_H
 
+#include "engine/hash_map.h"
 #include "engine/animation.h"
 #include "structs.h"
+
+// number of animations to be stored in player_anim_map
+#define PLAYER_ANIM_COUNT 56
 
 // declare players
 extern Player *player_one;
 extern Player *player_two;
+
+// hash map to store player anims
+Hash_Map *player_anim_map;
 
 // player 1 sprites & anims
 Sprite_Sheet p1_sprite_sheet_soldier_1_m16_idle_side;
@@ -212,6 +219,7 @@ Animation_Definition *adef_bullet_1_vertical;
 Animation *anim_bullet_1_horizontal;
 Animation *anim_bullet_1_vertical;
 
+void init_player_anim_hashmap();
 void init_all_anims();
 void update_player_status(Player *player);
 void update_player_animations(Player *player);

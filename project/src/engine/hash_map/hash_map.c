@@ -1,6 +1,8 @@
 #include "../hash_map.h"
 #include "../util.h"
 #include <stdlib.h>
+#include <string.h>
+
 // Function to create the hash map
 Hash_Map *create_hash_map(int capacity)
 {
