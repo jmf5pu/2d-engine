@@ -17,6 +17,7 @@
 #include "engine/render.h"
 #include "engine/animation.h"
 #include "engine/array_list.h"
+#include "engine/hash_map.h"
 
 // game specific headers
 #include "structs.h"
@@ -203,11 +204,11 @@ int main(int argc, char *argv[])
             }
 
             // skip entities with no associated animations, check if players and pickups are inactive
-            if (entity->animation == NULL || !entity->is_active || !entity->body->is_active)
+            if (!entity->animation || !entity->is_active || !entity->body->is_active)
             {
                 continue;
             }
-            animation_render(entity->animation, window, entity->body->aabb.position, 3, WHITE, texture_slots);
+            animation_render(entity->animation, window, entity->body->aabb.position, 0, WHITE, texture_slots);
 
             if (render_static_bodies)
                 render_aabb((f32 *)&entity->body->aabb, WHITE);
@@ -219,9 +220,17 @@ int main(int argc, char *argv[])
             Prop prop = map.props[i];
             prop.sprite->sprite_sheet;
 
-            // determine z-index based on player's position respective to the prop
-            bool is_in_front_of_player = (player_one->entity->body->aabb.position[1] - player_one->entity->body->aabb.half_size[1]) > (prop.sprite->position[1] - prop.sprite->half_size[1] + prop.layer_threshold);
-            render_sprite_sheet_frame(prop.sprite->sprite_sheet, window, prop.sprite->row, prop.sprite->column, prop.sprite->position, is_in_front_of_player ? 1 : -1, prop.sprite->is_flipped, render_static_bodies ? (vec4){0.9, 0.9, 0.9, 0.9} : prop.sprite->color, texture_slots);
+            /*
+             * Determining the props z_index based on position relative to player
+             * z_index should be below the players (0) if the lowest point of the player is under the y
+             * threshold we set OR they are above the prop entirely. Also the main background, (index 0)
+             * is rendered beneath the player no matter what
+             */
+            f32 player_y_min = player_one->entity->body->aabb.position[1] - player_one->entity->body->aabb.half_size[1];
+            bool is_below_player = player_y_min < (prop.sprite->position[1] - prop.sprite->half_size[1] + prop.layer_threshold) || player_y_min > (prop.sprite->position[1] + prop.sprite->half_size[1]) || i == 0;
+            i32 z_index = is_below_player ? prop.sprite->z_index : 1;
+            render_sprite_sheet_frame(prop.sprite->sprite_sheet, window, prop.sprite->row, prop.sprite->column, prop.sprite->position, z_index, prop.sprite->is_flipped, render_static_bodies ? (vec4){0.9, 0.9, 0.9, 0.9} : prop.sprite->color, texture_slots);
+
             // render the static body
             if (prop.static_body && render_static_bodies)
             {
