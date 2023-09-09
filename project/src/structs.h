@@ -14,12 +14,6 @@ enum Direction
     LEFT
 };
 
-enum Weapon_Name
-{
-    M16,
-    M44
-};
-
 enum Pickup_Name
 {
     M44_PICKUP,
@@ -51,7 +45,7 @@ enum Pickup_Status
 // used to define common weapon types
 typedef struct weapon_type
 {
-    enum Weapon_Name name;
+    char *name;
     enum Fire_Mode fire_mode;
     i8 capacity;
     u16 max_fire_rate; // rounds per minute
@@ -64,7 +58,7 @@ typedef struct weapon_type
 // contains weapon info as well as player-specific data
 typedef struct weapon
 {
-    enum Weapon_Name name;
+    char *name;
     enum Fire_Mode fire_mode;
     i8 capacity;
     i8 current_capacity;
@@ -78,29 +72,23 @@ typedef struct weapon
     bool ready_to_fire;
 } Weapon;
 
-typedef struct player_animation_set
-{
-    Animation *up_idle;
-    Animation *up_moving;
-    Animation *down_idle;
-    Animation *down_moving;
-    Animation *side_idle;
-    Animation *side_moving;
-    Animation *spawning;
-    Animation *dying;
-} Player_Animation_Set;
-
 typedef struct pickup_animation_set
 {
     Animation *active;
     Animation *spawning;
 } Pickup_Animation_Set;
 
+typedef struct armor
+{
+    char *name;
+    i16 integrity;
+} Armor;
+
 typedef struct player
 {
     Entity *entity;
-    Player_Animation_Set *animation_set;
     Weapon *weapon;
+    Armor *armor;
     vec2 spawn_point;
     enum Direction direction;
     enum Player_Status status;
@@ -109,7 +97,6 @@ typedef struct player
     f32 spawn_time;       // time in s from SPAWNING status to ACTIVE status
     u32 frames_on_status; // # of frames since last status change
     i16 health;
-    i16 armor;
     bool is_left_player;
 } Player;
 

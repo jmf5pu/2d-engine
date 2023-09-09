@@ -12,7 +12,6 @@ Player *player_two;
 void init_player_anim_hashmap()
 {
     player_anim_map = create_hash_map(PLAYER_ANIM_COUNT);
-    insert(player_anim_map, "p1_anim_soldier_1_m16_idle_side", p1_anim_soldier_1_m16_running_side);
     insert(player_anim_map, "p1_anim_soldier_1_m16_idle_side", p1_anim_soldier_1_m16_idle_side);
     insert(player_anim_map, "p1_anim_soldier_1_m16_running_side", p1_anim_soldier_1_m16_running_side);
     insert(player_anim_map, "p1_anim_soldier_1_m16_idle_back", p1_anim_soldier_1_m16_idle_back);
@@ -27,6 +26,8 @@ void init_player_anim_hashmap()
     insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_running_back", p1_anim_soldier_1_m16_brewster_running_back);
     insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_idle_front", p1_anim_soldier_1_m16_brewster_idle_front);
     insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_running_front", p1_anim_soldier_1_m16_brewster_running_front);
+    insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_spawning_side", p1_anim_soldier_1_m16_brewster_spawning_side);
+    insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_dying_side", p1_anim_soldier_1_m16_brewster_dying_side);
     insert(player_anim_map, "p1_anim_soldier_1_m44_idle_side", p1_anim_soldier_1_m44_idle_side);
     insert(player_anim_map, "p1_anim_soldier_1_m44_running_side", p1_anim_soldier_1_m44_running_side);
     insert(player_anim_map, "p1_anim_soldier_1_m44_idle_back", p1_anim_soldier_1_m44_idle_back);
@@ -41,6 +42,8 @@ void init_player_anim_hashmap()
     insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_running_back", p1_anim_soldier_1_m44_brewster_running_back);
     insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_idle_front", p1_anim_soldier_1_m44_brewster_idle_front);
     insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_running_front", p1_anim_soldier_1_m44_brewster_running_front);
+    insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_spawning_side", p1_anim_soldier_1_m44_brewster_spawning_side);
+    insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_dying_side", p1_anim_soldier_1_m44_brewster_dying_side);
     insert(player_anim_map, "p2_anim_soldier_1_m16_idle_side", p2_anim_soldier_1_m16_idle_side);
     insert(player_anim_map, "p2_anim_soldier_1_m16_running_side", p2_anim_soldier_1_m16_running_side);
     insert(player_anim_map, "p2_anim_soldier_1_m16_idle_back", p2_anim_soldier_1_m16_idle_back);
@@ -55,6 +58,8 @@ void init_player_anim_hashmap()
     insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_running_back", p2_anim_soldier_1_m16_brewster_running_back);
     insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_idle_front", p2_anim_soldier_1_m16_brewster_idle_front);
     insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_running_front", p2_anim_soldier_1_m16_brewster_running_front);
+    insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_spawning_side", p2_anim_soldier_1_m16_brewster_spawning_side);
+    insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_dying_side", p2_anim_soldier_1_m16_brewster_dying_side);
     insert(player_anim_map, "p2_anim_soldier_1_m44_idle_side", p2_anim_soldier_1_m44_idle_side);
     insert(player_anim_map, "p2_anim_soldier_1_m44_running_side", p2_anim_soldier_1_m44_running_side);
     insert(player_anim_map, "p2_anim_soldier_1_m44_idle_back", p2_anim_soldier_1_m44_idle_back);
@@ -69,6 +74,8 @@ void init_player_anim_hashmap()
     insert(player_anim_map, "p2_anim_soldier_1_m44_brewster_running_back", p2_anim_soldier_1_m44_brewster_running_back);
     insert(player_anim_map, "p2_anim_soldier_1_m44_brewster_idle_front", p2_anim_soldier_1_m44_brewster_idle_front);
     insert(player_anim_map, "p2_anim_soldier_1_m44_brewster_running_front", p2_anim_soldier_1_m44_brewster_running_front);
+    insert(player_anim_map, "p2_anim_soldier_1_m44_brewster_spawning_side", p2_anim_soldier_1_m44_brewster_spawning_side);
+    insert(player_anim_map, "p2_anim_soldier_1_m44_brewster_dying_side", p2_anim_soldier_1_m44_brewster_dying_side);
 }
 
 // sets up animations for players and bullets
@@ -87,7 +94,7 @@ void init_all_anims()
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_back, "assets/soldier_1_m16_running_back.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_front, "assets/soldier_1_m16_idle_front.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_front, "assets/soldier_1_m16_running_front.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_spawning_side, "assets/soldier_1_spawning_side.png", 42, 42);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
     p1_adef_soldier_1_m16_idle_side = animation_definition_create(
@@ -155,6 +162,8 @@ void init_all_anims()
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_running_back, "assets/soldier_1_m16_brewster_running_back.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_idle_front, "assets/soldier_1_m16_brewster_idle_front.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_running_front, "assets/soldier_1_m16_brewster_running_front.png", 36, 36);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
     p1_adef_soldier_1_m16_brewster_idle_side = animation_definition_create(
         &p1_sprite_sheet_soldier_1_m16_brewster_idle_side,
@@ -192,6 +201,18 @@ void init_all_anims()
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8},
         8);
+    p1_adef_soldier_1_m16_brewster_spawning_side = animation_definition_create(
+        &p1_sprite_sheet_soldier_1_m16_brewster_spawning_side,
+        (f32[]){0.25, 0.25},
+        (u8[]){0, 0},
+        (u8[]){1, 2},
+        2);
+    p1_adef_soldier_1_m16_brewster_dying_side = animation_definition_create(
+        &p1_sprite_sheet_soldier_1_m16_brewster_dying_side,
+        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.75, 0.5, 0.5, 0.5, 0.75},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        10);
 
     p1_anim_soldier_1_m16_brewster_idle_side = animation_create(p1_adef_soldier_1_m16_brewster_idle_side, false);
     p1_anim_soldier_1_m16_brewster_running_side = animation_create(p1_adef_soldier_1_m16_brewster_running_side, true);
@@ -199,6 +220,8 @@ void init_all_anims()
     p1_anim_soldier_1_m16_brewster_running_back = animation_create(p1_adef_soldier_1_m16_brewster_running_back, true);
     p1_anim_soldier_1_m16_brewster_idle_front = animation_create(p1_adef_soldier_1_m16_brewster_idle_front, false);
     p1_anim_soldier_1_m16_brewster_running_front = animation_create(p1_adef_soldier_1_m16_brewster_running_front, true);
+    p1_anim_soldier_1_m16_brewster_spawning_side = animation_create(p1_adef_soldier_1_m16_brewster_spawning_side, true);
+    p1_anim_soldier_1_m16_brewster_dying_side = animation_create(p1_adef_soldier_1_m16_brewster_dying_side, true);
 
     // m44
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_idle_side, "assets/soldier_1_m44_idle_side.png", 36, 36);
@@ -207,6 +230,8 @@ void init_all_anims()
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_running_back, "assets/soldier_1_m44_running_back.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_idle_front, "assets/soldier_1_m44_idle_front.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_running_front, "assets/soldier_1_m44_running_front.png", 36, 36);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
     p1_adef_soldier_1_m44_idle_side = animation_definition_create(
         &p1_sprite_sheet_soldier_1_m44_idle_side,
@@ -244,6 +269,18 @@ void init_all_anims()
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8},
         8);
+    p1_adef_soldier_1_m44_spawning_side = animation_definition_create(
+        &p1_sprite_sheet_soldier_1_m44_spawning_side,
+        (f32[]){0.25, 0.25},
+        (u8[]){0, 0},
+        (u8[]){1, 2},
+        2);
+    p1_adef_soldier_1_m44_dying_side = animation_definition_create(
+        &p1_sprite_sheet_soldier_1_m44_dying_side,
+        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.75, 0.5, 0.5, 0.5, 0.75},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        10);
 
     p1_anim_soldier_1_m44_idle_side = animation_create(p1_adef_soldier_1_m44_idle_side, false);
     p1_anim_soldier_1_m44_running_side = animation_create(p1_adef_soldier_1_m44_running_side, true);
@@ -251,6 +288,8 @@ void init_all_anims()
     p1_anim_soldier_1_m44_running_back = animation_create(p1_adef_soldier_1_m44_running_back, true);
     p1_anim_soldier_1_m44_idle_front = animation_create(p1_adef_soldier_1_m44_idle_front, false);
     p1_anim_soldier_1_m44_running_front = animation_create(p1_adef_soldier_1_m44_running_front, true);
+    p1_anim_soldier_1_m44_spawning_side = animation_create(p1_adef_soldier_1_m44_spawning_side, true);
+    p1_anim_soldier_1_m44_dying_side = animation_create(p1_adef_soldier_1_m44_dying_side, true);
 
     // m44 w brewster
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_idle_side, "assets/soldier_1_m44_brewster_idle_side.png", 36, 36);
@@ -259,6 +298,8 @@ void init_all_anims()
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_running_back, "assets/soldier_1_m44_brewster_running_back.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_idle_front, "assets/soldier_1_m44_brewster_idle_front.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_running_front, "assets/soldier_1_m44_brewster_running_front.png", 36, 36);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
     p1_adef_soldier_1_m44_brewster_idle_side = animation_definition_create(
         &p1_sprite_sheet_soldier_1_m44_brewster_idle_side,
@@ -296,6 +337,18 @@ void init_all_anims()
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8},
         8);
+    p1_adef_soldier_1_m44_brewster_spawning_side = animation_definition_create(
+        &p1_sprite_sheet_soldier_1_m44_brewster_spawning_side,
+        (f32[]){0.25, 0.25},
+        (u8[]){0, 0},
+        (u8[]){1, 2},
+        2);
+    p1_adef_soldier_1_m44_brewster_dying_side = animation_definition_create(
+        &p1_sprite_sheet_soldier_1_m44_brewster_dying_side,
+        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.75, 0.5, 0.5, 0.5, 0.75},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        10);
 
     p1_anim_soldier_1_m44_brewster_idle_side = animation_create(p1_adef_soldier_1_m44_brewster_idle_side, false);
     p1_anim_soldier_1_m44_brewster_running_side = animation_create(p1_adef_soldier_1_m44_brewster_running_side, true);
@@ -303,6 +356,8 @@ void init_all_anims()
     p1_anim_soldier_1_m44_brewster_running_back = animation_create(p1_adef_soldier_1_m44_brewster_running_back, true);
     p1_anim_soldier_1_m44_brewster_idle_front = animation_create(p1_adef_soldier_1_m44_brewster_idle_front, false);
     p1_anim_soldier_1_m44_brewster_running_front = animation_create(p1_adef_soldier_1_m44_brewster_running_front, true);
+    p1_anim_soldier_1_m44_brewster_spawning_side = animation_create(p1_adef_soldier_1_m44_brewster_spawning_side, true);
+    p1_anim_soldier_1_m44_brewster_dying_side = animation_create(p1_adef_soldier_1_m44_brewster_dying_side, true);
 
     /*
      * player two animations
@@ -315,7 +370,7 @@ void init_all_anims()
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_back, "assets/soldier_1_m16_running_back.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_front, "assets/soldier_1_m16_idle_front.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_front, "assets/soldier_1_m16_running_front.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_spawning_side, "assets/soldier_1_spawning_side.png", 42, 42);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
     p2_adef_soldier_1_m16_idle_side = animation_definition_create(
@@ -384,6 +439,8 @@ void init_all_anims()
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_running_back, "assets/soldier_1_m16_brewster_running_back.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_idle_front, "assets/soldier_1_m16_brewster_idle_front.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_running_front, "assets/soldier_1_m16_brewster_running_front.png", 36, 36);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
     p2_adef_soldier_1_m16_brewster_idle_side = animation_definition_create(
         &p2_sprite_sheet_soldier_1_m16_brewster_idle_side,
@@ -421,6 +478,18 @@ void init_all_anims()
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8},
         8);
+    p2_adef_soldier_1_m16_brewster_spawning_side = animation_definition_create(
+        &p2_sprite_sheet_soldier_1_m16_brewster_spawning_side,
+        (f32[]){0.25, 0.25},
+        (u8[]){0, 0},
+        (u8[]){1, 2},
+        2);
+    p2_adef_soldier_1_m16_brewster_dying_side = animation_definition_create(
+        &p2_sprite_sheet_soldier_1_m16_brewster_dying_side,
+        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.75, 0.5, 0.5, 0.5, 0.75},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        10);
 
     p2_anim_soldier_1_m16_brewster_idle_side = animation_create(p2_adef_soldier_1_m16_brewster_idle_side, false);
     p2_anim_soldier_1_m16_brewster_running_side = animation_create(p2_adef_soldier_1_m16_brewster_running_side, true);
@@ -428,6 +497,8 @@ void init_all_anims()
     p2_anim_soldier_1_m16_brewster_running_back = animation_create(p2_adef_soldier_1_m16_brewster_running_back, true);
     p2_anim_soldier_1_m16_brewster_idle_front = animation_create(p2_adef_soldier_1_m16_brewster_idle_front, false);
     p2_anim_soldier_1_m16_brewster_running_front = animation_create(p2_adef_soldier_1_m16_brewster_running_front, true);
+    p2_anim_soldier_1_m16_brewster_spawning_side = animation_create(p2_adef_soldier_1_m16_brewster_spawning_side, true);
+    p2_anim_soldier_1_m16_brewster_dying_side = animation_create(p2_adef_soldier_1_m16_brewster_dying_side, true);
 
     // m44
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_idle_side, "assets/soldier_1_m44_idle_side.png", 36, 36);
@@ -436,6 +507,8 @@ void init_all_anims()
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_running_back, "assets/soldier_1_m44_running_back.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_idle_front, "assets/soldier_1_m44_idle_front.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_running_front, "assets/soldier_1_m44_running_front.png", 36, 36);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
     p2_adef_soldier_1_m44_idle_side = animation_definition_create(
         &p2_sprite_sheet_soldier_1_m44_idle_side,
@@ -473,6 +546,18 @@ void init_all_anims()
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8},
         8);
+    p2_adef_soldier_1_m44_spawning_side = animation_definition_create(
+        &p2_sprite_sheet_soldier_1_m44_spawning_side,
+        (f32[]){0.25, 0.25},
+        (u8[]){0, 0},
+        (u8[]){1, 2},
+        2);
+    p2_adef_soldier_1_m44_dying_side = animation_definition_create(
+        &p2_sprite_sheet_soldier_1_m44_dying_side,
+        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.75, 0.5, 0.5, 0.5, 0.75},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        10);
 
     p2_anim_soldier_1_m44_idle_side = animation_create(p2_adef_soldier_1_m44_idle_side, false);
     p2_anim_soldier_1_m44_running_side = animation_create(p2_adef_soldier_1_m44_running_side, true);
@@ -480,6 +565,8 @@ void init_all_anims()
     p2_anim_soldier_1_m44_running_back = animation_create(p2_adef_soldier_1_m44_running_back, true);
     p2_anim_soldier_1_m44_idle_front = animation_create(p2_adef_soldier_1_m44_idle_front, false);
     p2_anim_soldier_1_m44_running_front = animation_create(p2_adef_soldier_1_m44_running_front, true);
+    p2_anim_soldier_1_m44_spawning_side = animation_create(p2_adef_soldier_1_m44_spawning_side, true);
+    p2_anim_soldier_1_m44_dying_side = animation_create(p2_adef_soldier_1_m44_dying_side, true);
 
     // m44 w brewster
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_idle_side, "assets/soldier_1_m44_brewster_idle_side.png", 36, 36);
@@ -488,6 +575,8 @@ void init_all_anims()
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_running_back, "assets/soldier_1_m44_brewster_running_back.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_idle_front, "assets/soldier_1_m44_brewster_idle_front.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_running_front, "assets/soldier_1_m44_brewster_running_front.png", 36, 36);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
     p2_adef_soldier_1_m44_brewster_idle_side = animation_definition_create(
         &p2_sprite_sheet_soldier_1_m44_brewster_idle_side,
@@ -525,6 +614,18 @@ void init_all_anims()
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8},
         8);
+    p2_adef_soldier_1_m44_brewster_spawning_side = animation_definition_create(
+        &p2_sprite_sheet_soldier_1_m44_brewster_spawning_side,
+        (f32[]){0.25, 0.25},
+        (u8[]){0, 0},
+        (u8[]){1, 2},
+        2);
+    p2_adef_soldier_1_m44_brewster_dying_side = animation_definition_create(
+        &p2_sprite_sheet_soldier_1_m44_brewster_dying_side,
+        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.75, 0.5, 0.5, 0.5, 0.75},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        10);
 
     p2_anim_soldier_1_m44_brewster_idle_side = animation_create(p2_adef_soldier_1_m44_brewster_idle_side, false);
     p2_anim_soldier_1_m44_brewster_running_side = animation_create(p2_adef_soldier_1_m44_brewster_running_side, true);
@@ -532,6 +633,8 @@ void init_all_anims()
     p2_anim_soldier_1_m44_brewster_running_back = animation_create(p2_adef_soldier_1_m44_brewster_running_back, true);
     p2_anim_soldier_1_m44_brewster_idle_front = animation_create(p2_adef_soldier_1_m44_brewster_idle_front, false);
     p2_anim_soldier_1_m44_brewster_running_front = animation_create(p2_adef_soldier_1_m44_brewster_running_front, true);
+    p2_anim_soldier_1_m44_brewster_spawning_side = animation_create(p2_adef_soldier_1_m44_brewster_spawning_side, true);
+    p2_anim_soldier_1_m44_brewster_dying_side = animation_create(p2_adef_soldier_1_m44_brewster_dying_side, true);
 
     // bullet stuff
     render_sprite_sheet_init(&sprite_sheet_bullet_1_horizontal, "assets/bullet_1_horizontal.png", 5, 5);
@@ -557,7 +660,7 @@ void init_all_anims()
 // updates player statuses based on frame counter associated with each playaer
 void update_player_status(Player *player)
 {
-
+    // SPAWN LOGIC
     // check if spawn delay is up
     if (player->status == PLAYER_INACTIVE && player->frames_on_status >= (player->spawn_delay * global.time.frame_rate))
     {
@@ -569,34 +672,19 @@ void update_player_status(Player *player)
         player->entity->body->aabb.position[0] = player->spawn_point[0];
         player->entity->body->aabb.position[1] = player->spawn_point[1];
 
-        // reset health
-        player->armor = 0; // should be 0 anyways??
+        // reset health and armor
+        player->armor->name = "";
+        player->armor->integrity = 0;
         player->health = 100;
 
         // reset player anims to default (may have changed from pickups)
         if (player == player_one)
         {
-            player->animation_set->down_idle = p1_anim_soldier_1_m16_idle_front;
-            player->animation_set->down_moving = p1_anim_soldier_1_m16_running_front;
-            player->animation_set->up_idle = p1_anim_soldier_1_m16_idle_back;
-            player->animation_set->up_moving = p1_anim_soldier_1_m16_running_back;
-            player->animation_set->side_idle = p1_anim_soldier_1_m16_idle_side;
-            player->animation_set->side_moving = p1_anim_soldier_1_m16_running_side;
-            player->animation_set->spawning = p1_anim_soldier_1_m16_spawning_side;
-            player->animation_set->dying = p1_anim_soldier_1_m16_dying_side;
             player_one->direction = RIGHT;
         }
         else
         { // player two
-            player->animation_set->down_idle = p2_anim_soldier_1_m16_idle_front;
-            player->animation_set->down_moving = p2_anim_soldier_1_m16_running_front;
-            player->animation_set->up_idle = p2_anim_soldier_1_m16_idle_back;
-            player->animation_set->up_moving = p2_anim_soldier_1_m16_running_back;
-            player->animation_set->side_idle = p2_anim_soldier_1_m16_idle_side;
-            player->animation_set->side_moving = p2_anim_soldier_1_m16_running_side;
-            player->animation_set->spawning = p2_anim_soldier_1_m16_spawning_side;
-            player->animation_set->dying = p2_anim_soldier_1_m16_dying_side;
-            player_one->direction = LEFT;
+            player_two->direction = LEFT;
         }
 
         // reset weapon
@@ -613,18 +701,26 @@ void update_player_status(Player *player)
         player->entity->is_active = true;
         player->entity->body->is_active = true;
     }
+
     // check if spawn time is up
     else if (player->status == PLAYER_SPAWNING && player->frames_on_status >= (player->spawn_time * global.time.frame_rate))
     {
         player->status = PLAYER_ACTIVE;
         player->frames_on_status = 0;
     }
+
+    // DESPAWN LOGIC
     // check if health is 0
     else if (player->health <= 0 && player->status == PLAYER_ACTIVE)
     {
         player->status = PLAYER_DESPAWNING;
-        player->animation_set->dying->current_frame_index = 0;
         player->frames_on_status = 0;
+
+        // TODO: remove this once more dying animations are added
+        if (player->direction == UP)
+            player->direction = RIGHT;
+        if (player->direction == DOWN)
+            player->direction = LEFT;
 
         // shouldn't be moving on death anim
         player->entity->body->velocity[0] = 0;
@@ -641,6 +737,7 @@ void update_player_status(Player *player)
         player->entity->body->is_active = false;
     }
 
+    // WEAPON STATUS LOGIC
     // update weapon status (check if weapon is ready to fire again)
     if (!player->weapon->ready_to_fire && player->weapon->frames_since_last_shot >= ((1.0 / (player->weapon->max_fire_rate / 60.0)) * global.time.frame_rate))
     {
@@ -660,7 +757,8 @@ void update_player_status(Player *player)
         }
     }
 
-    // update all timers
+    // TIMER UPDATES
+    // increments timers for BOTH player and weapon
     player->frames_on_status++;
     player->weapon->frames_since_last_shot++;
 }
@@ -671,35 +769,60 @@ void update_player_status(Player *player)
  */
 void update_player_animations(Player *player)
 {
+    if (player->status == PLAYER_INACTIVE)
+    {
+        return;
+    }
 
-    if (player->status == PLAYER_ACTIVE)
-    {
-        if (player->direction == RIGHT || player->direction == LEFT)
-        {
-            player->entity->animation = player->entity->body->velocity[0] != 0 ? player->animation_set->side_moving : player->animation_set->side_idle; // anim_soldier_running_side : anim_soldier_idle_side;
-            player->entity->animation->is_flipped = player->direction == LEFT ? true : false;
-        }
-        else if (player->direction == UP)
-        {
-            player->entity->animation = player->entity->body->velocity[1] != 0 ? player->animation_set->up_moving : player->animation_set->up_idle; // anim_soldier_running_back : anim_soldier_idle_back;
-        }
-        else if (player->direction == DOWN)
-        {
-            player->entity->animation = player->entity->body->velocity[1] != 0 ? player->animation_set->down_moving : player->animation_set->down_idle; // anim_soldier_running_front : anim_soldier_idle_front;
-        }
-        else
-        {
-            ERROR_EXIT(-1, "Player direction not recognized");
-        }
-    }
-    else if (player->status == PLAYER_SPAWNING)
-    {
-        player->entity->animation = player->animation_set->spawning;
-    }
+    // cache old anim to check if we are SWITCHING anims
+    Animation *prev_anim = player->entity->animation;
+
+    char *anim_name = calloc(50, sizeof(char));
+    char *player_side = player->is_left_player ? "p1_anim" : "p2_anim";
+    char *character = "soldier_1"; // player->character
+    char *weapon = player->weapon->name;
+    char *armor = player->armor->name;
+    char *status;
+    if (player->status == PLAYER_SPAWNING)
+        status = "spawning";
     else if (player->status == PLAYER_DESPAWNING)
+        status = "dying";
+    else if (player->entity->body->velocity[0] || player->entity->body->velocity[1])
+        status = "running";
+    else // player NOT moving
+        status = "idle";
+    char *direction;
+    if (player->direction == LEFT || player->direction == RIGHT)
+        direction = "side";
+    else if (player->direction == UP)
+        direction = "back";
+    else // player->direction == DOWN
+        direction = "front";
+    strcat(anim_name, player_side);
+    strcat(anim_name, "_");
+    strcat(anim_name, character);
+    strcat(anim_name, "_");
+    strcat(anim_name, weapon);
+    strcat(anim_name, "_");
+    if (strcmp(armor, "") != 0)
     {
-        player->entity->animation = player->animation_set->dying;
+        strcat(anim_name, armor);
+        strcat(anim_name, "_");
     }
+    strcat(anim_name, status);
+    strcat(anim_name, "_");
+    strcat(anim_name, direction);
+
+    player->entity->animation = get(player_anim_map, anim_name);
+
+    // ensure we are starting new anims at the first frame
+    if (player->entity->animation != prev_anim)
+        player->entity->animation->current_frame_index = 0;
+
+    // TODO: remove this once animations are added for facing left (right now right facing anims are flipped and reusedw)
+    player->entity->animation->is_flipped = player->direction == LEFT ? true : false;
+
+    free(anim_name);
 }
 
 void handle_player_shooting(Player *player)

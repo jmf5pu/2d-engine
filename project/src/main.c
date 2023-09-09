@@ -65,15 +65,6 @@ int main(int argc, char *argv[])
     // init player one
     player_one = malloc(sizeof(Player));
     player_one->entity = entity_create(spawn_point_one, (vec2){36, 36}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
-    player_one->animation_set = &(Player_Animation_Set){
-        .down_idle = p1_anim_soldier_1_m16_idle_front,
-        .down_moving = p1_anim_soldier_1_m16_running_front,
-        .up_idle = p1_anim_soldier_1_m16_idle_back,
-        .up_moving = p1_anim_soldier_1_m16_running_back,
-        .side_idle = p1_anim_soldier_1_m16_idle_side,
-        .side_moving = p1_anim_soldier_1_m16_running_side,
-        .spawning = p1_anim_soldier_1_m16_spawning_side,
-        .dying = p1_anim_soldier_1_m16_dying_side};
     player_one->direction = RIGHT;
     player_one->weapon = &(Weapon){
         .name = m16.name,
@@ -89,6 +80,11 @@ int main(int argc, char *argv[])
         .frames_since_last_shot = 0,
         .ready_to_fire = true,
     };
+    player_one->armor = &(Armor){
+        .name = "",
+        .integrity = 0,
+
+    };
     player_one->spawn_point[0] = spawn_point_one[0];
     player_one->spawn_point[1] = spawn_point_one[1];
     player_one->status = PLAYER_SPAWNING;
@@ -97,21 +93,11 @@ int main(int argc, char *argv[])
     player_one->spawn_time = 2;
     player_one->frames_on_status = 0;
     player_one->health = 100;
-    player_one->armor = 0;
     player_one->is_left_player = true;
 
     // init player two
     player_two = malloc(sizeof(Player));
     player_two->entity = entity_create(spawn_point_two, (vec2){36, 36}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
-    player_two->animation_set = &(Player_Animation_Set){
-        .down_idle = p2_anim_soldier_1_m16_idle_front,
-        .down_moving = p2_anim_soldier_1_m16_running_front,
-        .up_idle = p2_anim_soldier_1_m16_idle_back,
-        .up_moving = p2_anim_soldier_1_m16_running_back,
-        .side_idle = p2_anim_soldier_1_m16_idle_side,
-        .side_moving = p2_anim_soldier_1_m16_running_side,
-        .spawning = p2_anim_soldier_1_m16_spawning_side,
-        .dying = p2_anim_soldier_1_m16_dying_side};
     player_two->direction = LEFT;
     player_two->weapon = &(Weapon){
         .name = m16.name,
@@ -127,6 +113,11 @@ int main(int argc, char *argv[])
         .frames_since_last_shot = 0,
         .ready_to_fire = true,
     };
+    player_two->armor = &(Armor){
+        .name = "",
+        .integrity = 0,
+
+    };
     player_two->spawn_point[0] = spawn_point_two[0];
     player_two->spawn_point[1] = spawn_point_two[1];
     player_two->status = PLAYER_SPAWNING;
@@ -135,7 +126,6 @@ int main(int argc, char *argv[])
     player_two->spawn_time = 2;
     player_two->frames_on_status = 0;
     player_two->health = 100;
-    player_two->armor = 0;
     player_two->is_left_player = false;
 
     SDL_ShowCursor(false);
@@ -166,16 +156,18 @@ int main(int argc, char *argv[])
         // update map
         update_map(&map);
 
-        input_update(); // grab current inputs
+        // grab current inputs
+        input_update();
 
         // handle player inputs
         handle_player_input(player_one);
         handle_player_input(player_two);
 
-        // update each player status
+        // update player statuses
         update_player_status(player_one);
         update_player_status(player_two);
 
+        // update player animations
         update_player_animations(player_one);
         update_player_animations(player_two);
 
