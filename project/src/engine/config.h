@@ -6,7 +6,7 @@
 
 typedef struct config
 {
-    u8 keybinds[11];
+    u8 keybinds[13];
 } Config_State;
 
 void config_init(void);

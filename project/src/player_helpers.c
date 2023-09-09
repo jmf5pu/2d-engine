@@ -885,14 +885,21 @@ void handle_player_input(Player *player)
     {
         return;
     }
+
     Key_State left = player->is_left_player ? global.input.l_left : global.input.r_left;
     Key_State right = player->is_left_player ? global.input.l_right : global.input.r_right;
     Key_State up = player->is_left_player ? global.input.l_up : global.input.r_up;
     Key_State down = player->is_left_player ? global.input.l_down : global.input.r_down;
     Key_State shoot = player->is_left_player ? global.input.l_shoot : global.input.r_shoot;
+    Key_State crouch = player->is_left_player ? global.input.l_crouch : global.input.r_crouch;
 
     f32 velx = 0;
     f32 vely = 0;
+
+    if (global.input.l_crouch)
+        printf("left crouch input received\n");
+    if (global.input.r_crouch)
+        printf("right crouch input received\n");
 
     // 4 directional movement only, no diagonals
     if (right)

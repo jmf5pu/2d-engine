@@ -8,11 +8,13 @@ typedef enum input_key
     INPUT_KEY_L_UP,
     INPUT_KEY_L_DOWN,
     INPUT_KEY_L_SHOOT,
+    INPUT_KEY_L_CROUCH,
     INPUT_KEY_R_LEFT,
     INPUT_KEY_R_RIGHT,
     INPUT_KEY_R_UP,
     INPUT_KEY_R_DOWN,
     INPUT_KEY_R_SHOOT,
+    INPUT_KEY_R_CROUCH,
     INPUT_KEY_ESCAPE
 } Input_Key;
 
@@ -31,11 +33,13 @@ typedef struct input_state
     Key_State l_up;
     Key_State l_down;
     Key_State l_shoot;
+    Key_State l_crouch;
     Key_State r_left;
     Key_State r_right;
     Key_State r_up;
     Key_State r_down;
     Key_State r_shoot;
+    Key_State r_crouch;
 } Input_State;
 
 void input_update(void);
