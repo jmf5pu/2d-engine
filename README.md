@@ -9,13 +9,15 @@ next TODOs:
     * add dying anims
   * ~~pull out props to separate sprites~~
   * ~~make m16 burst fire~~
-  * refactor sprites to use string manipulation based on status of the player
+  * ~~refactor sprites to use string manipulation based on status of the player~~
   * ~~fix sprite/aabb size for players~~
   * ~~remove old props from bg sprite~~
-  * add all props that are needed for 1st map
-  * add another weapon (shotgun?)
-  * fix players running into their own bullets
+  * ~~fix players running into their own bullets~~
   * fix dying animation
-  * fix animation bug (one player flips the other)
-  * implement reloading / ammo count
+  * add props to map bg
+  * ~~fix animation bug (one player flips the other)~~
 * add crouching and 360 deg aiming
+* add weaker spawn weapon
+* implement reloading / ammo count
+* implement HUD
+* implement pause menu
