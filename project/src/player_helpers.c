@@ -834,9 +834,21 @@ void update_player_animations(Player *player)
     free(anim_name);
 }
 
-void handle_player_shooting(Player *player)
+void handle_player_shooting(Player *player, Key_State shoot)
 {
-    if (player->weapon->current_capacity > 0 && player->weapon->ready_to_fire) // only generate bullet if weapon is loaded
+    // check if key presses are correct based on fire mode
+    bool key_state_ready = false;
+    if ((player->weapon->fire_mode == AUTO && shoot == KS_HELD) || (player->weapon->fire_mode == SEMI && shoot == KS_PRESSED))
+    {
+        key_state_ready = true;
+    }
+    else if (player->weapon->fire_mode == BURST && ((player->weapon->burst_shots_remaining == player->weapon->burst_count && shoot == KS_PRESSED) || (player->weapon->burst_shots_remaining < player->weapon->burst_count && shoot == KS_HELD)))
+    {
+        key_state_ready = true;
+    }
+
+    // generate bullet if weapon is loaded and key state is correct
+    if (player->weapon->current_capacity > 0 && player->weapon->ready_to_fire && key_state_ready)
     {
         vec2 bullet_position = {player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]};
         vec2 bullet_velocity = {0, 0};
@@ -918,6 +930,8 @@ void handle_player_input(Player *player)
         player->entity->body->velocity[0] = 0;
         player->entity->body->velocity[1] = 0;
 
+        // TODO: update player animation
+
         vec2 player_position = {(player->entity->body->aabb.position[0]),
                                 (player->entity->body->aabb.position[1])};
 
@@ -928,28 +942,29 @@ void handle_player_input(Player *player)
             player->crosshair->animation = anim_crosshair_red;
         }
 
-        printf("player->crosshair: %p\n", player->crosshair);
         // crosshairs not restricted to 4 directions *unlike players*
         if (left)
-            velx -= 300;
+            velx -= 250;
         if (right)
-            velx += 300;
+            velx += 250;
         if (up)
-            vely += 300;
+            vely += 250;
         if (down)
-            vely -= 300;
+            vely -= 250;
 
         player->crosshair->body->velocity[0] = velx;
         player->crosshair->body->velocity[1] = vely;
 
-        printf("player->crosshair position: %f, %f \n", player->crosshair->body->aabb.position[0], player->crosshair->body->aabb.position[1]);
+        handle_player_shooting(player, shoot);
         return;
     }
 
     if (player->crosshair)
     {
+        printf("trying to destroy crosshair\n");
         entity_destroy(player->crosshair);
         player->crosshair = NULL;
+        printf("crosshair destroyed\n");
     }
 
     // 4 directional movement only, no diagonals
@@ -977,26 +992,9 @@ void handle_player_input(Player *player)
         vely -= 150;
     }
 
-    // handle weapon attribute updates & bullet generationm, contingent on fire mode, input, and weapon shot cooldown
-    if (player->weapon->fire_mode == AUTO && shoot == KS_HELD)
-    {
-        handle_player_shooting(player);
-    }
-    else if (player->weapon->fire_mode == SEMI && shoot == KS_PRESSED)
-    {
-        handle_player_shooting(player);
-    }
-    else if (player->weapon->fire_mode == BURST)
-    {
-        if (player->weapon->burst_shots_remaining == player->weapon->burst_count && shoot == KS_PRESSED)
-        {
-            handle_player_shooting(player);
-        }
-        else if (player->weapon->burst_shots_remaining < player->weapon->burst_count && shoot == KS_HELD)
-        {
-            handle_player_shooting(player);
-        }
-    }
+    // handle weapon attribute updates & bullet generation, contingent on fire mode, input, and weapon shot cooldown
+    handle_player_shooting(player, shoot);
+
     player->entity->body->velocity[0] = velx;
     player->entity->body->velocity[1] = vely;
 }

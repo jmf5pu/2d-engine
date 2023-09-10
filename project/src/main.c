@@ -65,6 +65,7 @@ int main(int argc, char *argv[])
     // init player one
     player_one = malloc(sizeof(Player));
     player_one->entity = entity_create(spawn_point_one, (vec2){36, 36}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    player_one->crosshair = NULL;
     player_one->direction = RIGHT;
     player_one->weapon = &(Weapon){
         .name = m16.name,
@@ -98,6 +99,7 @@ int main(int argc, char *argv[])
     // init player two
     player_two = malloc(sizeof(Player));
     player_two->entity = entity_create(spawn_point_two, (vec2){36, 36}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    player_two->crosshair = NULL;
     player_two->direction = LEFT;
     player_two->weapon = &(Weapon){
         .name = m16.name,
