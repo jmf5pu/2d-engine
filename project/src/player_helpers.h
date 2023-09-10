@@ -15,6 +15,11 @@ extern Player *player_two;
 // hash map to store player anims
 Hash_Map *player_anim_map;
 
+// crosshair sprites & anims
+Sprite_Sheet sprite_sheet_crosshair_red;
+Animation_Definition *adef_crosshair_red;
+Animation *anim_crosshair_red;
+
 // player 1 sprites & anims
 Sprite_Sheet p1_sprite_sheet_soldier_1_m16_idle_side;
 Sprite_Sheet p1_sprite_sheet_soldier_1_m16_running_side;

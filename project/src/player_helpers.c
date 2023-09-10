@@ -81,7 +81,16 @@ void init_player_anim_hashmap()
 // sets up animations for players and bullets
 void init_all_anims()
 {
-    // populate hashmap
+
+    // init crosshairs
+    render_sprite_sheet_init(&sprite_sheet_crosshair_red, "assets/crosshair_red.png", 27, 27);
+    adef_crosshair_red = animation_definition_create(
+        &sprite_sheet_crosshair_red,
+        (f32[]){0.05, 0.05, 0.05, 0.05},
+        (u8[]){0},
+        (u8[]){0},
+        4);
+    anim_crosshair_red = animation_create(adef_crosshair_red, true);
 
     /*
      * player one animations
@@ -896,10 +905,52 @@ void handle_player_input(Player *player)
     f32 velx = 0;
     f32 vely = 0;
 
-    if (global.input.l_crouch)
-        printf("left crouch input received\n");
-    if (global.input.r_crouch)
-        printf("right crouch input received\n");
+    /*
+     * check if player is crouched
+     *
+     * if so, update player anim to crouch, create crosshair entity
+     * and track movement input to the crosshair instead of the player
+     */
+
+    if (crouch)
+    {
+        // don't let players move while crouching
+        player->entity->body->velocity[0] = 0;
+        player->entity->body->velocity[1] = 0;
+
+        vec2 player_position = {(player->entity->body->aabb.position[0] + player->entity->body->aabb.half_size[0]),
+                                (player->entity->body->aabb.position[1] + player->entity->body->aabb.half_size[1])};
+
+        // if player doesn't already have a crosshair entity associated, create one
+        if (!player->crosshair)
+        {
+            player->crosshair = entity_create(player_position, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static);
+            player->crosshair->animation = anim_crosshair_red;
+        }
+
+        printf("player->crosshair: %p\n", player->crosshair);
+        // crosshairs not restricted to 4 directions *unlike players*
+        if (left)
+            velx -= 150;
+        if (right)
+            velx += 150;
+        if (up)
+            vely += 150;
+        if (down)
+            vely -= 150;
+
+        player->crosshair->body->velocity[0] = velx;
+        player->crosshair->body->velocity[1] = vely;
+
+        printf("player->crosshair position: %f, %f \n", player->crosshair->body->aabb.position[0], player->crosshair->body->aabb.position[1]);
+        return;
+    }
+
+    if (player->crosshair)
+    {
+        entity_destroy(player->crosshair);
+        player->crosshair = NULL;
+    }
 
     // 4 directional movement only, no diagonals
     if (right)
