@@ -87,6 +87,7 @@ typedef struct armor
 typedef struct player
 {
     Entity *entity;
+    Entity *crosshair;
     Weapon *weapon;
     Armor *armor;
     vec2 spawn_point;

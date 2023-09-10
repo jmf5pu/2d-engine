@@ -81,7 +81,16 @@ void init_player_anim_hashmap()
 // sets up animations for players and bullets
 void init_all_anims()
 {
-    // populate hashmap
+
+    // init crosshairs
+    render_sprite_sheet_init(&sprite_sheet_crosshair_red, "assets/crosshair_red.png", 27, 27);
+    adef_crosshair_red = animation_definition_create(
+        &sprite_sheet_crosshair_red,
+        (f32[]){0.1, 0.1, 0.1, 0.1},
+        (u8[]){0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4},
+        4);
+    anim_crosshair_red = animation_create(adef_crosshair_red, true);
 
     /*
      * player one animations
@@ -637,8 +646,8 @@ void init_all_anims()
     p2_anim_soldier_1_m44_brewster_dying_side = animation_create(p2_adef_soldier_1_m44_brewster_dying_side, true);
 
     // bullet stuff
-    render_sprite_sheet_init(&sprite_sheet_bullet_1_horizontal, "assets/bullet_1_horizontal.png", 5, 5);
-    render_sprite_sheet_init(&sprite_sheet_bullet_1_vertical, "assets/bullet_1_vertical.png", 5, 5);
+    render_sprite_sheet_init(&sprite_sheet_bullet_1_horizontal, "assets/bullet_round_small.png", 2, 2);
+    render_sprite_sheet_init(&sprite_sheet_bullet_1_vertical, "assets/bullet_round_small.png", 2, 2);
     adef_bullet_1_horizontal = animation_definition_create(
         &sprite_sheet_bullet_1_horizontal,
         (f32[]){0},
@@ -825,40 +834,77 @@ void update_player_animations(Player *player)
     free(anim_name);
 }
 
-void handle_player_shooting(Player *player)
+void handle_player_shooting(Player *player, Key_State shoot)
 {
-    if (player->weapon->current_capacity > 0 && player->weapon->ready_to_fire) // only generate bullet if weapon is loaded
+    // check if key presses are correct based on fire mode
+    bool key_state_ready = false;
+    if ((player->weapon->fire_mode == AUTO && shoot == KS_HELD) || (player->weapon->fire_mode == SEMI && shoot == KS_PRESSED))
+    {
+        key_state_ready = true;
+    }
+    else if (player->weapon->fire_mode == BURST && ((player->weapon->burst_shots_remaining == player->weapon->burst_count && shoot == KS_PRESSED) || (player->weapon->burst_shots_remaining < player->weapon->burst_count && shoot == KS_HELD)))
+    {
+        key_state_ready = true;
+    }
+
+    // generate bullet if weapon is loaded and key state is correct
+    if (player->weapon->current_capacity > 0 && player->weapon->ready_to_fire && key_state_ready)
     {
         vec2 bullet_position = {player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]};
-        vec2 bullet_velocity = {0, 0};
         Animation *bullet_anim = anim_bullet_1_horizontal;
-        if (player->direction == UP)
+        vec2 bullet_velocity = {0, 0};
+
+        // shoot at crosshair if present
+        if (player->crosshair)
         {
-            bullet_position[1] += 25;
-            bullet_velocity[1] = player->weapon->bullet_velocity;
-            bullet_anim = anim_bullet_1_vertical;
-        }
-        else if (player->direction == RIGHT)
-        {
-            bullet_position[0] += 25;
-            bullet_velocity[0] = player->weapon->bullet_velocity;
-        }
-        else if (player->direction == DOWN)
-        {
-            bullet_position[1] -= 25;
-            bullet_velocity[1] = -1 * player->weapon->bullet_velocity;
-            bullet_anim = anim_bullet_1_vertical;
-        }
-        else if (player->direction == LEFT)
-        {
-            bullet_position[0] -= 25;
-            bullet_velocity[0] = -1 * player->weapon->bullet_velocity;
+            // calculating angle
+            f32 cx = player->crosshair->body->aabb.position[0];
+            f32 cy = player->crosshair->body->aabb.position[1];
+            f32 px = player->entity->body->aabb.position[0];
+            f32 py = player->entity->body->aabb.position[1];
+            f32 dx = px - cx;
+            f32 dy = py - cy;
+            f32 angle = (cx > px && cy > py) || (cx < px && cy < py) ? atan(dy / dx) : -1 * atan(dy / dx);
+
+            // calculate starting position using angle
+            f32 bullet_x = cx > px ? 30 * cos(angle) : 30 * cos(angle) * -1;
+            f32 bullet_y = cy > py ? 30 * sin(angle) : 30 * sin(angle) * -1;
+            bullet_position[0] = player->entity->body->aabb.position[0] + bullet_x;
+            bullet_position[1] = player->entity->body->aabb.position[1] + bullet_y;
+
+            // calculate velocity using angle
+            f32 vx = cx > px ? player->weapon->bullet_velocity * cos(angle) : player->weapon->bullet_velocity * cos(angle) * -1;
+            f32 vy = cy > py ? player->weapon->bullet_velocity * sin(angle) : player->weapon->bullet_velocity * sin(angle) * -1;
+            bullet_velocity[0] = vx;
+            bullet_velocity[1] = vy;
         }
         else
         {
-            ERROR_EXIT(NULL, "Player direction not recognized");
+            if (player->direction == UP)
+            {
+                bullet_position[1] += 25;
+                bullet_velocity[1] = player->weapon->bullet_velocity;
+            }
+            else if (player->direction == RIGHT)
+            {
+                bullet_position[0] += 25;
+                bullet_velocity[0] = player->weapon->bullet_velocity;
+            }
+            else if (player->direction == DOWN)
+            {
+                bullet_position[1] -= 25;
+                bullet_velocity[1] = -1 * player->weapon->bullet_velocity;
+            }
+            else if (player->direction == LEFT)
+            {
+                bullet_position[0] -= 25;
+                bullet_velocity[0] = -1 * player->weapon->bullet_velocity;
+            }
+            else
+            {
+                ERROR_EXIT(NULL, "Player direction not recognized");
+            }
         }
-
         Entity *bullet = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
         bullet->animation = bullet_anim;
         bullet->body->velocity[0] = bullet_velocity[0];
@@ -885,14 +931,64 @@ void handle_player_input(Player *player)
     {
         return;
     }
+
     Key_State left = player->is_left_player ? global.input.l_left : global.input.r_left;
     Key_State right = player->is_left_player ? global.input.l_right : global.input.r_right;
     Key_State up = player->is_left_player ? global.input.l_up : global.input.r_up;
     Key_State down = player->is_left_player ? global.input.l_down : global.input.r_down;
     Key_State shoot = player->is_left_player ? global.input.l_shoot : global.input.r_shoot;
+    Key_State crouch = player->is_left_player ? global.input.l_crouch : global.input.r_crouch;
 
     f32 velx = 0;
     f32 vely = 0;
+
+    /*
+     * check if player is crouched
+     *
+     * if so, update player anim to crouch, create crosshair entity
+     * and track movement input to the crosshair instead of the player
+     */
+
+    if (crouch)
+    {
+        // don't let players move while crouching
+        player->entity->body->velocity[0] = 0;
+        player->entity->body->velocity[1] = 0;
+
+        // TODO: update player animation
+
+        vec2 player_position = {(player->entity->body->aabb.position[0]),
+                                (player->entity->body->aabb.position[1])};
+
+        // if player doesn't already have a crosshair entity associated, create one
+        if (!player->crosshair)
+        {
+            player->crosshair = entity_create(player_position, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static);
+            player->crosshair->animation = anim_crosshair_red;
+        }
+
+        // crosshairs not restricted to 4 directions *unlike players*
+        if (left)
+            velx -= 250;
+        if (right)
+            velx += 250;
+        if (up)
+            vely += 250;
+        if (down)
+            vely -= 250;
+
+        player->crosshair->body->velocity[0] = velx;
+        player->crosshair->body->velocity[1] = vely;
+
+        handle_player_shooting(player, shoot);
+        return;
+    }
+
+    if (player->crosshair)
+    {
+        entity_destroy(player->crosshair);
+        player->crosshair = NULL;
+    }
 
     // 4 directional movement only, no diagonals
     if (right)
@@ -919,26 +1015,9 @@ void handle_player_input(Player *player)
         vely -= 150;
     }
 
-    // handle weapon attribute updates & bullet generationm, contingent on fire mode, input, and weapon shot cooldown
-    if (player->weapon->fire_mode == AUTO && shoot == KS_HELD)
-    {
-        handle_player_shooting(player);
-    }
-    else if (player->weapon->fire_mode == SEMI && shoot == KS_PRESSED)
-    {
-        handle_player_shooting(player);
-    }
-    else if (player->weapon->fire_mode == BURST)
-    {
-        if (player->weapon->burst_shots_remaining == player->weapon->burst_count && shoot == KS_PRESSED)
-        {
-            handle_player_shooting(player);
-        }
-        else if (player->weapon->burst_shots_remaining < player->weapon->burst_count && shoot == KS_HELD)
-        {
-            handle_player_shooting(player);
-        }
-    }
+    // handle weapon attribute updates & bullet generation, contingent on fire mode, input, and weapon shot cooldown
+    handle_player_shooting(player, shoot);
+
     player->entity->body->velocity[0] = velx;
     player->entity->body->velocity[1] = vely;
 }

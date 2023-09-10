@@ -26,7 +26,7 @@
 #include "map_helpers.h"
 #include "weapon_types.h"
 
-bool render_static_bodies = false; // set to true for debugging static bodies
+bool render_bodies = false; // set to true for debugging static bodies
 
 const u8 frame_rate = 60;           // frame rate
 static u32 texture_slots[16] = {0}; // texture slots array for batch rendering
@@ -65,6 +65,7 @@ int main(int argc, char *argv[])
     // init player one
     player_one = malloc(sizeof(Player));
     player_one->entity = entity_create(spawn_point_one, (vec2){36, 36}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    player_one->crosshair = NULL;
     player_one->direction = RIGHT;
     player_one->weapon = &(Weapon){
         .name = m16.name,
@@ -98,6 +99,7 @@ int main(int argc, char *argv[])
     // init player two
     player_two = malloc(sizeof(Player));
     player_two->entity = entity_create(spawn_point_two, (vec2){36, 36}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    player_two->crosshair = NULL;
     player_two->direction = LEFT;
     player_two->weapon = &(Weapon){
         .name = m16.name,
@@ -201,8 +203,7 @@ int main(int argc, char *argv[])
                 continue;
             }
             animation_render(entity->animation, window, entity->body->aabb.position, 0, WHITE, texture_slots);
-
-            if (render_static_bodies)
+            if (render_bodies)
                 render_aabb((f32 *)&entity->body->aabb, WHITE);
         }
 
@@ -221,10 +222,10 @@ int main(int argc, char *argv[])
             f32 player_y_min = player_one->entity->body->aabb.position[1] - player_one->entity->body->aabb.half_size[1];
             bool is_below_player = player_y_min < (prop.sprite->position[1] - prop.sprite->half_size[1] + prop.layer_threshold) || player_y_min > (prop.sprite->position[1] + prop.sprite->half_size[1]) || i == 0;
             i32 z_index = is_below_player ? prop.sprite->z_index : 1;
-            render_sprite_sheet_frame(prop.sprite->sprite_sheet, window, prop.sprite->row, prop.sprite->column, prop.sprite->position, z_index, prop.sprite->is_flipped, render_static_bodies ? (vec4){0.9, 0.9, 0.9, 0.9} : prop.sprite->color, texture_slots);
+            render_sprite_sheet_frame(prop.sprite->sprite_sheet, window, prop.sprite->row, prop.sprite->column, prop.sprite->position, z_index, prop.sprite->is_flipped, render_bodies ? (vec4){0.9, 0.9, 0.9, 0.9} : prop.sprite->color, texture_slots);
 
             // render the static body
-            if (prop.static_body && render_static_bodies)
+            if (prop.static_body && render_bodies)
             {
                 render_aabb(&prop.static_body, WHITE);
             }
