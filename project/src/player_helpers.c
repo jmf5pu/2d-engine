@@ -646,8 +646,8 @@ void init_all_anims()
     p2_anim_soldier_1_m44_brewster_dying_side = animation_create(p2_adef_soldier_1_m44_brewster_dying_side, true);
 
     // bullet stuff
-    render_sprite_sheet_init(&sprite_sheet_bullet_1_horizontal, "assets/bullet_1_horizontal.png", 5, 5);
-    render_sprite_sheet_init(&sprite_sheet_bullet_1_vertical, "assets/bullet_1_vertical.png", 5, 5);
+    render_sprite_sheet_init(&sprite_sheet_bullet_1_horizontal, "assets/bullet_round_small.png", 2, 2);
+    render_sprite_sheet_init(&sprite_sheet_bullet_1_vertical, "assets/bullet_round_small.png", 2, 2);
     adef_bullet_1_horizontal = animation_definition_create(
         &sprite_sheet_bullet_1_horizontal,
         (f32[]){0},
@@ -851,35 +851,60 @@ void handle_player_shooting(Player *player, Key_State shoot)
     if (player->weapon->current_capacity > 0 && player->weapon->ready_to_fire && key_state_ready)
     {
         vec2 bullet_position = {player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]};
-        vec2 bullet_velocity = {0, 0};
         Animation *bullet_anim = anim_bullet_1_horizontal;
-        if (player->direction == UP)
+        vec2 bullet_velocity = {0, 0};
+
+        // shoot at crosshair if present
+        if (player->crosshair)
         {
-            bullet_position[1] += 25;
-            bullet_velocity[1] = player->weapon->bullet_velocity;
-            bullet_anim = anim_bullet_1_vertical;
-        }
-        else if (player->direction == RIGHT)
-        {
-            bullet_position[0] += 25;
-            bullet_velocity[0] = player->weapon->bullet_velocity;
-        }
-        else if (player->direction == DOWN)
-        {
-            bullet_position[1] -= 25;
-            bullet_velocity[1] = -1 * player->weapon->bullet_velocity;
-            bullet_anim = anim_bullet_1_vertical;
-        }
-        else if (player->direction == LEFT)
-        {
-            bullet_position[0] -= 25;
-            bullet_velocity[0] = -1 * player->weapon->bullet_velocity;
+            // calculating angle
+            f32 cx = player->crosshair->body->aabb.position[0];
+            f32 cy = player->crosshair->body->aabb.position[1];
+            f32 px = player->entity->body->aabb.position[0];
+            f32 py = player->entity->body->aabb.position[1];
+            f32 dx = px - cx;
+            f32 dy = py - cy;
+            f32 angle = (cx > px && cy > py) || (cx < px && cy < py) ? atan(dy / dx) : -1 * atan(dy / dx);
+
+            // calculate starting position using angle
+            f32 bullet_x = cx > px ? 30 * cos(angle) : 30 * cos(angle) * -1;
+            f32 bullet_y = cy > py ? 30 * sin(angle) : 30 * sin(angle) * -1;
+            bullet_position[0] = player->entity->body->aabb.position[0] + bullet_x;
+            bullet_position[1] = player->entity->body->aabb.position[1] + bullet_y;
+
+            // calculate velocity using angle
+            f32 vx = cx > px ? player->weapon->bullet_velocity * cos(angle) : player->weapon->bullet_velocity * cos(angle) * -1;
+            f32 vy = cy > py ? player->weapon->bullet_velocity * sin(angle) : player->weapon->bullet_velocity * sin(angle) * -1;
+            bullet_velocity[0] = vx;
+            bullet_velocity[1] = vy;
         }
         else
         {
-            ERROR_EXIT(NULL, "Player direction not recognized");
+            if (player->direction == UP)
+            {
+                bullet_position[1] += 25;
+                bullet_velocity[1] = player->weapon->bullet_velocity;
+            }
+            else if (player->direction == RIGHT)
+            {
+                bullet_position[0] += 25;
+                bullet_velocity[0] = player->weapon->bullet_velocity;
+            }
+            else if (player->direction == DOWN)
+            {
+                bullet_position[1] -= 25;
+                bullet_velocity[1] = -1 * player->weapon->bullet_velocity;
+            }
+            else if (player->direction == LEFT)
+            {
+                bullet_position[0] -= 25;
+                bullet_velocity[0] = -1 * player->weapon->bullet_velocity;
+            }
+            else
+            {
+                ERROR_EXIT(NULL, "Player direction not recognized");
+            }
         }
-
         Entity *bullet = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
         bullet->animation = bullet_anim;
         bullet->body->velocity[0] = bullet_velocity[0];
@@ -961,10 +986,8 @@ void handle_player_input(Player *player)
 
     if (player->crosshair)
     {
-        printf("trying to destroy crosshair\n");
         entity_destroy(player->crosshair);
         player->crosshair = NULL;
-        printf("crosshair destroyed\n");
     }
 
     // 4 directional movement only, no diagonals
