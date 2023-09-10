@@ -10,8 +10,8 @@
 #include "render_internal.h"
 
 static usize quad_id_counter = 0;
-static f32 window_width = 1280;
-static f32 window_height = 720;
+static u32 window_width = 1280;
+static u32 window_height = 720;
 static f32 render_width = 640;
 static f32 render_height = 360;
 static f32 scale = 2; // TODO: change this based on screen size
