@@ -11,7 +11,7 @@ static const char *CONFIG_DEFAULT =
     "l_up = W\n"
     "l_down = S\n"
     "l_shoot = Space\n"
-    "l_crouch = Z\n"
+    "l_crouch = Left Ctrl\n"
     "r_left = J\n"
     "r_right = L\n"
     "r_up = I\n"
@@ -54,7 +54,7 @@ static char *config_get_value(const char *config_buffer, const char *value)
         *tmp_ptr++ = *curr++;
     }
 
-    *(tmp_ptr + 1) = 0;
+    *tmp_ptr = '\0'; // null terminate char *
 
     return tmp_buffer;
 }
@@ -62,18 +62,18 @@ static char *config_get_value(const char *config_buffer, const char *value)
 // TODO: figure out why this only works if right keys are before left keys
 static void load_controls(const char *config_buffer)
 {
-    config_key_bind(INPUT_KEY_R_LEFT, config_get_value(config_buffer, "r_left"));
-    config_key_bind(INPUT_KEY_R_RIGHT, config_get_value(config_buffer, "r_right"));
-    config_key_bind(INPUT_KEY_R_UP, config_get_value(config_buffer, "r_up"));
-    config_key_bind(INPUT_KEY_R_DOWN, config_get_value(config_buffer, "r_down"));
-    config_key_bind(INPUT_KEY_R_SHOOT, config_get_value(config_buffer, "r_shoot"));
-    config_key_bind(INPUT_KEY_R_CROUCH, config_get_value(config_buffer, "r_crouch"));
     config_key_bind(INPUT_KEY_L_LEFT, config_get_value(config_buffer, "l_left"));
     config_key_bind(INPUT_KEY_L_RIGHT, config_get_value(config_buffer, "l_right"));
     config_key_bind(INPUT_KEY_L_UP, config_get_value(config_buffer, "l_up"));
     config_key_bind(INPUT_KEY_L_DOWN, config_get_value(config_buffer, "l_down"));
     config_key_bind(INPUT_KEY_L_SHOOT, config_get_value(config_buffer, "l_shoot"));
     config_key_bind(INPUT_KEY_L_CROUCH, config_get_value(config_buffer, "l_crouch"));
+    config_key_bind(INPUT_KEY_R_LEFT, config_get_value(config_buffer, "r_left"));
+    config_key_bind(INPUT_KEY_R_RIGHT, config_get_value(config_buffer, "r_right"));
+    config_key_bind(INPUT_KEY_R_UP, config_get_value(config_buffer, "r_up"));
+    config_key_bind(INPUT_KEY_R_DOWN, config_get_value(config_buffer, "r_down"));
+    config_key_bind(INPUT_KEY_R_SHOOT, config_get_value(config_buffer, "r_shoot"));
+    config_key_bind(INPUT_KEY_R_CROUCH, config_get_value(config_buffer, "r_crouch"));
     config_key_bind(INPUT_KEY_ESCAPE, config_get_value(config_buffer, "escape"));
 }
 
