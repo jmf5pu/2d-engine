@@ -26,7 +26,7 @@
 #include "map_helpers.h"
 #include "weapon_types.h"
 
-bool render_bodies = true; // set to true for debugging static bodies
+bool render_bodies = false; // set to true for debugging static bodies
 
 const u8 frame_rate = 60;           // frame rate
 static u32 texture_slots[16] = {0}; // texture slots array for batch rendering
@@ -177,7 +177,6 @@ int main(int argc, char *argv[])
 
         // render animated entities, check if any are marked for deletion (not active OR body is not active)
         int num_entities = (int)entity_count();
-        printf("num_entities: %d\n", num_entities);
         for (int i = num_entities - 1; i >= 0; --i)
         {
             Entity *entity = entity_get(i);

@@ -86,9 +86,9 @@ void init_all_anims()
     render_sprite_sheet_init(&sprite_sheet_crosshair_red, "assets/crosshair_red.png", 27, 27);
     adef_crosshair_red = animation_definition_create(
         &sprite_sheet_crosshair_red,
-        (f32[]){0.05, 0.05, 0.05, 0.05},
-        (u8[]){0},
-        (u8[]){0},
+        (f32[]){0.1, 0.1, 0.1, 0.1},
+        (u8[]){0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4},
         4);
     anim_crosshair_red = animation_create(adef_crosshair_red, true);
 
@@ -918,8 +918,8 @@ void handle_player_input(Player *player)
         player->entity->body->velocity[0] = 0;
         player->entity->body->velocity[1] = 0;
 
-        vec2 player_position = {(player->entity->body->aabb.position[0] + player->entity->body->aabb.half_size[0]),
-                                (player->entity->body->aabb.position[1] + player->entity->body->aabb.half_size[1])};
+        vec2 player_position = {(player->entity->body->aabb.position[0]),
+                                (player->entity->body->aabb.position[1])};
 
         // if player doesn't already have a crosshair entity associated, create one
         if (!player->crosshair)
@@ -931,13 +931,13 @@ void handle_player_input(Player *player)
         printf("player->crosshair: %p\n", player->crosshair);
         // crosshairs not restricted to 4 directions *unlike players*
         if (left)
-            velx -= 150;
+            velx -= 300;
         if (right)
-            velx += 150;
+            velx += 300;
         if (up)
-            vely += 150;
+            vely += 300;
         if (down)
-            vely -= 150;
+            vely -= 300;
 
         player->crosshair->body->velocity[0] = velx;
         player->crosshair->body->velocity[1] = vely;
