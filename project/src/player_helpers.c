@@ -867,8 +867,8 @@ void handle_player_shooting(Player *player, Key_State shoot)
             f32 angle = (cx > px && cy > py) || (cx < px && cy < py) ? atan(dy / dx) : -1 * atan(dy / dx);
 
             // calculate starting position using angle
-            f32 bullet_x = cx > px ? 30 * cos(angle) : 30 * cos(angle) * -1;
-            f32 bullet_y = cy > py ? 30 * sin(angle) : 30 * sin(angle) * -1;
+            f32 bullet_x = cx > px ? 30 * cos(angle) : 32 * cos(angle) * -1;
+            f32 bullet_y = cy > py ? 30 * sin(angle) : 32 * sin(angle) * -1;
             bullet_position[0] = player->entity->body->aabb.position[0] + bullet_x;
             bullet_position[1] = player->entity->body->aabb.position[1] + bullet_y;
 
@@ -878,27 +878,59 @@ void handle_player_shooting(Player *player, Key_State shoot)
             bullet_velocity[0] = vx;
             bullet_velocity[1] = vy;
         }
-        else
+        else // handle 8 directional shooting (player not crouched / aiming)
         {
+            // calculate x/y components of position and velocity based off 45 degree angle
+            const float rad_45_deg = 0.78539816;
+            const float bullet_position_45_deg = 32 * sin(rad_45_deg);
+            float bullet_velocity_45_deg = player->weapon->bullet_velocity * sin(rad_45_deg);
             if (player->direction == UP)
             {
-                bullet_position[1] += 25;
+                bullet_position[1] += 32;
                 bullet_velocity[1] = player->weapon->bullet_velocity;
             }
             else if (player->direction == RIGHT)
             {
-                bullet_position[0] += 25;
+                bullet_position[0] += 32;
                 bullet_velocity[0] = player->weapon->bullet_velocity;
             }
             else if (player->direction == DOWN)
             {
-                bullet_position[1] -= 25;
+                bullet_position[1] -= 32;
                 bullet_velocity[1] = -1 * player->weapon->bullet_velocity;
             }
             else if (player->direction == LEFT)
             {
-                bullet_position[0] -= 25;
+                bullet_position[0] -= 32;
                 bullet_velocity[0] = -1 * player->weapon->bullet_velocity;
+            }
+            else if (player->direction == UP_RIGHT)
+            {
+                bullet_position[0] += bullet_position_45_deg;
+                bullet_position[1] += bullet_position_45_deg;
+                bullet_velocity[0] += bullet_velocity_45_deg;
+                bullet_velocity[1] += bullet_velocity_45_deg;
+            }
+            else if (player->direction == UP_LEFT)
+            {
+                bullet_position[0] += -1 * bullet_position_45_deg;
+                bullet_position[1] += bullet_position_45_deg;
+                bullet_velocity[0] += -1 * bullet_velocity_45_deg;
+                bullet_velocity[1] += bullet_velocity_45_deg;
+            }
+            else if (player->direction == DOWN_RIGHT)
+            {
+                bullet_position[0] += bullet_position_45_deg;
+                bullet_position[1] += -1 * bullet_position_45_deg;
+                bullet_velocity[0] += bullet_velocity_45_deg;
+                bullet_velocity[1] += -1 * bullet_velocity_45_deg;
+            }
+            else if (player->direction == DOWN_LEFT)
+            {
+                bullet_position[0] += -1 * bullet_position_45_deg;
+                bullet_position[1] += -1 * bullet_position_45_deg;
+                bullet_velocity[0] += -1 * bullet_velocity_45_deg;
+                bullet_velocity[1] += -1 * bullet_velocity_45_deg;
             }
             else
             {
@@ -991,7 +1023,31 @@ void handle_player_input(Player *player)
     }
 
     // 4 directional movement only, no diagonals
-    if (right)
+    if (up && right)
+    {
+        player->direction = UP_RIGHT;
+        velx += 106;
+        vely += 106;
+    }
+    else if (up && left)
+    {
+        player->direction = UP_LEFT;
+        velx -= 106;
+        vely += 106;
+    }
+    else if (down && right)
+    {
+        player->direction = DOWN_RIGHT;
+        velx += 106;
+        vely -= 106;
+    }
+    else if (down && left)
+    {
+        player->direction = DOWN_LEFT;
+        velx -= 106;
+        vely -= 106;
+    }
+    else if (right)
     {
         player->direction = RIGHT;
         velx += 150;
