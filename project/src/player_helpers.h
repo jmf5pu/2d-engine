@@ -20,6 +20,11 @@ Sprite_Sheet sprite_sheet_crosshair_red;
 Animation_Definition *adef_crosshair_red;
 Animation *anim_crosshair_red;
 
+// placeholder animation if one is missing
+Sprite_Sheet sprite_sheet_player_placeholder;
+Animation_Definition *adef_player_placeholder;
+Animation *anim_player_placeholder;
+
 // player 1 sprites & anims
 Sprite_Sheet p1_sprite_sheet_soldier_1_m16_idle_side;
 Sprite_Sheet p1_sprite_sheet_soldier_1_m16_running_side;
@@ -27,6 +32,10 @@ Sprite_Sheet p1_sprite_sheet_soldier_1_m16_idle_back;
 Sprite_Sheet p1_sprite_sheet_soldier_1_m16_running_back;
 Sprite_Sheet p1_sprite_sheet_soldier_1_m16_idle_front;
 Sprite_Sheet p1_sprite_sheet_soldier_1_m16_running_front;
+Sprite_Sheet p1_sprite_sheet_soldier_1_m16_idle_up_right;
+Sprite_Sheet p1_sprite_sheet_soldier_1_m16_running_up_right;
+Sprite_Sheet p1_sprite_sheet_soldier_1_m16_idle_down_right;
+Sprite_Sheet p1_sprite_sheet_soldier_1_m16_running_down_right;
 Sprite_Sheet p1_sprite_sheet_soldier_1_m16_spawning_side;
 Sprite_Sheet p1_sprite_sheet_soldier_1_m16_dying_side;
 
@@ -63,6 +72,10 @@ Animation_Definition *p1_adef_soldier_1_m16_idle_back;
 Animation_Definition *p1_adef_soldier_1_m16_running_back;
 Animation_Definition *p1_adef_soldier_1_m16_idle_front;
 Animation_Definition *p1_adef_soldier_1_m16_running_front;
+Animation_Definition *p1_adef_soldier_1_m16_idle_up_right;
+Animation_Definition *p1_adef_soldier_1_m16_running_up_right;
+Animation_Definition *p1_adef_soldier_1_m16_idle_down_right;
+Animation_Definition *p1_adef_soldier_1_m16_running_down_right;
 Animation_Definition *p1_adef_soldier_1_m16_spawning_side;
 Animation_Definition *p1_adef_soldier_1_m16_dying_side;
 
@@ -99,6 +112,10 @@ Animation *p1_anim_soldier_1_m16_idle_back;
 Animation *p1_anim_soldier_1_m16_running_back;
 Animation *p1_anim_soldier_1_m16_idle_front;
 Animation *p1_anim_soldier_1_m16_running_front;
+Animation *p1_anim_soldier_1_m16_idle_up_right;
+Animation *p1_anim_soldier_1_m16_running_up_right;
+Animation *p1_anim_soldier_1_m16_idle_down_right;
+Animation *p1_anim_soldier_1_m16_running_down_right;
 Animation *p1_anim_soldier_1_m16_spawning_side;
 Animation *p1_anim_soldier_1_m16_dying_side;
 
@@ -136,6 +153,10 @@ Sprite_Sheet p2_sprite_sheet_soldier_1_m16_idle_back;
 Sprite_Sheet p2_sprite_sheet_soldier_1_m16_running_back;
 Sprite_Sheet p2_sprite_sheet_soldier_1_m16_idle_front;
 Sprite_Sheet p2_sprite_sheet_soldier_1_m16_running_front;
+Sprite_Sheet p2_sprite_sheet_soldier_1_m16_idle_up_right;
+Sprite_Sheet p2_sprite_sheet_soldier_1_m16_running_up_right;
+Sprite_Sheet p2_sprite_sheet_soldier_1_m16_idle_down_right;
+Sprite_Sheet p2_sprite_sheet_soldier_1_m16_running_down_right;
 Sprite_Sheet p2_sprite_sheet_soldier_1_m16_spawning_side;
 Sprite_Sheet p2_sprite_sheet_soldier_1_m16_dying_side;
 
@@ -172,6 +193,10 @@ Animation_Definition *p2_adef_soldier_1_m16_idle_back;
 Animation_Definition *p2_adef_soldier_1_m16_running_back;
 Animation_Definition *p2_adef_soldier_1_m16_idle_front;
 Animation_Definition *p2_adef_soldier_1_m16_running_front;
+Animation_Definition *p2_adef_soldier_1_m16_idle_up_right;
+Animation_Definition *p2_adef_soldier_1_m16_running_up_right;
+Animation_Definition *p2_adef_soldier_1_m16_idle_down_right;
+Animation_Definition *p2_adef_soldier_1_m16_running_down_right;
 Animation_Definition *p2_adef_soldier_1_m16_spawning_side;
 Animation_Definition *p2_adef_soldier_1_m16_dying_side;
 
@@ -208,6 +233,10 @@ Animation *p2_anim_soldier_1_m16_idle_back;
 Animation *p2_anim_soldier_1_m16_running_back;
 Animation *p2_anim_soldier_1_m16_idle_front;
 Animation *p2_anim_soldier_1_m16_running_front;
+Animation *p2_anim_soldier_1_m16_idle_up_right;
+Animation *p2_anim_soldier_1_m16_running_up_right;
+Animation *p2_anim_soldier_1_m16_idle_down_right;
+Animation *p2_anim_soldier_1_m16_running_down_right;
 Animation *p2_anim_soldier_1_m16_spawning_side;
 Animation *p2_anim_soldier_1_m16_dying_side;
 

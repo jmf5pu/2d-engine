@@ -12,14 +12,21 @@ Player *player_two;
 void init_player_anim_hashmap()
 {
     player_anim_map = create_hash_map(PLAYER_ANIM_COUNT);
+
+    // player one stuff
     insert(player_anim_map, "p1_anim_soldier_1_m16_idle_side", p1_anim_soldier_1_m16_idle_side);
     insert(player_anim_map, "p1_anim_soldier_1_m16_running_side", p1_anim_soldier_1_m16_running_side);
     insert(player_anim_map, "p1_anim_soldier_1_m16_idle_back", p1_anim_soldier_1_m16_idle_back);
     insert(player_anim_map, "p1_anim_soldier_1_m16_running_back", p1_anim_soldier_1_m16_running_back);
     insert(player_anim_map, "p1_anim_soldier_1_m16_idle_front", p1_anim_soldier_1_m16_idle_front);
     insert(player_anim_map, "p1_anim_soldier_1_m16_running_front", p1_anim_soldier_1_m16_running_front);
+    insert(player_anim_map, "p1_anim_soldier_1_m16_idle_up_right", p1_anim_soldier_1_m16_idle_up_right);
+    insert(player_anim_map, "p1_anim_soldier_1_m16_running_up_right", p1_anim_soldier_1_m16_running_up_right);
+    insert(player_anim_map, "p1_anim_soldier_1_m16_idle_down_right", p1_anim_soldier_1_m16_idle_down_right);
+    insert(player_anim_map, "p1_anim_soldier_1_m16_running_down_right", p1_anim_soldier_1_m16_running_down_right);
     insert(player_anim_map, "p1_anim_soldier_1_m16_spawning_side", p1_anim_soldier_1_m16_spawning_side);
     insert(player_anim_map, "p1_anim_soldier_1_m16_dying_side", p1_anim_soldier_1_m16_dying_side);
+
     insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_idle_side", p1_anim_soldier_1_m16_brewster_idle_side);
     insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_running_side", p1_anim_soldier_1_m16_brewster_running_side);
     insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_idle_back", p1_anim_soldier_1_m16_brewster_idle_back);
@@ -28,6 +35,7 @@ void init_player_anim_hashmap()
     insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_running_front", p1_anim_soldier_1_m16_brewster_running_front);
     insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_spawning_side", p1_anim_soldier_1_m16_brewster_spawning_side);
     insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_dying_side", p1_anim_soldier_1_m16_brewster_dying_side);
+
     insert(player_anim_map, "p1_anim_soldier_1_m44_idle_side", p1_anim_soldier_1_m44_idle_side);
     insert(player_anim_map, "p1_anim_soldier_1_m44_running_side", p1_anim_soldier_1_m44_running_side);
     insert(player_anim_map, "p1_anim_soldier_1_m44_idle_back", p1_anim_soldier_1_m44_idle_back);
@@ -36,6 +44,7 @@ void init_player_anim_hashmap()
     insert(player_anim_map, "p1_anim_soldier_1_m44_running_front", p1_anim_soldier_1_m44_running_front);
     insert(player_anim_map, "p1_anim_soldier_1_m44_spawning_side", p1_anim_soldier_1_m44_spawning_side);
     insert(player_anim_map, "p1_anim_soldier_1_m44_dying_side", p1_anim_soldier_1_m44_dying_side);
+
     insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_idle_side", p1_anim_soldier_1_m44_brewster_idle_side);
     insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_running_side", p1_anim_soldier_1_m44_brewster_running_side);
     insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_idle_back", p1_anim_soldier_1_m44_brewster_idle_back);
@@ -44,14 +53,20 @@ void init_player_anim_hashmap()
     insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_running_front", p1_anim_soldier_1_m44_brewster_running_front);
     insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_spawning_side", p1_anim_soldier_1_m44_brewster_spawning_side);
     insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_dying_side", p1_anim_soldier_1_m44_brewster_dying_side);
+
     insert(player_anim_map, "p2_anim_soldier_1_m16_idle_side", p2_anim_soldier_1_m16_idle_side);
     insert(player_anim_map, "p2_anim_soldier_1_m16_running_side", p2_anim_soldier_1_m16_running_side);
     insert(player_anim_map, "p2_anim_soldier_1_m16_idle_back", p2_anim_soldier_1_m16_idle_back);
     insert(player_anim_map, "p2_anim_soldier_1_m16_running_back", p2_anim_soldier_1_m16_running_back);
     insert(player_anim_map, "p2_anim_soldier_1_m16_idle_front", p2_anim_soldier_1_m16_idle_front);
     insert(player_anim_map, "p2_anim_soldier_1_m16_running_front", p2_anim_soldier_1_m16_running_front);
+    insert(player_anim_map, "p2_anim_soldier_1_m16_idle_up_right", p2_anim_soldier_1_m16_idle_up_right);
+    insert(player_anim_map, "p2_anim_soldier_1_m16_running_up_right", p2_anim_soldier_1_m16_running_up_right);
+    insert(player_anim_map, "p2_anim_soldier_1_m16_idle_down_right", p2_anim_soldier_1_m16_idle_down_right);
+    insert(player_anim_map, "p2_anim_soldier_1_m16_running_down_right", p2_anim_soldier_1_m16_running_down_right);
     insert(player_anim_map, "p2_anim_soldier_1_m16_spawning_side", p2_anim_soldier_1_m16_spawning_side);
     insert(player_anim_map, "p2_anim_soldier_1_m16_dying_side", p2_anim_soldier_1_m16_dying_side);
+
     insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_idle_side", p2_anim_soldier_1_m16_brewster_idle_side);
     insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_running_side", p2_anim_soldier_1_m16_brewster_running_side);
     insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_idle_back", p2_anim_soldier_1_m16_brewster_idle_back);
@@ -60,6 +75,7 @@ void init_player_anim_hashmap()
     insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_running_front", p2_anim_soldier_1_m16_brewster_running_front);
     insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_spawning_side", p2_anim_soldier_1_m16_brewster_spawning_side);
     insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_dying_side", p2_anim_soldier_1_m16_brewster_dying_side);
+
     insert(player_anim_map, "p2_anim_soldier_1_m44_idle_side", p2_anim_soldier_1_m44_idle_side);
     insert(player_anim_map, "p2_anim_soldier_1_m44_running_side", p2_anim_soldier_1_m44_running_side);
     insert(player_anim_map, "p2_anim_soldier_1_m44_idle_back", p2_anim_soldier_1_m44_idle_back);
@@ -68,6 +84,7 @@ void init_player_anim_hashmap()
     insert(player_anim_map, "p2_anim_soldier_1_m44_running_front", p2_anim_soldier_1_m44_running_front);
     insert(player_anim_map, "p2_anim_soldier_1_m44_spawning_side", p2_anim_soldier_1_m44_spawning_side);
     insert(player_anim_map, "p2_anim_soldier_1_m44_dying_side", p2_anim_soldier_1_m44_dying_side);
+
     insert(player_anim_map, "p2_anim_soldier_1_m44_brewster_idle_side", p2_anim_soldier_1_m44_brewster_idle_side);
     insert(player_anim_map, "p2_anim_soldier_1_m44_brewster_running_side", p2_anim_soldier_1_m44_brewster_running_side);
     insert(player_anim_map, "p2_anim_soldier_1_m44_brewster_idle_back", p2_anim_soldier_1_m44_brewster_idle_back);
@@ -81,6 +98,15 @@ void init_player_anim_hashmap()
 // sets up animations for players and bullets
 void init_all_anims()
 {
+    // init placeholder anims
+    render_sprite_sheet_init(&sprite_sheet_player_placeholder, "assets/question_mark.png", 36, 36);
+    adef_player_placeholder = animation_definition_create(
+        &sprite_sheet_player_placeholder,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_player_placeholder = animation_create(adef_player_placeholder, false);
 
     // init crosshairs
     render_sprite_sheet_init(&sprite_sheet_crosshair_red, "assets/crosshair_red.png", 27, 27);
@@ -103,6 +129,10 @@ void init_all_anims()
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_back, "assets/soldier_1_m16_running_back.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_front, "assets/soldier_1_m16_idle_front.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_front, "assets/soldier_1_m16_running_front.png", 36, 36);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_up_right, "assets/soldier_1_m16_idle_up_right.png", 36, 36);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_up_right, "assets/soldier_1_m16_idle_up_right.png", 36, 36);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_down_right, "assets/soldier_1_m16_idle_down_right.png", 36, 36);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_down_right, "assets/soldier_1_m16_idle_down_right.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
@@ -142,6 +172,30 @@ void init_all_anims()
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8},
         8);
+    p1_adef_soldier_1_m16_idle_up_right = animation_definition_create(
+        &p1_sprite_sheet_soldier_1_m16_idle_up_right,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    p1_adef_soldier_1_m16_running_up_right = animation_definition_create(
+        &p1_sprite_sheet_soldier_1_m16_running_up_right,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    p1_adef_soldier_1_m16_idle_down_right = animation_definition_create(
+        &p1_sprite_sheet_soldier_1_m16_idle_down_right,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    p1_adef_soldier_1_m16_running_down_right = animation_definition_create(
+        &p1_sprite_sheet_soldier_1_m16_running_down_right,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
     p1_adef_soldier_1_m16_spawning_side = animation_definition_create(
         &p1_sprite_sheet_soldier_1_m16_spawning_side,
         (f32[]){0.25, 0.25},
@@ -161,6 +215,10 @@ void init_all_anims()
     p1_anim_soldier_1_m16_running_back = animation_create(p1_adef_soldier_1_m16_running_back, true);
     p1_anim_soldier_1_m16_idle_front = animation_create(p1_adef_soldier_1_m16_idle_front, false);
     p1_anim_soldier_1_m16_running_front = animation_create(p1_adef_soldier_1_m16_running_front, true);
+    p1_anim_soldier_1_m16_idle_up_right = animation_create(p1_adef_soldier_1_m16_idle_up_right, false);
+    p1_anim_soldier_1_m16_running_up_right = animation_create(p1_adef_soldier_1_m16_running_up_right, false);
+    p1_anim_soldier_1_m16_idle_down_right = animation_create(p1_adef_soldier_1_m16_idle_down_right, false);
+    p1_anim_soldier_1_m16_running_down_right = animation_create(p1_adef_soldier_1_m16_running_down_right, false);
     p1_anim_soldier_1_m16_spawning_side = animation_create(p1_adef_soldier_1_m16_spawning_side, true);
     p1_anim_soldier_1_m16_dying_side = animation_create(p1_adef_soldier_1_m16_dying_side, true);
 
@@ -379,6 +437,10 @@ void init_all_anims()
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_back, "assets/soldier_1_m16_running_back.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_front, "assets/soldier_1_m16_idle_front.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_front, "assets/soldier_1_m16_running_front.png", 36, 36);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_up_right, "assets/soldier_1_m16_idle_up_right.png", 36, 36);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_up_right, "assets/soldier_1_m16_idle_up_right.png", 36, 36);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_down_right, "assets/soldier_1_m16_idle_down_right.png", 36, 36);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_down_right, "assets/soldier_1_m16_idle_down_right.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
@@ -418,13 +480,36 @@ void init_all_anims()
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8},
         8);
+    p2_adef_soldier_1_m16_idle_up_right = animation_definition_create(
+        &p2_sprite_sheet_soldier_1_m16_idle_up_right,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    p2_adef_soldier_1_m16_running_up_right = animation_definition_create(
+        &p2_sprite_sheet_soldier_1_m16_running_up_right,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    p2_adef_soldier_1_m16_idle_down_right = animation_definition_create(
+        &p2_sprite_sheet_soldier_1_m16_idle_down_right,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    p2_adef_soldier_1_m16_running_down_right = animation_definition_create(
+        &p2_sprite_sheet_soldier_1_m16_running_down_right,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
     p2_adef_soldier_1_m16_spawning_side = animation_definition_create(
         &p2_sprite_sheet_soldier_1_m16_spawning_side,
         (f32[]){0.25, 0.25},
         (u8[]){0, 0},
         (u8[]){1, 2},
         2);
-
     p2_adef_soldier_1_m16_dying_side = animation_definition_create(
         &p2_sprite_sheet_soldier_1_m16_dying_side,
         (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.75, 0.5, 0.5, 0.5, 0.75},
@@ -438,6 +523,10 @@ void init_all_anims()
     p2_anim_soldier_1_m16_running_back = animation_create(p2_adef_soldier_1_m16_running_back, true);
     p2_anim_soldier_1_m16_idle_front = animation_create(p2_adef_soldier_1_m16_idle_front, false);
     p2_anim_soldier_1_m16_running_front = animation_create(p2_adef_soldier_1_m16_running_front, true);
+    p2_anim_soldier_1_m16_idle_up_right = animation_create(p2_adef_soldier_1_m16_idle_up_right, false);
+    p2_anim_soldier_1_m16_running_up_right = animation_create(p2_adef_soldier_1_m16_running_up_right, false);
+    p2_anim_soldier_1_m16_idle_down_right = animation_create(p2_adef_soldier_1_m16_idle_down_right, false);
+    p2_anim_soldier_1_m16_running_down_right = animation_create(p2_adef_soldier_1_m16_running_down_right, false);
     p2_anim_soldier_1_m16_spawning_side = animation_create(p2_adef_soldier_1_m16_spawning_side, true);
     p2_anim_soldier_1_m16_dying_side = animation_create(p2_adef_soldier_1_m16_dying_side, true);
 
@@ -805,6 +894,10 @@ void update_player_animations(Player *player)
         direction = "side";
     else if (player->direction == UP)
         direction = "back";
+    else if (player->direction == UP_RIGHT)
+        direction = "up_right";
+    else if (player->direction == DOWN_RIGHT)
+        direction = "down_right";
     else // player->direction == DOWN
         direction = "front";
     strcat(anim_name, player_side);
@@ -822,13 +915,17 @@ void update_player_animations(Player *player)
     strcat(anim_name, "_");
     strcat(anim_name, direction);
 
-    player->entity->animation = get(player_anim_map, anim_name);
+    Animation *player_anim = get(player_anim_map, anim_name);
+    if (player_anim)
+        player->entity->animation = player_anim;
+    else
+        player->entity->animation = anim_player_placeholder;
 
     // ensure we are starting new anims at the first frame
     if (player->entity->animation != prev_anim)
         player->entity->animation->current_frame_index = 0;
 
-    // TODO: remove this once animations are added for facing left (right now right facing anims are flipped and reusedw)
+    // TODO: remove this once animations are added for facing left (right now right facing anims are flipped and reused)
     player->entity->animation->is_flipped = player->direction == LEFT ? true : false;
 
     free(anim_name);
