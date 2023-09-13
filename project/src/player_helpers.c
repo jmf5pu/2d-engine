@@ -130,7 +130,7 @@ void init_all_anims()
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_front, "assets/soldier_1_m16_idle_front.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_front, "assets/soldier_1_m16_running_front.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_up_right, "assets/soldier_1_m16_idle_up_right.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_up_right, "assets/soldier_1_m16_idle_up_right.png", 36, 36);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_up_right, "assets/soldier_1_m16_running_up_right.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_down_right, "assets/soldier_1_m16_idle_down_right.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_down_right, "assets/soldier_1_m16_idle_down_right.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
@@ -180,10 +180,10 @@ void init_all_anims()
         1);
     p1_adef_soldier_1_m16_running_up_right = animation_definition_create(
         &p1_sprite_sheet_soldier_1_m16_running_up_right,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){0},
-        1);
+        (f32[]){0.06, 0.1, 0.08, 0.06, 0.1, 0.08},
+        (u8[]){0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6},
+        6);
     p1_adef_soldier_1_m16_idle_down_right = animation_definition_create(
         &p1_sprite_sheet_soldier_1_m16_idle_down_right,
         (f32[]){0},
@@ -216,7 +216,7 @@ void init_all_anims()
     p1_anim_soldier_1_m16_idle_front = animation_create(p1_adef_soldier_1_m16_idle_front, false);
     p1_anim_soldier_1_m16_running_front = animation_create(p1_adef_soldier_1_m16_running_front, true);
     p1_anim_soldier_1_m16_idle_up_right = animation_create(p1_adef_soldier_1_m16_idle_up_right, false);
-    p1_anim_soldier_1_m16_running_up_right = animation_create(p1_adef_soldier_1_m16_running_up_right, false);
+    p1_anim_soldier_1_m16_running_up_right = animation_create(p1_adef_soldier_1_m16_running_up_right, true);
     p1_anim_soldier_1_m16_idle_down_right = animation_create(p1_adef_soldier_1_m16_idle_down_right, false);
     p1_anim_soldier_1_m16_running_down_right = animation_create(p1_adef_soldier_1_m16_running_down_right, false);
     p1_anim_soldier_1_m16_spawning_side = animation_create(p1_adef_soldier_1_m16_spawning_side, true);
@@ -438,7 +438,7 @@ void init_all_anims()
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_front, "assets/soldier_1_m16_idle_front.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_front, "assets/soldier_1_m16_running_front.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_up_right, "assets/soldier_1_m16_idle_up_right.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_up_right, "assets/soldier_1_m16_idle_up_right.png", 36, 36);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_up_right, "assets/soldier_1_m16_running_up_right.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_down_right, "assets/soldier_1_m16_idle_down_right.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_down_right, "assets/soldier_1_m16_idle_down_right.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
@@ -488,10 +488,10 @@ void init_all_anims()
         1);
     p2_adef_soldier_1_m16_running_up_right = animation_definition_create(
         &p2_sprite_sheet_soldier_1_m16_running_up_right,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){0},
-        1);
+        (f32[]){0.06, 0.1, 0.08, 0.06, 0.1, 0.08},
+        (u8[]){0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6},
+        6);
     p2_adef_soldier_1_m16_idle_down_right = animation_definition_create(
         &p2_sprite_sheet_soldier_1_m16_idle_down_right,
         (f32[]){0},
@@ -524,7 +524,7 @@ void init_all_anims()
     p2_anim_soldier_1_m16_idle_front = animation_create(p2_adef_soldier_1_m16_idle_front, false);
     p2_anim_soldier_1_m16_running_front = animation_create(p2_adef_soldier_1_m16_running_front, true);
     p2_anim_soldier_1_m16_idle_up_right = animation_create(p2_adef_soldier_1_m16_idle_up_right, false);
-    p2_anim_soldier_1_m16_running_up_right = animation_create(p2_adef_soldier_1_m16_running_up_right, false);
+    p2_anim_soldier_1_m16_running_up_right = animation_create(p2_adef_soldier_1_m16_running_up_right, true);
     p2_anim_soldier_1_m16_idle_down_right = animation_create(p2_adef_soldier_1_m16_idle_down_right, false);
     p2_anim_soldier_1_m16_running_down_right = animation_create(p2_adef_soldier_1_m16_running_down_right, false);
     p2_anim_soldier_1_m16_spawning_side = animation_create(p2_adef_soldier_1_m16_spawning_side, true);
