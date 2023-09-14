@@ -1,3 +1,4 @@
+#include <math.h> // for pi approximation
 #include "engine/global.h"
 #include "engine/util.h"
 #include "player_helpers.h"
@@ -951,6 +952,8 @@ void handle_player_shooting(Player *player, Key_State shoot)
         Animation *bullet_anim = anim_bullet_1_horizontal;
         vec2 bullet_velocity = {0, 0};
 
+        char *bullet_anim_name;
+
         // shoot at crosshair if present
         if (player->crosshair)
         {
@@ -974,6 +977,20 @@ void handle_player_shooting(Player *player, Key_State shoot)
             f32 vy = cy > py ? player->weapon->bullet_velocity * sin(angle) : player->weapon->bullet_velocity * sin(angle) * -1;
             bullet_velocity[0] = vx;
             bullet_velocity[1] = vy;
+
+            // assign anim based on angle TODO: debug why anim number is wrong and why aiming directly downward shoots up
+            if (cx < px && cy > py)
+                angle += 0.5 * M_PI;
+            if (cx < px && cy < py)
+                angle += M_PI;
+            if (cx > px && cy < py)
+                angle += 1.5 * M_PI;
+            if (cx < px && cy == py)
+                angle = M_PI;
+            if (cx == px && cy < py)
+                angle = 1.5 * M_PI;
+            float anim_number = floor((15 * angle) / (2 * M_PI));
+            printf("%f\n", anim_number);
         }
         else // handle 8 directional shooting (player not crouched / aiming)
         {
@@ -985,21 +1002,25 @@ void handle_player_shooting(Player *player, Key_State shoot)
             {
                 bullet_position[1] += 32;
                 bullet_velocity[1] = player->weapon->bullet_velocity;
+                bullet_anim_name = "bullet_4";
             }
             else if (player->direction == RIGHT)
             {
                 bullet_position[0] += 32;
                 bullet_velocity[0] = player->weapon->bullet_velocity;
+                bullet_anim_name = "bullet_0";
             }
             else if (player->direction == DOWN)
             {
                 bullet_position[1] -= 32;
                 bullet_velocity[1] = -1 * player->weapon->bullet_velocity;
+                bullet_anim_name = "bullet_12";
             }
             else if (player->direction == LEFT)
             {
                 bullet_position[0] -= 32;
                 bullet_velocity[0] = -1 * player->weapon->bullet_velocity;
+                bullet_anim_name = "bullet_8";
             }
             else if (player->direction == UP_RIGHT)
             {
@@ -1007,6 +1028,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
                 bullet_position[1] += bullet_position_45_deg;
                 bullet_velocity[0] += bullet_velocity_45_deg;
                 bullet_velocity[1] += bullet_velocity_45_deg;
+                bullet_anim_name = "bullet_2";
             }
             else if (player->direction == UP_LEFT)
             {
@@ -1014,6 +1036,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
                 bullet_position[1] += bullet_position_45_deg;
                 bullet_velocity[0] += -1 * bullet_velocity_45_deg;
                 bullet_velocity[1] += bullet_velocity_45_deg;
+                bullet_anim_name = "bullet_6";
             }
             else if (player->direction == DOWN_RIGHT)
             {
@@ -1021,6 +1044,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
                 bullet_position[1] += -1 * bullet_position_45_deg;
                 bullet_velocity[0] += bullet_velocity_45_deg;
                 bullet_velocity[1] += -1 * bullet_velocity_45_deg;
+                bullet_anim_name = "bullet_10";
             }
             else if (player->direction == DOWN_LEFT)
             {
@@ -1028,6 +1052,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
                 bullet_position[1] += -1 * bullet_position_45_deg;
                 bullet_velocity[0] += -1 * bullet_velocity_45_deg;
                 bullet_velocity[1] += -1 * bullet_velocity_45_deg;
+                bullet_anim_name = "bullet_14";
             }
             else
             {
