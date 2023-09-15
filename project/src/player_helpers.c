@@ -9,7 +9,29 @@
 Player *player_one;
 Player *player_two;
 
-// init animation hash_map
+// init bullet animation hash_map
+void init_bullet_anim_hashmap()
+{
+    bullet_anim_map = create_hash_map(BULLET_ANIM_COUNT);
+    insert(bullet_anim_map, "bullet_0", anim_bullet_0);
+    insert(bullet_anim_map, "bullet_1", anim_bullet_1);
+    insert(bullet_anim_map, "bullet_2", anim_bullet_2);
+    insert(bullet_anim_map, "bullet_3", anim_bullet_3);
+    insert(bullet_anim_map, "bullet_4", anim_bullet_4);
+    insert(bullet_anim_map, "bullet_5", anim_bullet_5);
+    insert(bullet_anim_map, "bullet_6", anim_bullet_6);
+    insert(bullet_anim_map, "bullet_7", anim_bullet_7);
+    insert(bullet_anim_map, "bullet_8", anim_bullet_8);
+    insert(bullet_anim_map, "bullet_9", anim_bullet_9);
+    insert(bullet_anim_map, "bullet_10", anim_bullet_10);
+    insert(bullet_anim_map, "bullet_11", anim_bullet_11);
+    insert(bullet_anim_map, "bullet_12", anim_bullet_12);
+    insert(bullet_anim_map, "bullet_13", anim_bullet_13);
+    insert(bullet_anim_map, "bullet_14", anim_bullet_14);
+    insert(bullet_anim_map, "bullet_15", anim_bullet_15);
+}
+
+// init player animation hash_map
 void init_player_anim_hashmap()
 {
     player_anim_map = create_hash_map(PLAYER_ANIM_COUNT);
@@ -99,6 +121,7 @@ void init_player_anim_hashmap()
 // sets up animations for players and bullets
 void init_all_anims()
 {
+    // TODO: separate player and non-player anims to separate methods
     // init placeholder anims
     render_sprite_sheet_init(&sprite_sheet_player_placeholder, "assets/question_mark.png", 36, 36);
     adef_player_placeholder = animation_definition_create(
@@ -109,7 +132,7 @@ void init_all_anims()
         1);
     anim_player_placeholder = animation_create(adef_player_placeholder, false);
 
-    // init crosshairs
+    // init crosshair anims
     render_sprite_sheet_init(&sprite_sheet_crosshair_red, "assets/crosshair_red.png", 27, 27);
     adef_crosshair_red = animation_definition_create(
         &sprite_sheet_crosshair_red,
@@ -118,6 +141,149 @@ void init_all_anims()
         (u8[]){1, 2, 3, 4},
         4);
     anim_crosshair_red = animation_create(adef_crosshair_red, true);
+
+    // init bullet anims
+    render_sprite_sheet_init(&sprite_sheet_bullet_0, "assets/bullet_0.png", 3, 1);
+    adef_bullet_0 = animation_definition_create(
+        &sprite_sheet_bullet_0,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_bullet_0 = animation_create(adef_bullet_0, false);
+    render_sprite_sheet_init(&sprite_sheet_bullet_1, "assets/bullet_1.png", 3, 2);
+    adef_bullet_1 = animation_definition_create(
+        &sprite_sheet_bullet_1,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_bullet_1 = animation_create(adef_bullet_1, false);
+    render_sprite_sheet_init(&sprite_sheet_bullet_2, "assets/bullet_2.png", 3, 3);
+    adef_bullet_2 = animation_definition_create(
+        &sprite_sheet_bullet_2,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_bullet_2 = animation_create(adef_bullet_2, false);
+
+    render_sprite_sheet_init(&sprite_sheet_bullet_3, "assets/bullet_3.png", 2, 3);
+    adef_bullet_3 = animation_definition_create(
+        &sprite_sheet_bullet_3,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_bullet_3 = animation_create(adef_bullet_3, false);
+
+    render_sprite_sheet_init(&sprite_sheet_bullet_4, "assets/bullet_4.png", 1, 3);
+    adef_bullet_4 = animation_definition_create(
+        &sprite_sheet_bullet_4,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_bullet_4 = animation_create(adef_bullet_4, false);
+
+    render_sprite_sheet_init(&sprite_sheet_bullet_5, "assets/bullet_5.png", 2, 3);
+    adef_bullet_5 = animation_definition_create(
+        &sprite_sheet_bullet_5,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_bullet_5 = animation_create(adef_bullet_5, false);
+
+    render_sprite_sheet_init(&sprite_sheet_bullet_6, "assets/bullet_6.png", 3, 3);
+    adef_bullet_6 = animation_definition_create(
+        &sprite_sheet_bullet_6,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_bullet_6 = animation_create(adef_bullet_6, false);
+
+    render_sprite_sheet_init(&sprite_sheet_bullet_7, "assets/bullet_7.png", 3, 2);
+    adef_bullet_7 = animation_definition_create(
+        &sprite_sheet_bullet_7,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_bullet_7 = animation_create(adef_bullet_7, false);
+
+    render_sprite_sheet_init(&sprite_sheet_bullet_8, "assets/bullet_8.png", 3, 1);
+    adef_bullet_8 = animation_definition_create(
+        &sprite_sheet_bullet_8,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_bullet_8 = animation_create(adef_bullet_8, false);
+
+    render_sprite_sheet_init(&sprite_sheet_bullet_9, "assets/bullet_9.png", 3, 2);
+    adef_bullet_9 = animation_definition_create(
+        &sprite_sheet_bullet_9,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_bullet_9 = animation_create(adef_bullet_9, false);
+
+    render_sprite_sheet_init(&sprite_sheet_bullet_10, "assets/bullet_10.png", 3, 3);
+    adef_bullet_10 = animation_definition_create(
+        &sprite_sheet_bullet_10,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_bullet_10 = animation_create(adef_bullet_10, false);
+
+    render_sprite_sheet_init(&sprite_sheet_bullet_11, "assets/bullet_11.png", 2, 3);
+    adef_bullet_11 = animation_definition_create(
+        &sprite_sheet_bullet_11,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_bullet_11 = animation_create(adef_bullet_11, false);
+
+    render_sprite_sheet_init(&sprite_sheet_bullet_12, "assets/bullet_12.png", 1, 3);
+    adef_bullet_12 = animation_definition_create(
+        &sprite_sheet_bullet_12,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_bullet_12 = animation_create(adef_bullet_12, false);
+
+    render_sprite_sheet_init(&sprite_sheet_bullet_13, "assets/bullet_13.png", 2, 3);
+    adef_bullet_13 = animation_definition_create(
+        &sprite_sheet_bullet_13,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_bullet_13 = animation_create(adef_bullet_13, false);
+
+    render_sprite_sheet_init(&sprite_sheet_bullet_14, "assets/bullet_14.png", 3, 3);
+    adef_bullet_14 = animation_definition_create(
+        &sprite_sheet_bullet_14,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_bullet_14 = animation_create(adef_bullet_14, false);
+
+    render_sprite_sheet_init(&sprite_sheet_bullet_15, "assets/bullet_15.png", 3, 2);
+    adef_bullet_15 = animation_definition_create(
+        &sprite_sheet_bullet_15,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_bullet_15 = animation_create(adef_bullet_15, false);
 
     /*
      * player one animations
@@ -753,6 +919,7 @@ void init_all_anims()
     anim_bullet_1_horizontal = animation_create(adef_bullet_1_horizontal, false);
     anim_bullet_1_vertical = animation_create(adef_bullet_1_vertical, false);
 
+    init_bullet_anim_hashmap();
     init_player_anim_hashmap();
 }
 
@@ -952,8 +1119,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
         Animation *bullet_anim = anim_bullet_1_horizontal;
         vec2 bullet_velocity = {0, 0};
 
-        char *bullet_anim_name;
-
+        char bullet_anim_name[50];
         // shoot at crosshair if present
         if (player->crosshair)
         {
@@ -973,24 +1139,24 @@ void handle_player_shooting(Player *player, Key_State shoot)
             bullet_position[1] = player->entity->body->aabb.position[1] + bullet_y;
 
             // calculate velocity using angle
-            f32 vx = cx > px ? player->weapon->bullet_velocity * cos(angle) : player->weapon->bullet_velocity * cos(angle) * -1;
-            f32 vy = cy > py ? player->weapon->bullet_velocity * sin(angle) : player->weapon->bullet_velocity * sin(angle) * -1;
+            f32 vx = cx >= px ? player->weapon->bullet_velocity * cos(angle) : player->weapon->bullet_velocity * cos(angle) * -1;
+            f32 vy = cy >= py ? player->weapon->bullet_velocity * sin(angle) : player->weapon->bullet_velocity * sin(angle) * -1;
             bullet_velocity[0] = vx;
             bullet_velocity[1] = vy;
 
-            // assign anim based on angle TODO: debug why anim number is wrong and why aiming directly downward shoots up
+            // assign anim based on angle TODO: debug why aiming directly downward shoots up
             if (cx < px && cy > py)
-                angle += 0.5 * M_PI;
+                angle += (0.5 * M_PI) - angle + (0.5 * M_PI);
             if (cx < px && cy < py)
                 angle += M_PI;
             if (cx > px && cy < py)
-                angle += 1.5 * M_PI;
+                angle += (0.5 * M_PI) - angle + (1.5 * M_PI);
             if (cx < px && cy == py)
                 angle = M_PI;
             if (cx == px && cy < py)
                 angle = 1.5 * M_PI;
-            float anim_number = floor((15 * angle) / (2 * M_PI));
-            printf("%f\n", anim_number);
+            int anim_number = floor((15 * angle) / (2 * M_PI));
+            sprintf(bullet_anim_name, "bullet_%d", anim_number);
         }
         else // handle 8 directional shooting (player not crouched / aiming)
         {
@@ -1002,25 +1168,25 @@ void handle_player_shooting(Player *player, Key_State shoot)
             {
                 bullet_position[1] += 32;
                 bullet_velocity[1] = player->weapon->bullet_velocity;
-                bullet_anim_name = "bullet_4";
+                strcpy(bullet_anim_name, "bullet_4");
             }
             else if (player->direction == RIGHT)
             {
                 bullet_position[0] += 32;
                 bullet_velocity[0] = player->weapon->bullet_velocity;
-                bullet_anim_name = "bullet_0";
+                strcpy(bullet_anim_name, "bullet_0");
             }
             else if (player->direction == DOWN)
             {
                 bullet_position[1] -= 32;
                 bullet_velocity[1] = -1 * player->weapon->bullet_velocity;
-                bullet_anim_name = "bullet_12";
+                strcpy(bullet_anim_name, "bullet_12");
             }
             else if (player->direction == LEFT)
             {
                 bullet_position[0] -= 32;
                 bullet_velocity[0] = -1 * player->weapon->bullet_velocity;
-                bullet_anim_name = "bullet_8";
+                strcpy(bullet_anim_name, "bullet_8");
             }
             else if (player->direction == UP_RIGHT)
             {
@@ -1028,7 +1194,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
                 bullet_position[1] += bullet_position_45_deg;
                 bullet_velocity[0] += bullet_velocity_45_deg;
                 bullet_velocity[1] += bullet_velocity_45_deg;
-                bullet_anim_name = "bullet_2";
+                strcpy(bullet_anim_name, "bullet_2");
             }
             else if (player->direction == UP_LEFT)
             {
@@ -1036,7 +1202,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
                 bullet_position[1] += bullet_position_45_deg;
                 bullet_velocity[0] += -1 * bullet_velocity_45_deg;
                 bullet_velocity[1] += bullet_velocity_45_deg;
-                bullet_anim_name = "bullet_6";
+                strcpy(bullet_anim_name, "bullet_6");
             }
             else if (player->direction == DOWN_RIGHT)
             {
@@ -1044,7 +1210,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
                 bullet_position[1] += -1 * bullet_position_45_deg;
                 bullet_velocity[0] += bullet_velocity_45_deg;
                 bullet_velocity[1] += -1 * bullet_velocity_45_deg;
-                bullet_anim_name = "bullet_10";
+                strcpy(bullet_anim_name, "bullet_10");
             }
             else if (player->direction == DOWN_LEFT)
             {
@@ -1052,15 +1218,17 @@ void handle_player_shooting(Player *player, Key_State shoot)
                 bullet_position[1] += -1 * bullet_position_45_deg;
                 bullet_velocity[0] += -1 * bullet_velocity_45_deg;
                 bullet_velocity[1] += -1 * bullet_velocity_45_deg;
-                bullet_anim_name = "bullet_14";
+                strcpy(bullet_anim_name, "bullet_14");
             }
             else
             {
                 ERROR_EXIT(NULL, "Player direction not recognized");
             }
         }
+
         Entity *bullet = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
-        bullet->animation = bullet_anim;
+
+        bullet->animation = get(bullet_anim_map, bullet_anim_name);
         bullet->body->velocity[0] = bullet_velocity[0];
         bullet->body->velocity[1] = bullet_velocity[1];
 
