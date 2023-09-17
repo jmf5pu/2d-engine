@@ -1,11 +1,11 @@
 Prioritized:
 * implement 8 directional movement
-  * add movement logic
-  * add shooting logic
+  * ~~add movement logic~~
+  * ~~add shooting logic~~
   * add player anims
 * implement crouched aiming (360 deg)
   * ~~implement base mechanics~~
-  * add bullet anims
+  * ~~add bullet anims~~
   * add player anims
 * integrate camera
   * add base logic
