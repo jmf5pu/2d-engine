@@ -1,4 +1,4 @@
-#include <math.h> // for pi approximation
+#include <math.h>
 #include "engine/global.h"
 #include "engine/util.h"
 #include "player_helpers.h"
@@ -1115,120 +1115,160 @@ void handle_player_shooting(Player *player, Key_State shoot)
     // generate bullet if weapon is loaded and key state is correct
     if (player->weapon->current_capacity > 0 && player->weapon->ready_to_fire && key_state_ready)
     {
+        f32 cx = 0;
+        f32 cy = 0;
+        f32 px = player->entity->body->aabb.position[0];
+        f32 py = player->entity->body->aabb.position[1];
         vec2 bullet_position = {player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]};
-        Animation *bullet_anim = anim_bullet_1_horizontal;
         vec2 bullet_velocity = {0, 0};
 
-        char bullet_anim_name[50];
         // shoot at crosshair if present
         if (player->crosshair)
         {
-            // calculating angle
-            f32 cx = player->crosshair->body->aabb.position[0];
-            f32 cy = player->crosshair->body->aabb.position[1];
-            f32 px = player->entity->body->aabb.position[0];
-            f32 py = player->entity->body->aabb.position[1];
-            f32 dx = px - cx;
-            f32 dy = py - cy;
-            f32 angle = (cx > px && cy > py) || (cx < px && cy < py) ? atan(dy / dx) : -1 * atan(dy / dx);
-
-            // calculate starting position using angle
-            f32 bullet_x = cx > px ? 30 * cos(angle) : 32 * cos(angle) * -1;
-            f32 bullet_y = cy > py ? 30 * sin(angle) : 32 * sin(angle) * -1;
-            bullet_position[0] = player->entity->body->aabb.position[0] + bullet_x;
-            bullet_position[1] = player->entity->body->aabb.position[1] + bullet_y;
-
-            // calculate velocity using angle
-            f32 vx = cx >= px ? player->weapon->bullet_velocity * cos(angle) : player->weapon->bullet_velocity * cos(angle) * -1;
-            f32 vy = cy >= py ? player->weapon->bullet_velocity * sin(angle) : player->weapon->bullet_velocity * sin(angle) * -1;
-            bullet_velocity[0] = vx;
-            bullet_velocity[1] = vy;
-
-            // assign anim based on angle TODO: debug why aiming directly downward shoots up
-            if (cx < px && cy > py)
-                angle += (0.5 * M_PI) - angle + (0.5 * M_PI);
-            if (cx < px && cy < py)
-                angle += M_PI;
-            if (cx > px && cy < py)
-                angle += (0.5 * M_PI) - angle + (1.5 * M_PI);
-            if (cx < px && cy == py)
-                angle = M_PI;
-            if (cx == px && cy < py)
-                angle = 1.5 * M_PI;
-            int anim_number = floor((15 * angle) / (2 * M_PI));
-            sprintf(bullet_anim_name, "bullet_%d", anim_number);
+            // populate crosshair position
+            cx = player->crosshair->body->aabb.position[0];
+            cy = player->crosshair->body->aabb.position[1];
         }
-        else // handle 8 directional shooting (player not crouched / aiming)
-        {
-            // calculate x/y components of position and velocity based off 45 degree angle
-            const float rad_45_deg = 0.78539816;
-            const float bullet_position_45_deg = 32 * sin(rad_45_deg);
-            float bullet_velocity_45_deg = player->weapon->bullet_velocity * sin(rad_45_deg);
+        else
+        { // player not crouching
             if (player->direction == UP)
             {
-                bullet_position[1] += 32;
-                bullet_velocity[1] = player->weapon->bullet_velocity;
-                strcpy(bullet_anim_name, "bullet_4");
+                cx = px;
+                cy = py + 1;
             }
             else if (player->direction == RIGHT)
             {
-                bullet_position[0] += 32;
-                bullet_velocity[0] = player->weapon->bullet_velocity;
-                strcpy(bullet_anim_name, "bullet_0");
+                cx = px + 1;
+                cy = py;
             }
             else if (player->direction == DOWN)
             {
-                bullet_position[1] -= 32;
-                bullet_velocity[1] = -1 * player->weapon->bullet_velocity;
-                strcpy(bullet_anim_name, "bullet_12");
+                cx = px;
+                cy = py - 1;
             }
             else if (player->direction == LEFT)
             {
-                bullet_position[0] -= 32;
-                bullet_velocity[0] = -1 * player->weapon->bullet_velocity;
-                strcpy(bullet_anim_name, "bullet_8");
+                cx = px - 1;
+                cy = py;
             }
             else if (player->direction == UP_RIGHT)
             {
-                bullet_position[0] += bullet_position_45_deg;
-                bullet_position[1] += bullet_position_45_deg;
-                bullet_velocity[0] += bullet_velocity_45_deg;
-                bullet_velocity[1] += bullet_velocity_45_deg;
-                strcpy(bullet_anim_name, "bullet_2");
+                cx = px + 1;
+                cy = py + 1;
             }
             else if (player->direction == UP_LEFT)
             {
-                bullet_position[0] += -1 * bullet_position_45_deg;
-                bullet_position[1] += bullet_position_45_deg;
-                bullet_velocity[0] += -1 * bullet_velocity_45_deg;
-                bullet_velocity[1] += bullet_velocity_45_deg;
-                strcpy(bullet_anim_name, "bullet_6");
+                cx = px - 1;
+                cy = py + 1;
             }
             else if (player->direction == DOWN_RIGHT)
             {
-                bullet_position[0] += bullet_position_45_deg;
-                bullet_position[1] += -1 * bullet_position_45_deg;
-                bullet_velocity[0] += bullet_velocity_45_deg;
-                bullet_velocity[1] += -1 * bullet_velocity_45_deg;
-                strcpy(bullet_anim_name, "bullet_10");
+                cx = px + 1;
+                cy = py - 1;
             }
             else if (player->direction == DOWN_LEFT)
             {
-                bullet_position[0] += -1 * bullet_position_45_deg;
-                bullet_position[1] += -1 * bullet_position_45_deg;
-                bullet_velocity[0] += -1 * bullet_velocity_45_deg;
-                bullet_velocity[1] += -1 * bullet_velocity_45_deg;
-                strcpy(bullet_anim_name, "bullet_14");
-            }
-            else
-            {
-                ERROR_EXIT(NULL, "Player direction not recognized");
+                cx = px - 1;
+                cy = py - 1;
             }
         }
 
-        Entity *bullet = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
+        // calculate angle
+        f32 dx = px - cx;
+        f32 dy = py - cy;
+        f32 angle = fabs((cx > px && cy > py) || (cx < px && cy < py) ? atan(dy / dx) : -1 * atan(dy / dx));
 
+        // calculate bullet starting position using angle
+        f32 bullet_x = cx >= px ? 32 * cos(angle) : 32 * cos(angle) * -1;
+        f32 bullet_y = cy >= py ? 32 * sin(angle) : 32 * sin(angle) * -1;
+
+        // calculate starting position using angle
+        bullet_position[0] = player->entity->body->aabb.position[0] + bullet_x;
+        bullet_position[1] = player->entity->body->aabb.position[1] + bullet_y;
+
+        // calculate velocity using angle
+        f32 vx = cx >= px ? player->weapon->bullet_velocity * cos(angle) : player->weapon->bullet_velocity * cos(angle) * -1;
+        f32 vy = cy >= py ? player->weapon->bullet_velocity * sin(angle) : player->weapon->bullet_velocity * sin(angle) * -1;
+        bullet_velocity[0] = vx;
+        bullet_velocity[1] = vy;
+
+        // correct angle
+        if (cx < px && cy > py) // 2nd quadrant
+            angle = M_PI - angle;
+        else if (cx < px && cy < py) // 3rd quadrant
+            angle += M_PI;
+        else if (cx > px && cy < py) // 4th quadrant
+            angle = 2 * M_PI - angle;
+
+        // check which of 16 buckets it falls into, assign animation
+        char *bullet_anim_name;
+        if (angle >= 6.1 || angle < 0.2)
+        {
+            bullet_anim_name = "bullet_0";
+        }
+        else if (angle >= 0.2 && angle < 0.59)
+        {
+            bullet_anim_name = "bullet_1";
+        }
+        else if (angle >= 0.59 && angle < 0.983)
+        {
+            bullet_anim_name = "bullet_2";
+        }
+        else if (angle >= 0.983 && angle < 1.375)
+        {
+            bullet_anim_name = "bullet_3";
+        }
+        else if (angle >= 1.375 && angle < 1.769)
+        {
+            bullet_anim_name = "bullet_4";
+        }
+        else if (angle >= 1.769 && angle < 2.163)
+        {
+            bullet_anim_name = "bullet_5";
+        }
+        else if (angle >= 2.163 && angle < 2.557)
+        {
+            bullet_anim_name = "bullet_6";
+        }
+        else if (angle >= 2.557 && angle < 2.95)
+        {
+            bullet_anim_name = "bullet_7";
+        }
+        else if (angle >= 2.95 && angle < 3.344)
+        {
+            bullet_anim_name = "bullet_8";
+        }
+        else if (angle >= 3.344 && angle < 3.738)
+        {
+            bullet_anim_name = "bullet_9";
+        }
+        else if (angle >= 3.738 && angle < 4.131)
+        {
+            bullet_anim_name = "bullet_10";
+        }
+        else if (angle >= 4.131 && angle < 4.525)
+        {
+            bullet_anim_name = "bullet_11";
+        }
+        else if (angle >= 4.525 && angle < 4.919)
+        {
+            bullet_anim_name = "bullet_12";
+        }
+        else if (angle >= 4.919 && angle < 5.313)
+        {
+            bullet_anim_name = "bullet_13";
+        }
+        else if (angle >= 5.313 && angle < 5.706)
+        {
+            bullet_anim_name = "bullet_14";
+        }
+        else if (angle >= 5.706 && angle < 6.1)
+        {
+            bullet_anim_name = "bullet_15";
+        }
+        Entity *bullet = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
         bullet->animation = get(bullet_anim_map, bullet_anim_name);
+
         bullet->body->velocity[0] = bullet_velocity[0];
         bullet->body->velocity[1] = bullet_velocity[1];
 
