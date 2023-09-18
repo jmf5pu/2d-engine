@@ -10,8 +10,6 @@
 #include "render_internal.h"
 
 static usize quad_id_counter = 0;
-static u32 window_width = 1280;
-static u32 window_height = 720;
 static f32 render_width = 640;
 static f32 render_height = 360;
 static f32 scale = 2; // TODO: change this based on screen size
@@ -31,7 +29,7 @@ static Array_List *list_batch;
 
 SDL_Window *render_init(void)
 {
-    SDL_Window *window = render_init_window(window_width, window_height);
+    SDL_Window *window = render_init_window(WINDOW_WIDTH, WINDOW_HEIGHT);
 
     render_init_quad(&vao_quad, &vbo_quad, &ebo_quad);
     render_init_batch_quads(&vao_batch, &vbo_batch, &ebo_batch);

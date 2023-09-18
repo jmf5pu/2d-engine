@@ -10,6 +10,18 @@ static Physics_State_Internal state;
 static u32 iterations = 60;
 static f32 tick_rate;
 
+// returns all bodies
+Array_List *get_all_bodies(void)
+{
+    return state.body_list;
+}
+
+// returns all static bodies
+Array_List *get_all_static_bodies(void)
+{
+    return state.static_body_list;
+}
+
 void physics_init(void)
 {
     state.body_list = array_list_create(sizeof(struct Body *), 0);

@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <linmath.h>
 #include "types.h"
+#include "array_list.h"
 
 typedef struct hit Hit;
 typedef struct body Body;
@@ -45,6 +46,8 @@ typedef struct hit
     vec2 normal;
 } Hit;
 
+Array_List *get_all_bodies(void);
+Array_List *get_all_static_bodies(void);
 void physics_init(void);
 void physics_update(void);
 Body *physics_body_create(vec2 position, vec2 size, vec2 velocity, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static);

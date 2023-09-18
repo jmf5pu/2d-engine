@@ -51,6 +51,8 @@ typedef struct sprite
 #define MAX_BATCH_QUADS 10000
 #define MAX_BATCH_VERTICES 40000
 #define MAX_BATCH_ELEMENTS 60000
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 720
 
 SDL_Window *
 render_init(void);

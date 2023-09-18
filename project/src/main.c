@@ -14,6 +14,7 @@
 #include "engine/physics.h"
 #include "engine/util.h"
 #include "engine/entity.h"
+#include "engine/camera.h"
 #include "engine/render.h"
 #include "engine/animation.h"
 #include "engine/array_list.h"
@@ -49,6 +50,7 @@ int main(int argc, char *argv[])
     entity_init();
     animation_init(); // creates animation storage
     init_all_anims(); // initializes all our animations
+    // camera_init();
 
     // define weapon types
     init_weapon_types();
@@ -175,6 +177,8 @@ int main(int argc, char *argv[])
 
         physics_update();
         animation_update(global.time.delta);
+        // camera_update(player_one->entity->body, &map, 200);
+
         render_begin();
 
         // render animated entities, check if any are marked for deletion (not active OR body is not active)
