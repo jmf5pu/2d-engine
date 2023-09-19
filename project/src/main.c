@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     entity_init();
     animation_init(); // creates animation storage
     init_all_anims(); // initializes all our animations
-    // camera_init();
+    camera_init();
 
     // define weapon types
     init_weapon_types();
@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
 
         physics_update();
         animation_update(global.time.delta);
-        // camera_update(player_one->entity->body, &map, 200);
+        camera_update(player_one->entity->body, &map, 50);
 
         render_begin();
 

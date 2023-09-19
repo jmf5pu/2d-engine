@@ -9,8 +9,8 @@ static vec2 camera;
 
 void camera_init()
 {
-    camera[0] = WINDOW_WIDTH * 0.5;
-    camera[1] = WINDOW_HEIGHT * 0.5;
+    camera[0] = RENDER_WIDTH * 0.5;
+    camera[1] = RENDER_HEIGHT * 0.5;
 }
 
 void shift_camera(vec2 shift, Map *map)
@@ -61,15 +61,15 @@ void camera_update(Body *body_player, Map *map, int buffer)
     }
 
     // check right buffer
-    if (position_x + buffer >= WINDOW_WIDTH)
+    if (position_x + buffer >= RENDER_WIDTH)
     {
-        shift_camera((vec2){(-1 * fabsf(position_x - (WINDOW_WIDTH - buffer))), 0}, map);
+        shift_camera((vec2){(-1 * fabsf(position_x - (RENDER_WIDTH - buffer))), 0}, map);
     }
 
     // check top buffer
-    if (position_y + buffer >= WINDOW_HEIGHT)
+    if (position_y + buffer >= RENDER_HEIGHT)
     {
-        shift_camera((vec2){0, -1 * fabsf(position_y - (WINDOW_HEIGHT - buffer))}, map);
+        shift_camera((vec2){0, -1 * fabsf(position_y - (RENDER_HEIGHT - buffer))}, map);
     }
 
     // check bottom buffer
