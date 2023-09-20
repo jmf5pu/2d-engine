@@ -33,10 +33,6 @@ const u8 frame_rate = 60;           // frame rate
 static u32 texture_slots[16] = {0}; // texture slots array for batch rendering
 static bool should_quit = false;    // quit flag
 
-// rendering dimensions
-static f32 render_width;
-static f32 render_height;
-
 // init spawn points
 static vec2 spawn_point_one = {100, 200};
 static vec2 spawn_point_two = {550, 200};
@@ -50,19 +46,18 @@ int main(int argc, char *argv[])
     entity_init();
     animation_init(); // creates animation storage
     init_all_anims(); // initializes all our animations
-    camera_init();
+
+    // create camera structs
+    Camera main_cam = (Camera){
+        .position = {RENDER_WIDTH * 0.5, RENDER_HEIGHT * 0.5},
+        .buffer = 50,
+    };
 
     // define weapon types
     init_weapon_types();
 
     // initialize map & props
     init_map(&map);
-
-    // get window & render dimensions
-    i32 window_width, window_height;
-    SDL_GetWindowSize(window, &window_width, &window_height);
-    render_width = window_width / render_get_scale();
-    render_height = window_height / render_get_scale();
 
     // init player one
     player_one = malloc(sizeof(Player));
@@ -177,7 +172,7 @@ int main(int argc, char *argv[])
 
         physics_update();
         animation_update(global.time.delta);
-        camera_update(player_one->entity->body, &map, 50);
+        camera_update(&main_cam, player_one->entity->body, &map);
 
         render_begin();
 

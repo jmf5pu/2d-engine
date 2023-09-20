@@ -103,6 +103,19 @@ void render_begin(void)
     glClearColor(0.88, 0.1, 0.1, 1);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    // glEnable(GL_SCISSOR_TEST);
+
+    // glScissor(0, 0, WINDOW_WIDTH * 0.5, WINDOW_HEIGHT);
+    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // // TODO: render left hand screen stuff here
+    // vec2 pos = {50, 50};
+    // vec2 size = {50, 50};
+    // render_quad(pos, size, WHITE);
+
+    // glScissor(WINDOW_WIDTH * 0.5, 0, WINDOW_WIDTH * 0.5, WINDOW_HEIGHT);
+    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // // TODO: render right hand screen stuff here
+
     list_batch->len = 0;
 }
 

@@ -1,23 +1,16 @@
 #include <linmath.h>
+#include "../camera.h"
 #include "../physics.h"
 #include "../global.h"
 #include "../physics/physics_internal.h"
 #include "../render.h"
 #include "../../structs.h"
 
-static vec2 camera;
-
-void camera_init()
-{
-    camera[0] = RENDER_WIDTH * 0.5;
-    camera[1] = RENDER_HEIGHT * 0.5;
-}
-
-void shift_camera(vec2 shift, Map *map)
+void shift_camera(Camera *camera, vec2 shift, Map *map)
 {
     // updates camera based on the passed in vector which represents the SHIFT, not destination position
-    camera[0] += shift[0]; // switch this to vec2_add?
-    camera[1] += shift[1];
+    camera->position[0] += shift[0]; // switch this to vec2_add?
+    camera->position[1] += shift[1];
 
     // update all bodies' positions
     Body *body;
@@ -48,33 +41,33 @@ void shift_camera(vec2 shift, Map *map)
     }
 }
 
-void camera_update(Body *body_player, Map *map, int buffer)
+void camera_update(Camera *camera, Body *body_player, Map *map)
 {
     // updates the camera based on the player's position
     float position_x = body_player->aabb.position[0];
     float position_y = body_player->aabb.position[1];
 
     // check if we have breached left buffer, if so, correct camera
-    if (position_x - buffer <= 0)
+    if (position_x - camera->buffer <= 0)
     {
-        shift_camera((vec2){fabsf(position_x - buffer), 0}, map);
+        shift_camera(camera, (vec2){fabsf(position_x - camera->buffer), 0}, map);
     }
 
     // check right buffer
-    if (position_x + buffer >= RENDER_WIDTH)
+    if (position_x + camera->buffer >= RENDER_WIDTH)
     {
-        shift_camera((vec2){(-1 * fabsf(position_x - (RENDER_WIDTH - buffer))), 0}, map);
+        shift_camera(camera, (vec2){(-1 * fabsf(position_x - (RENDER_WIDTH - camera->buffer))), 0}, map);
     }
 
     // check top buffer
-    if (position_y + buffer >= RENDER_HEIGHT)
+    if (position_y + camera->buffer >= RENDER_HEIGHT)
     {
-        shift_camera((vec2){0, -1 * fabsf(position_y - (RENDER_HEIGHT - buffer))}, map);
+        shift_camera(camera, (vec2){0, -1 * fabsf(position_y - (RENDER_HEIGHT - camera->buffer))}, map);
     }
 
     // check bottom buffer
-    if (position_y - buffer <= 0)
+    if (position_y - camera->buffer <= 0)
     {
-        shift_camera((vec2){0, fabsf(position_y - buffer)}, map);
+        shift_camera(camera, (vec2){0, fabsf(position_y - camera->buffer)}, map);
     }
 }
