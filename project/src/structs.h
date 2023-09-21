@@ -95,6 +95,7 @@ typedef struct player
     Weapon *weapon;
     Armor *armor;
     vec2 spawn_point;
+    vec2 relative_position; // position relative to the rest of the map NOT to the window
     enum Direction direction;
     enum Player_Status status;
     f32 despawn_time;     // time it takes for animation to complete after health <= 0

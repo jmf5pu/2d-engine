@@ -7,7 +7,7 @@
 typedef struct camera
 {
     vec2 position;
-    int buffer;
+    vec4 buffer;
 } Camera;
 
 void shift_camera(Camera *camera, vec2 position, Map *map);

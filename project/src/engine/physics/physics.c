@@ -134,7 +134,7 @@ static void sweep_response(Body *body, vec2 velocity)
     }
     else
     {
-        // no hit? Then update both axes
+        // no hit? Then update position on both axes
         vec2_add(body->aabb.position, body->aabb.position, velocity);
     }
 }

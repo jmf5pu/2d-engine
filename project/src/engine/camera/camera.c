@@ -9,8 +9,8 @@
 void shift_camera(Camera *camera, vec2 shift, Map *map)
 {
     // updates camera based on the passed in vector which represents the SHIFT, not destination position
-    camera->position[0] += shift[0]; // switch this to vec2_add?
-    camera->position[1] += shift[1];
+    camera->position[0] -= shift[0]; // switch this to vec2_add?
+    camera->position[1] -= shift[1];
 
     // update all bodies' positions
     Body *body;
@@ -48,26 +48,26 @@ void camera_update(Camera *camera, Body *body_player, Map *map)
     float position_y = body_player->aabb.position[1];
 
     // check if we have breached left buffer, if so, correct camera
-    if (position_x - camera->buffer <= 0)
+    if (position_x < camera->buffer[0])
     {
-        shift_camera(camera, (vec2){fabsf(position_x - camera->buffer), 0}, map);
+        shift_camera(camera, (vec2){fabsf(position_x - camera->buffer[0]), 0}, map);
     }
 
     // check right buffer
-    if (position_x + camera->buffer >= RENDER_WIDTH)
+    if (position_x > camera->buffer[1])
     {
-        shift_camera(camera, (vec2){(-1 * fabsf(position_x - (RENDER_WIDTH - camera->buffer))), 0}, map);
-    }
-
-    // check top buffer
-    if (position_y + camera->buffer >= RENDER_HEIGHT)
-    {
-        shift_camera(camera, (vec2){0, -1 * fabsf(position_y - (RENDER_HEIGHT - camera->buffer))}, map);
+        shift_camera(camera, (vec2){(-1 * fabsf(position_x - camera->buffer[1])), 0}, map);
     }
 
     // check bottom buffer
-    if (position_y - camera->buffer <= 0)
+    if (position_y < camera->buffer[2])
     {
-        shift_camera(camera, (vec2){0, fabsf(position_y - camera->buffer)}, map);
+        shift_camera(camera, (vec2){0, fabsf(position_y - camera->buffer[2])}, map);
+    }
+
+    // check top buffer
+    if (position_y > camera->buffer[3])
+    {
+        shift_camera(camera, (vec2){0, -1 * fabsf(position_y - camera->buffer[3])}, map);
     }
 }

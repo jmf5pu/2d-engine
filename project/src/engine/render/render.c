@@ -103,19 +103,27 @@ void render_begin(void)
     glClearColor(0.88, 0.1, 0.1, 1);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // glEnable(GL_SCISSOR_TEST);
+    list_batch->len = 0;
+}
 
-    // glScissor(0, 0, WINDOW_WIDTH * 0.5, WINDOW_HEIGHT);
-    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    // // TODO: render left hand screen stuff here
-    // vec2 pos = {50, 50};
-    // vec2 size = {50, 50};
-    // render_quad(pos, size, WHITE);
+void render_begin_left(void)
+{
+    glClearColor(0.88, 0.1, 0.1, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
 
-    // glScissor(WINDOW_WIDTH * 0.5, 0, WINDOW_WIDTH * 0.5, WINDOW_HEIGHT);
-    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    // // TODO: render right hand screen stuff here
+    glEnable(GL_SCISSOR_TEST);
 
+    glScissor(0, 0, WINDOW_WIDTH * 0.5, WINDOW_HEIGHT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void render_begin_right(void)
+{
+    glClearColor(0.88, 0.1, 0.1, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glScissor(WINDOW_WIDTH * 0.5, 0, WINDOW_WIDTH * 0.5, WINDOW_HEIGHT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     list_batch->len = 0;
 }
 
@@ -173,6 +181,7 @@ void render_end(SDL_Window *window, u32 batch_texture_ids[8], bool swap_window)
     render_batch(list_batch->items, list_batch->len, batch_texture_ids);
     if (swap_window)
         SDL_GL_SwapWindow(window); // updates opengl window
+    glDisable(GL_SCISSOR_TEST);
 }
 
 void render_quad(vec2 pos, vec2 size, vec4 color)

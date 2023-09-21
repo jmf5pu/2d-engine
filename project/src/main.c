@@ -27,12 +27,11 @@
 #include "map_helpers.h"
 #include "weapon_types.h"
 
-bool render_bodies = false; // set to true for debugging static bodies
-
 const u8 frame_rate = 60;           // frame rate
 static u32 texture_slots[16] = {0}; // texture slots array for batch rendering
 static bool should_quit = false;    // quit flag
-
+static bool render_bodies = false;  // set to true for debugging static bodies
+static bool split_screen = false;   // is the screen actively split
 // init spawn points
 static vec2 spawn_point_one = {100, 200};
 static vec2 spawn_point_two = {550, 200};
@@ -49,8 +48,8 @@ int main(int argc, char *argv[])
 
     // create camera structs
     Camera main_cam = (Camera){
-        .position = {RENDER_WIDTH * 0.5, RENDER_HEIGHT * 0.5},
-        .buffer = 50,
+        .position = {0, 0},
+        .buffer = {50, 590, 50, 310}, // Buffers: Left, Right, Bottom, Top
     };
 
     // define weapon types
@@ -85,6 +84,8 @@ int main(int argc, char *argv[])
     };
     player_one->spawn_point[0] = spawn_point_one[0];
     player_one->spawn_point[1] = spawn_point_one[1];
+    player_one->relative_position[0] = player_one->entity->body->aabb.position[0];
+    player_one->relative_position[1] = player_one->entity->body->aabb.position[1];
     player_one->status = PLAYER_SPAWNING;
     player_one->despawn_time = 2.9;
     player_one->spawn_delay = 5;
@@ -119,6 +120,8 @@ int main(int argc, char *argv[])
     };
     player_two->spawn_point[0] = spawn_point_two[0];
     player_two->spawn_point[1] = spawn_point_two[1];
+    player_two->relative_position[0] = player_two->entity->body->aabb.position[0];
+    player_two->relative_position[1] = player_two->entity->body->aabb.position[1];
     player_two->status = PLAYER_SPAWNING;
     player_two->despawn_time = 2.9;
     player_two->spawn_delay = 5;
@@ -170,65 +173,87 @@ int main(int argc, char *argv[])
         update_player_animations(player_one);
         update_player_animations(player_two);
 
+        // update relative position of players
+        player_one->relative_position[0] = player_one->entity->body->aabb.position[0] + main_cam.position[0];
+        player_one->relative_position[1] = player_one->entity->body->aabb.position[1] + main_cam.position[1];
+
         physics_update();
         animation_update(global.time.delta);
         camera_update(&main_cam, player_one->entity->body, &map);
 
-        render_begin();
-
-        // render animated entities, check if any are marked for deletion (not active OR body is not active)
-        int num_entities = (int)entity_count();
-        for (int i = num_entities - 1; i >= 0; --i)
+        // need to run render loop twice if we are actively splitting the screen
+        int render_count = split_screen ? 2 : 1;
+        for (int i = 0; i < render_count; i++)
         {
-            Entity *entity = entity_get(i);
-
-            // destroy any entities that are inactive or have physics bodies that are inactive and aren't associated with players or pickups bool is_pickup = false;
-
-            bool is_pickup = false;
-
-            for (int j = 0; j < map.num_pickups; j++)
+            if (split_screen && render_count == 0)
             {
-                if (entity == map.pickups[j].entity)
-                    is_pickup = true;
+                render_begin_left();
             }
-            if ((!entity->is_active || !entity->body->is_active) && entity != player_one->entity && entity != player_two->entity && !is_pickup)
+            else if (split_screen && render_count == 1)
             {
-                entity_destroy(entity);
+                render_begin_right();
+            }
+            else // hit when screen is not being split
+            {
+                render_begin();
             }
 
-            // skip entities with no associated animations, check if players and pickups are inactive
-            if (!entity->animation || !entity->is_active || !entity->body->is_active)
+            // render animated entities, check if any are marked for deletion (not active OR body is not active)
+            int num_entities = (int)entity_count();
+            for (int i = num_entities - 1; i >= 0; --i)
             {
-                continue;
+                Entity *entity = entity_get(i);
+
+                // destroy any entities that are inactive or have physics bodies that are inactive and aren't associated with players or pickups bool is_pickup = false;
+
+                bool is_pickup = false;
+
+                for (int j = 0; j < map.num_pickups; j++)
+                {
+                    if (entity == map.pickups[j].entity)
+                        is_pickup = true;
+                }
+                if ((!entity->is_active || !entity->body->is_active) && entity != player_one->entity && entity != player_two->entity && !is_pickup)
+                {
+                    entity_destroy(entity);
+                }
+
+                // skip entities with no associated animations, check if players and pickups are inactive
+                if (!entity->animation || !entity->is_active || !entity->body->is_active)
+                {
+                    continue;
+                }
+                animation_render(entity->animation, window, entity->body->aabb.position, 0, WHITE, texture_slots);
+                if (render_bodies)
+                    render_aabb((f32 *)&entity->body->aabb, WHITE);
             }
-            animation_render(entity->animation, window, entity->body->aabb.position, 0, WHITE, texture_slots);
-            if (render_bodies)
-                render_aabb((f32 *)&entity->body->aabb, WHITE);
+
+            // render map sprites
+            for (int i = 0; i < map.num_props; i++)
+            {
+                Prop prop = map.props[i];
+                prop.sprite->sprite_sheet;
+
+                /*
+                 * Determining the props z_index based on position relative to player
+                 * z_index should be below the players (0) if the lowest point of the player is under the y
+                 * threshold we set OR they are above the prop entirely. Also the main background, (index 0)
+                 * is rendered beneath the player no matter what
+                 */
+                f32 player_y_min = player_one->entity->body->aabb.position[1] - player_one->entity->body->aabb.half_size[1];
+                bool is_below_player = player_y_min < (prop.sprite->position[1] - prop.sprite->half_size[1] + prop.layer_threshold) || player_y_min > (prop.sprite->position[1] + prop.sprite->half_size[1]) || i == 0;
+                i32 z_index = is_below_player ? prop.sprite->z_index : 1;
+                render_sprite_sheet_frame(prop.sprite->sprite_sheet, window, prop.sprite->row, prop.sprite->column, prop.sprite->position, z_index, prop.sprite->is_flipped, render_bodies ? (vec4){0.9, 0.9, 0.9, 0.9} : prop.sprite->color, texture_slots);
+
+                // render the static body
+                if (prop.static_body && render_bodies)
+                {
+                    render_aabb(&prop.static_body, WHITE);
+                }
+            }
         }
-
-        // render map sprites
-        for (int i = 0; i < map.num_props; i++)
-        {
-            Prop prop = map.props[i];
-            prop.sprite->sprite_sheet;
-
-            /*
-             * Determining the props z_index based on position relative to player
-             * z_index should be below the players (0) if the lowest point of the player is under the y
-             * threshold we set OR they are above the prop entirely. Also the main background, (index 0)
-             * is rendered beneath the player no matter what
-             */
-            f32 player_y_min = player_one->entity->body->aabb.position[1] - player_one->entity->body->aabb.half_size[1];
-            bool is_below_player = player_y_min < (prop.sprite->position[1] - prop.sprite->half_size[1] + prop.layer_threshold) || player_y_min > (prop.sprite->position[1] + prop.sprite->half_size[1]) || i == 0;
-            i32 z_index = is_below_player ? prop.sprite->z_index : 1;
-            render_sprite_sheet_frame(prop.sprite->sprite_sheet, window, prop.sprite->row, prop.sprite->column, prop.sprite->position, z_index, prop.sprite->is_flipped, render_bodies ? (vec4){0.9, 0.9, 0.9, 0.9} : prop.sprite->color, texture_slots);
-
-            // render the static body
-            if (prop.static_body && render_bodies)
-            {
-                render_aabb(&prop.static_body, WHITE);
-            }
-        }
+        printf("camera pos: %f, %f\n", main_cam.position[0], main_cam.position[1]);
+        // printf("p2 pos: %f, %f\n", player_two->relative_position[0], player_two->relative_position[1]);
 
         render_end(window, texture_slots, true);
 
