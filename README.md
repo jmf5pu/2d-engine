@@ -8,7 +8,7 @@ Prioritized:
   * ~~add bullet anims~~
   * add player anims
 * integrate camera
-  * add base logic
+  * ~~add base logic~~
   * add screen splitting logic
 
 TODOs:
