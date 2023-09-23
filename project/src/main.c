@@ -28,10 +28,10 @@
 #include "weapon_types.h"
 
 const u8 frame_rate = 60;           // frame rate
-static u32 texture_slots[16] = {0}; // texture slots array for batch rendering
+static u32 texture_slots[32] = {0}; // texture slots array for batch rendering
 static bool should_quit = false;    // quit flag
 static bool render_bodies = false;  // set to true for debugging static bodies
-static bool split_screen = false;   // is the screen actively split
+static bool split_screen = true;    // is the screen actively split
 // init spawn points
 static vec2 spawn_point_one = {100, 200};
 static vec2 spawn_point_two = {550, 200};
@@ -49,7 +49,19 @@ int main(int argc, char *argv[])
     // create camera structs
     Camera main_cam = (Camera){
         .position = {0, 0},
-        .buffer = {50, 590, 50, 310}, // Buffers: Left, Right, Bottom, Top
+        .buffer = {50, 590, 50, 310}, // Buffers: Left, Right, Bottom, Top (actual screen coords, NOT relative)
+    };
+
+    // half way to the left of the screen, buffers the center instead of the right side
+    Camera left_cam = (Camera){
+        .position = {-160, 0},
+        .buffer = {50, 270, 50, 310},
+    };
+
+    // half way to the right of the screen, buffers the center instead of the left side
+    Camera right_cam = (Camera){
+        .position = {160, 0}, // half way to the left of the screen
+        .buffer = {370, 590, 50, 310},
     };
 
     // define weapon types
@@ -185,11 +197,11 @@ int main(int argc, char *argv[])
         int render_count = split_screen ? 2 : 1;
         for (int i = 0; i < render_count; i++)
         {
-            if (split_screen && render_count == 0)
+            if (split_screen && i == 0)
             {
                 render_begin_left();
             }
-            else if (split_screen && render_count == 1)
+            else if (split_screen && i == 1)
             {
                 render_begin_right();
             }
@@ -251,10 +263,11 @@ int main(int argc, char *argv[])
                     render_aabb(&prop.static_body, WHITE);
                 }
             }
-        }
-        printf("camera pos: %f, %f\n", main_cam.position[0], main_cam.position[1]);
-        // printf("p2 pos: %f, %f\n", player_two->relative_position[0], player_two->relative_position[1]);
 
+            // throw left side stuff into the rendering buffer, without performing the screen swap yet
+            if (split_screen && i == 0)
+                render_end(window, texture_slots, false);
+        }
         render_end(window, texture_slots, true);
 
         time_update_late();
