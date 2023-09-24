@@ -212,17 +212,17 @@ int main(int argc, char *argv[])
 
             // render animated entities, check if any are marked for deletion (not active OR body is not active)
             int num_entities = (int)entity_count();
-            for (int i = num_entities - 1; i >= 0; --i)
+            for (int j = num_entities - 1; j >= 0; --j)
             {
-                Entity *entity = entity_get(i);
+                Entity *entity = entity_get(j);
 
                 // destroy any entities that are inactive or have physics bodies that are inactive and aren't associated with players or pickups bool is_pickup = false;
 
                 bool is_pickup = false;
 
-                for (int j = 0; j < map.num_pickups; j++)
+                for (int k = 0; k < map.num_pickups; k++)
                 {
-                    if (entity == map.pickups[j].entity)
+                    if (entity == map.pickups[k].entity)
                         is_pickup = true;
                 }
                 if ((!entity->is_active || !entity->body->is_active) && entity != player_one->entity && entity != player_two->entity && !is_pickup)
@@ -235,15 +235,52 @@ int main(int argc, char *argv[])
                 {
                     continue;
                 }
-                animation_render(entity->animation, window, entity->body->aabb.position, 0, WHITE, texture_slots);
+
+                // TODO: right now, the camera will only move ANIMATIONS. Add logic so that all bodies are moved
+                // Consider this old code from camera.c
+                // // update all bodies' positions
+                // Body *body;
+                // Array_List *body_list = get_all_bodies();
+                // for (u32 i = 0; i < body_list->len; ++i)
+                // {
+                //     body = array_list_get(body_list, i, "in camera update\n");
+                //     body->aabb.position[0] += shift[0];
+                //     body->aabb.position[1] += shift[1];
+                // }
+
+                // // update all static bodies' positions
+                // Static_Body *static_body;
+                // Array_List *static_body_list = get_all_static_bodies();
+                // for (u32 i = 0; i < static_body_list->len; ++i)
+                // {
+                //     static_body = array_list_get(static_body_list, i, "in camera update\n");
+                //     static_body->aabb.position[0] += shift[0];
+                //     static_body->aabb.position[1] += shift[1];
+                // }
+
+                // // update positions of all props on the map
+                // for (int i = 0; i < map->num_props; i++)
+                // {
+                //     Prop prop = map->props[i];
+                //     prop.sprite->position[0] += shift[0];
+                //     prop.sprite->position[1] += shift[1];
+                // }
+
+                // players must always stay on the screen. Other sprites we can push off the screen when the camera moves
+                if (entity->body == player_one->entity->body || entity->body == player_two->entity->body)
+                    animation_render(entity->animation, window, entity->body->aabb.position, 0, WHITE, texture_slots);
+                else
+                    animation_render(entity->animation, window, (vec2){entity->body->aabb.position[0] - main_cam.position[0], entity->body->aabb.position[1] - main_cam.position[1]}, 0, WHITE, texture_slots);
+
+                // for debugging collisions
                 if (render_bodies)
                     render_aabb((f32 *)&entity->body->aabb, WHITE);
             }
 
             // render map sprites
-            for (int i = 0; i < map.num_props; i++)
+            for (int l = 0; l < map.num_props; l++)
             {
-                Prop prop = map.props[i];
+                Prop prop = map.props[l];
                 prop.sprite->sprite_sheet;
 
                 /*
@@ -253,7 +290,7 @@ int main(int argc, char *argv[])
                  * is rendered beneath the player no matter what
                  */
                 f32 player_y_min = player_one->entity->body->aabb.position[1] - player_one->entity->body->aabb.half_size[1];
-                bool is_below_player = player_y_min < (prop.sprite->position[1] - prop.sprite->half_size[1] + prop.layer_threshold) || player_y_min > (prop.sprite->position[1] + prop.sprite->half_size[1]) || i == 0;
+                bool is_below_player = player_y_min < (prop.sprite->position[1] - prop.sprite->half_size[1] + prop.layer_threshold) || player_y_min > (prop.sprite->position[1] + prop.sprite->half_size[1]) || l == 0;
                 i32 z_index = is_below_player ? prop.sprite->z_index : 1;
                 render_sprite_sheet_frame(prop.sprite->sprite_sheet, window, prop.sprite->row, prop.sprite->column, prop.sprite->position, z_index, prop.sprite->is_flipped, render_bodies ? (vec4){0.9, 0.9, 0.9, 0.9} : prop.sprite->color, texture_slots);
 
@@ -266,7 +303,10 @@ int main(int argc, char *argv[])
 
             // throw left side stuff into the rendering buffer, without performing the screen swap yet
             if (split_screen && i == 0)
+            {
+                printf("filling buffer\n");
                 render_end(window, texture_slots, false);
+            }
         }
         render_end(window, texture_slots, true);
 
