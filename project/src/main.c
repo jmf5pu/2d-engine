@@ -27,14 +27,53 @@
 #include "map_helpers.h"
 #include "weapon_types.h"
 
-const u8 frame_rate = 60;           // frame rate
 static u32 texture_slots[32] = {0}; // texture slots array for batch rendering
 static bool should_quit = false;    // quit flag
-static bool render_bodies = false;  // set to true for debugging static bodies
+static bool render_bodies = true;   // set to true for debugging static bodies
 static bool split_screen = true;    // is the screen actively split
+
+const u8 frame_rate = 60; // frame rate
+
 // init spawn points
 static vec2 spawn_point_one = {100, 200};
 static vec2 spawn_point_two = {550, 200};
+
+// moves all sprites in the particular vec2 direction. Used for camera movement
+void update_all_positions(Map *map, vec2 shift, bool player_one_moving)
+{
+    // update all bodies' positions
+    Body *body;
+    Array_List *body_list = get_all_bodies();
+    for (u32 i = 0; i < body_list->len; ++i)
+    {
+        body = array_list_get(body_list, i, "in camera update\n");
+        // the player that is moving should NOT be pushed out of the field of view of the camera
+        if ((body != player_one->entity->body && player_one_moving) || (body != player_two->entity->body && !player_one_moving))
+        {
+            printf("shifting body by: %f, %f \n", shift[0], shift[1]);
+            body->aabb.position[0] += shift[0];
+            body->aabb.position[1] += shift[1];
+        }
+    }
+
+    // update all static bodies' positions
+    Static_Body *static_body;
+    Array_List *static_body_list = get_all_static_bodies();
+    for (u32 i = 0; i < static_body_list->len; ++i)
+    {
+        static_body = array_list_get(static_body_list, i, "in camera update\n");
+        static_body->aabb.position[0] += shift[0];
+        static_body->aabb.position[1] += shift[1];
+    }
+
+    // update positions of all props on the map
+    for (int i = 0; i < map->num_props; i++)
+    {
+        Prop prop = map->props[i];
+        prop.sprite->position[0] += shift[0];
+        prop.sprite->position[1] += shift[1];
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -54,14 +93,14 @@ int main(int argc, char *argv[])
 
     // half way to the left of the screen, buffers the center instead of the right side
     Camera left_cam = (Camera){
-        .position = {-160, 0},
-        .buffer = {50, 270, 50, 310},
+        .position = {0, 0},
+        .buffer = {50, RENDER_WIDTH * 0.5 - 50, 50, RENDER_HEIGHT - 50},
     };
 
     // half way to the right of the screen, buffers the center instead of the left side
     Camera right_cam = (Camera){
-        .position = {160, 0}, // half way to the left of the screen
-        .buffer = {370, 590, 50, 310},
+        .position = {RENDER_WIDTH * 0.5, 0}, // essentially bump everything to the right by half the screen width right off the bat
+        .buffer = {RENDER_WIDTH * 0.5 + 50, RENDER_WIDTH - 50, 50, RENDER_HEIGHT - 50},
     };
 
     // define weapon types
@@ -186,29 +225,39 @@ int main(int argc, char *argv[])
         update_player_animations(player_two);
 
         // update relative position of players
-        player_one->relative_position[0] = player_one->entity->body->aabb.position[0] + main_cam.position[0];
-        player_one->relative_position[1] = player_one->entity->body->aabb.position[1] + main_cam.position[1];
+        player_one->relative_position[0] = player_one->entity->body->aabb.position[0] + left_cam.position[0];
+        player_one->relative_position[1] = player_one->entity->body->aabb.position[1] + left_cam.position[1];
+        player_two->relative_position[0] = player_two->entity->body->aabb.position[0] + right_cam.position[0];
+        player_two->relative_position[1] = player_two->entity->body->aabb.position[1] + right_cam.position[1];
 
-        physics_update();
         animation_update(global.time.delta);
-        camera_update(&main_cam, player_one->entity->body, &map);
+        camera_update(&left_cam, player_one->entity->body, &map);
+        camera_update(&right_cam, player_two->entity->body, &map);
 
         // need to run render loop twice if we are actively splitting the screen
         int render_count = split_screen ? 2 : 1;
         for (int i = 0; i < render_count; i++)
         {
+            printf("i: %d\n, ", i);
+
             if (split_screen && i == 0)
             {
-                render_begin_left();
+                render_begin_left(); // render left side
             }
             else if (split_screen && i == 1)
             {
-                render_begin_right();
+                render_begin_right(); // render_right side
             }
             else // hit when screen is not being split
             {
                 render_begin();
             }
+
+            // update all bodies positions respective to the camera
+            if (i == 0)
+                update_all_positions(&map, (vec2){-1 * left_cam.position[0], -1 * left_cam.position[1]}, true);
+            else // i == 1 TODO: will need to be updated when we merge cameras
+                update_all_positions(&map, (vec2){-1 * right_cam.position[0], -1 * right_cam.position[1]}, false);
 
             // render animated entities, check if any are marked for deletion (not active OR body is not active)
             int num_entities = (int)entity_count();
@@ -236,41 +285,9 @@ int main(int argc, char *argv[])
                     continue;
                 }
 
-                // TODO: right now, the camera will only move ANIMATIONS. Add logic so that all bodies are moved
-                // Consider this old code from camera.c
-                // // update all bodies' positions
-                // Body *body;
-                // Array_List *body_list = get_all_bodies();
-                // for (u32 i = 0; i < body_list->len; ++i)
-                // {
-                //     body = array_list_get(body_list, i, "in camera update\n");
-                //     body->aabb.position[0] += shift[0];
-                //     body->aabb.position[1] += shift[1];
-                // }
-
-                // // update all static bodies' positions
-                // Static_Body *static_body;
-                // Array_List *static_body_list = get_all_static_bodies();
-                // for (u32 i = 0; i < static_body_list->len; ++i)
-                // {
-                //     static_body = array_list_get(static_body_list, i, "in camera update\n");
-                //     static_body->aabb.position[0] += shift[0];
-                //     static_body->aabb.position[1] += shift[1];
-                // }
-
-                // // update positions of all props on the map
-                // for (int i = 0; i < map->num_props; i++)
-                // {
-                //     Prop prop = map->props[i];
-                //     prop.sprite->position[0] += shift[0];
-                //     prop.sprite->position[1] += shift[1];
-                // }
-
-                // players must always stay on the screen. Other sprites we can push off the screen when the camera moves
-                if (entity->body == player_one->entity->body || entity->body == player_two->entity->body)
-                    animation_render(entity->animation, window, entity->body->aabb.position, 0, WHITE, texture_slots);
-                else
-                    animation_render(entity->animation, window, (vec2){entity->body->aabb.position[0] - main_cam.position[0], entity->body->aabb.position[1] - main_cam.position[1]}, 0, WHITE, texture_slots);
+                // render the entity's animation
+                printf("rendering %d\n", i);
+                animation_render(entity->animation, window, entity->body->aabb.position, 0, WHITE, texture_slots);
 
                 // for debugging collisions
                 if (render_bodies)
@@ -304,9 +321,19 @@ int main(int argc, char *argv[])
             // throw left side stuff into the rendering buffer, without performing the screen swap yet
             if (split_screen && i == 0)
             {
-                printf("filling buffer\n");
                 render_end(window, texture_slots, false);
             }
+
+            // update the physics bodies using the camera-relative positions
+            // physics_update_side(i == 0);
+
+            printf("player_two position: %f, %f \n", player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1]);
+
+            // update the physics bodies move all positions back
+            if (i == 0)
+                update_all_positions(&map, left_cam.position, true);
+            else
+                update_all_positions(&map, right_cam.position, false);
         }
         render_end(window, texture_slots, true);
 

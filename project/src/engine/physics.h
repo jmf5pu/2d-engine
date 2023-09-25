@@ -50,6 +50,7 @@ Array_List *get_all_bodies(void);
 Array_List *get_all_static_bodies(void);
 void physics_init(void);
 void physics_update(void);
+void physics_update_side(bool left);
 Body *physics_body_create(vec2 position, vec2 size, vec2 velocity, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static);
 usize physics_body_count();
 Body *physics_body_get(usize index);

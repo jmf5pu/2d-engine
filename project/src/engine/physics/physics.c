@@ -189,6 +189,36 @@ void physics_update(void)
     }
 }
 
+// updates the physics bodies on either the left or right side of the screen
+void physics_update_side(bool left)
+{
+    Body *body;
+
+    for (u32 i = 0; i < state.body_list->len; ++i)
+    {
+        body = array_list_get(state.body_list, i, "physics_update");
+        f32 x_pos = body->aabb.position[0];
+        f32 y_pos = body->aabb.position[1];
+
+        // only update bodies in the specified pane (left or right)
+        if (y_pos > 0 && y_pos < RENDER_HEIGHT && ((left && x_pos > 0 && x_pos < RENDER_WIDTH * 0.5) || (!left && x_pos > RENDER_WIDTH * 0.5 && x_pos < RENDER_WIDTH)))
+        {
+            // update velocity based on acceleration
+            body->velocity[0] += body->acceleration[0];
+            body->velocity[1] += body->acceleration[1];
+
+            vec2 scaled_velocity;
+            vec2_scale(scaled_velocity, body->velocity, global.time.delta * tick_rate);
+
+            for (u32 j = 0; j < iterations; ++j)
+            {
+                sweep_response(body, scaled_velocity);
+                stationary_response(body);
+            }
+        }
+    }
+}
+
 Body *physics_body_create(vec2 position, vec2 size, vec2 velocity, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static)
 {
     Body *body = (Body *)malloc(sizeof(Body)); // Allocate memory for the Body struct

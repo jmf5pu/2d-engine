@@ -10,8 +10,8 @@
 #include "render_internal.h"
 
 static usize quad_id_counter = 0;
-static f32 render_width = 640;
-static f32 render_height = 360;
+static f32 render_width = WINDOW_WIDTH * 0.25; // TODO: different if not split_screen
+static f32 render_height = WINDOW_HEIGHT * 0.5;
 static f32 scale = 2; // TODO: change this based on screen size
 
 static u32 vao_quad;
@@ -111,13 +111,13 @@ void render_begin_left(void)
     glClearColor(0.88, 0.1, 0.1, 1);
     glClear(GL_COLOR_BUFFER_BIT);
     list_batch->len = 0; // clears batch vertices buffer from previous frame
-    glEnable(GL_SCISSOR_TEST);
-    glScissor(0, 0, WINDOW_WIDTH * 0.5, WINDOW_HEIGHT);
+    glViewport(0, 0, WINDOW_WIDTH * 0.5, WINDOW_HEIGHT);
 }
 
 void render_begin_right(void)
 {
-    glScissor(WINDOW_WIDTH * 0.5, 0, WINDOW_WIDTH * 0.5, WINDOW_HEIGHT);
+    list_batch->len = 0;
+    glViewport(WINDOW_WIDTH * 0.5, 0, WINDOW_WIDTH * 0.5, WINDOW_HEIGHT);
 }
 
 static void render_batch(Batch_Vertex *vertices, usize count, u32 texture_ids[32])
