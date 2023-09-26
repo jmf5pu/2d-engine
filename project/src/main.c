@@ -30,18 +30,14 @@
 static u32 texture_slots[32] = {0}; // texture slots array for batch rendering
 static bool should_quit = false;    // quit flag
 static bool render_bodies = true;   // set to true for debugging static bodies
-static bool split_screen = true;    // is the screen actively split
+static bool split_screen = true;
 
 const u8 frame_rate = 60; // frame rate
-
-// init spawn points
-static vec2 spawn_point_one = {100, 200};
-static vec2 spawn_point_two = {550, 200};
 
 // moves all sprites in the particular vec2 direction. Used for camera movement
 void update_all_positions(Map *map, vec2 shift, bool player_one_moving)
 {
-    // update all bodies' positions
+    // update all bodies' positions (includes pickups, players, etc)
     Body *body;
     Array_List *body_list = get_all_bodies();
     for (u32 i = 0; i < body_list->len; ++i)
@@ -50,7 +46,7 @@ void update_all_positions(Map *map, vec2 shift, bool player_one_moving)
         // the player that is moving should NOT be pushed out of the field of view of the camera
         if ((body != player_one->entity->body && player_one_moving) || (body != player_two->entity->body && !player_one_moving))
         {
-            printf("shifting body by: %f, %f \n", shift[0], shift[1]);
+            // printf("shifting body by: %f, %f \n", shift[0], shift[1]);
             body->aabb.position[0] += shift[0];
             body->aabb.position[1] += shift[1];
         }
@@ -73,13 +69,29 @@ void update_all_positions(Map *map, vec2 shift, bool player_one_moving)
         prop.sprite->position[0] += shift[0];
         prop.sprite->position[1] += shift[1];
     }
+
+    // shift spawn points
+    for (int i = 0; i < map->num_p1_spawns; i++)
+    {
+        map->player_one_spawn_points[i][0] += shift[0];
+        map->player_one_spawn_points[i][1] += shift[1];
+    }
+
+    for (int i = 0; i < map->num_p2_spawns; i++)
+    {
+        map->player_two_spawn_points[i][0] += shift[0];
+        map->player_two_spawn_points[i][1] += shift[1];
+    }
 }
 
 int main(int argc, char *argv[])
 {
+    int render_width = split_screen ? WINDOW_WIDTH * 0.25 : WINDOW_WIDTH * 0.5; // half width if split screen is active
+    int render_height = WINDOW_HEIGHT * 0.5;
+
     time_init(frame_rate);
     config_init();
-    SDL_Window *window = render_init();
+    SDL_Window *window = render_init(render_width, render_height);
     physics_init();
     entity_init();
     animation_init(); // creates animation storage
@@ -88,19 +100,20 @@ int main(int argc, char *argv[])
     // create camera structs
     Camera main_cam = (Camera){
         .position = {0, 0},
-        .buffer = {50, 590, 50, 310}, // Buffers: Left, Right, Bottom, Top (actual screen coords, NOT relative)
+        .buffer = {50, render_width - 50, 50, render_height - 50}, // Buffers: Left, Right, Bottom, Top (actual screen coords, NOT relative)
     };
 
     // half way to the left of the screen, buffers the center instead of the right side
     Camera left_cam = (Camera){
         .position = {0, 0},
-        .buffer = {50, RENDER_WIDTH * 0.5 - 50, 50, RENDER_HEIGHT - 50},
+        .buffer = {50, render_width - 50, 50, render_height - 50},
     };
 
     // half way to the right of the screen, buffers the center instead of the left side
     Camera right_cam = (Camera){
-        .position = {RENDER_WIDTH * 0.5, 0}, // essentially bump everything to the right by half the screen width right off the bat
-        .buffer = {RENDER_WIDTH * 0.5 + 50, RENDER_WIDTH - 50, 50, RENDER_HEIGHT - 50},
+        .position = {render_width, 0}, // essentially bump everything to the right by half the screen width right off the bat
+        .buffer = {50, render_width - 50, 50, render_height - 50},
+
     };
 
     // define weapon types
@@ -111,7 +124,7 @@ int main(int argc, char *argv[])
 
     // init player one
     player_one = malloc(sizeof(Player));
-    player_one->entity = entity_create(spawn_point_one, (vec2){36, 36}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    player_one->entity = entity_create(map.player_one_spawn_points[0], (vec2){36, 36}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
     player_one->crosshair = NULL;
     player_one->direction = RIGHT;
     player_one->weapon = &(Weapon){
@@ -133,8 +146,8 @@ int main(int argc, char *argv[])
         .integrity = 0,
 
     };
-    player_one->spawn_point[0] = spawn_point_one[0];
-    player_one->spawn_point[1] = spawn_point_one[1];
+    player_one->spawn_point[0] = map.player_one_spawn_points[0][0];
+    player_one->spawn_point[1] = map.player_one_spawn_points[0][1];
     player_one->relative_position[0] = player_one->entity->body->aabb.position[0];
     player_one->relative_position[1] = player_one->entity->body->aabb.position[1];
     player_one->status = PLAYER_SPAWNING;
@@ -147,7 +160,7 @@ int main(int argc, char *argv[])
 
     // init player two
     player_two = malloc(sizeof(Player));
-    player_two->entity = entity_create(spawn_point_two, (vec2){36, 36}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    player_two->entity = entity_create(map.player_two_spawn_points[0], (vec2){36, 36}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
     player_two->crosshair = NULL;
     player_two->direction = LEFT;
     player_two->weapon = &(Weapon){
@@ -169,8 +182,8 @@ int main(int argc, char *argv[])
         .integrity = 0,
 
     };
-    player_two->spawn_point[0] = spawn_point_two[0];
-    player_two->spawn_point[1] = spawn_point_two[1];
+    player_two->spawn_point[0] = map.player_two_spawn_points[0][0];
+    player_two->spawn_point[1] = map.player_two_spawn_points[0][1];
     player_two->relative_position[0] = player_two->entity->body->aabb.position[0];
     player_two->relative_position[1] = player_two->entity->body->aabb.position[1];
     player_two->status = PLAYER_SPAWNING;
@@ -212,33 +225,49 @@ int main(int argc, char *argv[])
         // grab current inputs
         input_update();
 
-        // handle player inputs
-        handle_player_input(player_one);
-        handle_player_input(player_two);
+        // update physics bodies
+        printf("player_one pos: %f, %f\n", player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[0]);
+        printf("player_one relative position: %f, %f\n", player_one->relative_position[0], player_one->relative_position[1]);
+        printf("pickup 01 pos: %f, %f\n", map.pickups[0].entity->body->aabb.position[0], map.pickups[0].entity->body->aabb.position[1]);
 
-        // update player statuses
-        update_player_status(player_one);
-        update_player_status(player_two);
-
-        // update player animations
-        update_player_animations(player_one);
-        update_player_animations(player_two);
-
-        // update relative position of players
+        // update relative position of players (transform of the position on the screen, using camera as a vector)
         player_one->relative_position[0] = player_one->entity->body->aabb.position[0] + left_cam.position[0];
         player_one->relative_position[1] = player_one->entity->body->aabb.position[1] + left_cam.position[1];
         player_two->relative_position[0] = player_two->entity->body->aabb.position[0] + right_cam.position[0];
         player_two->relative_position[1] = player_two->entity->body->aabb.position[1] + right_cam.position[1];
 
+        // need to pass the RELATIVE position of the players into the physics engine to properly detect collisions
+        vec2 p1_pos_holder = {player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1]};
+        player_one->entity->body->aabb.position[0] = player_one->relative_position[0];
+        player_one->entity->body->aabb.position[1] = player_one->relative_position[1];
+
+        vec2 p2_pos_holder = {player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1]};
+        player_two->entity->body->aabb.position[0] = player_two->relative_position[0];
+        player_two->entity->body->aabb.position[1] = player_two->relative_position[1];
+
+        physics_update();
+
+        // update the actual positions (saved value plus the difference generated by the physics engine)
+        player_one->entity->body->aabb.position[0] = p1_pos_holder[0] + (player_one->entity->body->aabb.position[0] - player_one->relative_position[0]);
+        player_one->entity->body->aabb.position[1] = p1_pos_holder[1] + (player_one->entity->body->aabb.position[1] - player_one->relative_position[1]);
+
+        player_two->entity->body->aabb.position[0] = p2_pos_holder[0] + (player_two->entity->body->aabb.position[0] - player_two->relative_position[0]);
+        player_two->entity->body->aabb.position[1] = p2_pos_holder[1] + (player_two->entity->body->aabb.position[1] - player_two->relative_position[1]);
+
         animation_update(global.time.delta);
-        camera_update(&left_cam, player_one->entity->body, &map);
-        camera_update(&right_cam, player_two->entity->body, &map);
+        if (split_screen)
+        {
+            camera_update(&left_cam, player_one->entity->body, &map);
+            camera_update(&right_cam, player_two->entity->body, &map);
+        }
+        else
+            camera_update(&main_cam, player_one->entity->body, &map);
 
         // need to run render loop twice if we are actively splitting the screen
         int render_count = split_screen ? 2 : 1;
         for (int i = 0; i < render_count; i++)
         {
-            printf("i: %d\n, ", i);
+            printf("i: %d\n", i);
 
             if (split_screen && i == 0)
             {
@@ -254,10 +283,43 @@ int main(int argc, char *argv[])
             }
 
             // update all bodies positions respective to the camera
-            if (i == 0)
+            if (split_screen && i == 0)
                 update_all_positions(&map, (vec2){-1 * left_cam.position[0], -1 * left_cam.position[1]}, true);
-            else // i == 1 TODO: will need to be updated when we merge cameras
+            else if (split_screen && i == 1) // i == 1 TODO: will need to be updated when we merge cameras
                 update_all_positions(&map, (vec2){-1 * right_cam.position[0], -1 * right_cam.position[1]}, false);
+            else // not split
+                update_all_positions(&map, (vec2){-1 * main_cam.position[0], -1 * main_cam.position[1]}, true);
+
+            // Now that positions are updated, handle the corresponding inputs and update statuses/directions
+            if (split_screen && i == 0)
+            {
+                handle_player_input(player_one);
+                update_player_status(player_one);
+                update_player_animations(player_one);
+
+                printf("IN RENDERING LOOP player_one pos: %f, %f\n", player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[0]);
+                printf("IN RENDERING LOOP pickup 01 pos: %f, %f\n", map.pickups[0].entity->body->aabb.position[0], map.pickups[0].entity->body->aabb.position[1]);
+            }
+            else if (split_screen && i == 1)
+            {
+                handle_player_input(player_two);
+                update_player_status(player_two);
+                update_player_animations(player_two);
+            }
+            else
+            {
+                // handle player inputs
+                handle_player_input(player_one);
+                handle_player_input(player_two);
+
+                // update player statuses
+                update_player_status(player_one);
+                update_player_status(player_two);
+
+                // update player animations
+                update_player_animations(player_one);
+                update_player_animations(player_two);
+            }
 
             // render animated entities, check if any are marked for deletion (not active OR body is not active)
             int num_entities = (int)entity_count();
@@ -286,7 +348,6 @@ int main(int argc, char *argv[])
                 }
 
                 // render the entity's animation
-                printf("rendering %d\n", i);
                 animation_render(entity->animation, window, entity->body->aabb.position, 0, WHITE, texture_slots);
 
                 // for debugging collisions
@@ -324,16 +385,13 @@ int main(int argc, char *argv[])
                 render_end(window, texture_slots, false);
             }
 
-            // update the physics bodies using the camera-relative positions
-            // physics_update_side(i == 0);
-
-            printf("player_two position: %f, %f \n", player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1]);
-
             // update the physics bodies move all positions back
-            if (i == 0)
+            if (split_screen && i == 0)
                 update_all_positions(&map, left_cam.position, true);
-            else
+            else if (split_screen && i == 1)
                 update_all_positions(&map, right_cam.position, false);
+            else // not split
+                update_all_positions(&map, (vec2){main_cam.position[0], main_cam.position[1]}, true);
         }
         render_end(window, texture_slots, true);
 

@@ -9,8 +9,11 @@ Map map;
 // set up map & props
 void init_map(Map *map)
 {
+    // we use these to track array length later on
     map->num_pickups = 2;
     map->num_props = 3;
+    map->num_p1_spawns = 1;
+    map->num_p2_spawns = 1;
 
     Sprite_Sheet *sprite_sheet_map_1_main_bg = malloc(sizeof(Sprite_Sheet));
     render_sprite_sheet_init(sprite_sheet_map_1_main_bg, "assets/map_1.png", 640, 360);
@@ -178,9 +181,22 @@ void init_map(Map *map)
     pickup_array[0] = m44_pickup;
     pickup_array[1] = brewster_pickup;
 
+    // instantiate player spawn point arrays
+    vec2 *p1_spawn_point_array = malloc(sizeof(vec2) * map->num_p1_spawns);
+    vec2 p1_spawn_1 = {100, 200};
+    p1_spawn_point_array[0][0] = p1_spawn_1[0];
+    p1_spawn_point_array[0][1] = p1_spawn_1[1];
+
+    vec2 *p2_spawn_point_array = malloc(sizeof(vec2) * map->num_p2_spawns);
+    vec2 p2_spawn_1 = {550, 200};
+    p2_spawn_point_array[0][0] = p2_spawn_1[0];
+    p2_spawn_point_array[0][1] = p2_spawn_1[1];
+
     // populate map struct
     map->pickups = pickup_array;
     map->props = prop_array;
+    map->player_one_spawn_points = p1_spawn_point_array;
+    map->player_two_spawn_points = p2_spawn_point_array;
 }
 
 // updates the status of a pickup, should be called once per frame for each pickup

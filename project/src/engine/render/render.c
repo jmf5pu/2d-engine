@@ -10,8 +10,6 @@
 #include "render_internal.h"
 
 static usize quad_id_counter = 0;
-static f32 render_width = WINDOW_WIDTH * 0.25; // TODO: different if not split_screen
-static f32 render_height = WINDOW_HEIGHT * 0.5;
 static f32 scale = 2; // TODO: change this based on screen size
 
 static u32 vao_quad;
@@ -27,7 +25,7 @@ static u32 ebo_batch;
 static u32 shader_batch;
 static Array_List *list_batch;
 
-SDL_Window *render_init(void)
+SDL_Window *render_init(int render_width, int render_height)
 {
     SDL_Window *window = render_init_window(WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -102,8 +100,8 @@ void render_begin(void)
 {
     glClearColor(0.88, 0.1, 0.1, 1);
     glClear(GL_COLOR_BUFFER_BIT);
-
     list_batch->len = 0; // clears batch vertices buffer
+    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 }
 
 void render_begin_left(void)
