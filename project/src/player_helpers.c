@@ -1119,7 +1119,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
         f32 cy = 0;
         f32 px = player->entity->body->aabb.position[0];
         f32 py = player->entity->body->aabb.position[1];
-        vec2 bullet_position = {player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]};
+        vec2 bullet_position = {player->relative_position[0], player->relative_position[1]};
         vec2 bullet_velocity = {0, 0};
 
         // shoot at crosshair if present
@@ -1183,8 +1183,8 @@ void handle_player_shooting(Player *player, Key_State shoot)
         f32 bullet_y = cy >= py ? 32 * sin(angle) : 32 * sin(angle) * -1;
 
         // calculate starting position using angle
-        bullet_position[0] = player->entity->body->aabb.position[0] + bullet_x;
-        bullet_position[1] = player->entity->body->aabb.position[1] + bullet_y;
+        bullet_position[0] = player->relative_position[0] + bullet_x;
+        bullet_position[1] = player->relative_position[1] + bullet_y;
 
         // calculate velocity using angle
         f32 vx = cx >= px ? player->weapon->bullet_velocity * cos(angle) : player->weapon->bullet_velocity * cos(angle) * -1;
@@ -1266,6 +1266,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
         {
             bullet_anim_name = "bullet_15";
         }
+        printf("\nRELATIVE POSITION in shooting method: %f, %f\n\n", player->relative_position[0], player->relative_position[1]);
         Entity *bullet = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
         bullet->animation = get(bullet_anim_map, bullet_anim_name);
 
