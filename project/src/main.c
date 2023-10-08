@@ -37,14 +37,24 @@ const u8 frame_rate = 60; // frame rate
 // moves all sprites in the particular vec2 direction. Used for camera movement
 void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
 {
+    printf("updating positions\n");
     // update all bodies' positions (includes pickups, players, etc)
     Body *body;
     Array_List *body_list = get_all_bodies();
     for (u32 i = 0; i < body_list->len; ++i)
     {
         body = array_list_get(body_list, i, "in camera update\n");
-        // the player that is moving should NOT be pushed out of the field of view of the camera
-        if ((body == player_one->entity->body && !left_player_is_active) || (body == player_two->entity->body && left_player_is_active) || (body != player_one->entity->body && body != player_two->entity->body))
+        /* shift all bodies that:
+         * are either not associated with a player
+         * OR are not the active player (p1 is active on left, p2 is active on right)
+         *
+         * Additionally, we do not render p1's crosshair on the right or vice versa
+         */
+        bool is_active_player_body = (body == player_one->entity->body && left_player_is_active) || (body == player_two->entity->body && !left_player_is_active);
+        bool not_player_or_crosshair = body != player_one->entity->body && body != player_two->entity->body && body != player_one->crosshair->body && body != player_two->crosshair->body;
+        if (
+            !is_active_player_body ||
+            not_player_or_crosshair)
         {
             body->aabb.position[0] += shift[0];
             body->aabb.position[1] += shift[1];
@@ -69,18 +79,8 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
         prop.sprite->position[1] += shift[1];
     }
 
-    // shift spawn points
-    for (int i = 0; i < map->num_p1_spawns; i++)
-    {
-        map->player_one_spawn_points[i][0] += shift[0];
-        map->player_one_spawn_points[i][1] += shift[1];
-    }
-
-    for (int i = 0; i < map->num_p2_spawns; i++)
-    {
-        map->player_two_spawn_points[i][0] += shift[0];
-        map->player_two_spawn_points[i][1] += shift[1];
-    }
+    // spawn points are relative, no need to shift them
+    printf("done updating positions\n");
 }
 
 int main(int argc, char *argv[])
@@ -124,7 +124,8 @@ int main(int argc, char *argv[])
     // init player one
     player_one = malloc(sizeof(Player));
     player_one->entity = entity_create(map.player_one_spawn_points[0], (vec2){36, 36}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
-    player_one->crosshair = NULL;
+    player_one->crosshair = entity_create((vec2){player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1]}, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static);
+    player_one->crosshair->is_active = false;
     player_one->direction = RIGHT;
     player_one->weapon = &(Weapon){
         .name = m16.name,
@@ -160,7 +161,8 @@ int main(int argc, char *argv[])
     // init player two
     player_two = malloc(sizeof(Player));
     player_two->entity = entity_create((vec2){map.player_two_spawn_points[0][1], map.player_two_spawn_points[0][1]}, (vec2){36, 36}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
-    player_two->crosshair = NULL;
+    player_two->crosshair = entity_create((vec2){player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1]}, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static);
+    player_two->crosshair->is_active = false;
     player_two->direction = LEFT;
     player_two->weapon = &(Weapon){
         .name = m16.name,
@@ -250,12 +252,12 @@ int main(int argc, char *argv[])
         player_two->entity->body->aabb.position[1] = p2_pos_holder[1] + (player_two->entity->body->aabb.position[1] - player_two->relative_position[1]);
 
         animation_update(global.time.delta);
-        printf("left_cam pos: %f, %f\n", left_cam.position[0], left_cam.position[1]);
-        printf("right_cam pos: %f, %f\n", right_cam.position[0], right_cam.position[1]);
-        printf("player_one pos: %f, %f\n", player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1]);
-        printf("player_one relative position: %f, %f\n", player_one->relative_position[0], player_one->relative_position[1]);
-        printf("player_two pos: %f, %f\n", player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1]);
-        printf("player_two relative position: %f, %f\n", player_two->relative_position[0], player_two->relative_position[1]);
+        // printf("left_cam pos: %f, %f\n", left_cam.position[0], left_cam.position[1]);
+        // printf("right_cam pos: %f, %f\n", right_cam.position[0], right_cam.position[1]);
+        // printf("player_one pos: %f, %f\n", player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1]);
+        // printf("player_one relative position: %f, %f\n", player_one->relative_position[0], player_one->relative_position[1]);
+        // printf("player_two pos: %f, %f\n", player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1]);
+        // printf("player_two relative position: %f, %f\n", player_two->relative_position[0], player_two->relative_position[1]);
 
         if (split_screen)
         {
@@ -269,9 +271,6 @@ int main(int argc, char *argv[])
         int render_count = split_screen ? 2 : 1;
         for (int i = 0; i < render_count; i++)
         {
-            vec2 p1_pos_holder_2 = {player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1]};
-            vec2 p2_pos_holder_2 = {player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1]};
-
             if (split_screen && i == 0)
             {
                 render_begin_left(); // render left side
@@ -285,25 +284,9 @@ int main(int argc, char *argv[])
                 render_begin();
             }
 
-            // update all bodies positions respective to the camera
-            printf("\ni = %d\n", i);
-
-            if (split_screen && i == 0)
-            {
-                player_two->entity->body->aabb.position[0] = player_two->relative_position[0];
-                player_two->entity->body->aabb.position[1] = player_two->relative_position[1];
-                update_all_positions(&map, (vec2){-1 * left_cam.position[0], -1 * left_cam.position[1]}, true);
-            }
-            else if (split_screen && i == 1)
-            { // i == 1 TODO: will need to be updated when we merge cameras
-                player_one->entity->body->aabb.position[0] = player_one->relative_position[0];
-                player_one->entity->body->aabb.position[1] = player_one->relative_position[1];
-                update_all_positions(&map, (vec2){-1 * right_cam.position[0], -1 * right_cam.position[1]}, false);
-            }
-            else // not split
-                update_all_positions(&map, (vec2){-1 * main_cam.position[0], -1 * main_cam.position[1]}, true);
-
-            // Now that positions are updated, handle the corresponding inputs and update statuses/directions
+            // handle the corresponding inputs and update statuses/directions
+            // must handle player input BEFORE rendering because entities can
+            // be created in `handle_player_shooting`
             if (split_screen && i == 0)
             {
                 handle_player_input(player_one);
@@ -331,28 +314,46 @@ int main(int argc, char *argv[])
                 update_player_animations(player_two);
             }
 
+            vec2 p1_pos_holder_2 = {player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1]};
+            vec2 p2_pos_holder_2 = {player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1]};
+
+            if (split_screen && i == 0)
+            {
+                player_two->entity->body->aabb.position[0] = player_two->relative_position[0];
+                player_two->entity->body->aabb.position[1] = player_two->relative_position[1];
+                update_all_positions(&map, (vec2){-1 * left_cam.position[0], -1 * left_cam.position[1]}, true);
+            }
+            else if (split_screen && i == 1)
+            { // i == 1 TODO: will need to be updated when we merge cameras
+                player_one->entity->body->aabb.position[0] = player_one->relative_position[0];
+                player_one->entity->body->aabb.position[1] = player_one->relative_position[1];
+                update_all_positions(&map, (vec2){-1 * right_cam.position[0], -1 * right_cam.position[1]}, false);
+            }
+            else // not split
+                update_all_positions(&map, (vec2){-1 * main_cam.position[0], -1 * main_cam.position[1]}, true);
+
             // render animated entities, check if any are marked for deletion (not active OR body is not active)
             int num_entities = (int)entity_count();
             for (int j = num_entities - 1; j >= 0; --j)
             {
                 Entity *entity = entity_get(j);
 
-                // destroy any entities that are inactive or have physics bodies that are inactive and aren't associated with players or pickups bool is_pickup = false;
-
+                // destroy any entities that are inactive or have physics bodies that are inactive and aren't associated with players, crosshairs, or pickups
+                bool is_left_crosshair = entity == player_one->crosshair;
+                bool is_right_crosshair = entity == player_two->crosshair;
                 bool is_pickup = false;
-
                 for (int k = 0; k < map.num_pickups; k++)
                 {
                     if (entity == map.pickups[k].entity)
                         is_pickup = true;
                 }
-                if ((!entity->is_active || !entity->body->is_active) && entity != player_one->entity && entity != player_two->entity && !is_pickup)
+                if ((!entity->is_active || !entity->body->is_active) && entity != player_one->entity && entity != player_two->entity && !is_pickup && !is_left_crosshair && !is_right_crosshair)
                 {
                     entity_destroy(entity);
                 }
 
                 // skip entities with no associated animations, check if players and pickups are inactive
-                if (!entity->animation || !entity->is_active || !entity->body->is_active)
+                if (!entity->animation || !entity->is_active || !entity->body->is_active || i == 0 && is_right_crosshair || i == 1 && is_left_crosshair)
                 {
                     continue;
                 }

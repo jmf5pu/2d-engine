@@ -1117,13 +1117,13 @@ void handle_player_shooting(Player *player, Key_State shoot)
     {
         f32 cx = 0;
         f32 cy = 0;
-        f32 px = player->entity->body->aabb.position[0];
-        f32 py = player->entity->body->aabb.position[1];
+        f32 px = player->relative_position[0];
+        f32 py = player->relative_position[1];
         vec2 bullet_position = {player->relative_position[0], player->relative_position[1]};
         vec2 bullet_velocity = {0, 0};
 
         // shoot at crosshair if present
-        if (player->crosshair)
+        if (player->crosshair->is_active)
         {
             // populate crosshair position
             cx = player->crosshair->body->aabb.position[0];
@@ -1266,7 +1266,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
         {
             bullet_anim_name = "bullet_15";
         }
-        printf("\nRELATIVE POSITION in shooting method: %f, %f\n\n", player->relative_position[0], player->relative_position[1]);
+
         Entity *bullet = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
         bullet->animation = get(bullet_anim_map, bullet_anim_name);
 
@@ -1324,9 +1324,11 @@ void handle_player_input(Player *player)
                                 (player->entity->body->aabb.position[1])};
 
         // if player doesn't already have a crosshair entity associated, create one
-        if (!player->crosshair)
+        if (!player->crosshair->is_active)
         {
-            player->crosshair = entity_create(player_position, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static);
+            player->crosshair->body->aabb.position[0] = player_position[0];
+            player->crosshair->body->aabb.position[1] = player_position[1];
+            player->crosshair->is_active = true;
             player->crosshair->animation = anim_crosshair_red;
         }
 
@@ -1347,10 +1349,9 @@ void handle_player_input(Player *player)
         return;
     }
 
-    if (player->crosshair)
+    if (player->crosshair->is_active)
     {
-        entity_destroy(player->crosshair);
-        player->crosshair = NULL;
+        player->crosshair->is_active = false;
     }
 
     // 4 directional movement only, no diagonals
