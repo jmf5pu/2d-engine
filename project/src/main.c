@@ -37,7 +37,6 @@ const u8 frame_rate = 60; // frame rate
 // moves all sprites in the particular vec2 direction. Used for camera movement
 void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
 {
-    printf("updating positions\n");
     // update all bodies' positions (includes pickups, players, etc)
     Body *body;
     Array_List *body_list = get_all_bodies();
@@ -51,10 +50,8 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
          * Additionally, we do not render p1's crosshair on the right or vice versa
          */
         bool is_active_player_body = (body == player_one->entity->body && left_player_is_active) || (body == player_two->entity->body && !left_player_is_active);
-        bool not_player_or_crosshair = body != player_one->entity->body && body != player_two->entity->body && body != player_one->crosshair->body && body != player_two->crosshair->body;
-        if (
-            !is_active_player_body ||
-            not_player_or_crosshair)
+        bool is_crosshair = body == player_one->crosshair->body && body == player_two->crosshair->body;
+        if (!is_active_player_body && !is_crosshair)
         {
             body->aabb.position[0] += shift[0];
             body->aabb.position[1] += shift[1];
@@ -80,7 +77,6 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
     }
 
     // spawn points are relative, no need to shift them
-    printf("done updating positions\n");
 }
 
 int main(int argc, char *argv[])
@@ -356,6 +352,11 @@ int main(int argc, char *argv[])
                 if (!entity->animation || !entity->is_active || !entity->body->is_active || i == 0 && is_right_crosshair || i == 1 && is_left_crosshair)
                 {
                     continue;
+                }
+
+                if (entity->body == player_two->crosshair->body)
+                {
+                    printf("p2 crosshair position: %f, %f\n", entity->body->aabb.position[0], entity->body->aabb.position[1]);
                 }
 
                 // render the entity's animation

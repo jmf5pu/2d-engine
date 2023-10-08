@@ -1326,6 +1326,8 @@ void handle_player_input(Player *player)
         // if player doesn't already have a crosshair entity associated, create one
         if (!player->crosshair->is_active)
         {
+            printf("activating crosshair\n");
+            printf("setting crosshair position to: %f, %f\n", player->crosshair->body->aabb.position[0], player->crosshair->body->aabb.position[1]);
             player->crosshair->body->aabb.position[0] = player_position[0];
             player->crosshair->body->aabb.position[1] = player_position[1];
             player->crosshair->is_active = true;
