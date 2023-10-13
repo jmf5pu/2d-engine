@@ -50,7 +50,7 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
          * Additionally, we do not render p1's crosshair on the right or vice versa
          */
         bool is_active_player_body = (body == player_one->entity->body && left_player_is_active) || (body == player_two->entity->body && !left_player_is_active);
-        bool is_crosshair = body == player_one->crosshair->body && body == player_two->crosshair->body;
+        bool is_crosshair = body == player_one->crosshair->body || body == player_two->crosshair->body;
         if (!is_active_player_body && !is_crosshair)
         {
             body->aabb.position[0] += shift[0];
@@ -108,7 +108,6 @@ int main(int argc, char *argv[])
     Camera right_cam = (Camera){
         .position = {render_width, 0}, // essentially bump everything to the right by half the screen width right off the bat
         .buffer = {50, render_width - 50, 50, render_height - 50},
-
     };
 
     // define weapon types
@@ -352,11 +351,6 @@ int main(int argc, char *argv[])
                 if (!entity->animation || !entity->is_active || !entity->body->is_active || i == 0 && is_right_crosshair || i == 1 && is_left_crosshair)
                 {
                     continue;
-                }
-
-                if (entity->body == player_two->crosshair->body)
-                {
-                    printf("p2 crosshair position: %f, %f\n", entity->body->aabb.position[0], entity->body->aabb.position[1]);
                 }
 
                 // render the entity's animation
