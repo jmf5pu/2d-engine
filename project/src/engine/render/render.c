@@ -25,14 +25,14 @@ static u32 ebo_batch;
 static u32 shader_batch;
 static Array_List *list_batch;
 
-SDL_Window *render_init(int render_width, int render_height)
+SDL_Window *render_init()
 {
     SDL_Window *window = render_init_window(WINDOW_WIDTH, WINDOW_HEIGHT);
 
     render_init_quad(&vao_quad, &vbo_quad, &ebo_quad);
     render_init_batch_quads(&vao_batch, &vbo_batch, &ebo_batch);
     render_init_line(&vao_line, &vbo_line);
-    render_init_shaders(&shader_default, &shader_batch, render_width, render_height);
+    render_init_shaders(&shader_default, &shader_batch, RENDER_WIDTH, RENDER_HEIGHT);
     render_init_color_texture(&texture_color);
 
     // create transparency / semi transparent effect

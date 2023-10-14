@@ -30,9 +30,9 @@
 static u32 texture_slots[32] = {0}; // texture slots array for batch rendering
 static bool should_quit = false;    // quit flag
 static bool render_bodies = false;  // set to true for debugging static bodies
-static bool split_screen = true;
 
-const u8 frame_rate = 60; // frame rate
+const vec4 camera_buffer = {50, RENDER_WIDTH - 50, 50, RENDER_HEIGHT - 50}; // Buffers: Left, Right, Bottom, Top (actual screen coords, NOT relative)
+const u8 frame_rate = 60;                                                   // frame rate
 
 // moves all sprites in the particular vec2 direction. Used for camera movement
 void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
@@ -43,12 +43,8 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
     for (u32 i = 0; i < body_list->len; ++i)
     {
         body = array_list_get(body_list, i, "in camera update\n");
-        /* shift all bodies that:
-         * are either not associated with a player
-         * OR are not the active player (p1 is active on left, p2 is active on right)
-         *
-         * Additionally, we do not render p1's crosshair on the right or vice versa
-         */
+
+        // shift all bodies EXCEPT the active player and crosshairs
         bool is_active_player_body = (body == player_one->entity->body && left_player_is_active) || (body == player_two->entity->body && !left_player_is_active);
         bool is_crosshair = body == player_one->crosshair->body || body == player_two->crosshair->body;
         if (!is_active_player_body && !is_crosshair)
@@ -81,12 +77,9 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
 
 int main(int argc, char *argv[])
 {
-    int render_width = split_screen ? WINDOW_WIDTH * 0.25 : WINDOW_WIDTH * 0.5; // half width if split screen is active
-    int render_height = WINDOW_HEIGHT * 0.5;
-
     time_init(frame_rate);
     config_init();
-    SDL_Window *window = render_init(render_width, render_height);
+    SDL_Window *window = render_init();
     physics_init();
     entity_init();
     animation_init(); // creates animation storage
@@ -95,19 +88,19 @@ int main(int argc, char *argv[])
     // create camera structs
     Camera main_cam = (Camera){
         .position = {0, 0},
-        .buffer = {50, render_width - 50, 50, render_height - 50}, // Buffers: Left, Right, Bottom, Top (actual screen coords, NOT relative)
+        .buffer = {camera_buffer[0], camera_buffer[1], camera_buffer[2], camera_buffer[3]},
     };
 
     // half way to the left of the screen, buffers the center instead of the right side
     Camera left_cam = (Camera){
         .position = {0, 0},
-        .buffer = {50, render_width - 50, 50, render_height - 50},
+        .buffer = {camera_buffer[0], camera_buffer[1], camera_buffer[2], camera_buffer[3]},
     };
 
     // half way to the right of the screen, buffers the center instead of the left side
     Camera right_cam = (Camera){
-        .position = {render_width, 0}, // essentially bump everything to the right by half the screen width right off the bat
-        .buffer = {50, render_width - 50, 50, render_height - 50},
+        .position = {RENDER_WIDTH, 0}, // essentially bump everything to the right by half the screen width right off the bat
+        .buffer = {camera_buffer[0], camera_buffer[1], camera_buffer[2], camera_buffer[3]},
     };
 
     // define weapon types
@@ -247,14 +240,8 @@ int main(int argc, char *argv[])
         player_two->entity->body->aabb.position[1] = p2_pos_holder[1] + (player_two->entity->body->aabb.position[1] - player_two->relative_position[1]);
 
         animation_update(global.time.delta);
-        // printf("left_cam pos: %f, %f\n", left_cam.position[0], left_cam.position[1]);
-        // printf("right_cam pos: %f, %f\n", right_cam.position[0], right_cam.position[1]);
-        // printf("player_one pos: %f, %f\n", player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1]);
-        // printf("player_one relative position: %f, %f\n", player_one->relative_position[0], player_one->relative_position[1]);
-        // printf("player_two pos: %f, %f\n", player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1]);
-        // printf("player_two relative position: %f, %f\n", player_two->relative_position[0], player_two->relative_position[1]);
 
-        if (split_screen)
+        if (SPLIT_SCREEN)
         {
             camera_update(&left_cam, player_one->entity->body, &map);
             camera_update(&right_cam, player_two->entity->body, &map);
@@ -263,14 +250,14 @@ int main(int argc, char *argv[])
             camera_update(&main_cam, player_one->entity->body, &map);
 
         // need to run render loop twice if we are actively splitting the screen
-        int render_count = split_screen ? 2 : 1;
+        int render_count = SPLIT_SCREEN ? 2 : 1;
         for (int i = 0; i < render_count; i++)
         {
-            if (split_screen && i == 0)
+            if (SPLIT_SCREEN && i == 0)
             {
                 render_begin_left(); // render left side
             }
-            else if (split_screen && i == 1)
+            else if (SPLIT_SCREEN && i == 1)
             {
                 render_begin_right(); // render_right side
             }
@@ -282,13 +269,13 @@ int main(int argc, char *argv[])
             // handle the corresponding inputs and update statuses/directions
             // must handle player input BEFORE rendering because entities can
             // be created in `handle_player_shooting`
-            if (split_screen && i == 0)
+            if (SPLIT_SCREEN && i == 0)
             {
                 handle_player_input(player_one);
                 update_player_status(player_one);
                 update_player_animations(player_one);
             }
-            else if (split_screen && i == 1)
+            else if (SPLIT_SCREEN && i == 1)
             {
                 handle_player_input(player_two);
                 update_player_status(player_two);
@@ -312,13 +299,13 @@ int main(int argc, char *argv[])
             vec2 p1_pos_holder_2 = {player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1]};
             vec2 p2_pos_holder_2 = {player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1]};
 
-            if (split_screen && i == 0)
+            if (SPLIT_SCREEN && i == 0)
             {
                 player_two->entity->body->aabb.position[0] = player_two->relative_position[0];
                 player_two->entity->body->aabb.position[1] = player_two->relative_position[1];
                 update_all_positions(&map, (vec2){-1 * left_cam.position[0], -1 * left_cam.position[1]}, true);
             }
-            else if (split_screen && i == 1)
+            else if (SPLIT_SCREEN && i == 1)
             { // i == 1 TODO: will need to be updated when we merge cameras
                 player_one->entity->body->aabb.position[0] = player_one->relative_position[0];
                 player_one->entity->body->aabb.position[1] = player_one->relative_position[1];
@@ -386,19 +373,19 @@ int main(int argc, char *argv[])
             }
 
             // throw left side stuff into the rendering buffer, without performing the screen swap yet
-            if (split_screen && i == 0)
+            if (SPLIT_SCREEN && i == 0)
             {
                 render_end(window, texture_slots, false);
             }
 
             // update the physics bodies move all positions back
-            if (split_screen && i == 0)
+            if (SPLIT_SCREEN && i == 0)
             {
                 update_all_positions(&map, left_cam.position, true);
                 player_two->entity->body->aabb.position[0] = p2_pos_holder_2[0];
                 player_two->entity->body->aabb.position[1] = p2_pos_holder_2[1];
             }
-            else if (split_screen && i == 1)
+            else if (SPLIT_SCREEN && i == 1)
             {
                 update_all_positions(&map, right_cam.position, false);
                 player_one->entity->body->aabb.position[0] = p1_pos_holder_2[0];
