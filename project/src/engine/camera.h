@@ -1,8 +1,12 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#define WINDOW_BUFFER 100 // how close the player can get to the window edge
+
 #include <linmath.h>
 #include "../structs.h"
+
+extern const vec4 camera_buffer; // Buffers: Left, Right, Bottom, Top (actual screen coords, NOT relative)
 
 typedef struct camera
 {

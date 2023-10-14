@@ -6,6 +6,8 @@
 #include "../render.h"
 #include "../../structs.h"
 
+const vec4 camera_buffer = {WINDOW_BUFFER, RENDER_WIDTH - WINDOW_BUFFER, WINDOW_BUFFER, RENDER_HEIGHT - WINDOW_BUFFER};
+
 void shift_camera(Camera *camera, vec2 shift, Map *map)
 {
     // updates camera based on the passed in vector which represents the SHIFT, not destination position

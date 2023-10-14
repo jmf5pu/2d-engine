@@ -31,8 +31,7 @@ static u32 texture_slots[32] = {0}; // texture slots array for batch rendering
 static bool should_quit = false;    // quit flag
 static bool render_bodies = false;  // set to true for debugging static bodies
 
-const vec4 camera_buffer = {50, RENDER_WIDTH - 50, 50, RENDER_HEIGHT - 50}; // Buffers: Left, Right, Bottom, Top (actual screen coords, NOT relative)
-const u8 frame_rate = 60;                                                   // frame rate
+const u8 frame_rate = 60; // frame rate
 
 // moves all sprites in the particular vec2 direction. Used for camera movement
 void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
@@ -46,7 +45,7 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
 
         // shift all bodies EXCEPT the active player and crosshairs
         bool is_active_player_body = (body == player_one->entity->body && left_player_is_active) || (body == player_two->entity->body && !left_player_is_active);
-        bool is_crosshair = body == player_one->crosshair->body || body == player_two->crosshair->body;
+        bool is_crosshair = body == player_one->crosshair->entity->body || body == player_two->crosshair->entity->body;
         if (!is_active_player_body && !is_crosshair)
         {
             body->aabb.position[0] += shift[0];
@@ -112,8 +111,12 @@ int main(int argc, char *argv[])
     // init player one
     player_one = malloc(sizeof(Player));
     player_one->entity = entity_create(map.player_one_spawn_points[0], (vec2){36, 36}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
-    player_one->crosshair = entity_create((vec2){player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1]}, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static);
-    player_one->crosshair->is_active = false;
+    player_one->crosshair = &(Crosshair){
+        .entity = entity_create((vec2){player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1]}, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static),
+        .relative_position = {
+            player_one->entity->body->aabb.position[0],
+            player_one->entity->body->aabb.position[1]}};
+    player_one->crosshair->entity->is_active = false;
     player_one->direction = RIGHT;
     player_one->weapon = &(Weapon){
         .name = m16.name,
@@ -149,8 +152,12 @@ int main(int argc, char *argv[])
     // init player two
     player_two = malloc(sizeof(Player));
     player_two->entity = entity_create((vec2){map.player_two_spawn_points[0][1], map.player_two_spawn_points[0][1]}, (vec2){36, 36}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
-    player_two->crosshair = entity_create((vec2){player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1]}, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static);
-    player_two->crosshair->is_active = false;
+    player_two->crosshair = &(Crosshair){
+        .entity = entity_create((vec2){player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1]}, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static),
+        .relative_position = {
+            player_two->entity->body->aabb.position[0],
+            player_two->entity->body->aabb.position[1]}};
+    player_two->crosshair->entity->is_active = false;
     player_two->direction = LEFT;
     player_two->weapon = &(Weapon){
         .name = m16.name,
@@ -214,11 +221,16 @@ int main(int argc, char *argv[])
         // grab current inputs
         input_update();
 
-        // update relative position of players (transform of the position on the screen, using camera as a vector)
+        // update relative position of players and their crosshairs (transform of the position on the screen, using camera as a vector)
         player_one->relative_position[0] = player_one->entity->body->aabb.position[0] + left_cam.position[0];
         player_one->relative_position[1] = player_one->entity->body->aabb.position[1] + left_cam.position[1];
+        player_one->crosshair->relative_position[0] = player_one->crosshair->entity->body->aabb.position[0] + left_cam.position[0];
+        player_one->crosshair->relative_position[1] = player_one->crosshair->entity->body->aabb.position[1] + left_cam.position[1];
+
         player_two->relative_position[0] = player_two->entity->body->aabb.position[0] + right_cam.position[0];
         player_two->relative_position[1] = player_two->entity->body->aabb.position[1] + right_cam.position[1];
+        player_two->crosshair->relative_position[0] = player_two->crosshair->entity->body->aabb.position[0] + right_cam.position[0];
+        player_two->crosshair->relative_position[1] = player_two->crosshair->entity->body->aabb.position[1] + right_cam.position[1];
 
         // need to pass the RELATIVE position of the players into the physics engine to properly detect collisions
         vec2 p1_pos_holder = {player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1]};
@@ -321,8 +333,8 @@ int main(int argc, char *argv[])
                 Entity *entity = entity_get(j);
 
                 // destroy any entities that are inactive or have physics bodies that are inactive and aren't associated with players, crosshairs, or pickups
-                bool is_left_crosshair = entity == player_one->crosshair;
-                bool is_right_crosshair = entity == player_two->crosshair;
+                bool is_left_crosshair = entity == player_one->crosshair->entity;
+                bool is_right_crosshair = entity == player_two->crosshair->entity;
                 bool is_pickup = false;
                 for (int k = 0; k < map.num_pickups; k++)
                 {

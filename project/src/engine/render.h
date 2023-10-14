@@ -1,6 +1,15 @@
 #ifndef RENDER_H
 #define RENDER_H
 
+#define MAX_BATCH_QUADS 10000
+#define MAX_BATCH_VERTICES 40000
+#define MAX_BATCH_ELEMENTS 60000
+#define SPLIT_SCREEN true
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 720
+#define RENDER_WIDTH (SPLIT_SCREEN ? WINDOW_WIDTH * 0.25 : WINDOW_WIDTH * 0.5)
+#define RENDER_HEIGHT WINDOW_HEIGHT * 0.5
+
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 #include <linmath.h>
@@ -47,15 +56,6 @@ typedef struct sprite
     bool is_flipped;
     vec4 color;
 } Sprite;
-
-#define MAX_BATCH_QUADS 10000
-#define MAX_BATCH_VERTICES 40000
-#define MAX_BATCH_ELEMENTS 60000
-#define SPLIT_SCREEN true
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720
-#define RENDER_WIDTH (SPLIT_SCREEN ? WINDOW_WIDTH * 0.25 : WINDOW_WIDTH * 0.5)
-#define RENDER_HEIGHT WINDOW_HEIGHT * 0.5
 
 SDL_Window *render_init();
 void render_begin(void);

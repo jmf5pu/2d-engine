@@ -1123,11 +1123,11 @@ void handle_player_shooting(Player *player, Key_State shoot)
         vec2 bullet_velocity = {0, 0};
 
         // shoot at crosshair if present
-        if (player->crosshair->is_active)
+        if (player->crosshair->entity->is_active)
         {
             // populate crosshair position
-            cx = player->crosshair->body->aabb.position[0];
-            cy = player->crosshair->body->aabb.position[1];
+            cx = player->crosshair->relative_position[0];
+            cy = player->crosshair->relative_position[1];
         }
         else
         { // player not crouching
@@ -1267,6 +1267,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
             bullet_anim_name = "bullet_15";
         }
 
+        // create bullet entity and calculated assign anim and velocity
         Entity *bullet = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
         bullet->animation = get(bullet_anim_map, bullet_anim_name);
 
@@ -1324,14 +1325,19 @@ void handle_player_input(Player *player)
                                 (player->entity->body->aabb.position[1])};
 
         // if player doesn't already have a crosshair entity associated, create one
-        if (!player->crosshair->is_active)
+        if (!player->crosshair->entity->is_active)
         {
-            printf("activating crosshair\n");
-            printf("setting crosshair position to: %f, %f\n", player->crosshair->body->aabb.position[0], player->crosshair->body->aabb.position[1]);
-            player->crosshair->body->aabb.position[0] = player_position[0];
-            player->crosshair->body->aabb.position[1] = player_position[1];
-            player->crosshair->is_active = true;
-            player->crosshair->animation = anim_crosshair_red;
+            // set crosshair aabb position to player aabb position
+            player->crosshair->entity->body->aabb.position[0] = player_position[0];
+            player->crosshair->entity->body->aabb.position[1] = player_position[1];
+
+            // set crosshair relative position to player relative position
+            player->crosshair->relative_position[0] = player->relative_position[0];
+            player->crosshair->relative_position[1] = player->relative_position[1];
+
+            // activate entity and set anim
+            player->crosshair->entity->is_active = true;
+            player->crosshair->entity->animation = anim_crosshair_red;
         }
 
         // crosshairs not restricted to 4 directions *unlike players*
@@ -1344,16 +1350,17 @@ void handle_player_input(Player *player)
         if (down)
             vely -= 250;
 
-        player->crosshair->body->velocity[0] = velx;
-        player->crosshair->body->velocity[1] = vely;
+        player->crosshair->entity->body->velocity[0] = velx;
+        player->crosshair->entity->body->velocity[1] = vely;
 
         handle_player_shooting(player, shoot);
         return;
     }
 
-    if (player->crosshair->is_active)
+    // if player isn't crouched make sure the crosshair isn't activated
+    if (player->crosshair->entity->is_active)
     {
-        player->crosshair->is_active = false;
+        player->crosshair->entity->is_active = false;
     }
 
     // 4 directional movement only, no diagonals
