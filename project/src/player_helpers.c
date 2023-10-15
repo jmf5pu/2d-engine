@@ -1,6 +1,7 @@
 #include <math.h>
 #include "engine/global.h"
 #include "engine/util.h"
+#include "engine/camera.h"
 #include "player_helpers.h"
 #include "collision_behavior.h"
 #include "weapon_types.h"
@@ -1340,7 +1341,7 @@ void handle_player_input(Player *player)
             player->crosshair->entity->animation = anim_crosshair_red;
         }
 
-        // crosshairs not restricted to 4 directions *unlike players*
+        // movement inputs now move crosshair instead of player
         if (left)
             velx -= 250;
         if (right)
@@ -1349,6 +1350,28 @@ void handle_player_input(Player *player)
             vely += 250;
         if (down)
             vely -= 250;
+
+        // check if crosshair is out of bounds, if so, put in bounds, set velocity to 0
+        if (player->crosshair->entity->body->aabb.position[0] < 0)
+        {
+            player->crosshair->entity->body->aabb.position[0] = 0;
+            velx = 0;
+        }
+        if (player->crosshair->entity->body->aabb.position[0] > RENDER_WIDTH)
+        {
+            player->crosshair->entity->body->aabb.position[0] = RENDER_WIDTH;
+            velx = 0;
+        }
+        if (player->crosshair->entity->body->aabb.position[1] < 0)
+        {
+            player->crosshair->entity->body->aabb.position[1] = 0;
+            vely = 0;
+        }
+        if (player->crosshair->entity->body->aabb.position[1] > RENDER_HEIGHT)
+        {
+            player->crosshair->entity->body->aabb.position[1] = RENDER_HEIGHT;
+            vely = 0;
+        }
 
         player->crosshair->entity->body->velocity[0] = velx;
         player->crosshair->entity->body->velocity[1] = vely;
