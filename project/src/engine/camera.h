@@ -6,14 +6,18 @@
 #include <linmath.h>
 #include "../structs.h"
 
-extern const vec4 camera_buffer; // Buffers: Left, Right, Bottom, Top (actual screen coords, NOT relative)
-
 typedef struct camera
 {
     vec2 position;
     vec4 buffer;
 } Camera;
 
+extern const vec4 camera_buffer; // Buffers: Left, Right, Bottom, Top (actual screen coords, NOT relative)
+extern Camera main_cam;
+extern Camera left_cam;
+extern Camera right_cam;
+
+void camera_init(void);
 void shift_camera(Camera *camera, vec2 position, Map *map);
 void camera_update(Camera *camera, Body *body_player, Map *map);
 

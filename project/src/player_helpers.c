@@ -935,9 +935,18 @@ void update_player_status(Player *player)
         player->status = PLAYER_SPAWNING;
         player->frames_on_status = 0;
 
-        // reset location
-        player->entity->body->aabb.position[0] = player->spawn_point[0];
-        player->entity->body->aabb.position[1] = player->spawn_point[1];
+        // move player to respawn point
+        player->relative_position[0] = player->spawn_point[0];
+        player->relative_position[1] = player->spawn_point[1];
+
+        // set player to center of their window
+        player->entity->body->aabb.position[0] = RENDER_WIDTH * 0.5;
+        player->entity->body->aabb.position[1] = RENDER_HEIGHT * 0.5;
+
+        // set camera to center the spawn point
+        Camera *camera = player->is_left_player ? &left_cam : &right_cam;
+        camera->position[0] = player->spawn_point[0] - (0.5 * RENDER_WIDTH);
+        camera->position[1] = player->spawn_point[1] - (0.5 * RENDER_HEIGHT);
 
         // reset health and armor
         player->armor->name = "";

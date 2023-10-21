@@ -79,28 +79,11 @@ int main(int argc, char *argv[])
     time_init(frame_rate);
     config_init();
     SDL_Window *window = render_init();
+    camera_init();
     physics_init();
     entity_init();
     animation_init(); // creates animation storage
     init_all_anims(); // initializes all our animations
-
-    // create camera structs
-    Camera main_cam = (Camera){
-        .position = {0, 0},
-        .buffer = {camera_buffer[0], camera_buffer[1], camera_buffer[2], camera_buffer[3]},
-    };
-
-    // half way to the left of the screen, buffers the center instead of the right side
-    Camera left_cam = (Camera){
-        .position = {0, 0},
-        .buffer = {camera_buffer[0], camera_buffer[1], camera_buffer[2], camera_buffer[3]},
-    };
-
-    // half way to the right of the screen, buffers the center instead of the left side
-    Camera right_cam = (Camera){
-        .position = {RENDER_WIDTH, 0}, // essentially bump everything to the right by half the screen width right off the bat
-        .buffer = {camera_buffer[0], camera_buffer[1], camera_buffer[2], camera_buffer[3]},
-    };
 
     // define weapon types
     init_weapon_types();

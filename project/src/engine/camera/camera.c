@@ -7,6 +7,30 @@
 #include "../../structs.h"
 
 const vec4 camera_buffer = {WINDOW_BUFFER, RENDER_WIDTH - WINDOW_BUFFER, WINDOW_BUFFER, RENDER_HEIGHT - WINDOW_BUFFER};
+Camera main_cam;
+Camera left_cam;
+Camera right_cam;
+
+void camera_init(void)
+{
+    // create camera structs
+    main_cam = (Camera){
+        .position = {0, 0},
+        .buffer = {camera_buffer[0], camera_buffer[1], camera_buffer[2], camera_buffer[3]},
+    };
+
+    // half way to the left of the screen, buffers the center instead of the right side
+    left_cam = (Camera){
+        .position = {0, 0},
+        .buffer = {camera_buffer[0], camera_buffer[1], camera_buffer[2], camera_buffer[3]},
+    };
+
+    // half way to the right of the screen, buffers the center instead of the left side
+    right_cam = (Camera){
+        .position = {RENDER_WIDTH, 0}, // essentially bump everything to the right by half the screen width right off the bat
+        .buffer = {camera_buffer[0], camera_buffer[1], camera_buffer[2], camera_buffer[3]},
+    };
+}
 
 void shift_camera(Camera *camera, vec2 shift, Map *map)
 {
