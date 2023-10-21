@@ -29,7 +29,7 @@
 
 static u32 texture_slots[32] = {0}; // texture slots array for batch rendering
 static bool should_quit = false;    // quit flag
-static bool render_bodies = false;  // set to true for debugging static bodies
+static bool render_bodies = true;   // set to true for debugging static bodies
 
 const u8 frame_rate = 60; // frame rate
 
@@ -377,7 +377,7 @@ int main(int argc, char *argv[])
                 i32 z_index = is_below_player ? prop.sprite->z_index : 1;
                 render_sprite_sheet_frame(prop.sprite->sprite_sheet, window, prop.sprite->row, prop.sprite->column, prop.sprite->position, z_index, prop.sprite->is_flipped, render_bodies ? (vec4){0.9, 0.9, 0.9, 0.9} : prop.sprite->color, texture_slots);
 
-                // render the static body
+                // render the static body TODO: not working for some reason
                 if (prop.static_body && render_bodies)
                 {
                     render_aabb(&prop.static_body, WHITE);

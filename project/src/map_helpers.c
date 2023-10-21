@@ -56,7 +56,7 @@ void init_map(Map *map)
     Prop chain_link_fence_bottom_prop = (Prop){
         .sprite = chain_link_fence_horizontal_wide,
         .layer_threshold = 25,
-        .static_body = physics_static_body_create((vec2){320, 10}, (vec2){640, 3}, COLLISION_LAYER_TERRIAN),
+        .static_body = physics_static_body_create((vec2){320, 10}, (vec2){640, 3}, COLLISION_LAYER_TERRAIN),
     };
 
     Sprite_Sheet *sprite_sheet_traffic_cone = malloc(sizeof(Sprite_Sheet));

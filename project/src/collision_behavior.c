@@ -5,11 +5,11 @@
 #include "map_helpers.h"
 #include "weapon_types.h"
 
-const u8 enemy_mask = COLLISION_LAYER_PLAYER | COLLISION_LAYER_TERRIAN | COLLISION_LAYER_BULLET;
-const u8 player_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRIAN | COLLISION_LAYER_BULLET | COLLISION_LAYER_PICKUP;
-const u8 bullet_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRIAN;
+const u8 enemy_mask = COLLISION_LAYER_PLAYER | COLLISION_LAYER_TERRAIN | COLLISION_LAYER_BULLET;
+const u8 player_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRAIN | COLLISION_LAYER_BULLET | COLLISION_LAYER_PICKUP;
+const u8 bullet_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRAIN;
 const u8 pickup_mask = COLLISION_LAYER_PLAYER;
-const u8 crosshair_mask = COLLISION_LAYER_TERRIAN;
+const u8 crosshair_mask = 0;
 
 void player_on_hit(Body *self, Body *other, Hit hit)
 {

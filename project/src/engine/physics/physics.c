@@ -39,7 +39,6 @@ static void update_sweep_result(Hit *result, usize other_id, AABB a, AABB b, vec
     {
         return;
     }
-
     AABB sum_aabb = b;
     vec2_add(sum_aabb.half_size, sum_aabb.half_size, a.half_size);
 
@@ -74,7 +73,6 @@ static Hit sweep_static_bodies(Body *body, vec2 velocity) // TODO: bug here
     for (u32 i = 0; i < state.static_body_list->len; ++i)
     {
         Static_Body *static_body = physics_static_body_get(i);
-
         update_sweep_result(&result, i, body->aabb, static_body->aabb, velocity, body->collision_mask, static_body->collision_layer);
     }
     return result;
@@ -102,7 +100,6 @@ static void sweep_response(Body *body, vec2 velocity)
 {
     Hit hit = sweep_static_bodies(body, velocity);
     Hit hit_moving = sweep_bodies(body, velocity);
-
     if (hit_moving.is_hit)
     {
         if (body->on_hit != NULL)
@@ -144,6 +141,10 @@ static void stationary_response(Body *body)
     for (u32 i = 0; i < state.static_body_list->len; ++i)
     {
         Static_Body *static_body = physics_static_body_get(i);
+
+        // if collision masks aren't indicating a collision, skip collision logic (return)
+        if ((static_body->collision_layer & body->collision_layer) == 0)
+            return;
 
         AABB aabb = aabb_minkowski_difference(static_body->aabb, body->aabb);
         vec2 min, max;
