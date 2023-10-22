@@ -975,7 +975,9 @@ void update_player_status(Player *player)
         player->weapon->name = m16.name;
         player->weapon->fire_mode = m16.fire_mode;
         player->weapon->capacity = m16.capacity;
-        player->weapon->current_capacity = m16.capacity;
+        player->weapon->max_capacity = m16.capacity;
+        player->weapon->reserve = m16.reserve;
+        player->weapon->max_reserve = m16.reserve;
         player->weapon->max_fire_rate = m16.max_fire_rate;
         player->weapon->damage = m16.damage;
         player->weapon->frames_since_last_shot = 0;
@@ -1000,12 +1002,6 @@ void update_player_status(Player *player)
         player->status = PLAYER_DESPAWNING;
         player->frames_on_status = 0;
 
-        // TODO: remove this once more dying animations are added
-        if (player->direction == UP)
-            player->direction = RIGHT;
-        if (player->direction == DOWN)
-            player->direction = LEFT;
-
         // shouldn't be moving on death anim
         player->entity->body->velocity[0] = 0;
         player->entity->body->velocity[1] = 0;
@@ -1022,8 +1018,19 @@ void update_player_status(Player *player)
     }
 
     // WEAPON STATUS LOGIC
+    // reloading logic
+    if (player->status == PLAYER_RELOADING)
+    {
+        // reload either the missing bullets in the magazine or whatever the player has left in reserve
+        u16 reload_amount = MIN(player->weapon->reserve, (player->weapon->max_capacity - player->weapon->capacity));
+        player->weapon->capacity += reload_amount;
+        player->weapon->reserve -= reload_amount;
+        // TODO: add animation / reload wait time logic
+        player->status = PLAYER_ACTIVE;
+    }
+
     // update weapon status (check if weapon is ready to fire again)
-    if (!player->weapon->ready_to_fire && player->weapon->frames_since_last_shot >= ((1.0 / (player->weapon->max_fire_rate / 60.0)) * global.time.frame_rate))
+    if (player->status != PLAYER_RELOADING && !player->weapon->ready_to_fire && player->weapon->frames_since_last_shot >= ((1.0 / (player->weapon->max_fire_rate / 60.0)) * global.time.frame_rate))
     {
         if (player->weapon->fire_mode == AUTO || player->weapon->fire_mode == SEMI)
         {
@@ -1131,7 +1138,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
     }
 
     // generate bullet if weapon is loaded and key state is correct
-    if (player->weapon->current_capacity > 0 && player->weapon->ready_to_fire && key_state_ready)
+    if (player->weapon->capacity > 0 && player->weapon->ready_to_fire && key_state_ready)
     {
         f32 cx = 0;
         f32 cy = 0;
@@ -1293,7 +1300,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
         bullet->body->velocity[1] = bullet_velocity[1];
 
         // decrement weapon capacity
-        player->weapon->current_capacity -= 1;
+        player->weapon->capacity -= 1;
 
         if (player->weapon->fire_mode == BURST)
         {
@@ -1306,7 +1313,13 @@ void handle_player_shooting(Player *player, Key_State shoot)
     }
 }
 
-// handles key inputs of players
+/*
+ *   handles key inputs of players, typically updates player status, other attributes
+ *
+ *   Priority of keys is as follows - crouch, reload, movement, shoot.
+ *   Players can only shoot while crouching.
+ *   Players cannot reload while doing any other actions (running, crouching, shooting)
+ */
 void handle_player_input(Player *player)
 {
     if (player->status != PLAYER_ACTIVE) // don't allow inputs on inactive players
@@ -1320,6 +1333,7 @@ void handle_player_input(Player *player)
     Key_State down = player->is_left_player ? global.input.l_down : global.input.r_down;
     Key_State shoot = player->is_left_player ? global.input.l_shoot : global.input.r_shoot;
     Key_State crouch = player->is_left_player ? global.input.l_crouch : global.input.r_crouch;
+    Key_State reload = player->is_left_player ? global.input.l_reload : global.input.r_reload;
 
     f32 velx = 0;
     f32 vely = 0;
@@ -1401,6 +1415,14 @@ void handle_player_input(Player *player)
     if (player->crosshair->entity->is_active)
     {
         player->crosshair->entity->is_active = false;
+    }
+
+    // handle reloading (logic implemented in update_player_status)
+    printf("reload status: %d\n", reload);
+    if (reload)
+    {
+        player->status = PLAYER_RELOADING;
+        return;
     }
 
     // 4 directional movement only, no diagonals

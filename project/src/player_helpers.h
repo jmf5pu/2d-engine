@@ -9,6 +9,9 @@
 #define PLAYER_ANIM_COUNT 56
 #define BULLET_ANIM_COUNT 16
 
+// used in reloading calculations
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
+
 // declare players
 extern Player *player_one;
 extern Player *player_two;

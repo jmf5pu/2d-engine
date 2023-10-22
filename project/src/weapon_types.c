@@ -8,6 +8,7 @@ void init_weapon_types()
     m16.name = "m16";
     m16.fire_mode = BURST;
     m16.capacity = 30;
+    m16.reserve = 60;
     m16.max_fire_rate = 900; // rounds per minute
     m16.burst_count = 3;
     m16.burst_delay = 0.4; // seconds
@@ -17,6 +18,7 @@ void init_weapon_types()
     m44.name = "m44";
     m44.fire_mode = SEMI;
     m44.capacity = 5;
+    m44.reserve = 10;
     m44.max_fire_rate = 30;
     m44.damage = 100;
     m44.bullet_velocity = 2000;

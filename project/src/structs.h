@@ -35,8 +35,9 @@ enum Player_Status
 {
     PLAYER_SPAWNING,
     PLAYER_ACTIVE,
+    PLAYER_RELOADING,
     PLAYER_DESPAWNING,
-    PLAYER_INACTIVE
+    PLAYER_INACTIVE,
 };
 
 enum Pickup_Status
@@ -51,7 +52,8 @@ typedef struct weapon_type
 {
     char *name;
     enum Fire_Mode fire_mode;
-    i8 capacity;
+    u16 capacity;      // max ammo in a magazine
+    u16 reserve;       // maximum amount of spare ammo
     u16 max_fire_rate; // rounds per minute
     u16 burst_count;   // maximum number of shots in a "burst", both burst attributes will be null if Fire_Mode != BURST
     f32 burst_delay;   // in seconds
@@ -64,8 +66,10 @@ typedef struct weapon
 {
     char *name;
     enum Fire_Mode fire_mode;
-    i8 capacity;
-    i8 current_capacity;
+    u16 capacity;
+    u16 max_capacity;
+    u16 reserve;
+    u16 max_reserve;
     u16 max_fire_rate;
     i8 burst_shots_remaining;
     u16 burst_count;
@@ -87,7 +91,6 @@ typedef struct armor
     char *name;
     i16 integrity;
 } Armor;
-
 
 typedef struct crosshair
 {

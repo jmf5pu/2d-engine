@@ -54,7 +54,9 @@ void player_on_hit(Body *self, Body *other, Hit hit)
             player->weapon->name = m44.name;
             player->weapon->fire_mode = m44.fire_mode;
             player->weapon->capacity = m44.capacity;
-            player->weapon->current_capacity = m44.capacity;
+            player->weapon->max_capacity = m44.capacity;
+            player->weapon->reserve = m44.reserve;
+            player->weapon->max_reserve = m44.reserve;
             player->weapon->max_fire_rate = m44.max_fire_rate;
             player->weapon->damage = m44.damage;
             player->weapon->bullet_velocity = m44.bullet_velocity;
