@@ -1,4 +1,6 @@
 Prioritized:
+* implement reloading / ammo count
+* implement HUD
 * implement 8 directional movement
   * ~~add movement logic~~
   * ~~add shooting logic~~
@@ -7,9 +9,9 @@ Prioritized:
   * ~~implement base mechanics~~
   * ~~add bullet anims~~
   * add player anims
-* integrate camera
+* ~~integrate camera~~
   * ~~add base logic~~
-  * add screen splitting logic
+  * ~~add screen splitting logic~~
 
 TODOs:
 * ~~add destructor for entities and bodies~~
@@ -31,6 +33,5 @@ TODOs:
   * ~~fix animation bug (one player flips the other)~~
 * add crouching and 360 deg aiming
 * add weaker spawn weapon
-* implement reloading / ammo count
-* implement HUD
 * implement pause menu
+* figure out why static bodies aren't rendering with `render_bodies` flag
