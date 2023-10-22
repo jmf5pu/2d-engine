@@ -13,33 +13,39 @@ const u8 crosshair_mask = 0;
 
 void player_on_hit(Body *self, Body *other, Hit hit)
 {
+    // TODO: update this - temp fix because bullets are only being created from other players right now
+    // need to create bullet struct that contains information on damage
     Player *player = get_player_from_body(player_one, player_two, self, false);
-    Player *other_player = get_player_from_body(player_one, player_two, self, true);
-    if (other->collision_layer == COLLISION_LAYER_BULLET && other->is_active && self->is_active)
+
+    if (SPLIT_SCREEN)
     {
-        i8 bullet_damage = other_player->weapon->damage; // TODO: eventually may need to attach this value to a bullet struct
-        if (player->armor->integrity > 0)
+        Player *other_player = get_player_from_body(player_one, player_two, self, true);
+        if (other->collision_layer == COLLISION_LAYER_BULLET && other->is_active && self->is_active)
         {
-            // Apply as much damage as possible to the armor
-            if (player->armor->integrity >= bullet_damage)
+            i8 bullet_damage = other_player->weapon->damage; // TODO: eventually may need to attach this value to a bullet struct
+            if (player->armor->integrity > 0)
             {
-                player->armor->integrity -= bullet_damage;
+                // Apply as much damage as possible to the armor
+                if (player->armor->integrity >= bullet_damage)
+                {
+                    player->armor->integrity -= bullet_damage;
+                }
+                else
+                {
+                    player->health -= (bullet_damage - player->armor->integrity);
+                    player->armor->integrity = 0;
+                }
             }
             else
             {
-                player->health -= (bullet_damage - player->armor->integrity);
-                player->armor->integrity = 0;
+                // If the armor is already 0, apply damage directly to health
+                player->health -= bullet_damage;
             }
+            other->is_active = false; // always mark bullet as inactive
         }
-        else
-        {
-            // If the armor is already 0, apply damage directly to health
-            player->health -= bullet_damage;
-        }
-        other->is_active = false; // always mark bullet as inactive
     }
 
-    else if (other->collision_layer == COLLISION_LAYER_PICKUP && other->is_active && self->is_active)
+    if (other->collision_layer == COLLISION_LAYER_PICKUP && other->is_active && self->is_active)
     {
         Pickup *pickup = get_pickup_from_body(other);
         if (pickup->name == M44_PICKUP && pickup->status == PICKUP_ACTIVE)

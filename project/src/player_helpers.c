@@ -944,9 +944,17 @@ void update_player_status(Player *player)
         player->entity->body->aabb.position[1] = RENDER_HEIGHT * 0.5;
 
         // set camera to center the spawn point
-        Camera *camera = player->is_left_player ? &left_cam : &right_cam;
-        camera->position[0] = player->spawn_point[0] - (0.5 * RENDER_WIDTH);
-        camera->position[1] = player->spawn_point[1] - (0.5 * RENDER_HEIGHT);
+        if (SPLIT_SCREEN)
+        {
+            Camera *camera = player->is_left_player ? &left_cam : &right_cam;
+            camera->position[0] = player->spawn_point[0] - (0.5 * RENDER_WIDTH);
+            camera->position[1] = player->spawn_point[1] - (0.5 * RENDER_HEIGHT);
+        }
+        else
+        {
+            main_cam.position[0] = player->spawn_point[0] - (0.5 * RENDER_WIDTH);
+            main_cam.position[1] = player->spawn_point[1] - (0.5 * RENDER_HEIGHT);
+        }
 
         // reset health and armor
         player->armor->name = "";
@@ -958,7 +966,7 @@ void update_player_status(Player *player)
         {
             player_one->direction = RIGHT;
         }
-        else
+        else if (SPLIT_SCREEN)
         { // player two
             player_two->direction = LEFT;
         }
@@ -1458,7 +1466,7 @@ Player *get_player_from_body(Player *player_one, Player *player_two, Body *body,
     {
         return !return_other_player ? player_one : player_two;
     }
-    else if (player_two->entity->body == body)
+    else if (SPLIT_SCREEN && player_two->entity->body == body)
     {
         return !return_other_player ? player_two : player_one;
     }
