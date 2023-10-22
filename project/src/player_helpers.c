@@ -1,6 +1,7 @@
 #include <math.h>
 #include "engine/global.h"
 #include "engine/util.h"
+#include "engine/camera.h"
 #include "player_helpers.h"
 #include "collision_behavior.h"
 #include "weapon_types.h"
@@ -934,9 +935,26 @@ void update_player_status(Player *player)
         player->status = PLAYER_SPAWNING;
         player->frames_on_status = 0;
 
-        // reset location
-        player->entity->body->aabb.position[0] = player->spawn_point[0];
-        player->entity->body->aabb.position[1] = player->spawn_point[1];
+        // move player to respawn point
+        player->relative_position[0] = player->spawn_point[0];
+        player->relative_position[1] = player->spawn_point[1];
+
+        // set player to center of their window
+        player->entity->body->aabb.position[0] = RENDER_WIDTH * 0.5;
+        player->entity->body->aabb.position[1] = RENDER_HEIGHT * 0.5;
+
+        // set camera to center the spawn point
+        if (SPLIT_SCREEN)
+        {
+            Camera *camera = player->is_left_player ? &left_cam : &right_cam;
+            camera->position[0] = player->spawn_point[0] - (0.5 * RENDER_WIDTH);
+            camera->position[1] = player->spawn_point[1] - (0.5 * RENDER_HEIGHT);
+        }
+        else
+        {
+            main_cam.position[0] = player->spawn_point[0] - (0.5 * RENDER_WIDTH);
+            main_cam.position[1] = player->spawn_point[1] - (0.5 * RENDER_HEIGHT);
+        }
 
         // reset health and armor
         player->armor->name = "";
@@ -948,7 +966,7 @@ void update_player_status(Player *player)
         {
             player_one->direction = RIGHT;
         }
-        else
+        else if (SPLIT_SCREEN)
         { // player two
             player_two->direction = LEFT;
         }
@@ -1117,17 +1135,17 @@ void handle_player_shooting(Player *player, Key_State shoot)
     {
         f32 cx = 0;
         f32 cy = 0;
-        f32 px = player->entity->body->aabb.position[0];
-        f32 py = player->entity->body->aabb.position[1];
-        vec2 bullet_position = {player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]};
+        f32 px = player->relative_position[0];
+        f32 py = player->relative_position[1];
+        vec2 bullet_position = {player->relative_position[0], player->relative_position[1]};
         vec2 bullet_velocity = {0, 0};
 
         // shoot at crosshair if present
-        if (player->crosshair)
+        if (player->crosshair->entity->is_active)
         {
             // populate crosshair position
-            cx = player->crosshair->body->aabb.position[0];
-            cy = player->crosshair->body->aabb.position[1];
+            cx = player->crosshair->relative_position[0];
+            cy = player->crosshair->relative_position[1];
         }
         else
         { // player not crouching
@@ -1183,8 +1201,8 @@ void handle_player_shooting(Player *player, Key_State shoot)
         f32 bullet_y = cy >= py ? 32 * sin(angle) : 32 * sin(angle) * -1;
 
         // calculate starting position using angle
-        bullet_position[0] = player->entity->body->aabb.position[0] + bullet_x;
-        bullet_position[1] = player->entity->body->aabb.position[1] + bullet_y;
+        bullet_position[0] = player->relative_position[0] + bullet_x;
+        bullet_position[1] = player->relative_position[1] + bullet_y;
 
         // calculate velocity using angle
         f32 vx = cx >= px ? player->weapon->bullet_velocity * cos(angle) : player->weapon->bullet_velocity * cos(angle) * -1;
@@ -1266,6 +1284,8 @@ void handle_player_shooting(Player *player, Key_State shoot)
         {
             bullet_anim_name = "bullet_15";
         }
+
+        // create bullet entity and calculated assign anim and velocity
         Entity *bullet = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
         bullet->animation = get(bullet_anim_map, bullet_anim_name);
 
@@ -1323,13 +1343,22 @@ void handle_player_input(Player *player)
                                 (player->entity->body->aabb.position[1])};
 
         // if player doesn't already have a crosshair entity associated, create one
-        if (!player->crosshair)
+        if (!player->crosshair->entity->is_active)
         {
-            player->crosshair = entity_create(player_position, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static);
-            player->crosshair->animation = anim_crosshair_red;
+            // set crosshair aabb position to player aabb position
+            player->crosshair->entity->body->aabb.position[0] = player_position[0];
+            player->crosshair->entity->body->aabb.position[1] = player_position[1];
+
+            // set crosshair relative position to player relative position
+            player->crosshair->relative_position[0] = player->relative_position[0];
+            player->crosshair->relative_position[1] = player->relative_position[1];
+
+            // activate entity and set anim
+            player->crosshair->entity->is_active = true;
+            player->crosshair->entity->animation = anim_crosshair_red;
         }
 
-        // crosshairs not restricted to 4 directions *unlike players*
+        // movement inputs now move crosshair instead of player
         if (left)
             velx -= 250;
         if (right)
@@ -1339,17 +1368,39 @@ void handle_player_input(Player *player)
         if (down)
             vely -= 250;
 
-        player->crosshair->body->velocity[0] = velx;
-        player->crosshair->body->velocity[1] = vely;
+        // check if crosshair is out of bounds, if so, put in bounds, set velocity to 0
+        if (player->crosshair->entity->body->aabb.position[0] < 0)
+        {
+            player->crosshair->entity->body->aabb.position[0] = 0;
+            velx = 0;
+        }
+        if (player->crosshair->entity->body->aabb.position[0] > RENDER_WIDTH)
+        {
+            player->crosshair->entity->body->aabb.position[0] = RENDER_WIDTH;
+            velx = 0;
+        }
+        if (player->crosshair->entity->body->aabb.position[1] < 0)
+        {
+            player->crosshair->entity->body->aabb.position[1] = 0;
+            vely = 0;
+        }
+        if (player->crosshair->entity->body->aabb.position[1] > RENDER_HEIGHT)
+        {
+            player->crosshair->entity->body->aabb.position[1] = RENDER_HEIGHT;
+            vely = 0;
+        }
+
+        player->crosshair->entity->body->velocity[0] = velx;
+        player->crosshair->entity->body->velocity[1] = vely;
 
         handle_player_shooting(player, shoot);
         return;
     }
 
-    if (player->crosshair)
+    // if player isn't crouched make sure the crosshair isn't activated
+    if (player->crosshair->entity->is_active)
     {
-        entity_destroy(player->crosshair);
-        player->crosshair = NULL;
+        player->crosshair->entity->is_active = false;
     }
 
     // 4 directional movement only, no diagonals
@@ -1415,7 +1466,7 @@ Player *get_player_from_body(Player *player_one, Player *player_two, Body *body,
     {
         return !return_other_player ? player_one : player_two;
     }
-    else if (player_two->entity->body == body)
+    else if (SPLIT_SCREEN && player_two->entity->body == body)
     {
         return !return_other_player ? player_two : player_one;
     }

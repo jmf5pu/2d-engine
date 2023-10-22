@@ -1,6 +1,16 @@
 #ifndef RENDER_H
 #define RENDER_H
 
+#define SPLIT_SCREEN true
+
+#define MAX_BATCH_QUADS 10000
+#define MAX_BATCH_VERTICES 40000
+#define MAX_BATCH_ELEMENTS 60000
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 720
+#define RENDER_WIDTH (SPLIT_SCREEN ? WINDOW_WIDTH * 0.25 : WINDOW_WIDTH * 0.5)
+#define RENDER_HEIGHT WINDOW_HEIGHT * 0.5
+
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 #include <linmath.h>
@@ -48,15 +58,7 @@ typedef struct sprite
     vec4 color;
 } Sprite;
 
-#define MAX_BATCH_QUADS 10000
-#define MAX_BATCH_VERTICES 40000
-#define MAX_BATCH_ELEMENTS 60000
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720
-#define RENDER_WIDTH 640
-#define RENDER_HEIGHT 360
-
-SDL_Window *render_init(void);
+SDL_Window *render_init();
 void render_begin(void);
 void render_begin_split(void);
 void render_end(SDL_Window *window, u32 batch_texture_ids[32], bool swap_window);

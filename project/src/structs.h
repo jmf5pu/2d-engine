@@ -88,10 +88,16 @@ typedef struct armor
     i16 integrity;
 } Armor;
 
+
+typedef struct crosshair
+{
+    Entity *entity;
+    vec2 relative_position;
+} Crosshair;
 typedef struct player
 {
     Entity *entity;
-    Entity *crosshair;
+    Crosshair *crosshair;
     Weapon *weapon;
     Armor *armor;
     vec2 spawn_point;
