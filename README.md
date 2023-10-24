@@ -1,6 +1,8 @@
 Prioritized:
 * implement reloading / ammo count
+  * add reload animations (or placeholders) 
 * implement HUD
+  * Add new glViewport for HUD items so that changes rendering width/height of main cam won't affect HUD scaling 
 * implement 8 directional movement
   * ~~add movement logic~~
   * ~~add shooting logic~~
