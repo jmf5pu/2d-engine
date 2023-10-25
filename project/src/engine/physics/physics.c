@@ -244,7 +244,7 @@ usize physics_body_get_id(Body *target_body)
             return i;
         }
     }
-    ERROR_RETURN((usize)-1, "Could not find the specified entity in the Array_List\n");
+    ERROR_EXIT("ERROR: Could not find the specified entity in the Array_List\n");
 }
 
 void physics_body_destroy(Body *body)

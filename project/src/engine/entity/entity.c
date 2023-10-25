@@ -47,7 +47,7 @@ usize entity_get_id(Entity *target_entity)
             return i;
         }
     }
-    ERROR_RETURN((usize)-1, "Could not find the specified entity in the Array_List\n");
+    ERROR_EXIT("ERROR: Could not find the specified entity in the Array_List\n");
 }
 
 // decrements length of entity list, marks as inactive, then destroys body, animation, and self respectively

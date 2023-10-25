@@ -8,6 +8,8 @@
 extern Map map;
 
 void init_map(Map *map);
+void update_map(Map *map);
+void free_map_attributes(Map *map);
 Pickup *get_pickup_from_body(Body *body);
 
 #endif

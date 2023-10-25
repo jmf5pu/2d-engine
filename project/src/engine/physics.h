@@ -54,7 +54,7 @@ Body *physics_body_create(vec2 position, vec2 size, vec2 velocity, u8 collision_
 usize physics_body_count();
 Body *physics_body_get(usize index);
 usize physics_body_get_id(Body *target_body);
-void physics_body_destroy(usize index);
+void physics_body_destroy(Body *body);
 Static_Body *physics_static_body_create(vec2 position, vec2 size, u8 collision_layer);
 Static_Body *physics_static_body_get(usize index);
 bool physics_point_intersect_aabb(vec2 point, AABB aabb);
@@ -64,4 +64,4 @@ void aabb_penetration_vector(vec2 r, AABB aabb);
 void aabb_min_max(vec2 min, vec2 max, AABB aabb);
 Hit ray_intersect_aabb(vec2 position, vec2 magnitude, AABB aabb);
 
-#endif PHYSICS_H
+#endif

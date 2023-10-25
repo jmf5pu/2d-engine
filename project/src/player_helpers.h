@@ -3,6 +3,7 @@
 
 #include "engine/hash_map.h"
 #include "engine/animation.h"
+#include "engine/global.h"
 #include "structs.h"
 
 // number of animations to be stored in player_anim_map
@@ -339,7 +340,7 @@ void init_player_anim_hashmap();
 void init_all_anims();
 void update_player_status(Player *player);
 void update_player_animations(Player *player);
-void handle_player_shooting(Player *player);
+void handle_player_shooting(Player *player, Key_State shoot);
 void handle_player_input(Player *player);
 Player *get_player_from_body(Player *player_one, Player *player_two, Body *body, bool return_other_player);
 

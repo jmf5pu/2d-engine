@@ -269,7 +269,7 @@ Pickup *get_pickup_from_body(Body *body)
 {
     if (!map.pickups)
     {
-        ERROR_RETURN(1, "Map not yet initialized or initialized incorrectly.")
+        ERROR_EXIT("ERROR: Map not yet initialized or initialized incorrectly.\n")
     }
 
     for (int i = 0; i < map.num_pickups; i++)
