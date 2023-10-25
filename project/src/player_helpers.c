@@ -1418,7 +1418,6 @@ void handle_player_input(Player *player)
     }
 
     // handle reloading (logic implemented in update_player_status)
-    printf("reload status: %d\n", reload);
     if (reload)
     {
         player->status = PLAYER_RELOADING;
