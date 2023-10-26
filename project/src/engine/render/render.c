@@ -24,15 +24,18 @@ static u32 vbo_batch;
 static u32 ebo_batch;
 static u32 shader_batch;
 static Array_List *list_batch;
+u16 render_width;
+u16 render_height;
 
-SDL_Window *render_init()
+SDL_Window *render_init(void)
 {
+    if (!render_height || !render_width)
+        ERROR_EXIT("ERROR: render dimensions not initialized properly");
     SDL_Window *window = render_init_window(WINDOW_WIDTH, WINDOW_HEIGHT);
-
     render_init_quad(&vao_quad, &vbo_quad, &ebo_quad);
     render_init_batch_quads(&vao_batch, &vbo_batch, &ebo_batch);
     render_init_line(&vao_line, &vbo_line);
-    render_init_shaders(&shader_default, &shader_batch, RENDER_WIDTH, RENDER_HEIGHT);
+    render_init_shaders(&shader_default, &shader_batch, render_width, render_height);
     render_init_color_texture(&texture_color);
 
     // create transparency / semi transparent effect
@@ -44,6 +47,14 @@ SDL_Window *render_init()
     stbi_set_flip_vertically_on_load(1);
 
     return window;
+}
+
+// util to set rendering dimensions
+// scale_factor: float representing the fraction of the window dimensions the render dimensions should be
+void set_render_dimensions(f32 scale_factor)
+{
+    render_width = (SPLIT_SCREEN ? WINDOW_WIDTH * 0.25 : WINDOW_WIDTH * 0.5); // SPLIT_SCREEN ? WINDOW_WIDTH * scale_factor * 0.5 : WINDOW_WIDTH * scale_factor;
+    render_height = WINDOW_HEIGHT * 0.5;                                      // WINDOW_HEIGHT * scale_factor;
 }
 
 // checks if texture id is already present in texture slots array (for reuse)
@@ -212,7 +223,7 @@ static void append_quad(vec2 position, vec2 size, vec4 texture_coordinates, i32 
         vertices[i] = malloc(sizeof(Batch_Vertex));
         if (!vertices[i])
         {
-            ERROR_RETURN(NULL, "Could not allocate memory for vertices\n");
+            ERROR_EXIT("ERROR: Could not allocate memory for vertices\n");
         }
     }
 

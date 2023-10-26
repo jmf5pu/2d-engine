@@ -940,20 +940,20 @@ void update_player_status(Player *player)
         player->relative_position[1] = player->spawn_point[1];
 
         // set player to center of their window
-        player->entity->body->aabb.position[0] = RENDER_WIDTH * 0.5;
-        player->entity->body->aabb.position[1] = RENDER_HEIGHT * 0.5;
+        player->entity->body->aabb.position[0] = render_width * 0.5;
+        player->entity->body->aabb.position[1] = render_height * 0.5;
 
         // set camera to center the spawn point
         if (SPLIT_SCREEN)
         {
             Camera *camera = player->is_left_player ? &left_cam : &right_cam;
-            camera->position[0] = player->spawn_point[0] - (0.5 * RENDER_WIDTH);
-            camera->position[1] = player->spawn_point[1] - (0.5 * RENDER_HEIGHT);
+            camera->position[0] = player->spawn_point[0] - (0.5 * render_width);
+            camera->position[1] = player->spawn_point[1] - (0.5 * render_height);
         }
         else
         {
-            main_cam.position[0] = player->spawn_point[0] - (0.5 * RENDER_WIDTH);
-            main_cam.position[1] = player->spawn_point[1] - (0.5 * RENDER_HEIGHT);
+            main_cam.position[0] = player->spawn_point[0] - (0.5 * render_width);
+            main_cam.position[1] = player->spawn_point[1] - (0.5 * render_height);
         }
 
         // reset health and armor
@@ -1388,9 +1388,9 @@ void handle_player_input(Player *player)
             player->crosshair->entity->body->aabb.position[0] = 0;
             velx = 0;
         }
-        if (player->crosshair->entity->body->aabb.position[0] > RENDER_WIDTH)
+        if (player->crosshair->entity->body->aabb.position[0] > render_width)
         {
-            player->crosshair->entity->body->aabb.position[0] = RENDER_WIDTH;
+            player->crosshair->entity->body->aabb.position[0] = render_width;
             velx = 0;
         }
         if (player->crosshair->entity->body->aabb.position[1] < 0)
@@ -1398,9 +1398,9 @@ void handle_player_input(Player *player)
             player->crosshair->entity->body->aabb.position[1] = 0;
             vely = 0;
         }
-        if (player->crosshair->entity->body->aabb.position[1] > RENDER_HEIGHT)
+        if (player->crosshair->entity->body->aabb.position[1] > render_height)
         {
-            player->crosshair->entity->body->aabb.position[1] = RENDER_HEIGHT;
+            player->crosshair->entity->body->aabb.position[1] = render_height;
             vely = 0;
         }
 

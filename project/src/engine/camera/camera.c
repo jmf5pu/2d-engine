@@ -6,13 +6,19 @@
 #include "../render.h"
 #include "../../structs.h"
 
-const vec4 camera_buffer = {WINDOW_BUFFER, RENDER_WIDTH - WINDOW_BUFFER, WINDOW_BUFFER, RENDER_HEIGHT - WINDOW_BUFFER};
+vec4 camera_buffer;
 Camera main_cam;
 Camera left_cam;
 Camera right_cam;
 
 void camera_init(void)
 {
+    // init camera buffer
+    camera_buffer[0] = WINDOW_BUFFER;
+    camera_buffer[1] = render_width - WINDOW_BUFFER;
+    camera_buffer[2] = WINDOW_BUFFER;
+    camera_buffer[3] = render_height - WINDOW_BUFFER;
+
     // create camera structs
     main_cam = (Camera){
         .position = {0, 0},
@@ -27,7 +33,7 @@ void camera_init(void)
 
     // half way to the right of the screen, buffers the center instead of the left side
     right_cam = (Camera){
-        .position = {RENDER_WIDTH, 0}, // essentially bump everything to the right by half the screen width right off the bat
+        .position = {render_width, 0}, // essentially bump everything to the right by half the screen width right off the bat
         .buffer = {camera_buffer[0], camera_buffer[1], camera_buffer[2], camera_buffer[3]},
     };
 }
@@ -41,6 +47,12 @@ void shift_camera(Camera *camera, vec2 shift, Map *map)
 
 void camera_update(Camera *camera, Body *body_player, Map *map)
 {
+    // update camera buffer
+    camera_buffer[0] = WINDOW_BUFFER;
+    camera_buffer[1] = render_width - WINDOW_BUFFER;
+    camera_buffer[2] = WINDOW_BUFFER;
+    camera_buffer[3] = render_height - WINDOW_BUFFER;
+
     // updates the camera based on the player's position
     float position_x = body_player->aabb.position[0];
     float position_y = body_player->aabb.position[1];

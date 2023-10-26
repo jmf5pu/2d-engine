@@ -1,21 +1,23 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#define SPLIT_SCREEN true
+#define SPLIT_SCREEN false
 
 #define MAX_BATCH_QUADS 10000
 #define MAX_BATCH_VERTICES 40000
 #define MAX_BATCH_ELEMENTS 60000
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
-#define RENDER_WIDTH (SPLIT_SCREEN ? WINDOW_WIDTH * 0.25 : WINDOW_WIDTH * 0.5)
-#define RENDER_HEIGHT WINDOW_HEIGHT * 0.5
 
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 #include <linmath.h>
 
 #include "types.h"
+
+// defined in render.c
+extern u16 render_width;
+extern u16 render_height;
 
 typedef struct batch_vertex
 {
@@ -59,8 +61,10 @@ typedef struct sprite
 } Sprite;
 
 SDL_Window *render_init();
+void set_render_dimensions(f32 scale_factor);
 void render_begin(void);
-void render_begin_split(void);
+void render_begin_left(void);
+void render_begin_right(void);
 void render_end(SDL_Window *window, u32 batch_texture_ids[32], bool swap_window);
 void render_quad(vec2 pos, vec2 state, vec4 color);
 void render_line_segment(vec2 start, vec2 end, vec4 color);

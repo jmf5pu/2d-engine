@@ -78,6 +78,7 @@ int main(int argc, char *argv[])
 {
     time_init(frame_rate);
     config_init();
+    set_render_dimensions(0.5);
     SDL_Window *window = render_init();
     camera_init();
     physics_init();
@@ -403,7 +404,7 @@ int main(int argc, char *argv[])
                 // render the static body TODO: not working for some reason
                 if (prop.static_body && render_bodies)
                 {
-                    render_aabb(&prop.static_body, WHITE);
+                    render_aabb((f32 *)&prop.static_body->aabb, WHITE);
                 }
             }
 

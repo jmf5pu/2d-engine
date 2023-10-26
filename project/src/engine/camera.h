@@ -12,7 +12,7 @@ typedef struct camera
     vec4 buffer;
 } Camera;
 
-extern const vec4 camera_buffer; // Buffers: Left, Right, Bottom, Top (actual screen coords, NOT relative)
+extern vec4 camera_buffer; // Buffers: Left, Right, Bottom, Top (actual screen coords, NOT relative)
 extern Camera main_cam;
 extern Camera left_cam;
 extern Camera right_cam;
