@@ -1,4 +1,5 @@
 Prioritized:
+* make crosshair not spawn on top of player
 * implement reloading / ammo count
   * add reload animations (or placeholders) 
 * implement HUD
