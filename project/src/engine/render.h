@@ -1,7 +1,7 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#define SPLIT_SCREEN false
+#define SPLIT_SCREEN true
 
 #define MAX_BATCH_QUADS 10000
 #define MAX_BATCH_VERTICES 40000
@@ -16,8 +16,8 @@
 #include "types.h"
 
 // defined in render.c
-extern u16 render_width;
-extern u16 render_height;
+extern f32 render_width;
+extern f32 render_height;
 
 typedef struct batch_vertex
 {
@@ -61,7 +61,7 @@ typedef struct sprite
 } Sprite;
 
 SDL_Window *render_init();
-void set_render_dimensions(f32 scale_factor);
+void set_render_dimensions(f32 scale_factor, bool update_shaders);
 void render_begin(void);
 void render_begin_left(void);
 void render_begin_right(void);

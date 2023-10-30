@@ -6,12 +6,6 @@
 #include <linmath.h>
 #include "../structs.h"
 
-typedef struct camera
-{
-    vec2 position;
-    vec4 buffer;
-} Camera;
-
 extern vec4 camera_buffer; // Buffers: Left, Right, Bottom, Top (actual screen coords, NOT relative)
 extern Camera main_cam;
 extern Camera left_cam;

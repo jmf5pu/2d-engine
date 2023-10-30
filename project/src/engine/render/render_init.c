@@ -52,10 +52,14 @@ SDL_Window *render_init_window(u32 width, u32 height)
 
 void render_init_shaders(u32 *shader_default, u32 *shader_batch, f32 render_width, f32 render_height)
 {
-    mat4x4 projection;
     *shader_default = render_shader_create("./shaders/default.vert", "./shaders/default.frag");
     *shader_batch = render_shader_create("./shaders/batch_quad.vert", "./shaders/batch_quad.frag");
+    update_projection_matrix(shader_default, shader_batch, render_width, render_height);
+}
 
+void update_projection_matrix(u32 *shader_default, u32 *shader_batch, f32 render_width, f32 render_height)
+{
+    mat4x4 projection;
     mat4x4_ortho(projection, 0, render_width, 0, render_height, -2, 2);
 
     glUseProgram(*shader_default);

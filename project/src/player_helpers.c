@@ -944,17 +944,8 @@ void update_player_status(Player *player)
         player->entity->body->aabb.position[1] = render_height * 0.5;
 
         // set camera to center the spawn point
-        if (SPLIT_SCREEN)
-        {
-            Camera *camera = player->is_left_player ? &left_cam : &right_cam;
-            camera->position[0] = player->spawn_point[0] - (0.5 * render_width);
-            camera->position[1] = player->spawn_point[1] - (0.5 * render_height);
-        }
-        else
-        {
-            main_cam.position[0] = player->spawn_point[0] - (0.5 * render_width);
-            main_cam.position[1] = player->spawn_point[1] - (0.5 * render_height);
-        }
+        player->camera->position[0] = player->spawn_point[0] - (0.5 * render_width);
+        player->camera->position[1] = player->spawn_point[1] - (0.5 * render_height);
 
         // reset health and armor
         player->armor->name = "";
@@ -1000,6 +991,11 @@ void update_player_status(Player *player)
     else if (player->health <= 0 && player->status == PLAYER_ACTIVE)
     {
         player->status = PLAYER_DESPAWNING;
+
+        // TODO: pull these two lines out into helper for updating scale factor (used in multiple places)
+        player->prev_frame_scale_factor = player->render_scale_factor;
+        player->render_scale_factor = 0.5;
+
         player->frames_on_status = 0;
 
         // shouldn't be moving on death anim
@@ -1347,6 +1343,10 @@ void handle_player_input(Player *player)
 
     if (crouch)
     {
+        // adjust players FOV to the weapon's setting for aiming/crouched
+        player->prev_frame_scale_factor = player->render_scale_factor; // TODO: refactor
+        player->render_scale_factor = 0.75;
+
         // don't let players move while crouching
         player->entity->body->velocity[0] = 0;
         player->entity->body->velocity[1] = 0;
@@ -1411,10 +1411,13 @@ void handle_player_input(Player *player)
         return;
     }
 
-    // if player isn't crouched make sure the crosshair isn't activated
+    // if player isn't crouched updated status, make sure the crosshair isn't activated, and reset view to normal
     if (player->crosshair->entity->is_active)
     {
+        player->status = PLAYER_ACTIVE;
         player->crosshair->entity->is_active = false;
+        player->prev_frame_scale_factor = player->render_scale_factor; // TODO: refactor
+        player->render_scale_factor = 0.5;
     }
 
     // handle reloading (logic implemented in update_player_status)

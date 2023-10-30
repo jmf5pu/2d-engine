@@ -38,6 +38,7 @@ enum Player_Status
     PLAYER_RELOADING,
     PLAYER_DESPAWNING,
     PLAYER_INACTIVE,
+    PLAYER_CROUCHED,
 };
 
 enum Pickup_Status
@@ -97,9 +98,17 @@ typedef struct crosshair
     Entity *entity;
     vec2 relative_position;
 } Crosshair;
+
+typedef struct camera
+{
+    vec2 position;
+    vec4 buffer;
+} Camera;
+
 typedef struct player
 {
     Entity *entity;
+    Camera *camera;
     Crosshair *crosshair;
     Weapon *weapon;
     Armor *armor;
@@ -107,10 +116,12 @@ typedef struct player
     vec2 relative_position; // position relative to the rest of the map NOT to the window
     enum Direction direction;
     enum Player_Status status;
-    f32 despawn_time;     // time it takes for animation to complete after health <= 0
-    f32 spawn_delay;      // time in s from INACTIVE status to SPAWNING status
-    f32 spawn_time;       // time in s from SPAWNING status to ACTIVE status
-    u32 frames_on_status; // # of frames since last status change
+    f32 render_scale_factor;     // render scale factor (determines FOV of the player). Normal is 0.5, render width is 0.5 of window width
+    f32 prev_frame_scale_factor; // stores the players scale factor at the previous frame. Used to determine if projection matrix needs to be updated at a given frame
+    f32 despawn_time;            // time it takes for animation to complete after health <= 0
+    f32 spawn_delay;             // time in s from INACTIVE status to SPAWNING status
+    f32 spawn_time;              // time in s from SPAWNING status to ACTIVE status
+    u32 frames_on_status;        // # of frames since last status change
     i16 health;
     bool is_left_player;
 } Player;

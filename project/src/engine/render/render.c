@@ -24,11 +24,12 @@ static u32 vbo_batch;
 static u32 ebo_batch;
 static u32 shader_batch;
 static Array_List *list_batch;
-u16 render_width;
-u16 render_height;
+f32 render_width;
+f32 render_height;
 
 SDL_Window *render_init(void)
 {
+    set_render_dimensions(0.5, false);
     if (!render_height || !render_width)
         ERROR_EXIT("ERROR: render dimensions not initialized properly");
     SDL_Window *window = render_init_window(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -49,12 +50,16 @@ SDL_Window *render_init(void)
     return window;
 }
 
-// util to set rendering dimensions
+// util to set rendering dimensions, updates shader projection matrix if desired
 // scale_factor: float representing the fraction of the window dimensions the render dimensions should be
-void set_render_dimensions(f32 scale_factor)
+void set_render_dimensions(f32 scale_factor, bool update_shaders)
 {
-    render_width = (SPLIT_SCREEN ? WINDOW_WIDTH * 0.25 : WINDOW_WIDTH * 0.5); // SPLIT_SCREEN ? WINDOW_WIDTH * scale_factor * 0.5 : WINDOW_WIDTH * scale_factor;
-    render_height = WINDOW_HEIGHT * 0.5;                                      // WINDOW_HEIGHT * scale_factor;
+    render_width = SPLIT_SCREEN ? WINDOW_WIDTH * scale_factor * 0.5 : WINDOW_WIDTH * scale_factor;
+    render_height = WINDOW_HEIGHT * scale_factor;
+    if (update_shaders)
+    {
+        update_projection_matrix(&shader_default, &shader_batch, render_width, render_height);
+    }
 }
 
 // checks if texture id is already present in texture slots array (for reuse)

@@ -19,6 +19,7 @@
 #include "engine/animation.h"
 #include "engine/array_list.h"
 #include "engine/hash_map.h"
+#include "engine/render/render_internal.h"
 
 // game specific headers
 #include "structs.h"
@@ -29,7 +30,7 @@
 
 static u32 texture_slots[32] = {0}; // texture slots array for batch rendering
 static bool should_quit = false;    // quit flag
-static bool render_bodies = true;   // set to true for debugging static bodies
+static bool render_bodies = false;  // set to true for debugging static bodies
 
 const u8 frame_rate = 60; // frame rate
 
@@ -78,8 +79,8 @@ int main(int argc, char *argv[])
 {
     time_init(frame_rate);
     config_init();
-    set_render_dimensions(0.5);
     SDL_Window *window = render_init();
+
     camera_init();
     physics_init();
     entity_init();
@@ -95,6 +96,7 @@ int main(int argc, char *argv[])
     // init player one
     player_one = malloc(sizeof(Player));
     player_one->entity = entity_create(map.player_one_spawn_points[0], (vec2){36, 36}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    player_one->camera = SPLIT_SCREEN ? &left_cam : &main_cam;
     player_one->crosshair = &(Crosshair){
         .entity = entity_create((vec2){player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1]}, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static),
         .relative_position = {
@@ -128,6 +130,8 @@ int main(int argc, char *argv[])
     player_one->relative_position[0] = player_one->entity->body->aabb.position[0];
     player_one->relative_position[1] = player_one->entity->body->aabb.position[1];
     player_one->status = PLAYER_SPAWNING;
+    player_one->render_scale_factor = 0.5;
+    player_one->prev_frame_scale_factor = 0.5;
     player_one->despawn_time = 2.9;
     player_one->spawn_delay = 5;
     player_one->spawn_time = 2;
@@ -140,6 +144,7 @@ int main(int argc, char *argv[])
     {
         player_two = malloc(sizeof(Player));
         player_two->entity = entity_create((vec2){map.player_two_spawn_points[0][1], map.player_two_spawn_points[0][1]}, (vec2){36, 36}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+        player_two->camera = &right_cam;
         player_two->crosshair = &(Crosshair){
             .entity = entity_create((vec2){player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1]}, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static),
             .relative_position = {
@@ -173,6 +178,8 @@ int main(int argc, char *argv[])
         player_two->relative_position[0] = player_two->entity->body->aabb.position[0];
         player_two->relative_position[1] = player_two->entity->body->aabb.position[1];
         player_two->status = PLAYER_SPAWNING;
+        player_two->render_scale_factor = 0.5;
+        player_two->prev_frame_scale_factor = 0.5;
         player_two->despawn_time = 2.9;
         player_two->spawn_delay = 5;
         player_two->spawn_time = 2;
@@ -272,19 +279,25 @@ int main(int argc, char *argv[])
             camera_update(&main_cam, player_one->entity->body, &map);
 
         // need to run render loop twice if we are actively splitting the screen
-        int render_count = SPLIT_SCREEN ? 2 : 1;
-        for (int i = 0; i < render_count; i++)
+        int player_count = SPLIT_SCREEN ? 2 : 1;
+        for (int i = 0; i < player_count; i++)
         {
             if (SPLIT_SCREEN && i == 0)
             {
-                render_begin_left(); // render left side
+                // update FOV for left player and begin rendering
+                set_render_dimensions(player_one->render_scale_factor, true);
+                render_begin_left();
             }
             else if (SPLIT_SCREEN && i == 1)
             {
-                render_begin_right(); // render_right side
+                // update FOV for right player and begin rendering (update proj matrix if player has different scale than the other)
+                set_render_dimensions(player_two->render_scale_factor, true);
+                render_begin_right();
             }
             else // hit when screen is not being split
             {
+
+                set_render_dimensions(player_one->render_scale_factor, player_one->prev_frame_scale_factor != player_one->render_scale_factor);
                 render_begin();
             }
 
