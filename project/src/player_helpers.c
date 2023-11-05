@@ -300,7 +300,7 @@ void init_all_anims()
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_up_right, "assets/soldier_1_m16_idle_up_right.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_up_right, "assets/soldier_1_m16_running_up_right.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_down_right, "assets/soldier_1_m16_idle_down_right.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_down_right, "assets/soldier_1_m16_idle_down_right.png", 36, 36);
+    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_down_right, "assets/soldier_1_m16_running_down_right.png", 36, 36);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
     render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
@@ -360,10 +360,10 @@ void init_all_anims()
         1);
     p1_adef_soldier_1_m16_running_down_right = animation_definition_create(
         &p1_sprite_sheet_soldier_1_m16_running_down_right,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){0},
-        1);
+        (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05},
+        (u8[]){0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6},
+        6);
     p1_adef_soldier_1_m16_spawning_side = animation_definition_create(
         &p1_sprite_sheet_soldier_1_m16_spawning_side,
         (f32[]){0.25, 0.25},
@@ -386,7 +386,7 @@ void init_all_anims()
     p1_anim_soldier_1_m16_idle_up_right = animation_create(p1_adef_soldier_1_m16_idle_up_right, false);
     p1_anim_soldier_1_m16_running_up_right = animation_create(p1_adef_soldier_1_m16_running_up_right, true);
     p1_anim_soldier_1_m16_idle_down_right = animation_create(p1_adef_soldier_1_m16_idle_down_right, false);
-    p1_anim_soldier_1_m16_running_down_right = animation_create(p1_adef_soldier_1_m16_running_down_right, false);
+    p1_anim_soldier_1_m16_running_down_right = animation_create(p1_adef_soldier_1_m16_running_down_right, true);
     p1_anim_soldier_1_m16_spawning_side = animation_create(p1_adef_soldier_1_m16_spawning_side, true);
     p1_anim_soldier_1_m16_dying_side = animation_create(p1_adef_soldier_1_m16_dying_side, true);
 
@@ -608,7 +608,7 @@ void init_all_anims()
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_up_right, "assets/soldier_1_m16_idle_up_right.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_up_right, "assets/soldier_1_m16_running_up_right.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_down_right, "assets/soldier_1_m16_idle_down_right.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_down_right, "assets/soldier_1_m16_idle_down_right.png", 36, 36);
+    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_down_right, "assets/soldier_1_m16_running_down_right.png", 36, 36);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
     render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
@@ -668,10 +668,10 @@ void init_all_anims()
         1);
     p2_adef_soldier_1_m16_running_down_right = animation_definition_create(
         &p2_sprite_sheet_soldier_1_m16_running_down_right,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){0},
-        1);
+        (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05},
+        (u8[]){0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6},
+        6);
     p2_adef_soldier_1_m16_spawning_side = animation_definition_create(
         &p2_sprite_sheet_soldier_1_m16_spawning_side,
         (f32[]){0.25, 0.25},
@@ -694,7 +694,7 @@ void init_all_anims()
     p2_anim_soldier_1_m16_idle_up_right = animation_create(p2_adef_soldier_1_m16_idle_up_right, false);
     p2_anim_soldier_1_m16_running_up_right = animation_create(p2_adef_soldier_1_m16_running_up_right, true);
     p2_anim_soldier_1_m16_idle_down_right = animation_create(p2_adef_soldier_1_m16_idle_down_right, false);
-    p2_anim_soldier_1_m16_running_down_right = animation_create(p2_adef_soldier_1_m16_running_down_right, false);
+    p2_anim_soldier_1_m16_running_down_right = animation_create(p2_adef_soldier_1_m16_running_down_right, true);
     p2_anim_soldier_1_m16_spawning_side = animation_create(p2_adef_soldier_1_m16_spawning_side, true);
     p2_anim_soldier_1_m16_dying_side = animation_create(p2_adef_soldier_1_m16_dying_side, true);
 
@@ -1318,7 +1318,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
  */
 void handle_player_input(Player *player)
 {
-    if (player->status != PLAYER_ACTIVE) // don't allow inputs on inactive players
+    if (player->status == PLAYER_SPAWNING || player->status == PLAYER_DESPAWNING || player->status == PLAYER_INACTIVE) // don't allow inputs on inactive players
     {
         return;
     }
@@ -1345,32 +1345,83 @@ void handle_player_input(Player *player)
     {
         // adjust players FOV to the weapon's setting for aiming/crouched
         player->prev_frame_scale_factor = player->render_scale_factor; // TODO: refactor
-        player->render_scale_factor = 0.75;
+        player->render_scale_factor = 1;
+
+        if (player->status != PLAYER_CROUCHED)
+        {
+            set_render_dimensions(player->render_scale_factor, true);
+
+            printf("player aabb position BEFORE shift: %f, %f\n", player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]);
+            printf("player relative position BEFORE shift: %f, %f\n", player->relative_position[0], player->relative_position[1]);
+            printf("camera position BEFORE shift: %f, %f\n", player->camera->position[0], player->camera->position[1]);
+            player->entity->body->aabb.position[0] = (render_width * 0.5);
+            player->entity->body->aabb.position[1] = (render_height * 0.5);
+            player->camera->position[0] = player->relative_position[0] - (0.5 * render_width);
+            player->camera->position[1] = player->relative_position[1] - (0.5 * render_height);
+
+            printf("player aabb position AFTER shift: %f, %f\n", player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]);
+            printf("player relative position BEFORE shift: %f, %f\n", player->relative_position[0], player->relative_position[1]);
+            printf("camera position AFTER shift: %f, %f\n\n", player->camera->position[0], player->camera->position[1]);
+
+            player->status = PLAYER_CROUCHED;
+        }
 
         // don't let players move while crouching
         player->entity->body->velocity[0] = 0;
         player->entity->body->velocity[1] = 0;
 
-        // TODO: update player animation
-
-        vec2 player_position = {(player->entity->body->aabb.position[0]),
-                                (player->entity->body->aabb.position[1])};
-
         // if player doesn't already have a crosshair entity associated, create one
         if (!player->crosshair->entity->is_active)
         {
-            // set crosshair aabb position to player aabb position
-            player->crosshair->entity->body->aabb.position[0] = player_position[0];
-            player->crosshair->entity->body->aabb.position[1] = player_position[1];
+            // calculate where the crosshair will start using the player's direction
+            const f32 crosshair_starting_distance_from_player = 50;
+            f32 crosshair_xy_distance_at_45_deg = 0.707106781 * crosshair_starting_distance_from_player; // sin/cos(45) * hypotenuse
+            vec2 crosshair_starting_distance_vector = {0, 0};
 
-            // set crosshair relative position to player relative position
-            player->crosshair->relative_position[0] = player->relative_position[0];
-            player->crosshair->relative_position[1] = player->relative_position[1];
+            if (player->direction == UP)
+                crosshair_starting_distance_vector[1] = crosshair_starting_distance_from_player;
+            if (player->direction == RIGHT)
+                crosshair_starting_distance_vector[0] = crosshair_starting_distance_from_player;
+            if (player->direction == DOWN)
+                crosshair_starting_distance_vector[1] = -1 * crosshair_starting_distance_from_player;
+            if (player->direction == LEFT)
+                crosshair_starting_distance_vector[0] = -1 * crosshair_starting_distance_from_player;
+            if (player->direction == UP_RIGHT)
+            {
+                crosshair_starting_distance_vector[0] = crosshair_xy_distance_at_45_deg;
+                crosshair_starting_distance_vector[1] = crosshair_xy_distance_at_45_deg;
+            }
+            if (player->direction == DOWN_RIGHT)
+            {
+                crosshair_starting_distance_vector[0] = crosshair_xy_distance_at_45_deg;
+                crosshair_starting_distance_vector[1] = -1 * crosshair_xy_distance_at_45_deg;
+            }
+
+            if (player->direction == DOWN_LEFT)
+            {
+                crosshair_starting_distance_vector[0] = -1 * crosshair_xy_distance_at_45_deg;
+                crosshair_starting_distance_vector[1] = -1 * crosshair_xy_distance_at_45_deg;
+            }
+
+            if (player->direction == UP_LEFT)
+            {
+                crosshair_starting_distance_vector[0] = -1 * crosshair_xy_distance_at_45_deg;
+                crosshair_starting_distance_vector[1] = crosshair_xy_distance_at_45_deg;
+            }
+
+            // set crosshair aabb position with respect to player aabb position
+            player->crosshair->entity->body->aabb.position[0] = player->entity->body->aabb.position[0] + crosshair_starting_distance_vector[0];
+            player->crosshair->entity->body->aabb.position[1] = player->entity->body->aabb.position[1] + crosshair_starting_distance_vector[1];
+
+            // set crosshair relative position with respect to player relative position
+            player->crosshair->relative_position[0] = player->relative_position[0] + crosshair_starting_distance_vector[0];
+            player->crosshair->relative_position[1] = player->relative_position[1] + crosshair_starting_distance_vector[1];
 
             // activate entity and set anim
             player->crosshair->entity->is_active = true;
             player->crosshair->entity->animation = anim_crosshair_red;
         }
+        // printf("player crosshair aabb position: %f, %f\n", player->crosshair->entity->body->aabb.position[0], player->crosshair->entity->body->aabb.position[1]);
 
         // movement inputs now move crosshair instead of player
         if (left)
@@ -1411,20 +1462,34 @@ void handle_player_input(Player *player)
         return;
     }
 
-    // if player isn't crouched updated status, make sure the crosshair isn't activated, and reset view to normal
-    if (player->crosshair->entity->is_active)
-    {
-        player->status = PLAYER_ACTIVE;
-        player->crosshair->entity->is_active = false;
-        player->prev_frame_scale_factor = player->render_scale_factor; // TODO: refactor
-        player->render_scale_factor = 0.5;
-    }
-
     // handle reloading (logic implemented in update_player_status)
     if (reload)
     {
         player->status = PLAYER_RELOADING;
         return;
+    }
+
+    // if player isn't crouched updated status, make sure the crosshair isn't activated, and reset view to normal
+    if (player->status == PLAYER_CROUCHED)
+    {
+        printf("[BACK] player aabb position BEFORE shift: %f, %f\n", player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]);
+        printf("[BACK] player relative position BEFORE shift: %f, %f\n", player->relative_position[0], player->relative_position[1]);
+        printf("[BACK] camera position BEFORE shift: %f, %f\n", player->camera->position[0], player->camera->position[1]);
+
+        player->status = PLAYER_ACTIVE;
+        player->crosshair->entity->is_active = false;
+
+        player->prev_frame_scale_factor = player->render_scale_factor; // TODO: refactor
+        player->render_scale_factor = 0.5;
+        set_render_dimensions(player->render_scale_factor, true);
+        player->camera->position[0] = player->relative_position[0] - (0.5 * render_width);
+        player->camera->position[1] = player->relative_position[1] - (0.5 * render_height);
+        player->entity->body->aabb.position[0] = (render_width * 0.5);  // - player->entity->body->aabb.half_size[0];
+        player->entity->body->aabb.position[1] = (render_height * 0.5); // - player->entity->body->aabb.half_size[1];
+
+        printf("[BACK] player aabb position AFTER shift BACK: %f, %f\n", player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]);
+        printf("[BACK] player relative position BEFORE shift BACK: %f, %f\n", player->relative_position[0], player->relative_position[1]);
+        printf("[BACK] camera position BEFORE shift: %f, %f\n\n", player->camera->position[0], player->camera->position[1]);
     }
 
     // 4 directional movement only, no diagonals
