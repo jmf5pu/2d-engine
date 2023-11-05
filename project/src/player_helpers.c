@@ -1349,20 +1349,18 @@ void handle_player_input(Player *player)
 
         if (player->status != PLAYER_CROUCHED)
         {
+            // update rendering dimensions and projection matrix
             set_render_dimensions(player->render_scale_factor, true);
 
-            printf("player aabb position BEFORE shift: %f, %f\n", player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]);
-            printf("player relative position BEFORE shift: %f, %f\n", player->relative_position[0], player->relative_position[1]);
-            printf("camera position BEFORE shift: %f, %f\n", player->camera->position[0], player->camera->position[1]);
+            // set aabb location to center of screen
             player->entity->body->aabb.position[0] = (render_width * 0.5);
             player->entity->body->aabb.position[1] = (render_height * 0.5);
+
+            // set camera location to center the player
             player->camera->position[0] = player->relative_position[0] - (0.5 * render_width);
             player->camera->position[1] = player->relative_position[1] - (0.5 * render_height);
 
-            printf("player aabb position AFTER shift: %f, %f\n", player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]);
-            printf("player relative position BEFORE shift: %f, %f\n", player->relative_position[0], player->relative_position[1]);
-            printf("camera position AFTER shift: %f, %f\n\n", player->camera->position[0], player->camera->position[1]);
-
+            // update status
             player->status = PLAYER_CROUCHED;
         }
 
@@ -1421,7 +1419,6 @@ void handle_player_input(Player *player)
             player->crosshair->entity->is_active = true;
             player->crosshair->entity->animation = anim_crosshair_red;
         }
-        // printf("player crosshair aabb position: %f, %f\n", player->crosshair->entity->body->aabb.position[0], player->crosshair->entity->body->aabb.position[1]);
 
         // movement inputs now move crosshair instead of player
         if (left)
@@ -1472,24 +1469,22 @@ void handle_player_input(Player *player)
     // if player isn't crouched updated status, make sure the crosshair isn't activated, and reset view to normal
     if (player->status == PLAYER_CROUCHED)
     {
-        printf("[BACK] player aabb position BEFORE shift: %f, %f\n", player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]);
-        printf("[BACK] player relative position BEFORE shift: %f, %f\n", player->relative_position[0], player->relative_position[1]);
-        printf("[BACK] camera position BEFORE shift: %f, %f\n", player->camera->position[0], player->camera->position[1]);
-
+        // update player and crosshair status
         player->status = PLAYER_ACTIVE;
         player->crosshair->entity->is_active = false;
 
+        // reset render dimensions and projection matrix
         player->prev_frame_scale_factor = player->render_scale_factor; // TODO: refactor
         player->render_scale_factor = 0.5;
         set_render_dimensions(player->render_scale_factor, true);
+
+        // center camera on player
         player->camera->position[0] = player->relative_position[0] - (0.5 * render_width);
         player->camera->position[1] = player->relative_position[1] - (0.5 * render_height);
-        player->entity->body->aabb.position[0] = (render_width * 0.5);  // - player->entity->body->aabb.half_size[0];
-        player->entity->body->aabb.position[1] = (render_height * 0.5); // - player->entity->body->aabb.half_size[1];
 
-        printf("[BACK] player aabb position AFTER shift BACK: %f, %f\n", player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]);
-        printf("[BACK] player relative position BEFORE shift BACK: %f, %f\n", player->relative_position[0], player->relative_position[1]);
-        printf("[BACK] camera position BEFORE shift: %f, %f\n\n", player->camera->position[0], player->camera->position[1]);
+        // center player aabb
+        player->entity->body->aabb.position[0] = (render_width * 0.5);
+        player->entity->body->aabb.position[1] = (render_height * 0.5);
     }
 
     // 4 directional movement only, no diagonals

@@ -12,7 +12,7 @@ extern Camera left_cam;
 extern Camera right_cam;
 
 void camera_init(void);
-void shift_camera(Camera *camera, vec2 position, Map *map);
-void camera_update(Camera *camera, Body *body_player, Map *map);
+void shift_camera(Camera *camera, vec2 position);
+void camera_update(Camera *camera, Player *player, Map *map);
 
 #endif

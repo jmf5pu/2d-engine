@@ -114,7 +114,7 @@ static int compare_vertices(const void *a, const void *b)
 
 void render_begin(void)
 {
-    glClearColor(0.88, 0.1, 0.1, 1);
+    glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
     list_batch->len = 0; // clears batch vertices buffer
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -122,7 +122,7 @@ void render_begin(void)
 
 void render_begin_left(void)
 {
-    glClearColor(0.88, 0.1, 0.1, 1);
+    glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
     list_batch->len = 0; // clears batch vertices buffer from previous frame
     glViewport(0, 0, WINDOW_WIDTH * 0.5, WINDOW_HEIGHT);

@@ -46,6 +46,11 @@ typedef struct hit
     vec2 normal;
 } Hit;
 
+/*
+ * Notes:
+ * AABB position is the CENTER of the AABB (not bottom left)
+ */
+
 Array_List *get_all_bodies(void);
 Array_List *get_all_static_bodies(void);
 void physics_init(void);

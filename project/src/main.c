@@ -270,67 +270,50 @@ int main(int argc, char *argv[])
 
         animation_update(global.time.delta);
 
-        if (SPLIT_SCREEN)
-        {
-            camera_update(&left_cam, player_one->entity->body, &map);
-            camera_update(&right_cam, player_two->entity->body, &map);
-        }
-        else
-            camera_update(&main_cam, player_one->entity->body, &map);
-
         // need to run render loop twice if we are actively splitting the screen
         int player_count = SPLIT_SCREEN ? 2 : 1;
         for (int i = 0; i < player_count; i++)
         {
-            if (SPLIT_SCREEN && i == 0)
-            {
-                // update FOV for left player and begin rendering
-                set_render_dimensions(player_one->render_scale_factor, true);
-                render_begin_left();
-            }
-            else if (SPLIT_SCREEN && i == 1)
-            {
-                // update FOV for right player and begin rendering (update proj matrix if player has different scale than the other)
-                set_render_dimensions(player_two->render_scale_factor, true);
-                render_begin_right();
-            }
-            else // hit when screen is not being split
-            {
-
-                set_render_dimensions(player_one->render_scale_factor, player_one->prev_frame_scale_factor != player_one->render_scale_factor);
-                render_begin();
-            }
-
+            // FIRST:
+            // For the player being rendered, update render dimensions based on player status,
+            // update the corresponding projection matrix, update the camera location,
+            // and clear the rendering buffer to begin rendering
+            // THEN:
             // handle the corresponding inputs and update statuses/directions
             // must handle player input BEFORE rendering because entities can
             // be created in `handle_player_shooting`
             if (SPLIT_SCREEN && i == 0)
             {
+                set_render_dimensions(player_one->render_scale_factor, true);
+                camera_update(&left_cam, player_one, &map);
+                render_begin_left();
                 handle_player_input(player_one);
                 update_player_status(player_one);
                 update_player_animations(player_one);
             }
             else if (SPLIT_SCREEN && i == 1)
             {
+                set_render_dimensions(player_two->render_scale_factor, true);
+                camera_update(&right_cam, player_two, &map);
+                render_begin_right();
                 handle_player_input(player_two);
                 update_player_status(player_two);
                 update_player_animations(player_two);
             }
-            else
+            else // hit when screen is not being split
             {
-                // handle player inputs
+                set_render_dimensions(player_one->render_scale_factor, player_one->prev_frame_scale_factor != player_one->render_scale_factor);
+                camera_update(&main_cam, player_one, &map);
+                render_begin();
                 handle_player_input(player_one);
-
-                // update player statuses
                 update_player_status(player_one);
-
-                // update player animations
                 update_player_animations(player_one);
             }
 
             // save aabb positions again
             p1_pos_holder[0] = player_one->entity->body->aabb.position[0];
             p1_pos_holder[1] = player_one->entity->body->aabb.position[1];
+
             if (SPLIT_SCREEN)
             {
                 p2_pos_holder[0] = player_two->entity->body->aabb.position[0];
