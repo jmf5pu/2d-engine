@@ -991,11 +991,7 @@ void update_player_status(Player *player)
     else if (player->health <= 0 && player->status == PLAYER_ACTIVE)
     {
         player->status = PLAYER_DESPAWNING;
-
-        // TODO: pull these two lines out into helper for updating scale factor (used in multiple places)
-        player->prev_frame_scale_factor = player->render_scale_factor;
-        player->render_scale_factor = 0.5;
-
+        player->render_scale_factor = RENDER_SCALE_FACTOR_DEFAULT;
         player->frames_on_status = 0;
 
         // shouldn't be moving on death anim
@@ -1200,8 +1196,8 @@ void handle_player_shooting(Player *player, Key_State shoot)
         f32 angle = fabs((cx > px && cy > py) || (cx < px && cy < py) ? atan(dy / dx) : -1 * atan(dy / dx));
 
         // calculate bullet starting position using angle
-        f32 bullet_x = cx >= px ? 32 * cos(angle) : 32 * cos(angle) * -1;
-        f32 bullet_y = cy >= py ? 32 * sin(angle) : 32 * sin(angle) * -1;
+        f32 bullet_x = cx >= px ? BULLET_DISTANCE_FROM_PLAYER * cos(angle) : BULLET_DISTANCE_FROM_PLAYER * cos(angle) * -1;
+        f32 bullet_y = cy >= py ? BULLET_DISTANCE_FROM_PLAYER * sin(angle) : BULLET_DISTANCE_FROM_PLAYER * sin(angle) * -1;
 
         // calculate starting position using angle
         bullet_position[0] = player->relative_position[0] + bullet_x;
@@ -1343,12 +1339,10 @@ void handle_player_input(Player *player)
 
     if (crouch)
     {
-        // adjust players FOV to the weapon's setting for aiming/crouched
-        player->prev_frame_scale_factor = player->render_scale_factor; // TODO: refactor
-        player->render_scale_factor = 1;
-
         if (player->status != PLAYER_CROUCHED)
         {
+            player->render_scale_factor = player->weapon->aiming_scale_factor;
+
             // update rendering dimensions and projection matrix
             set_render_dimensions(player->render_scale_factor, true);
 
@@ -1474,8 +1468,7 @@ void handle_player_input(Player *player)
         player->crosshair->entity->is_active = false;
 
         // reset render dimensions and projection matrix
-        player->prev_frame_scale_factor = player->render_scale_factor; // TODO: refactor
-        player->render_scale_factor = 0.5;
+        player->render_scale_factor = RENDER_SCALE_FACTOR_DEFAULT;
         set_render_dimensions(player->render_scale_factor, true);
 
         // center camera on player

@@ -60,6 +60,7 @@ typedef struct weapon_type
     f32 burst_delay;   // in seconds
     i16 damage;
     i16 bullet_velocity;
+    f32 aiming_scale_factor; // factor by which the rendering dimensions change when player is crouching
 } Weapon_Type;
 
 // contains weapon info as well as player-specific data
@@ -77,6 +78,7 @@ typedef struct weapon
     f32 burst_delay;
     i16 damage;
     i16 bullet_velocity;
+    f32 aiming_scale_factor;
     u16 frames_since_last_shot;
     bool ready_to_fire;
 } Weapon;
@@ -116,12 +118,11 @@ typedef struct player
     vec2 relative_position; // position relative to the rest of the map NOT to the window
     enum Direction direction;
     enum Player_Status status;
-    f32 render_scale_factor;     // render scale factor (determines FOV of the player). Normal is 0.5, render width is 0.5 of window width
-    f32 prev_frame_scale_factor; // stores the players scale factor at the previous frame. Used to determine if projection matrix needs to be updated at a given frame
-    f32 despawn_time;            // time it takes for animation to complete after health <= 0
-    f32 spawn_delay;             // time in s from INACTIVE status to SPAWNING status
-    f32 spawn_time;              // time in s from SPAWNING status to ACTIVE status
-    u32 frames_on_status;        // # of frames since last status change
+    f32 render_scale_factor; // render scale factor (determines FOV of the player). Normal is 0.5, render width is 0.5 of window width
+    f32 despawn_time;        // time it takes for animation to complete after health <= 0
+    f32 spawn_delay;         // time in s from INACTIVE status to SPAWNING status
+    f32 spawn_time;          // time in s from SPAWNING status to ACTIVE status
+    u32 frames_on_status;    // # of frames since last status change
     i16 health;
     bool is_left_player;
 } Player;

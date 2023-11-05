@@ -14,6 +14,7 @@ void init_weapon_types()
     m16.burst_delay = 0.4; // seconds
     m16.damage = 30;
     m16.bullet_velocity = 1500;
+    m16.aiming_scale_factor = 0.72;
 
     m44.name = "m44";
     m44.fire_mode = SEMI;
@@ -22,4 +23,5 @@ void init_weapon_types()
     m44.max_fire_rate = 30;
     m44.damage = 100;
     m44.bullet_velocity = 2000;
+    m44.aiming_scale_factor = 0.6;
 }

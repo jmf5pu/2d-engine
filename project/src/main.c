@@ -117,6 +117,7 @@ int main(int argc, char *argv[])
         .burst_shots_remaining = m16.burst_count,
         .damage = m16.damage,
         .bullet_velocity = m16.bullet_velocity,
+        .aiming_scale_factor = m16.aiming_scale_factor,
         .frames_since_last_shot = 0,
         .ready_to_fire = true,
     };
@@ -130,8 +131,7 @@ int main(int argc, char *argv[])
     player_one->relative_position[0] = player_one->entity->body->aabb.position[0];
     player_one->relative_position[1] = player_one->entity->body->aabb.position[1];
     player_one->status = PLAYER_SPAWNING;
-    player_one->render_scale_factor = 0.5;
-    player_one->prev_frame_scale_factor = 0.5;
+    player_one->render_scale_factor = RENDER_SCALE_FACTOR_DEFAULT;
     player_one->despawn_time = 2.9;
     player_one->spawn_delay = 5;
     player_one->spawn_time = 2;
@@ -165,6 +165,7 @@ int main(int argc, char *argv[])
             .burst_shots_remaining = m16.burst_count,
             .damage = m16.damage,
             .bullet_velocity = m16.bullet_velocity,
+            .aiming_scale_factor = m16.aiming_scale_factor,
             .frames_since_last_shot = 0,
             .ready_to_fire = true,
         };
@@ -178,8 +179,7 @@ int main(int argc, char *argv[])
         player_two->relative_position[0] = player_two->entity->body->aabb.position[0];
         player_two->relative_position[1] = player_two->entity->body->aabb.position[1];
         player_two->status = PLAYER_SPAWNING;
-        player_two->render_scale_factor = 0.5;
-        player_two->prev_frame_scale_factor = 0.5;
+        player_two->render_scale_factor = RENDER_SCALE_FACTOR_DEFAULT;
         player_two->despawn_time = 2.9;
         player_two->spawn_delay = 5;
         player_two->spawn_time = 2;
@@ -302,7 +302,7 @@ int main(int argc, char *argv[])
             }
             else // hit when screen is not being split
             {
-                set_render_dimensions(player_one->render_scale_factor, player_one->prev_frame_scale_factor != player_one->render_scale_factor);
+                set_render_dimensions(player_one->render_scale_factor, true);
                 camera_update(&main_cam, player_one, &map);
                 render_begin();
                 handle_player_input(player_one);

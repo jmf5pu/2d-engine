@@ -13,6 +13,8 @@
 // used in reloading calculations
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
+#define BULLET_DISTANCE_FROM_PLAYER 40
+
 // declare players
 extern Player *player_one;
 extern Player *player_two;
