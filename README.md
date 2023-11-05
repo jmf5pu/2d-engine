@@ -1,5 +1,4 @@
 Prioritized:
-* make crosshair not spawn on top of player
 * implement reloading / ammo count
   * add reload animations (or placeholders) 
 * implement HUD
@@ -34,7 +33,6 @@ TODOs:
   * fix dying animation
   * add props to map bg
   * ~~fix animation bug (one player flips the other)~~
-* add crouching and 360 deg aiming
 * add weaker spawn weapon
 * implement pause menu
 * figure out why static bodies aren't rendering with `render_bodies` flag
