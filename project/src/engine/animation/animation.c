@@ -111,7 +111,8 @@ void animation_update(f32 dt)
 
         if (animation->current_frame_time <= 0)
         {
-            animation->current_frame_index += 1;
+            if (animation->current_frame_index < adef->frame_count)
+                animation->current_frame_index += 1;
 
             // Loop or stay on last frame.
             if (animation->current_frame_index == adef->frame_count)
@@ -119,10 +120,6 @@ void animation_update(f32 dt)
                 if (animation->does_loop)
                 {
                     animation->current_frame_index = 0;
-                }
-                else
-                {
-                    animation->current_frame_index -= 1;
                 }
             }
 

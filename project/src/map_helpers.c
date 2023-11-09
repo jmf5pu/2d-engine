@@ -146,7 +146,7 @@ void init_map(Map *map)
     Animation_Definition *adef_brewster_spawning = malloc(sizeof(Animation_Definition));
     Animation *anim_brewster = malloc(sizeof(Animation));
     Animation *anim_brewster_spawning = malloc(sizeof(Animation));
-    render_sprite_sheet_init(sprite_sheet_brewster, "assets/brewster_body_shield.png", 22, 22);
+    // render_sprite_sheet_init(sprite_sheet_brewster, "assets/brewster_body_shield.png", 22, 22);
     adef_brewster = animation_definition_create(
         sprite_sheet_brewster,
         (f32[]){0},
@@ -154,7 +154,7 @@ void init_map(Map *map)
         (u8[]){1},
         1);
     anim_brewster = animation_create(adef_brewster, false);
-    render_sprite_sheet_init(sprite_sheet_brewster_spawning, "assets/brewster_body_shield.png", 22, 22);
+    // render_sprite_sheet_init(sprite_sheet_brewster_spawning, "assets/brewster_body_shield.png", 22, 22);
     adef_brewster_spawning = animation_definition_create(
         sprite_sheet_brewster_spawning,
         (f32[]){0},

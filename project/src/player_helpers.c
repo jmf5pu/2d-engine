@@ -78,6 +78,13 @@ void init_player_anim_hashmap()
     insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_spawning_side", p1_anim_soldier_1_m44_brewster_spawning_side);
     insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_dying_side", p1_anim_soldier_1_m44_brewster_dying_side);
 
+    // crouched anims
+    insert(player_anim_map, "p1_anim_soldier_1_m16_crouched_0", p1_anim_soldier_1_m16_crouched_0);
+    insert(player_anim_map, "p1_anim_soldier_1_m16_crouched_1", p1_anim_soldier_1_m16_crouched_1);
+    insert(player_anim_map, "p1_anim_soldier_1_m16_crouched_2", p1_anim_soldier_1_m16_crouched_2);
+    insert(player_anim_map, "p1_anim_soldier_1_m16_crouched_4", p1_anim_soldier_1_m16_crouched_4);
+    insert(player_anim_map, "p1_anim_soldier_1_m16_crouched_12", p1_anim_soldier_1_m16_crouched_12);
+
     insert(player_anim_map, "p2_anim_soldier_1_m16_idle_side", p2_anim_soldier_1_m16_idle_side);
     insert(player_anim_map, "p2_anim_soldier_1_m16_running_side", p2_anim_soldier_1_m16_running_side);
     insert(player_anim_map, "p2_anim_soldier_1_m16_idle_back", p2_anim_soldier_1_m16_idle_back);
@@ -291,18 +298,24 @@ void init_all_anims()
      */
 
     // m16
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_side, "assets/soldier_1_m16_idle_side.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_side, "assets/soldier_1_m16_running_side.png", 36, 37);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_back, "assets/soldier_1_m16_idle_back.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_back, "assets/soldier_1_m16_running_back.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_front, "assets/soldier_1_m16_idle_front.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_front, "assets/soldier_1_m16_running_front.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_up_right, "assets/soldier_1_m16_idle_up_right.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_up_right, "assets/soldier_1_m16_running_up_right.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_down_right, "assets/soldier_1_m16_idle_down_right.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_down_right, "assets/soldier_1_m16_running_down_right.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_side, "assets/soldier_1_m16_idle_side.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_side, "assets/soldier_1_m16_running_side.png", 36, 37);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_back, "assets/soldier_1_m16_idle_back.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_back, "assets/soldier_1_m16_running_back.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_front, "assets/soldier_1_m16_idle_front.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_front, "assets/soldier_1_m16_running_front.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_up_right, "assets/soldier_1_m16_idle_up_right.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_up_right, "assets/soldier_1_m16_running_up_right.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_idle_down_right, "assets/soldier_1_m16_idle_down_right.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_running_down_right, "assets/soldier_1_m16_running_down_right.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
+
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_crouched_0, "assets/soldier_1_m16_crouched_0.png", 70, 70);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_crouched_1, "assets/soldier_1_m16_crouched_1.png", 70, 70);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_crouched_2, "assets/soldier_1_m16_crouched_2.png", 70, 70);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_crouched_4, "assets/soldier_1_m16_crouched_4.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_crouched_12, "assets/soldier_1_m16_crouched_12.png", 36, 36);
 
     p1_adef_soldier_1_m16_idle_side = animation_definition_create(
         &p1_sprite_sheet_soldier_1_m16_idle_side,
@@ -377,6 +390,38 @@ void init_all_anims()
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
         10);
 
+    // crouched
+    p1_adef_soldier_1_m16_crouched_0 = animation_definition_create(
+        &p1_sprite_sheet_soldier_1_m16_crouched_0,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    p1_adef_soldier_1_m16_crouched_1 = animation_definition_create(
+        &p1_sprite_sheet_soldier_1_m16_crouched_1,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    p1_adef_soldier_1_m16_crouched_2 = animation_definition_create(
+        &p1_sprite_sheet_soldier_1_m16_crouched_2,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    p1_adef_soldier_1_m16_crouched_4 = animation_definition_create(
+        &p1_sprite_sheet_soldier_1_m16_crouched_4,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    p1_adef_soldier_1_m16_crouched_12 = animation_definition_create(
+        &p1_sprite_sheet_soldier_1_m16_crouched_12,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+
     p1_anim_soldier_1_m16_idle_side = animation_create(p1_adef_soldier_1_m16_idle_side, false);
     p1_anim_soldier_1_m16_running_side = animation_create(p1_adef_soldier_1_m16_running_side, true);
     p1_anim_soldier_1_m16_idle_back = animation_create(p1_adef_soldier_1_m16_idle_back, false);
@@ -388,17 +433,22 @@ void init_all_anims()
     p1_anim_soldier_1_m16_idle_down_right = animation_create(p1_adef_soldier_1_m16_idle_down_right, false);
     p1_anim_soldier_1_m16_running_down_right = animation_create(p1_adef_soldier_1_m16_running_down_right, true);
     p1_anim_soldier_1_m16_spawning_side = animation_create(p1_adef_soldier_1_m16_spawning_side, true);
-    p1_anim_soldier_1_m16_dying_side = animation_create(p1_adef_soldier_1_m16_dying_side, true);
+    p1_anim_soldier_1_m16_dying_side = animation_create(p1_adef_soldier_1_m16_dying_side, false);
+    p1_anim_soldier_1_m16_crouched_0 = animation_create(p1_adef_soldier_1_m16_crouched_0, false);
+    p1_anim_soldier_1_m16_crouched_1 = animation_create(p1_adef_soldier_1_m16_crouched_1, false);
+    p1_anim_soldier_1_m16_crouched_2 = animation_create(p1_adef_soldier_1_m16_crouched_2, false);
+    p1_anim_soldier_1_m16_crouched_4 = animation_create(p1_adef_soldier_1_m16_crouched_4, false);
+    p1_anim_soldier_1_m16_crouched_12 = animation_create(p1_adef_soldier_1_m16_crouched_12, false);
 
     // m16 w brewster
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_idle_side, "assets/soldier_1_m16_brewster_idle_side.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_running_side, "assets/soldier_1_m16_brewster_running_side.png", 36, 37);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_idle_back, "assets/soldier_1_m16_brewster_idle_back.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_running_back, "assets/soldier_1_m16_brewster_running_back.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_idle_front, "assets/soldier_1_m16_brewster_idle_front.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_running_front, "assets/soldier_1_m16_brewster_running_front.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_idle_side, "assets/soldier_1_m16_brewster_idle_side.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_running_side, "assets/soldier_1_m16_brewster_running_side.png", 36, 37);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_idle_back, "assets/soldier_1_m16_brewster_idle_back.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_running_back, "assets/soldier_1_m16_brewster_running_back.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_idle_front, "assets/soldier_1_m16_brewster_idle_front.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_running_front, "assets/soldier_1_m16_brewster_running_front.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m16_brewster_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
     p1_adef_soldier_1_m16_brewster_idle_side = animation_definition_create(
         &p1_sprite_sheet_soldier_1_m16_brewster_idle_side,
@@ -459,14 +509,14 @@ void init_all_anims()
     p1_anim_soldier_1_m16_brewster_dying_side = animation_create(p1_adef_soldier_1_m16_brewster_dying_side, true);
 
     // m44
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_idle_side, "assets/soldier_1_m44_idle_side.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_running_side, "assets/soldier_1_m44_running_side.png", 36, 37);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_idle_back, "assets/soldier_1_m44_idle_back.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_running_back, "assets/soldier_1_m44_running_back.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_idle_front, "assets/soldier_1_m44_idle_front.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_running_front, "assets/soldier_1_m44_running_front.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_idle_side, "assets/soldier_1_m44_idle_side.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_running_side, "assets/soldier_1_m44_running_side.png", 36, 37);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_idle_back, "assets/soldier_1_m44_idle_back.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_running_back, "assets/soldier_1_m44_running_back.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_idle_front, "assets/soldier_1_m44_idle_front.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_running_front, "assets/soldier_1_m44_running_front.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
     p1_adef_soldier_1_m44_idle_side = animation_definition_create(
         &p1_sprite_sheet_soldier_1_m44_idle_side,
@@ -527,14 +577,14 @@ void init_all_anims()
     p1_anim_soldier_1_m44_dying_side = animation_create(p1_adef_soldier_1_m44_dying_side, true);
 
     // m44 w brewster
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_idle_side, "assets/soldier_1_m44_brewster_idle_side.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_running_side, "assets/soldier_1_m44_brewster_running_side.png", 36, 37);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_idle_back, "assets/soldier_1_m44_brewster_idle_back.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_running_back, "assets/soldier_1_m44_brewster_running_back.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_idle_front, "assets/soldier_1_m44_brewster_idle_front.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_running_front, "assets/soldier_1_m44_brewster_running_front.png", 36, 36);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
-    render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_idle_side, "assets/soldier_1_m44_brewster_idle_side.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_running_side, "assets/soldier_1_m44_brewster_running_side.png", 36, 37);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_idle_back, "assets/soldier_1_m44_brewster_idle_back.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_running_back, "assets/soldier_1_m44_brewster_running_back.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_idle_front, "assets/soldier_1_m44_brewster_idle_front.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_running_front, "assets/soldier_1_m44_brewster_running_front.png", 36, 36);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
+    // render_sprite_sheet_init(&p1_sprite_sheet_soldier_1_m44_brewster_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
     p1_adef_soldier_1_m44_brewster_idle_side = animation_definition_create(
         &p1_sprite_sheet_soldier_1_m44_brewster_idle_side,
@@ -599,18 +649,18 @@ void init_all_anims()
      */
 
     // m16
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_side, "assets/soldier_1_m16_idle_side.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_side, "assets/soldier_1_m16_running_side.png", 36, 37);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_back, "assets/soldier_1_m16_idle_back.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_back, "assets/soldier_1_m16_running_back.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_front, "assets/soldier_1_m16_idle_front.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_front, "assets/soldier_1_m16_running_front.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_up_right, "assets/soldier_1_m16_idle_up_right.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_up_right, "assets/soldier_1_m16_running_up_right.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_down_right, "assets/soldier_1_m16_idle_down_right.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_down_right, "assets/soldier_1_m16_running_down_right.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_side, "assets/soldier_1_m16_idle_side.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_side, "assets/soldier_1_m16_running_side.png", 36, 37);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_back, "assets/soldier_1_m16_idle_back.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_back, "assets/soldier_1_m16_running_back.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_front, "assets/soldier_1_m16_idle_front.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_front, "assets/soldier_1_m16_running_front.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_up_right, "assets/soldier_1_m16_idle_up_right.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_up_right, "assets/soldier_1_m16_running_up_right.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_idle_down_right, "assets/soldier_1_m16_idle_down_right.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_running_down_right, "assets/soldier_1_m16_running_down_right.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
     p2_adef_soldier_1_m16_idle_side = animation_definition_create(
         &p2_sprite_sheet_soldier_1_m16_idle_side,
@@ -696,17 +746,17 @@ void init_all_anims()
     p2_anim_soldier_1_m16_idle_down_right = animation_create(p2_adef_soldier_1_m16_idle_down_right, false);
     p2_anim_soldier_1_m16_running_down_right = animation_create(p2_adef_soldier_1_m16_running_down_right, true);
     p2_anim_soldier_1_m16_spawning_side = animation_create(p2_adef_soldier_1_m16_spawning_side, true);
-    p2_anim_soldier_1_m16_dying_side = animation_create(p2_adef_soldier_1_m16_dying_side, true);
+    p2_anim_soldier_1_m16_dying_side = animation_create(p2_adef_soldier_1_m16_dying_side, false);
 
     // m16 w brewster
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_idle_side, "assets/soldier_1_m16_brewster_idle_side.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_running_side, "assets/soldier_1_m16_brewster_running_side.png", 36, 37);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_idle_back, "assets/soldier_1_m16_brewster_idle_back.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_running_back, "assets/soldier_1_m16_brewster_running_back.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_idle_front, "assets/soldier_1_m16_brewster_idle_front.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_running_front, "assets/soldier_1_m16_brewster_running_front.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_idle_side, "assets/soldier_1_m16_brewster_idle_side.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_running_side, "assets/soldier_1_m16_brewster_running_side.png", 36, 37);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_idle_back, "assets/soldier_1_m16_brewster_idle_back.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_running_back, "assets/soldier_1_m16_brewster_running_back.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_idle_front, "assets/soldier_1_m16_brewster_idle_front.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_running_front, "assets/soldier_1_m16_brewster_running_front.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m16_brewster_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
     p2_adef_soldier_1_m16_brewster_idle_side = animation_definition_create(
         &p2_sprite_sheet_soldier_1_m16_brewster_idle_side,
@@ -767,14 +817,14 @@ void init_all_anims()
     p2_anim_soldier_1_m16_brewster_dying_side = animation_create(p2_adef_soldier_1_m16_brewster_dying_side, true);
 
     // m44
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_idle_side, "assets/soldier_1_m44_idle_side.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_running_side, "assets/soldier_1_m44_running_side.png", 36, 37);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_idle_back, "assets/soldier_1_m44_idle_back.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_running_back, "assets/soldier_1_m44_running_back.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_idle_front, "assets/soldier_1_m44_idle_front.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_running_front, "assets/soldier_1_m44_running_front.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_idle_side, "assets/soldier_1_m44_idle_side.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_running_side, "assets/soldier_1_m44_running_side.png", 36, 37);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_idle_back, "assets/soldier_1_m44_idle_back.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_running_back, "assets/soldier_1_m44_running_back.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_idle_front, "assets/soldier_1_m44_idle_front.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_running_front, "assets/soldier_1_m44_running_front.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
     p2_adef_soldier_1_m44_idle_side = animation_definition_create(
         &p2_sprite_sheet_soldier_1_m44_idle_side,
@@ -835,14 +885,14 @@ void init_all_anims()
     p2_anim_soldier_1_m44_dying_side = animation_create(p2_adef_soldier_1_m44_dying_side, true);
 
     // m44 w brewster
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_idle_side, "assets/soldier_1_m44_brewster_idle_side.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_running_side, "assets/soldier_1_m44_brewster_running_side.png", 36, 37);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_idle_back, "assets/soldier_1_m44_brewster_idle_back.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_running_back, "assets/soldier_1_m44_brewster_running_back.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_idle_front, "assets/soldier_1_m44_brewster_idle_front.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_running_front, "assets/soldier_1_m44_brewster_running_front.png", 36, 36);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
-    render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_idle_side, "assets/soldier_1_m44_brewster_idle_side.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_running_side, "assets/soldier_1_m44_brewster_running_side.png", 36, 37);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_idle_back, "assets/soldier_1_m44_brewster_idle_back.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_running_back, "assets/soldier_1_m44_brewster_running_back.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_idle_front, "assets/soldier_1_m44_brewster_idle_front.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_running_front, "assets/soldier_1_m44_brewster_running_front.png", 36, 36);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_spawning_side, "assets/soldier_1_m16_spawning_side.png", 42, 42);
+    // render_sprite_sheet_init(&p2_sprite_sheet_soldier_1_m44_brewster_dying_side, "assets/soldier_1_m16_dying_side.png", 42, 42);
 
     p2_adef_soldier_1_m44_brewster_idle_side = animation_definition_create(
         &p2_sprite_sheet_soldier_1_m44_brewster_idle_side,
@@ -903,25 +953,93 @@ void init_all_anims()
     p2_anim_soldier_1_m44_brewster_dying_side = animation_create(p2_adef_soldier_1_m44_brewster_dying_side, true);
 
     // bullet stuff
-    render_sprite_sheet_init(&sprite_sheet_bullet_1_horizontal, "assets/bullet_round_small.png", 2, 2);
-    render_sprite_sheet_init(&sprite_sheet_bullet_1_vertical, "assets/bullet_round_small.png", 2, 2);
-    adef_bullet_1_horizontal = animation_definition_create(
-        &sprite_sheet_bullet_1_horizontal,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){0},
-        1);
-    adef_bullet_1_vertical = animation_definition_create(
-        &sprite_sheet_bullet_1_vertical,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){0},
-        1);
-    anim_bullet_1_horizontal = animation_create(adef_bullet_1_horizontal, false);
-    anim_bullet_1_vertical = animation_create(adef_bullet_1_vertical, false);
+    // render_sprite_sheet_init(&sprite_sheet_bullet_1_horizontal, "assets/bullet_round_small.png", 2, 2);
+    // render_sprite_sheet_init(&sprite_sheet_bullet_1_vertical, "assets/bullet_round_small.png", 2, 2);
+    // adef_bullet_1_horizontal = animation_definition_create(
+    //     &sprite_sheet_bullet_1_horizontal,
+    //     (f32[]){0},
+    //     (u8[]){0},
+    //     (u8[]){0},
+    //     1);
+    // adef_bullet_1_vertical = animation_definition_create(
+    //     &sprite_sheet_bullet_1_vertical,
+    //     (f32[]){0},
+    //     (u8[]){0},
+    //     (u8[]){0},
+    //     1);
+    // anim_bullet_1_horizontal = animation_create(adef_bullet_1_horizontal, false);
+    // anim_bullet_1_vertical = animation_create(adef_bullet_1_vertical, false);
 
     init_bullet_anim_hashmap();
     init_player_anim_hashmap();
+}
+
+char *get_bucket_from_angle(f32 angle)
+{
+    if (angle >= 6.1 || angle < 0.2)
+    {
+        return "0\0";
+    }
+    else if (angle >= 0.2 && angle < 0.59)
+    {
+        return "1\0";
+    }
+    else if (angle >= 0.59 && angle < 0.983)
+    {
+        return "2\0";
+    }
+    else if (angle >= 0.983 && angle < 1.375)
+    {
+        return "3\0";
+    }
+    else if (angle >= 1.375 && angle < 1.769)
+    {
+        return "4\0";
+    }
+    else if (angle >= 1.769 && angle < 2.163)
+    {
+        return "5\0";
+    }
+    else if (angle >= 2.163 && angle < 2.557)
+    {
+        return "6\0";
+    }
+    else if (angle >= 2.557 && angle < 2.95)
+    {
+        return "7\0";
+    }
+    else if (angle >= 2.95 && angle < 3.344)
+    {
+        return "8\0";
+    }
+    else if (angle >= 3.344 && angle < 3.738)
+    {
+        return "9\0";
+    }
+    else if (angle >= 3.738 && angle < 4.131)
+    {
+        return "10\0";
+    }
+    else if (angle >= 4.131 && angle < 4.525)
+    {
+        return "11\0";
+    }
+    else if (angle >= 4.525 && angle < 4.919)
+    {
+        return "12\0";
+    }
+    else if (angle >= 4.919 && angle < 5.313)
+    {
+        return "13\0";
+    }
+    else if (angle >= 5.313 && angle < 5.706)
+    {
+        return "14\0";
+    }
+    else if (angle >= 5.706 && angle < 6.1)
+    {
+        return "15\0";
+    }
 }
 
 // updates player statuses based on frame counter associated with each playaer
@@ -1065,26 +1183,33 @@ void update_player_animations(Player *player)
     char *character = "soldier_1"; // player->character
     char *weapon = player->weapon->name;
     char *armor = player->armor->name;
-    char *status;
+    char status[50];
     if (player->status == PLAYER_SPAWNING)
-        status = "spawning";
+        strcpy(status, "spawning\0");
     else if (player->status == PLAYER_DESPAWNING)
-        status = "dying";
+        strcpy(status, "dying\0");
     else if (player->entity->body->velocity[0] || player->entity->body->velocity[1])
-        status = "running";
+        strcpy(status, "running\0");
+    else if (player->status == PLAYER_CROUCHED)
+    {
+        // assign correct of the 16 crouched anims for the direction the player is aiming
+        strcpy(status, "crouched_");
+        char *bucket = get_bucket_from_angle(player->crosshair->angle);
+        strcat(status, bucket);
+    }
     else // player NOT moving
-        status = "idle";
+        strcpy(status, "idle\0");
     char *direction;
     if (player->direction == LEFT || player->direction == RIGHT)
-        direction = "side";
+        direction = "side\0";
     else if (player->direction == UP)
-        direction = "back";
+        direction = "back\0";
     else if (player->direction == UP_RIGHT)
-        direction = "up_right";
+        direction = "up_right\0";
     else if (player->direction == DOWN_RIGHT)
-        direction = "down_right";
+        direction = "down_right\0";
     else // player->direction == DOWN
-        direction = "front";
+        direction = "front\0";
     strcat(anim_name, player_side);
     strcat(anim_name, "_");
     strcat(anim_name, character);
@@ -1097,9 +1222,11 @@ void update_player_animations(Player *player)
         strcat(anim_name, "_");
     }
     strcat(anim_name, status);
-    strcat(anim_name, "_");
-    strcat(anim_name, direction);
-
+    if (player->status != PLAYER_CROUCHED)
+    {
+        strcat(anim_name, "_");
+        strcat(anim_name, direction);
+    }
     Animation *player_anim = get(player_anim_map, anim_name);
     if (player_anim)
         player->entity->animation = player_anim;
@@ -1108,11 +1235,19 @@ void update_player_animations(Player *player)
 
     // ensure we are starting new anims at the first frame
     if (player->entity->animation != prev_anim)
+    {
+        printf("setting animation current frame to 0\n");
         player->entity->animation->current_frame_index = 0;
+    }
+
+    if (player->status == PLAYER_DESPAWNING)
+    {
+        // printf("adef frame count: %u\n", player->entity->animation->animation_definition->frame_count);
+        printf("current frame: %u\n", player->entity->animation->current_frame_index);
+    }
 
     // TODO: remove this once animations are added for facing left (right now right facing anims are flipped and reused)
     player->entity->animation->is_flipped = player->direction == LEFT ? true : false;
-
     free(anim_name);
 }
 
@@ -1129,160 +1264,99 @@ void handle_player_shooting(Player *player, Key_State shoot)
         key_state_ready = true;
     }
 
+    f32 cx = 0;
+    f32 cy = 0;
+    f32 px = player->relative_position[0];
+    f32 py = player->relative_position[1];
+    vec2 bullet_position = {player->relative_position[0], player->relative_position[1]};
+    vec2 bullet_velocity = {0, 0};
+
+    // shoot at crosshair if present
+    if (player->crosshair->entity->is_active)
+    {
+        // populate crosshair position
+        cx = player->crosshair->relative_position[0];
+        cy = player->crosshair->relative_position[1];
+    }
+    else
+    { // player not crouching
+        if (player->direction == UP)
+        {
+            cx = px;
+            cy = py + 1;
+        }
+        else if (player->direction == RIGHT)
+        {
+            cx = px + 1;
+            cy = py;
+        }
+        else if (player->direction == DOWN)
+        {
+            cx = px;
+            cy = py - 1;
+        }
+        else if (player->direction == LEFT)
+        {
+            cx = px - 1;
+            cy = py;
+        }
+        else if (player->direction == UP_RIGHT)
+        {
+            cx = px + 1;
+            cy = py + 1;
+        }
+        else if (player->direction == UP_LEFT)
+        {
+            cx = px - 1;
+            cy = py + 1;
+        }
+        else if (player->direction == DOWN_RIGHT)
+        {
+            cx = px + 1;
+            cy = py - 1;
+        }
+        else if (player->direction == DOWN_LEFT)
+        {
+            cx = px - 1;
+            cy = py - 1;
+        }
+    }
+
+    // calculate angle
+    f32 dx = px - cx;
+    f32 dy = py - cy;
+    f32 angle = fabs((cx > px && cy > py) || (cx < px && cy < py) ? atan(dy / dx) : -1 * atan(dy / dx));
+
+    // calculate bullet starting position using angle
+    f32 bullet_x = cx >= px ? BULLET_DISTANCE_FROM_PLAYER * cos(angle) : BULLET_DISTANCE_FROM_PLAYER * cos(angle) * -1;
+    f32 bullet_y = cy >= py ? BULLET_DISTANCE_FROM_PLAYER * sin(angle) : BULLET_DISTANCE_FROM_PLAYER * sin(angle) * -1;
+
+    // calculate starting position using angle
+    bullet_position[0] = player->relative_position[0] + bullet_x;
+    bullet_position[1] = player->relative_position[1] + bullet_y;
+
+    // calculate velocity using angle
+    f32 vx = cx >= px ? player->weapon->bullet_velocity * cos(angle) : player->weapon->bullet_velocity * cos(angle) * -1;
+    f32 vy = cy >= py ? player->weapon->bullet_velocity * sin(angle) : player->weapon->bullet_velocity * sin(angle) * -1;
+    bullet_velocity[0] = vx;
+    bullet_velocity[1] = vy;
+
+    // correct angle
+    if (cx < px && cy > py) // 2nd quadrant
+        angle = M_PI - angle;
+    else if (cx < px && cy < py) // 3rd quadrant
+        angle += M_PI;
+    else if (cx > px && cy < py) // 4th quadrant
+        angle = 2 * M_PI - angle;
+    player->crosshair->angle = angle;
+
     // generate bullet if weapon is loaded and key state is correct
     if (player->weapon->capacity > 0 && player->weapon->ready_to_fire && key_state_ready)
     {
-        f32 cx = 0;
-        f32 cy = 0;
-        f32 px = player->relative_position[0];
-        f32 py = player->relative_position[1];
-        vec2 bullet_position = {player->relative_position[0], player->relative_position[1]};
-        vec2 bullet_velocity = {0, 0};
-
-        // shoot at crosshair if present
-        if (player->crosshair->entity->is_active)
-        {
-            // populate crosshair position
-            cx = player->crosshair->relative_position[0];
-            cy = player->crosshair->relative_position[1];
-        }
-        else
-        { // player not crouching
-            if (player->direction == UP)
-            {
-                cx = px;
-                cy = py + 1;
-            }
-            else if (player->direction == RIGHT)
-            {
-                cx = px + 1;
-                cy = py;
-            }
-            else if (player->direction == DOWN)
-            {
-                cx = px;
-                cy = py - 1;
-            }
-            else if (player->direction == LEFT)
-            {
-                cx = px - 1;
-                cy = py;
-            }
-            else if (player->direction == UP_RIGHT)
-            {
-                cx = px + 1;
-                cy = py + 1;
-            }
-            else if (player->direction == UP_LEFT)
-            {
-                cx = px - 1;
-                cy = py + 1;
-            }
-            else if (player->direction == DOWN_RIGHT)
-            {
-                cx = px + 1;
-                cy = py - 1;
-            }
-            else if (player->direction == DOWN_LEFT)
-            {
-                cx = px - 1;
-                cy = py - 1;
-            }
-        }
-
-        // calculate angle
-        f32 dx = px - cx;
-        f32 dy = py - cy;
-        f32 angle = fabs((cx > px && cy > py) || (cx < px && cy < py) ? atan(dy / dx) : -1 * atan(dy / dx));
-
-        // calculate bullet starting position using angle
-        f32 bullet_x = cx >= px ? BULLET_DISTANCE_FROM_PLAYER * cos(angle) : BULLET_DISTANCE_FROM_PLAYER * cos(angle) * -1;
-        f32 bullet_y = cy >= py ? BULLET_DISTANCE_FROM_PLAYER * sin(angle) : BULLET_DISTANCE_FROM_PLAYER * sin(angle) * -1;
-
-        // calculate starting position using angle
-        bullet_position[0] = player->relative_position[0] + bullet_x;
-        bullet_position[1] = player->relative_position[1] + bullet_y;
-
-        // calculate velocity using angle
-        f32 vx = cx >= px ? player->weapon->bullet_velocity * cos(angle) : player->weapon->bullet_velocity * cos(angle) * -1;
-        f32 vy = cy >= py ? player->weapon->bullet_velocity * sin(angle) : player->weapon->bullet_velocity * sin(angle) * -1;
-        bullet_velocity[0] = vx;
-        bullet_velocity[1] = vy;
-
-        // correct angle
-        if (cx < px && cy > py) // 2nd quadrant
-            angle = M_PI - angle;
-        else if (cx < px && cy < py) // 3rd quadrant
-            angle += M_PI;
-        else if (cx > px && cy < py) // 4th quadrant
-            angle = 2 * M_PI - angle;
-
         // check which of 16 buckets it falls into, assign animation
-        char *bullet_anim_name;
-        if (angle >= 6.1 || angle < 0.2)
-        {
-            bullet_anim_name = "bullet_0";
-        }
-        else if (angle >= 0.2 && angle < 0.59)
-        {
-            bullet_anim_name = "bullet_1";
-        }
-        else if (angle >= 0.59 && angle < 0.983)
-        {
-            bullet_anim_name = "bullet_2";
-        }
-        else if (angle >= 0.983 && angle < 1.375)
-        {
-            bullet_anim_name = "bullet_3";
-        }
-        else if (angle >= 1.375 && angle < 1.769)
-        {
-            bullet_anim_name = "bullet_4";
-        }
-        else if (angle >= 1.769 && angle < 2.163)
-        {
-            bullet_anim_name = "bullet_5";
-        }
-        else if (angle >= 2.163 && angle < 2.557)
-        {
-            bullet_anim_name = "bullet_6";
-        }
-        else if (angle >= 2.557 && angle < 2.95)
-        {
-            bullet_anim_name = "bullet_7";
-        }
-        else if (angle >= 2.95 && angle < 3.344)
-        {
-            bullet_anim_name = "bullet_8";
-        }
-        else if (angle >= 3.344 && angle < 3.738)
-        {
-            bullet_anim_name = "bullet_9";
-        }
-        else if (angle >= 3.738 && angle < 4.131)
-        {
-            bullet_anim_name = "bullet_10";
-        }
-        else if (angle >= 4.131 && angle < 4.525)
-        {
-            bullet_anim_name = "bullet_11";
-        }
-        else if (angle >= 4.525 && angle < 4.919)
-        {
-            bullet_anim_name = "bullet_12";
-        }
-        else if (angle >= 4.919 && angle < 5.313)
-        {
-            bullet_anim_name = "bullet_13";
-        }
-        else if (angle >= 5.313 && angle < 5.706)
-        {
-            bullet_anim_name = "bullet_14";
-        }
-        else if (angle >= 5.706 && angle < 6.1)
-        {
-            bullet_anim_name = "bullet_15";
-        }
+        char bullet_anim_name[15] = "bullet_";
+        char *bucket = get_bucket_from_angle(angle);
+        strcat(bullet_anim_name, bucket);
 
         // create bullet entity and calculated assign anim and velocity
         Entity *bullet = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);

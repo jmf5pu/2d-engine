@@ -99,6 +99,7 @@ typedef struct crosshair
 {
     Entity *entity;
     vec2 relative_position;
+    f32 angle;
 } Crosshair;
 
 typedef struct camera
