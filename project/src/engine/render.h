@@ -8,7 +8,7 @@
 #define MAX_BATCH_ELEMENTS 60000
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
-#define RENDER_SCALE_FACTOR_DEFAULT 0.5
+#define RENDER_SCALE_FACTOR_DEFAULT 0.75
 
 #include <stdbool.h>
 #include <SDL2/SDL.h>

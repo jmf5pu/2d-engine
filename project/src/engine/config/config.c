@@ -119,7 +119,8 @@ void config_key_bind(Input_Key key, const char *key_name)
     SDL_Scancode scan_code = SDL_GetScancodeFromName(key_name);
     if (scan_code == SDL_SCANCODE_UNKNOWN)
     {
-        ERROR_EXIT("ERROR: Invalid scan code when binding key: %s\n", key_name);
+        printf("ERROR: Invalid scan code when binding key: %s\n", key_name);
+        return;
     }
 
     global.config.keybinds[key] = scan_code;

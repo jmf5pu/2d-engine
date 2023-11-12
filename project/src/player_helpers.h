@@ -327,6 +327,25 @@ Animation *p2_anim_soldier_1_m44_brewster_running_front;
 Animation *p2_anim_soldier_1_m44_brewster_spawning_side;
 Animation *p2_anim_soldier_1_m44_brewster_dying_side;
 
+/*
+NEW PLAYER OBJECTS 11/12
+*/
+Sprite_Sheet sprite_sheet_soldier_purple_base_idle_back;
+Sprite_Sheet sprite_sheet_soldier_purple_base_idle_side;
+Sprite_Sheet sprite_sheet_soldier_purple_base_idle_front;
+
+Animation_Definition *adef_soldier_purple_base_idle_back;
+Animation_Definition *adef_soldier_purple_base_idle_side;
+Animation_Definition *adef_soldier_purple_base_idle_front;
+
+Animation *p1_anim_soldier_purple_base_idle_back;
+Animation *p1_anim_soldier_purple_base_idle_side;
+Animation *p1_anim_soldier_purple_base_idle_front;
+
+Animation *p2_anim_soldier_purple_base_idle_back;
+Animation *p2_anim_soldier_purple_base_idle_side;
+Animation *p2_anim_soldier_purple_base_idle_front;
+
 // bullet sprites & anims
 Sprite_Sheet sprite_sheet_bullet_1_horizontal;
 Sprite_Sheet sprite_sheet_bullet_1_vertical;

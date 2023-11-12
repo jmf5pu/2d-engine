@@ -1,10 +1,21 @@
 #include "weapon_types.h"
+#include "engine/render.h"
 
+Weapon_Type base;
 Weapon_Type m16;
 Weapon_Type m44;
 
 void init_weapon_types()
 {
+    base.name = "base";
+    base.fire_mode = AUTO;
+    base.capacity = 0;
+    base.reserve = 0;
+    base.max_fire_rate = 1;
+    base.damage = 0;
+    base.bullet_velocity = 0;
+    base.aiming_scale_factor = RENDER_SCALE_FACTOR_DEFAULT;
+
     m16.name = "m16";
     m16.fire_mode = BURST;
     m16.capacity = 30;

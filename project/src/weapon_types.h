@@ -3,6 +3,7 @@
 
 #include "structs.h"
 
+extern Weapon_Type base;
 extern Weapon_Type m16;
 extern Weapon_Type m44;
 
