@@ -1458,13 +1458,13 @@ void handle_player_input(Player *player)
 
         // movement inputs now move crosshair instead of player
         if (left)
-            velx -= 250;
+            velx -= DEFAULT_PLAYER_MOVEMENT_SPEED;
         if (right)
-            velx += 250;
+            velx += DEFAULT_PLAYER_MOVEMENT_SPEED;
         if (up)
-            vely += 250;
+            vely += DEFAULT_PLAYER_MOVEMENT_SPEED;
         if (down)
-            vely -= 250;
+            vely -= DEFAULT_PLAYER_MOVEMENT_SPEED;
 
         // check if crosshair is out of bounds, if so, put in bounds, set velocity to 0
         if (player->crosshair->entity->body->aabb.position[0] < 0)
@@ -1522,53 +1522,55 @@ void handle_player_input(Player *player)
         player->entity->body->aabb.position[1] = (render_height * 0.5);
     }
 
-    // 4 directional movement only, no diagonals
+    // 8 directional movement
+    f32 angle = 0.78539816; // 45 degrees in radians
+    f32 xy_magnitude = sin(angle) * DEFAULT_PLAYER_MOVEMENT_SPEED;
     if (up && right)
     {
         player->direction = UP_RIGHT;
-        velx += 106;
-        vely += 106;
+        velx += xy_magnitude;
+        vely += xy_magnitude;
     }
     else if (up && left)
     {
         player->direction = UP_LEFT;
-        velx -= 106;
-        vely += 106;
+        velx -= xy_magnitude;
+        vely += xy_magnitude;
     }
     else if (down && right)
     {
         player->direction = DOWN_RIGHT;
-        velx += 106;
-        vely -= 106;
+        velx += xy_magnitude;
+        vely -= xy_magnitude;
     }
     else if (down && left)
     {
         player->direction = DOWN_LEFT;
-        velx -= 106;
-        vely -= 106;
+        velx -= xy_magnitude;
+        vely -= xy_magnitude;
     }
     else if (right)
     {
         player->direction = RIGHT;
-        velx += 150;
+        velx += DEFAULT_PLAYER_MOVEMENT_SPEED;
     }
 
     else if (left)
     {
         player->direction = LEFT;
-        velx -= 150;
+        velx -= DEFAULT_PLAYER_MOVEMENT_SPEED;
     }
 
     else if (up)
     {
         player->direction = UP;
-        vely += 150;
+        vely += DEFAULT_PLAYER_MOVEMENT_SPEED;
     }
 
     else if (down)
     {
         player->direction = DOWN;
-        vely -= 150;
+        vely -= DEFAULT_PLAYER_MOVEMENT_SPEED;
     }
 
     // handle weapon attribute updates & bullet generation, contingent on fire mode, input, and weapon shot cooldown

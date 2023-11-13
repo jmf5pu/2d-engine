@@ -15,6 +15,9 @@
 
 #define BULLET_DISTANCE_FROM_PLAYER 40
 
+#define DEFAULT_PLAYER_MOVEMENT_SPEED 250
+#define DEFAULT_CROSSHAIR_MOVEMENT_SPEED 350
+
 // declare players
 extern Player *player_one;
 extern Player *player_two;

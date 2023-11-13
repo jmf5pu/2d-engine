@@ -99,82 +99,82 @@ void init_map(Map *map)
     Pickup *pickup_array = malloc(map->num_pickups * sizeof(Pickup));
 
     // m44 pickup
-    Sprite_Sheet *sprite_sheet_m44 = malloc(sizeof(Sprite_Sheet));
-    Sprite_Sheet *sprite_sheet_m44_spawning = malloc(sizeof(Sprite_Sheet));
-    Animation_Definition *adef_m44 = malloc(sizeof(Animation_Definition));
-    Animation_Definition *adef_m44_spawning = malloc(sizeof(Animation_Definition));
-    Animation *anim_m44 = malloc(sizeof(Animation));
-    Animation *anim_m44_spawning = malloc(sizeof(Animation));
-    render_sprite_sheet_init(sprite_sheet_m44, "assets/m44.png", 30, 15);
-    adef_m44 = animation_definition_create(
-        sprite_sheet_m44,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){1},
-        1);
-    anim_m44 = animation_create(adef_m44, false);
-    render_sprite_sheet_init(sprite_sheet_m44_spawning, "assets/m44_spawning.png", 30, 15);
-    adef_m44_spawning = animation_definition_create(
-        sprite_sheet_m44_spawning,
-        (f32[]){0.25, 0.25},
-        (u8[]){0},
-        (u8[]){1, 2},
-        2);
-    anim_m44_spawning = animation_create(adef_m44_spawning, true);
+    // Sprite_Sheet *sprite_sheet_m44 = malloc(sizeof(Sprite_Sheet));
+    // Sprite_Sheet *sprite_sheet_m44_spawning = malloc(sizeof(Sprite_Sheet));
+    // Animation_Definition *adef_m44 = malloc(sizeof(Animation_Definition));
+    // Animation_Definition *adef_m44_spawning = malloc(sizeof(Animation_Definition));
+    // Animation *anim_m44 = malloc(sizeof(Animation));
+    // Animation *anim_m44_spawning = malloc(sizeof(Animation));
+    // render_sprite_sheet_init(sprite_sheet_m44, "assets/m44.png", 30, 15);
+    // adef_m44 = animation_definition_create(
+    //     sprite_sheet_m44,
+    //     (f32[]){0},
+    //     (u8[]){0},
+    //     (u8[]){1},
+    //     1);
+    // anim_m44 = animation_create(adef_m44, false);
+    // render_sprite_sheet_init(sprite_sheet_m44_spawning, "assets/m44_spawning.png", 30, 15);
+    // adef_m44_spawning = animation_definition_create(
+    //     sprite_sheet_m44_spawning,
+    //     (f32[]){0.25, 0.25},
+    //     (u8[]){0},
+    //     (u8[]){1, 2},
+    //     2);
+    // anim_m44_spawning = animation_create(adef_m44_spawning, true);
 
-    Pickup_Animation_Set *m44_pickup_animation_set = malloc(sizeof(Pickup_Animation_Set));
-    m44_pickup_animation_set->active = anim_m44;
-    m44_pickup_animation_set->spawning = anim_m44_spawning;
+    // Pickup_Animation_Set *m44_pickup_animation_set = malloc(sizeof(Pickup_Animation_Set));
+    // m44_pickup_animation_set->active = anim_m44;
+    // m44_pickup_animation_set->spawning = anim_m44_spawning;
 
-    Pickup m44_pickup = (Pickup){
-        .entity = entity_create((vec2){340, 75}, (vec2){30, 20}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, bullet_mask, pickup_on_hit, pickup_on_hit_static),
-        .animation_set = m44_pickup_animation_set,
-        .name = M44_PICKUP,
-        .status = PICKUP_ACTIVE,
-        .spawn_delay = 5,
-        .spawn_time = 3,
-        .frames_on_status = 0};
+    // Pickup m44_pickup = (Pickup){
+    //     .entity = entity_create((vec2){340, 75}, (vec2){30, 20}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, bullet_mask, pickup_on_hit, pickup_on_hit_static),
+    //     .animation_set = m44_pickup_animation_set,
+    //     .name = M44_PICKUP,
+    //     .status = PICKUP_ACTIVE,
+    //     .spawn_delay = 5,
+    //     .spawn_time = 3,
+    //     .frames_on_status = 0};
 
-    m44_pickup.entity->animation = anim_m44;
+    // m44_pickup.entity->animation = anim_m44;
 
-    // brewster body armor pickup
-    Sprite_Sheet *sprite_sheet_brewster = malloc(sizeof(Sprite_Sheet));
-    Sprite_Sheet *sprite_sheet_brewster_spawning = malloc(sizeof(Sprite_Sheet));
-    Animation_Definition *adef_brewster = malloc(sizeof(Animation_Definition));
-    Animation_Definition *adef_brewster_spawning = malloc(sizeof(Animation_Definition));
-    Animation *anim_brewster = malloc(sizeof(Animation));
-    Animation *anim_brewster_spawning = malloc(sizeof(Animation));
-    render_sprite_sheet_init(sprite_sheet_brewster, "assets/brewster_body_shield.png", 22, 22);
-    adef_brewster = animation_definition_create(
-        sprite_sheet_brewster,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){1},
-        1);
-    anim_brewster = animation_create(adef_brewster, false);
-    render_sprite_sheet_init(sprite_sheet_brewster_spawning, "assets/brewster_body_shield.png", 22, 22);
-    adef_brewster_spawning = animation_definition_create(
-        sprite_sheet_brewster_spawning,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){1},
-        1);
-    anim_brewster_spawning = animation_create(adef_brewster_spawning, false);
+    // // brewster body armor pickup
+    // Sprite_Sheet *sprite_sheet_brewster = malloc(sizeof(Sprite_Sheet));
+    // Sprite_Sheet *sprite_sheet_brewster_spawning = malloc(sizeof(Sprite_Sheet));
+    // Animation_Definition *adef_brewster = malloc(sizeof(Animation_Definition));
+    // Animation_Definition *adef_brewster_spawning = malloc(sizeof(Animation_Definition));
+    // Animation *anim_brewster = malloc(sizeof(Animation));
+    // Animation *anim_brewster_spawning = malloc(sizeof(Animation));
+    // render_sprite_sheet_init(sprite_sheet_brewster, "assets/brewster_body_shield.png", 22, 22);
+    // adef_brewster = animation_definition_create(
+    //     sprite_sheet_brewster,
+    //     (f32[]){0},
+    //     (u8[]){0},
+    //     (u8[]){1},
+    //     1);
+    // anim_brewster = animation_create(adef_brewster, false);
+    // render_sprite_sheet_init(sprite_sheet_brewster_spawning, "assets/brewster_body_shield.png", 22, 22);
+    // adef_brewster_spawning = animation_definition_create(
+    //     sprite_sheet_brewster_spawning,
+    //     (f32[]){0},
+    //     (u8[]){0},
+    //     (u8[]){1},
+    //     1);
+    // anim_brewster_spawning = animation_create(adef_brewster_spawning, false);
 
-    Pickup_Animation_Set *brewster_pickup_animation_set = malloc(sizeof(Pickup_Animation_Set));
-    brewster_pickup_animation_set->active = anim_brewster;
-    brewster_pickup_animation_set->spawning = anim_brewster_spawning;
+    // Pickup_Animation_Set *brewster_pickup_animation_set = malloc(sizeof(Pickup_Animation_Set));
+    // brewster_pickup_animation_set->active = anim_brewster;
+    // brewster_pickup_animation_set->spawning = anim_brewster_spawning;
 
-    Pickup brewster_pickup = (Pickup){
-        .entity = entity_create((vec2){340, 200}, (vec2){22, 22}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, bullet_mask, pickup_on_hit, pickup_on_hit_static),
-        .animation_set = brewster_pickup_animation_set,
-        .name = BREWSTER_PICKUP,
-        .status = PICKUP_ACTIVE,
-        .spawn_delay = 5,
-        .spawn_time = 3,
-        .frames_on_status = 0};
+    // Pickup brewster_pickup = (Pickup){
+    //     .entity = entity_create((vec2){340, 200}, (vec2){22, 22}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, bullet_mask, pickup_on_hit, pickup_on_hit_static),
+    //     .animation_set = brewster_pickup_animation_set,
+    //     .name = BREWSTER_PICKUP,
+    //     .status = PICKUP_ACTIVE,
+    //     .spawn_delay = 5,
+    //     .spawn_time = 3,
+    //     .frames_on_status = 0};
 
-    brewster_pickup.entity->animation = anim_brewster;
+    // brewster_pickup.entity->animation = anim_brewster;
 
     // pickup_array[0] = m44_pickup;
     // pickup_array[1] = brewster_pickup;
