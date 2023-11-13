@@ -14,7 +14,7 @@ void init_weapon_types()
     base.max_fire_rate = 1;
     base.damage = 0;
     base.bullet_velocity = 0;
-    base.aiming_scale_factor = RENDER_SCALE_FACTOR_DEFAULT;
+    base.aiming_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
 
     m16.name = "m16";
     m16.fire_mode = BURST;

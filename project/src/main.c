@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
     player_one->relative_position[0] = player_one->entity->body->aabb.position[0];
     player_one->relative_position[1] = player_one->entity->body->aabb.position[1];
     player_one->status = PLAYER_SPAWNING;
-    player_one->render_scale_factor = RENDER_SCALE_FACTOR_DEFAULT;
+    player_one->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
     player_one->despawn_time = 2.9;
     player_one->spawn_delay = 5;
     player_one->spawn_time = 2;
@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
         player_two->relative_position[0] = player_two->entity->body->aabb.position[0];
         player_two->relative_position[1] = player_two->entity->body->aabb.position[1];
         player_two->status = PLAYER_SPAWNING;
-        player_two->render_scale_factor = RENDER_SCALE_FACTOR_DEFAULT;
+        player_two->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
         player_two->despawn_time = 2.9;
         player_two->spawn_delay = 5;
         player_two->spawn_time = 2;

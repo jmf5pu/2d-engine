@@ -6,9 +6,7 @@
 #define MAX_BATCH_QUADS 10000
 #define MAX_BATCH_VERTICES 40000
 #define MAX_BATCH_ELEMENTS 60000
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720
-#define RENDER_SCALE_FACTOR_DEFAULT 0.75
+#define DEFAULT_RENDER_SCALE_FACTOR 0.5
 
 #include <stdbool.h>
 #include <SDL2/SDL.h>
@@ -17,6 +15,8 @@
 #include "types.h"
 
 // defined in render.c
+extern f32 window_width;
+extern f32 window_height;
 extern f32 render_width;
 extern f32 render_height;
 

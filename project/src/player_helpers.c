@@ -1033,7 +1033,7 @@ void update_player_status(Player *player)
     else if (player->health <= 0 && player->status == PLAYER_ACTIVE)
     {
         player->status = PLAYER_DESPAWNING;
-        player->render_scale_factor = RENDER_SCALE_FACTOR_DEFAULT;
+        player->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
         player->frames_on_status = 0;
 
         // shouldn't be moving on death anim
@@ -1510,7 +1510,7 @@ void handle_player_input(Player *player)
         player->crosshair->entity->is_active = false;
 
         // reset render dimensions and projection matrix
-        player->render_scale_factor = RENDER_SCALE_FACTOR_DEFAULT;
+        player->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
         set_render_dimensions(player->render_scale_factor, true);
 
         // center camera on player

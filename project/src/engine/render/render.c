@@ -24,20 +24,25 @@ static u32 vbo_batch;
 static u32 ebo_batch;
 static u32 shader_batch;
 static Array_List *list_batch;
-f32 render_width;
-f32 render_height;
+
+f32 window_width, window_height, render_width, render_height;
 
 SDL_Window *render_init(void)
 {
+    // initialize video subsystem
+    SDL_Init(SDL_INIT_VIDEO);
+
+    // create main window
     SDL_DisplayMode display_mode;
     SDL_GetCurrentDisplayMode(0, &display_mode);
-    int width = display_mode.w;
-    int height = display_mode.h;
-    printf("Display mode width, height: %d,%d\n", width, height);
-    set_render_dimensions(0.5, false);
+    printf("Dislpay Mode Resolution: %dx%d\n", display_mode.w, display_mode.h);
+    window_width = display_mode.w;
+    window_height = display_mode.h;
+
+    set_render_dimensions(DEFAULT_RENDER_SCALE_FACTOR, false);
     if (!render_height || !render_width)
         ERROR_EXIT("ERROR: render dimensions not initialized properly");
-    SDL_Window *window = render_init_window(WINDOW_WIDTH, WINDOW_HEIGHT);
+    SDL_Window *window = render_init_window(window_width, window_height);
     render_init_quad(&vao_quad, &vbo_quad, &ebo_quad);
     render_init_batch_quads(&vao_batch, &vbo_batch, &ebo_batch);
     render_init_line(&vao_line, &vbo_line);
@@ -59,8 +64,8 @@ SDL_Window *render_init(void)
 // scale_factor: float representing the fraction of the window dimensions the render dimensions should be
 void set_render_dimensions(f32 scale_factor, bool update_shaders)
 {
-    render_width = SPLIT_SCREEN ? WINDOW_WIDTH * scale_factor * 0.5 : WINDOW_WIDTH * scale_factor;
-    render_height = WINDOW_HEIGHT * scale_factor;
+    render_width = SPLIT_SCREEN ? window_width * scale_factor * 0.5 : window_width * scale_factor;
+    render_height = window_height * scale_factor;
     if (update_shaders)
     {
         update_projection_matrix(&shader_default, &shader_batch, render_width, render_height);
@@ -122,7 +127,7 @@ void render_begin(void)
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
     list_batch->len = 0; // clears batch vertices buffer
-    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+    glViewport(0, 0, window_width, window_height);
 }
 
 void render_begin_left(void)
@@ -130,13 +135,13 @@ void render_begin_left(void)
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
     list_batch->len = 0; // clears batch vertices buffer from previous frame
-    glViewport(0, 0, WINDOW_WIDTH * 0.5, WINDOW_HEIGHT);
+    glViewport(0, 0, window_width * 0.5, window_height);
 }
 
 void render_begin_right(void)
 {
     list_batch->len = 0;
-    glViewport(WINDOW_WIDTH * 0.5, 0, WINDOW_WIDTH * 0.5, WINDOW_HEIGHT);
+    glViewport(window_width * 0.5, 0, window_width * 0.5, window_height);
 }
 
 static void render_batch(Batch_Vertex *vertices, usize count, u32 texture_ids[32])
