@@ -29,6 +29,11 @@ f32 render_height;
 
 SDL_Window *render_init(void)
 {
+    SDL_DisplayMode display_mode;
+    SDL_GetCurrentDisplayMode(0, &display_mode);
+    int width = display_mode.w;
+    int height = display_mode.h;
+    printf("Display mode width, height: %d,%d\n", width, height);
     set_render_dimensions(0.5, false);
     if (!render_height || !render_width)
         ERROR_EXIT("ERROR: render dimensions not initialized properly");
