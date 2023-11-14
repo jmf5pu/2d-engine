@@ -30,7 +30,6 @@
 
 static u32 texture_slots[32] = {0}; // texture slots array for batch rendering
 static bool should_quit = false;    // quit flag
-static bool render_bodies = false;  // set to true for debugging static bodies
 
 const u8 frame_rate = 60; // frame rate
 
@@ -95,7 +94,7 @@ int main(int argc, char *argv[])
 
     // init player one
     player_one = malloc(sizeof(Player));
-    player_one->entity = entity_create(map.player_one_spawn_points[0], (vec2){36, 36}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    player_one->entity = entity_create((vec2){render_width * 0.5, render_height * 0.5}, (vec2){40, 75}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
     player_one->camera = SPLIT_SCREEN ? &left_cam : &main_cam;
     player_one->crosshair = &(Crosshair){
         .entity = entity_create((vec2){player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1]}, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static),
@@ -118,6 +117,20 @@ int main(int argc, char *argv[])
         .frames_since_last_shot = 0,
         .ready_to_fire = false,
     };
+    // player_one->weapon = &(Weapon){
+    //     .name = m44.name,
+    //     .fire_mode = m44.fire_mode,
+    //     .capacity = m44.capacity,
+    //     .max_capacity = m44.capacity,
+    //     .reserve = m44.reserve,
+    //     .max_reserve = m44.reserve,
+    //     .max_fire_rate = m44.max_fire_rate,
+    //     .damage = m44.damage,
+    //     .bullet_velocity = m44.bullet_velocity,
+    //     .aiming_scale_factor = m44.aiming_scale_factor,
+    //     .frames_since_last_shot = 0,
+    //     .ready_to_fire = true,
+    // };
     player_one->armor = &(Armor){
         .name = "",
         .integrity = 0,
@@ -125,8 +138,8 @@ int main(int argc, char *argv[])
     };
     player_one->spawn_point[0] = map.player_one_spawn_points[0][0];
     player_one->spawn_point[1] = map.player_one_spawn_points[0][1];
-    player_one->relative_position[0] = player_one->entity->body->aabb.position[0];
-    player_one->relative_position[1] = player_one->entity->body->aabb.position[1];
+    player_one->relative_position[0] = map.player_one_spawn_points[0][0];
+    player_one->relative_position[1] = map.player_one_spawn_points[0][1];
     player_one->status = PLAYER_SPAWNING;
     player_one->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
     player_one->despawn_time = 2.9;
@@ -135,12 +148,13 @@ int main(int argc, char *argv[])
     player_one->frames_on_status = 0;
     player_one->health = 100;
     player_one->is_left_player = true;
+    camera_update(&left_cam, player_one, &map);
 
     // init player two
     if (SPLIT_SCREEN)
     {
         player_two = malloc(sizeof(Player));
-        player_two->entity = entity_create((vec2){map.player_two_spawn_points[0][1], map.player_two_spawn_points[0][1]}, (vec2){36, 36}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+        player_two->entity = entity_create((vec2){render_width * 0.5, render_height * 0.5}, (vec2){40, 75}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
         player_two->camera = &right_cam;
         player_two->crosshair = &(Crosshair){
             .entity = entity_create((vec2){player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1]}, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static),
@@ -170,8 +184,8 @@ int main(int argc, char *argv[])
         };
         player_two->spawn_point[0] = map.player_two_spawn_points[0][0];
         player_two->spawn_point[1] = map.player_two_spawn_points[0][1];
-        player_two->relative_position[0] = player_two->entity->body->aabb.position[0];
-        player_two->relative_position[1] = player_two->entity->body->aabb.position[1];
+        player_two->relative_position[0] = map.player_two_spawn_points[0][0];
+        player_two->relative_position[1] = map.player_two_spawn_points[0][1];
         player_two->status = PLAYER_SPAWNING;
         player_two->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
         player_two->despawn_time = 2.9;
@@ -180,9 +194,8 @@ int main(int argc, char *argv[])
         player_two->frames_on_status = 0;
         player_two->health = 100;
         player_two->is_left_player = false;
+        camera_update(&right_cam, player_two, &map);
     }
-
-    SDL_ShowCursor(false);
 
     // main gameplay loop
     while (!should_quit)
@@ -362,7 +375,7 @@ int main(int argc, char *argv[])
                 animation_render(entity->animation, window, entity->body->aabb.position, 0, WHITE, texture_slots);
 
                 // for debugging collisions
-                if (render_bodies)
+                if (RENDER_PHYSICS_BODIES)
                     render_aabb((f32 *)&entity->body->aabb, WHITE);
             }
 
@@ -370,7 +383,6 @@ int main(int argc, char *argv[])
             for (int l = 0; l < map.num_props; l++)
             {
                 Prop prop = map.props[l];
-                prop.sprite->sprite_sheet;
 
                 /*
                  * Determining the props z_index based on position relative to player
@@ -389,12 +401,15 @@ int main(int argc, char *argv[])
                 }
                 bool is_below_player = player_y_min < (prop.sprite->position[1] - prop.sprite->half_size[1] + prop.layer_threshold) || player_y_min > (prop.sprite->position[1] + prop.sprite->half_size[1]) || l == 0;
                 i32 z_index = is_below_player ? prop.sprite->z_index : 1;
-                render_sprite_sheet_frame(prop.sprite->sprite_sheet, window, prop.sprite->row, prop.sprite->column, prop.sprite->position, z_index, prop.sprite->is_flipped, render_bodies ? (vec4){0.9, 0.9, 0.9, 0.9} : prop.sprite->color, texture_slots);
+                render_sprite_sheet_frame(prop.sprite->sprite_sheet, window, prop.sprite->row, prop.sprite->column, prop.sprite->position, z_index, prop.sprite->is_flipped, RENDER_PHYSICS_BODIES ? (vec4){0.9, 0.9, 0.9, 0.9} : prop.sprite->color, texture_slots);
 
-                // render the static body TODO: not working for some reason
-                if (prop.static_body && render_bodies)
+                // render the static bodies
+                if (RENDER_PHYSICS_BODIES)
                 {
-                    render_aabb((f32 *)&prop.static_body->aabb, WHITE);
+                    for (int k = 0; k < prop.num_static_bodies; k++)
+                    {
+                        render_aabb((f32 *)&prop.static_bodies[k]->aabb, WHITE);
+                    }
                 }
             }
 

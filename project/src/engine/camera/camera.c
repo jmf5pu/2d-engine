@@ -26,7 +26,7 @@ void camera_init(void)
 
     // half way to the right of the screen, buffers the center instead of the left side
     right_cam = (Camera){
-        .position = {render_width, 0}, // essentially bump everything to the right by half the screen width right off the bat
+        .position = {0, 0}, // essentially bump everything to the right by half the screen width right off the bat
         .buffer = {WINDOW_BUFFER, render_width - WINDOW_BUFFER, WINDOW_BUFFER, render_height - WINDOW_BUFFER},
     };
 }

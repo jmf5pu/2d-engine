@@ -32,6 +32,9 @@ SDL_Window *render_init(void)
     // initialize video subsystem
     SDL_Init(SDL_INIT_VIDEO);
 
+    // hide cursor
+    SDL_ShowCursor(false);
+
     // create main window
     SDL_DisplayMode display_mode;
     SDL_GetCurrentDisplayMode(0, &display_mode);

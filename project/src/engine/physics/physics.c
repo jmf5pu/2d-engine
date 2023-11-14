@@ -142,15 +142,11 @@ static void stationary_response(Body *body)
     {
         Static_Body *static_body = physics_static_body_get(i);
 
-        // if collision masks aren't indicating a collision, skip collision logic (return)
-        if ((static_body->collision_layer & body->collision_layer) == 0)
-            return;
-
         AABB aabb = aabb_minkowski_difference(static_body->aabb, body->aabb);
         vec2 min, max;
         aabb_min_max(min, max, aabb);
 
-        if (min[0] <= 0 && max[0] >= 0 && min[1] <= 0 && max[1] >= 0)
+        if (min[0] <= 0 && max[0] >= 0 && min[1] <= 0 && max[1] >= 0 && (static_body->collision_layer & body->collision_layer) == 0)
         {
             vec2 penetration_vector;
             aabb_penetration_vector(penetration_vector, aabb);
@@ -167,13 +163,6 @@ void physics_update(void)
     for (u32 i = 0; i < state.body_list->len; ++i)
     {
         body = array_list_get(state.body_list, i, "physics_update");
-
-        // TODO: Don't need this stuff for a top down game
-        // body->velocity[1] += state.gravity;
-        // if (state.terminal_velocity > body->velocity[1])
-        // {
-        //     body->velocity[1] = state.terminal_velocity;
-        // }
 
         // update velocity based on acceleration
         body->velocity[0] += body->acceleration[0];

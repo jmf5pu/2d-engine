@@ -141,9 +141,10 @@ typedef struct pickup
 
 typedef struct prop
 {
-    Sprite *sprite;           // sprite to render for this prop
-    i32 layer_threshold;      // if entity is ABOVE this y coordinate, the entity will render BEFORE this prop, and vice-versa
-    Static_Body *static_body; // holds the static body for this prop (null if not applicable)
+    Sprite *sprite;              // sprite to render for this prop
+    i32 layer_threshold;         // if entity is ABOVE this y coordinate, the entity will render BEFORE this prop, and vice-versa
+    usize num_static_bodies;     // number of static bodies associated with this prop
+    Static_Body **static_bodies; // holds the references of the static bodies for this prop
 } Prop;
 
 typedef struct map
