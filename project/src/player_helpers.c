@@ -966,6 +966,106 @@ void init_all_anims()
     init_player_anim_hashmap();
 }
 
+// initializes the player struct
+void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 despawn_time, f32 spawn_delay, f32 spawn_time, bool is_left_player)
+{
+    player->entity = entity_create((vec2){render_width * 0.5, render_height * 0.5}, (vec2){40, 75}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    player->crosshair = malloc(sizeof(Crosshair));
+    player->crosshair->entity = entity_create((vec2){player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]}, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static);
+    player->crosshair->relative_position[0] = player->entity->body->aabb.position[0];
+    player->crosshair->relative_position[1] = player->entity->body->aabb.position[1];
+    player->crosshair->entity->is_active = false;
+    player->direction = RIGHT;
+
+    // populate weapon
+    player->weapon = malloc(sizeof(Weapon));
+    player->weapon->name = starting_weapon->name;
+    player->weapon->fire_mode = starting_weapon->fire_mode;
+    player->weapon->capacity = starting_weapon->capacity;
+    player->weapon->max_capacity = starting_weapon->capacity;
+    player->weapon->reserve = starting_weapon->reserve;
+    player->weapon->max_reserve = starting_weapon->reserve;
+    player->weapon->max_fire_rate = starting_weapon->max_fire_rate;
+    player->weapon->damage = starting_weapon->damage;
+    player->weapon->bullet_velocity = starting_weapon->bullet_velocity;
+    player->weapon->burst_count = starting_weapon->burst_count;
+    player->weapon->burst_delay = starting_weapon->burst_delay;
+    player->weapon->aiming_scale_factor = starting_weapon->aiming_scale_factor;
+    player->weapon->frames_since_last_shot = 0;
+    player->weapon->ready_to_fire = true;
+
+    // populate armor
+    player->armor = malloc(sizeof(Armor));
+    player->armor->name = "";
+    player->armor->integrity = 0;
+
+    player->spawn_point[0] = is_left_player ? map->player_one_spawn_points[0][0] : map->player_two_spawn_points[0][0];
+    player->spawn_point[1] = is_left_player ? map->player_one_spawn_points[0][1] : map->player_two_spawn_points[0][1];
+    player->despawn_time = despawn_time;
+    player->spawn_delay = spawn_delay;
+    player->spawn_time = spawn_time;
+    player->is_left_player = is_left_player;
+    if (is_left_player)
+    {
+        player->camera = SPLIT_SCREEN ? &left_cam : &main_cam;
+    }
+    else
+    {
+        player->camera = &right_cam;
+    }
+}
+
+// Spawns the player and resets their attributes to default values
+void spawn_player(Player *player, Weapon_Type *starting_weapon)
+{
+    // update status & reset counter
+    player->status = PLAYER_SPAWNING;
+    player->frames_on_status = 0;
+
+    // move player to respawn point
+    player->relative_position[0] = player->spawn_point[0];
+    player->relative_position[1] = player->spawn_point[1];
+
+    // set player to center of their window
+    player->entity->body->aabb.position[0] = render_width * 0.5;
+    player->entity->body->aabb.position[1] = render_height * 0.5;
+
+    // set camera to center the spawn point
+    player->camera->position[0] = player->spawn_point[0] - (0.5 * render_width);
+    player->camera->position[1] = player->spawn_point[1] - (0.5 * render_height);
+
+    // reset render scale factor
+    player->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
+
+    // reset health and armor
+    player->armor->name = "";
+    player->armor->integrity = 0;
+    player->health = 100;
+
+    // reset player anims to default (may have changed from pickups)
+    player->direction = RIGHT;
+
+    // reset weapon
+    player->weapon->name = starting_weapon->name;
+    player->weapon->fire_mode = starting_weapon->fire_mode;
+    player->weapon->capacity = starting_weapon->capacity;
+    player->weapon->max_capacity = starting_weapon->capacity;
+    player->weapon->reserve = starting_weapon->reserve;
+    player->weapon->max_reserve = starting_weapon->reserve;
+    player->weapon->max_fire_rate = starting_weapon->max_fire_rate;
+    player->weapon->damage = starting_weapon->damage;
+    player->weapon->bullet_velocity = starting_weapon->bullet_velocity;
+    player->weapon->burst_count = starting_weapon->burst_count;
+    player->weapon->burst_delay = starting_weapon->burst_delay;
+    player->weapon->aiming_scale_factor = starting_weapon->aiming_scale_factor;
+    player->weapon->frames_since_last_shot = 0;
+    player->weapon->ready_to_fire = true;
+
+    // make player visible
+    player->entity->is_active = true;
+    player->entity->body->is_active = true;
+}
+
 // updates player statuses based on frame counter associated with each playaer
 void update_player_status(Player *player)
 {
@@ -973,52 +1073,7 @@ void update_player_status(Player *player)
     // check if spawn delay is up
     if (player->status == PLAYER_INACTIVE && player->frames_on_status >= (player->spawn_delay * global.time.frame_rate))
     {
-        // update status & reset counter
-        player->status = PLAYER_SPAWNING;
-        player->frames_on_status = 0;
-
-        // move player to respawn point
-        player->relative_position[0] = player->spawn_point[0];
-        player->relative_position[1] = player->spawn_point[1];
-
-        // set player to center of their window
-        player->entity->body->aabb.position[0] = render_width * 0.5;
-        player->entity->body->aabb.position[1] = render_height * 0.5;
-
-        // set camera to center the spawn point
-        player->camera->position[0] = player->spawn_point[0] - (0.5 * render_width);
-        player->camera->position[1] = player->spawn_point[1] - (0.5 * render_height);
-
-        // reset health and armor
-        player->armor->name = "";
-        player->armor->integrity = 0;
-        player->health = 100;
-
-        // reset player anims to default (may have changed from pickups)
-        if (player == player_one)
-        {
-            player_one->direction = RIGHT;
-        }
-        else if (SPLIT_SCREEN)
-        { // player two
-            player_two->direction = LEFT;
-        }
-
-        // reset weapon
-        player->weapon->name = m16.name;
-        player->weapon->fire_mode = m16.fire_mode;
-        player->weapon->capacity = m16.capacity;
-        player->weapon->max_capacity = m16.capacity;
-        player->weapon->reserve = m16.reserve;
-        player->weapon->max_reserve = m16.reserve;
-        player->weapon->max_fire_rate = m16.max_fire_rate;
-        player->weapon->damage = m16.damage;
-        player->weapon->frames_since_last_shot = 0;
-        player->weapon->ready_to_fire = true;
-
-        // make player visible
-        player->entity->is_active = true;
-        player->entity->body->is_active = true;
+        spawn_player(player, base);
     }
 
     // check if spawn time is up
@@ -1578,6 +1633,13 @@ void handle_player_input(Player *player)
 
     player->entity->body->velocity[0] = velx;
     player->entity->body->velocity[1] = vely;
+}
+
+// cleans up the player struct
+void free_player(Player *player)
+{
+    free(player->crosshair);
+    free(player);
 }
 
 // helper to get the player from a body (if associated), used in on_hit helpers

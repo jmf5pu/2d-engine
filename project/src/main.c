@@ -94,107 +94,15 @@ int main(int argc, char *argv[])
 
     // init player one
     player_one = malloc(sizeof(Player));
-    player_one->entity = entity_create((vec2){render_width * 0.5, render_height * 0.5}, (vec2){40, 75}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
-    player_one->camera = SPLIT_SCREEN ? &left_cam : &main_cam;
-    player_one->crosshair = &(Crosshair){
-        .entity = entity_create((vec2){player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1]}, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static),
-        .relative_position = {
-            player_one->entity->body->aabb.position[0],
-            player_one->entity->body->aabb.position[1]}};
-    player_one->crosshair->entity->is_active = false;
-    player_one->direction = RIGHT;
-    player_one->weapon = &(Weapon){
-        .name = base.name,
-        .fire_mode = base.fire_mode,
-        .capacity = base.capacity,
-        .max_capacity = base.capacity,
-        .reserve = base.reserve,
-        .max_reserve = base.reserve,
-        .max_fire_rate = base.max_fire_rate,
-        .damage = base.damage,
-        .bullet_velocity = base.bullet_velocity,
-        .aiming_scale_factor = base.aiming_scale_factor,
-        .frames_since_last_shot = 0,
-        .ready_to_fire = false,
-    };
-    // player_one->weapon = &(Weapon){
-    //     .name = m44.name,
-    //     .fire_mode = m44.fire_mode,
-    //     .capacity = m44.capacity,
-    //     .max_capacity = m44.capacity,
-    //     .reserve = m44.reserve,
-    //     .max_reserve = m44.reserve,
-    //     .max_fire_rate = m44.max_fire_rate,
-    //     .damage = m44.damage,
-    //     .bullet_velocity = m44.bullet_velocity,
-    //     .aiming_scale_factor = m44.aiming_scale_factor,
-    //     .frames_since_last_shot = 0,
-    //     .ready_to_fire = true,
-    // };
-    player_one->armor = &(Armor){
-        .name = "",
-        .integrity = 0,
-
-    };
-    player_one->spawn_point[0] = map.player_one_spawn_points[0][0];
-    player_one->spawn_point[1] = map.player_one_spawn_points[0][1];
-    player_one->relative_position[0] = map.player_one_spawn_points[0][0];
-    player_one->relative_position[1] = map.player_one_spawn_points[0][1];
-    player_one->status = PLAYER_SPAWNING;
-    player_one->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
-    player_one->despawn_time = 2.9;
-    player_one->spawn_delay = 5;
-    player_one->spawn_time = 2;
-    player_one->frames_on_status = 0;
-    player_one->health = 100;
-    player_one->is_left_player = true;
-    camera_update(&left_cam, player_one, &map);
+    init_player(player_one, &map, base, 2.9, 5, 2, true);
+    spawn_player(player_one, base);
 
     // init player two
     if (SPLIT_SCREEN)
     {
         player_two = malloc(sizeof(Player));
-        player_two->entity = entity_create((vec2){render_width * 0.5, render_height * 0.5}, (vec2){40, 75}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
-        player_two->camera = &right_cam;
-        player_two->crosshair = &(Crosshair){
-            .entity = entity_create((vec2){player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1]}, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static),
-            .relative_position = {
-                player_two->entity->body->aabb.position[0],
-                player_two->entity->body->aabb.position[1]}};
-        player_two->crosshair->entity->is_active = false;
-        player_two->direction = LEFT;
-        player_two->weapon = &(Weapon){
-            .name = base.name,
-            .fire_mode = base.fire_mode,
-            .capacity = base.capacity,
-            .max_capacity = base.capacity,
-            .reserve = base.reserve,
-            .max_reserve = base.reserve,
-            .max_fire_rate = base.max_fire_rate,
-            .damage = base.damage,
-            .bullet_velocity = base.bullet_velocity,
-            .aiming_scale_factor = base.aiming_scale_factor,
-            .frames_since_last_shot = 0,
-            .ready_to_fire = false,
-        };
-        player_two->armor = &(Armor){
-            .name = "",
-            .integrity = 0,
-
-        };
-        player_two->spawn_point[0] = map.player_two_spawn_points[0][0];
-        player_two->spawn_point[1] = map.player_two_spawn_points[0][1];
-        player_two->relative_position[0] = map.player_two_spawn_points[0][0];
-        player_two->relative_position[1] = map.player_two_spawn_points[0][1];
-        player_two->status = PLAYER_SPAWNING;
-        player_two->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
-        player_two->despawn_time = 2.9;
-        player_two->spawn_delay = 5;
-        player_two->spawn_time = 2;
-        player_two->frames_on_status = 0;
-        player_two->health = 100;
-        player_two->is_left_player = false;
-        camera_update(&right_cam, player_two, &map);
+        init_player(player_two, &map, base, 2.9, 5, 2, false);
+        spawn_player(player_two, base);
     }
 
     // main gameplay loop
@@ -441,9 +349,9 @@ int main(int argc, char *argv[])
     }
 
     free_map_attributes(&map);
-    free(player_one);
+    free_player(player_one);
     if (SPLIT_SCREEN)
-        free(player_two);
-
+        free_player(player_two);
+    free_weapon_types();
     return 0;
 }

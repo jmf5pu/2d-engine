@@ -51,16 +51,16 @@ void player_on_hit(Body *self, Body *other, Hit hit)
         if (pickup->name == M44_PICKUP && pickup->status == PICKUP_ACTIVE)
         {
             // update player weapon
-            player->weapon->name = m44.name;
-            player->weapon->fire_mode = m44.fire_mode;
-            player->weapon->capacity = m44.capacity;
-            player->weapon->max_capacity = m44.capacity;
-            player->weapon->reserve = m44.reserve;
-            player->weapon->max_reserve = m44.reserve;
-            player->weapon->max_fire_rate = m44.max_fire_rate;
-            player->weapon->damage = m44.damage;
-            player->weapon->bullet_velocity = m44.bullet_velocity;
-            player->weapon->aiming_scale_factor = m44.aiming_scale_factor;
+            player->weapon->name = m44->name;
+            player->weapon->fire_mode = m44->fire_mode;
+            player->weapon->capacity = m44->capacity;
+            player->weapon->max_capacity = m44->capacity;
+            player->weapon->reserve = m44->reserve;
+            player->weapon->max_reserve = m44->reserve;
+            player->weapon->max_fire_rate = m44->max_fire_rate;
+            player->weapon->damage = m44->damage;
+            player->weapon->bullet_velocity = m44->bullet_velocity;
+            player->weapon->aiming_scale_factor = m44->aiming_scale_factor;
             player->weapon->frames_since_last_shot = 0;
             player->weapon->ready_to_fire = true;
         }
