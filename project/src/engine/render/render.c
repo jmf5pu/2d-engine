@@ -169,7 +169,7 @@ static void render_batch(Batch_Vertex *vertices, usize count, u32 texture_ids[32
     u8 *destination = (u8 *)vertex_data;
     for (usize i = 0; i < list_batch->len; ++i)
     {
-        Batch_Vertex *vertex = array_list_get(list_batch, i, "in render_batch");
+        Batch_Vertex *vertex = array_list_get(list_batch, i);
         memcpy(destination, vertex, sizeof(Batch_Vertex));
         destination += sizeof(Batch_Vertex);
     }

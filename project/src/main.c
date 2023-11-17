@@ -41,7 +41,7 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
     Array_List *body_list = get_all_bodies();
     for (u32 i = 0; i < body_list->len; ++i)
     {
-        body = array_list_get(body_list, i, "in camera update\n");
+        body = array_list_get(body_list, i);
 
         // shift all bodies EXCEPT the active player and crosshairs
         bool is_active_player_body = (body == player_one->entity->body && left_player_is_active) || (SPLIT_SCREEN && body == player_two->entity->body && !left_player_is_active);
@@ -58,7 +58,7 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
     Array_List *static_body_list = get_all_static_bodies();
     for (u32 i = 0; i < static_body_list->len; ++i)
     {
-        static_body = array_list_get(static_body_list, i, "in camera update\n");
+        static_body = array_list_get(static_body_list, i);
         static_body->aabb.position[0] += shift[0];
         static_body->aabb.position[1] += shift[1];
     }
@@ -257,6 +257,10 @@ int main(int argc, char *argv[])
             {
                 Entity *entity = entity_get(j);
 
+                // for debugging
+                if (RENDER_PHYSICS_BODIES)
+                    render_aabb((f32 *)&entity->body->aabb, WHITE);
+
                 // destroy any entities that are inactive or have physics bodies that are inactive and aren't associated with players, crosshairs, or pickups
                 bool is_left_crosshair = entity == player_one->crosshair->entity;
                 bool is_right_crosshair = SPLIT_SCREEN ? (entity == player_two->crosshair->entity) : false;
@@ -281,10 +285,6 @@ int main(int argc, char *argv[])
 
                 // render the entity's animation
                 animation_render(entity->animation, window, entity->body->aabb.position, 0, WHITE, texture_slots);
-
-                // for debugging collisions
-                if (RENDER_PHYSICS_BODIES)
-                    render_aabb((f32 *)&entity->body->aabb, WHITE);
             }
 
             // render map sprites

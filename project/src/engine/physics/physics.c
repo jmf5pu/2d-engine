@@ -162,7 +162,7 @@ void physics_update(void)
 
     for (u32 i = 0; i < state.body_list->len; ++i)
     {
-        body = array_list_get(state.body_list, i, "physics_update");
+        body = array_list_get(state.body_list, i);
 
         // update velocity based on acceleration
         body->velocity[0] += body->acceleration[0];
@@ -221,7 +221,7 @@ usize physics_body_count()
 
 Body *physics_body_get(usize index)
 {
-    return array_list_get(state.body_list, index, "physics_body_get");
+    return array_list_get(state.body_list, index);
 }
 
 usize physics_body_get_id(Body *target_body)
@@ -270,7 +270,7 @@ Static_Body *physics_static_body_create(vec2 position, vec2 size, u8 collision_l
 
 Static_Body *physics_static_body_get(usize index)
 {
-    return array_list_get(state.static_body_list, index, "physics_static_body_get");
+    return array_list_get(state.static_body_list, index);
 }
 
 // gets the minimium and maximum position of the aabb

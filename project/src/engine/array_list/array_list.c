@@ -25,11 +25,10 @@ Array_List *array_list_create(usize item_size, usize initial_capacity)
     return list;
 }
 
-void *array_list_get(Array_List *list, usize index, char *description)
+void *array_list_get(Array_List *list, usize index)
 {
     if ((u32)index >= (u32)list->len)
     {
-        printf("Description: %s [list->len: %zd] [index: %zd]\n", description, list->len, index);
         ERROR_EXIT("ERROR: Index out of bounds (get)\n");
     }
     void **stored_item = (void **)((u8 *)list->items + index * sizeof(void *));
@@ -97,7 +96,7 @@ void array_list_clear(Array_List *list)
 {
     for (usize i = 0; i < list->len; ++i)
     {
-        void *item = array_list_get(list, i, "Clearing ArrayList");
+        void *item = array_list_get(list, i);
         free(item);
     }
 

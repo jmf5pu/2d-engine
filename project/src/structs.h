@@ -41,6 +41,13 @@ enum Player_Status
     PLAYER_CROUCHED,
 };
 
+enum Enemy_Status
+{
+    ENEMY_ACTIVE,
+    ENEMY_DESPAWNING,
+    ENEMY_INACTIVE,
+};
+
 enum Pickup_Status
 {
     PICKUP_ACTIVE,
@@ -127,6 +134,16 @@ typedef struct player
     bool is_left_player;
 } Player;
 
+typedef struct zombie
+{
+    Entity *entity;
+    enum Direction direction;
+    enum Enemy_Status status;
+    f32 despawn_time;
+    u32 frames_on_status;
+    i16 health;
+} Zombie;
+
 typedef struct pickup
 {
     Entity *entity;
@@ -154,11 +171,14 @@ typedef struct map
     usize num_props;
     usize num_p1_spawns;
     usize num_p2_spawns;
+    usize num_enemy_spawns;
+    usize max_enemies;
 
     Pickup *pickups;               // start of pickups array
     Prop *props;                   // start of props array
     vec2 *player_one_spawn_points; // player one's spawn points
     vec2 *player_two_spawn_points; // player two's spawn points
+    vec2 *enemy_spawn_points;
 } Map;
 
 #endif

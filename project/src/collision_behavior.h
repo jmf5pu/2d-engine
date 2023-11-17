@@ -17,6 +17,7 @@ typedef enum collision_layer
 extern const u8 enemy_mask;
 extern const u8 player_mask;
 extern const u8 bullet_mask;
+extern const u8 pickup_mask;
 extern const u8 crosshair_mask;
 
 void player_on_hit(Body *self, Body *other, Hit hit);

@@ -1,5 +1,6 @@
 #include "engine./util.h"
 #include "engine/global.h"
+#include "enemy_helpers.h"
 #include "map_helpers.h"
 #include "collision_behavior.h"
 #include <stdlib.h>
@@ -14,6 +15,8 @@ void init_map(Map *map)
     map->num_props = 1; // min of 1, background counts as a prop
     map->num_p1_spawns = 1;
     map->num_p2_spawns = 1;
+    map->num_enemy_spawns = 1;
+    map->max_enemies = 1; // max number of enemies that can be present at the same time
 
     Sprite_Sheet *sprite_sheet_map_1_main_bg = malloc(sizeof(Sprite_Sheet));
     render_sprite_sheet_init(sprite_sheet_map_1_main_bg, "assets/shooting_range_map.png", 1215, 560);
@@ -72,6 +75,11 @@ void init_map(Map *map)
     p2_spawn_point_array[0][0] = p2_spawn_1[0];
     p2_spawn_point_array[0][1] = p2_spawn_1[1];
 
+    vec2 *enemy_spawn_point_array = malloc(sizeof(vec2) * map->num_enemy_spawns);
+    vec2 enemy_spawn_1 = {250, 250};
+    enemy_spawn_point_array[0][0] = enemy_spawn_1[0];
+    enemy_spawn_point_array[0][1] = enemy_spawn_1[1];
+
     /*
     Populate parent struct
     */
@@ -79,6 +87,12 @@ void init_map(Map *map)
     map->props = prop_array;
     map->player_one_spawn_points = p1_spawn_point_array;
     map->player_two_spawn_points = p2_spawn_point_array;
+    map->enemy_spawn_points = enemy_spawn_point_array;
+
+    /*
+    initialize enemies arraylist
+    */
+    init_enemies(sizeof(Zombie *), map->max_enemies);
 }
 
 // updates the status of a pickup, should be called once per frame for each pickup
@@ -118,14 +132,31 @@ void update_pickup_animations(Pickup *pickup)
     }
 }
 
-// updates all pickup statuses and animations, should be called once per frame
+// update the enemy spawns (spawn enemies if needed) TODO: potentially move this to a struct attribute, will vary from map to map
+void update_enemy_spawns(Map *map)
+{
+    if (get_all_enemies()->len < map->max_enemies)
+    {
+        create_enemy(map->enemy_spawn_points[0], (vec2){70, 70});
+    }
+}
+
+// updates map attributes each frame
 void update_map(Map *map)
 {
+    // update the pickups
     for (int i = 0; i < map->num_pickups; i++)
     {
         update_pickup_status(&map->pickups[i]);
         update_pickup_animations(&map->pickups[i]);
     }
+
+    // update the enemies (generate if needed)
+    if (map->num_enemy_spawns > 0)
+    {
+        update_enemy_spawns(map);
+    }
+    update_current_enemies();
 }
 
 // frees all map attributes that used malloc to init

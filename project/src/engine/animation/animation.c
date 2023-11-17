@@ -56,7 +56,7 @@ Animation *animation_create(Animation_Definition *adef, bool does_loop)
     // check if anims are inactive, if so replace one, otherwise append to end
     for (usize i = 0; i < animation_storage->len; ++i)
     {
-        Animation *animation = array_list_get(animation_storage, i, "animation_create trying to find first free slot");
+        Animation *animation = array_list_get(animation_storage, i);
         if (!animation->is_active)
         {
             id = i;
@@ -76,7 +76,7 @@ Animation *animation_create(Animation_Definition *adef, bool does_loop)
         id = animation_storage->len - 1; // Update id to the newly appended index
     }
 
-    Animation *animation = array_list_get(animation_storage, id, "animation_create trying to find first free slot");
+    Animation *animation = array_list_get(animation_storage, id);
 
     // Other fields default to 0 when using field dot syntax.
     *animation = (Animation){
@@ -90,14 +90,14 @@ Animation *animation_create(Animation_Definition *adef, bool does_loop)
 
 void animation_destroy(usize id)
 {
-    Animation *animation = array_list_get(animation_storage, id, "called by animation_destroy");
+    Animation *animation = array_list_get(animation_storage, id);
     animation->is_active = false;
     array_list_remove(animation_storage, id);
 }
 
 Animation *animation_get(usize id)
 {
-    return array_list_get(animation_storage, id, "called by animation_get");
+    return array_list_get(animation_storage, id);
 }
 
 void animation_update(f32 dt)
@@ -105,7 +105,7 @@ void animation_update(f32 dt)
     // iterate through all animations
     for (usize i = 0; i < animation_storage->len; ++i)
     {
-        Animation *animation = array_list_get(animation_storage, i, "called by animation_update");
+        Animation *animation = array_list_get(animation_storage, i);
         Animation_Definition *adef = animation->animation_definition; // get associated animation definition
         animation->current_frame_time -= dt;
 

@@ -14,7 +14,6 @@ void entity_init(void)
 Entity *entity_create(vec2 position, vec2 size, vec2 velocity, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static)
 {
     Entity *entity = (Entity *)malloc(sizeof(Entity)); // Allocate memory for Entity
-
     if (entity == NULL)
     {
         // Handle memory allocation error
@@ -35,7 +34,7 @@ Entity *entity_create(vec2 position, vec2 size, vec2 velocity, u8 collision_laye
 
 Entity *entity_get(usize id)
 {
-    return array_list_get(entity_list, id, "entity_get");
+    return array_list_get(entity_list, id);
 }
 
 usize entity_get_id(Entity *target_entity)

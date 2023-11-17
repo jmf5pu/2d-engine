@@ -104,14 +104,14 @@ void enemy_on_hit(Body *self, Body *other, Hit hit)
 
 void enemy_on_hit_static(Body *self, Static_Body *other, Hit hit)
 {
-    if (hit.normal[0] > 0)
-    {
-        self->velocity[0] = 400;
-    }
-    if (hit.normal[0] < 0)
-    {
-        self->velocity[0] = -400;
-    }
+    // if (hit.normal[0] > 0)
+    // {
+    //     self->velocity[0] = 400;
+    // }
+    // if (hit.normal[0] < 0)
+    // {
+    //     self->velocity[0] = -400;
+    // }
 }
 
 // these aren't needed atm since pickups aren't moving around
