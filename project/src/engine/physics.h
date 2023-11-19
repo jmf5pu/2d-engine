@@ -29,6 +29,7 @@ typedef struct body
     u8 collision_layer;
     u8 collision_mask;
     bool is_active;
+    void *parent; // used to associate a body with a bullet, player, etc.
 } Body;
 
 typedef struct static_body

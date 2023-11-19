@@ -16,6 +16,8 @@ f32 get_distance(vec2 point_a, vec2 point_b)
 // determines if players are visible to the enemies (i.e. valid targets)
 bool player_visible(Player *player)
 {
+    if (!player) // if not split screen and we are checking player two
+        return false;
     return player->status != PLAYER_INACTIVE && player->status != PLAYER_SPAWNING && player->status != PLAYER_DESPAWNING;
 }
 
@@ -36,6 +38,7 @@ void create_enemy(vec2 spawn_point, vec2 size)
 {
     Zombie *enemy = malloc(sizeof(Zombie));
     enemy->entity = entity_create(spawn_point, size, (vec2){0, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
+    enemy->entity->body->parent = enemy;
     enemy->despawn_time = 1;
     enemy->direction = LEFT;
     enemy->frames_on_status = 0;
@@ -51,6 +54,13 @@ void update_current_enemies(void)
     {
         // find closest player
         Zombie *zombie = array_list_get(current_enemies, i);
+
+        // free dead enemies & remove from arraylist
+        if (zombie->health <= 0)
+        {
+            zombie->entity->is_active = false; // marking entity for deletion
+            array_list_remove(current_enemies, i);
+        }
 
         if (!player_visible(player_one) && !player_visible(player_two))
         {

@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "engine/physics.h"
 #include "collision_behavior.h"
 #include "structs.h"
@@ -13,36 +14,45 @@ const u8 crosshair_mask = 0;
 
 void player_on_hit(Body *self, Body *other, Hit hit)
 {
-    // TODO: update this - temp fix because bullets are only being created from other players right now
-    // need to create bullet struct that contains information on damage
-    Player *player = get_player_from_body(player_one, player_two, self, false);
+    // make sure player_on_hit is only called on player physics bodies
+    assert(sizeof(self->parent) == sizeof(Player *));
+    Player *player = self->parent;
 
-    if (SPLIT_SCREEN)
+    if (other->collision_layer == COLLISION_LAYER_BULLET)
     {
-        Player *other_player = get_player_from_body(player_one, player_two, self, true);
-        if (other->collision_layer == COLLISION_LAYER_BULLET && other->is_active && self->is_active)
+        // all bullets should have a parent pointer populated
+        assert(other->parent);
+        assert(sizeof(other->parent) == sizeof(Bullet *));
+        if (other->is_active && self->is_active)
         {
-            i8 bullet_damage = other_player->weapon->damage; // TODO: eventually may need to attach this value to a bullet struct
+            Bullet *bullet = (Bullet *)other->parent;
             if (player->armor->integrity > 0)
             {
                 // Apply as much damage as possible to the armor
-                if (player->armor->integrity >= bullet_damage)
+                if (player->armor->integrity >= bullet->damage)
                 {
-                    player->armor->integrity -= bullet_damage;
+                    player->armor->integrity -= bullet->damage;
                 }
                 else
                 {
-                    player->health -= (bullet_damage - player->armor->integrity);
+                    player->health -= (bullet->damage - player->armor->integrity);
                     player->armor->integrity = 0;
                 }
             }
             else
             {
                 // If the armor is already 0, apply damage directly to health
-                player->health -= bullet_damage;
+                player->health -= bullet->damage;
             }
-            other->is_active = false; // always mark bullet as inactive
+            other->is_active = false;
+            free(bullet);
         }
+    }
+
+    // prevents players from pushing through enemies
+    if (other->collision_layer == COLLISION_LAYER_ENEMY && other->is_active && self->is_active)
+    {
+        vec2_add(self->aabb.position, self->aabb.position, hit.normal);
     }
 
     if (other->collision_layer == COLLISION_LAYER_PICKUP && other->is_active && self->is_active)
@@ -85,21 +95,53 @@ void player_on_hit_static(Body *self, Static_Body *other, Hit hit)
 
 void bullet_on_hit(Body *self, Body *other, Hit hit)
 {
-    // mark for body (and entity) for destruction
-    if (other->is_active)
-    {
-        self->is_active = false;
-    }
+    // // mark for body (and entity) for destruction
+    // if (other->is_active)
+    // {
+    //     self->is_active = false;
+    // }
 }
 
 void bullet_on_hit_static(Body *self, Static_Body *other, Hit hit)
 {
+    // all bullet bodies should have a pointer to their parent struct
+    assert(self->parent);
+    assert(sizeof(self->parent) == sizeof(Bullet *));
+
     // mark for body (and entity) for destruction
     self->is_active = false;
+
+    // free parent struct
+    free(self->parent);
 }
 
 void enemy_on_hit(Body *self, Body *other, Hit hit)
 {
+    // every enemy body should have an associated enemy struct
+    assert(self->parent);
+    assert(sizeof(self->parent) == sizeof(Zombie *));
+
+    Zombie *zombie = self->parent;
+
+    // prevent enemy from overlapping with player
+    if (other->collision_layer == COLLISION_LAYER_PLAYER)
+    {
+        vec2_add(self->aabb.position, self->aabb.position, hit.normal);
+    }
+
+    // update enemy health on bullet collisions
+    if (other->collision_layer == COLLISION_LAYER_BULLET)
+    {
+        assert(other->parent);
+        assert(sizeof(other->parent) == sizeof(Bullet *));
+        Bullet *bullet = (Bullet *)other->parent;
+        if (other->is_active && self->is_active)
+        {
+            zombie->health -= bullet->damage;
+            other->is_active = false;
+            free(bullet);
+        }
+    }
 }
 
 void enemy_on_hit_static(Body *self, Static_Body *other, Hit hit)
@@ -118,6 +160,7 @@ void enemy_on_hit_static(Body *self, Static_Body *other, Hit hit)
 void pickup_on_hit(Body *self, Body *other, Hit hit)
 {
 }
+
 void pickup_on_hit_static(Body *self, Static_Body *other, Hit hit)
 {
 }

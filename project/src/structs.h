@@ -108,6 +108,12 @@ typedef struct crosshair
     vec2 relative_position;
 } Crosshair;
 
+typedef struct bullet
+{
+    Entity *entity;
+    i32 damage;
+} Bullet;
+
 typedef struct camera
 {
     vec2 position;
@@ -173,6 +179,10 @@ typedef struct map
     usize num_p2_spawns;
     usize num_enemy_spawns;
     usize max_enemies;
+
+    // used when calculating when to spawn enemies
+    i32 enemy_spawn_delay;
+    i32 frames_since_last_spawn;
 
     Pickup *pickups;               // start of pickups array
     Prop *props;                   // start of props array

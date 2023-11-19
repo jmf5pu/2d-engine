@@ -94,8 +94,8 @@ int main(int argc, char *argv[])
 
     // init player one
     player_one = malloc(sizeof(Player));
-    init_player(player_one, &map, base, 2.9, 5, 2, true);
-    spawn_player(player_one, base);
+    init_player(player_one, &map, m16, 2.9, 5, 2, true);
+    spawn_player(player_one, m16);
 
     // init player two
     if (SPLIT_SCREEN)

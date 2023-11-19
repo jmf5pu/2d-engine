@@ -970,6 +970,7 @@ void init_all_anims()
 void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 despawn_time, f32 spawn_delay, f32 spawn_time, bool is_left_player)
 {
     player->entity = entity_create((vec2){render_width * 0.5, render_height * 0.5}, (vec2){40, 75}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+    player->entity->body->parent = player;
     player->crosshair = malloc(sizeof(Crosshair));
     player->crosshair->entity = entity_create((vec2){player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]}, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static);
     player->crosshair->relative_position[0] = player->entity->body->aabb.position[0];
@@ -1073,7 +1074,7 @@ void update_player_status(Player *player)
     // check if spawn delay is up
     if (player->status == PLAYER_INACTIVE && player->frames_on_status >= (player->spawn_delay * global.time.frame_rate))
     {
-        spawn_player(player, base);
+        spawn_player(player, m16);
     }
 
     // check if spawn time is up
@@ -1381,12 +1382,14 @@ void handle_player_shooting(Player *player, Key_State shoot)
             bullet_anim_name = "bullet_15";
         }
 
-        // create bullet entity and calculated assign anim and velocity
-        Entity *bullet = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
-        bullet->animation = get(bullet_anim_map, bullet_anim_name);
-
-        bullet->body->velocity[0] = bullet_velocity[0];
-        bullet->body->velocity[1] = bullet_velocity[1];
+        // create bullet struct and calculated anim and velocity
+        Bullet *bullet = malloc(sizeof(Bullet));
+        bullet->entity = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
+        bullet->damage = player->weapon->damage;
+        bullet->entity->animation = get(bullet_anim_map, bullet_anim_name);
+        bullet->entity->body->velocity[0] = bullet_velocity[0];
+        bullet->entity->body->velocity[1] = bullet_velocity[1];
+        bullet->entity->body->parent = bullet;
 
         // decrement weapon capacity
         player->weapon->capacity -= 1;
@@ -1396,7 +1399,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
             player->weapon->burst_shots_remaining -= 1;
         }
 
-        // restart rpm timer
+        // restart rounds per minute timer
         player->weapon->ready_to_fire = false;
         player->weapon->frames_since_last_shot = 0;
     }

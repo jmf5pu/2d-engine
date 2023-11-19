@@ -82,7 +82,7 @@ void array_list_remove(Array_List *list, usize index)
         if (new_capacity < 1)
             new_capacity = 1;
 
-        // Reallocate memory to fit the new capacity
+        // Reallocate memory to fit the new capacity (frees old excess memory)
         void **new_items = (void **)realloc(list->items, sizeof(void *) * new_capacity);
         if (new_items)
         {

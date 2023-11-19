@@ -16,7 +16,9 @@ void init_map(Map *map)
     map->num_p1_spawns = 1;
     map->num_p2_spawns = 1;
     map->num_enemy_spawns = 1;
-    map->max_enemies = 1; // max number of enemies that can be present at the same time
+    map->max_enemies = 1;         // max number of enemies that can be present at the same time
+    map->enemy_spawn_delay = 120; // in frames
+    map->frames_since_last_spawn = 0;
 
     Sprite_Sheet *sprite_sheet_map_1_main_bg = malloc(sizeof(Sprite_Sheet));
     render_sprite_sheet_init(sprite_sheet_map_1_main_bg, "assets/shooting_range_map.png", 1215, 560);
@@ -135,10 +137,12 @@ void update_pickup_animations(Pickup *pickup)
 // update the enemy spawns (spawn enemies if needed) TODO: potentially move this to a struct attribute, will vary from map to map
 void update_enemy_spawns(Map *map)
 {
-    if (get_all_enemies()->len < map->max_enemies)
+    if (get_all_enemies()->len < map->max_enemies && map->frames_since_last_spawn >= map->enemy_spawn_delay)
     {
         create_enemy(map->enemy_spawn_points[0], (vec2){70, 70});
+        map->frames_since_last_spawn = 0;
     }
+    map->frames_since_last_spawn++;
 }
 
 // updates map attributes each frame
