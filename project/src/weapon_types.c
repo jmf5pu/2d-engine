@@ -15,7 +15,7 @@ void init_weapon_types(void)
     base->max_fire_rate = 1;
     base->damage = 0;
     base->bullet_velocity = 0;
-    base->aiming_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
+    base->aiming_scale_factor = 1.2; // DEFAULT_RENDER_SCALE_FACTOR;
 
     m16 = malloc(sizeof(Weapon_Type));
     m16->name = "m16";

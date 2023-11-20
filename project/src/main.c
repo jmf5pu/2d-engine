@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
             // be created in `handle_player_shooting`
             if (SPLIT_SCREEN && i == 0)
             {
-                set_render_dimensions(player_one->render_scale_factor, true);
+                set_render_dimensions(player_one->render_scale_factor, false, true);
                 camera_update(&left_cam, player_one, &map);
                 render_begin_left();
                 handle_player_input(player_one);
@@ -208,7 +208,7 @@ int main(int argc, char *argv[])
             }
             else if (SPLIT_SCREEN && i == 1)
             {
-                set_render_dimensions(player_two->render_scale_factor, true);
+                set_render_dimensions(player_two->render_scale_factor, false, true);
                 camera_update(&right_cam, player_two, &map);
                 render_begin_right();
                 handle_player_input(player_two);
@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
             }
             else // hit when screen is not being split
             {
-                set_render_dimensions(player_one->render_scale_factor, true);
+                set_render_dimensions(player_one->render_scale_factor, false, true);
                 camera_update(&main_cam, player_one, &map);
                 render_begin();
                 handle_player_input(player_one);
@@ -343,6 +343,22 @@ int main(int argc, char *argv[])
             else // not split
                 update_all_positions(&map, (vec2){main_cam.position[0], main_cam.position[1]}, true);
         }
+        render_end(window, texture_slots, false);
+
+        set_render_dimensions(DEFAULT_RENDER_SCALE_FACTOR, true, true);
+        render_begin_hud();
+        AABB weapon_hud_aabb;
+        weapon_hud_aabb.half_size[0] = 100;
+        weapon_hud_aabb.half_size[1] = 50;
+        weapon_hud_aabb.position[0] = 100;
+        weapon_hud_aabb.position[1] = 50;
+        AABB health_hud_aabb;
+        health_hud_aabb.half_size[0] = 50;
+        health_hud_aabb.half_size[1] = 50;
+        health_hud_aabb.position[0] = 50;
+        health_hud_aabb.position[1] = window_height - 50;
+        render_aabb((f32 *)(&weapon_hud_aabb), BLUE);
+        render_aabb((f32 *)(&health_hud_aabb), RED);
         render_end(window, texture_slots, true);
 
         time_update_late();

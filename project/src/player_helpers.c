@@ -1444,7 +1444,7 @@ void handle_player_input(Player *player)
             player->render_scale_factor = player->weapon->aiming_scale_factor;
 
             // update rendering dimensions and projection matrix
-            set_render_dimensions(player->render_scale_factor, true);
+            set_render_dimensions(player->render_scale_factor, false, true);
 
             // set aabb location to center of screen
             player->entity->body->aabb.position[0] = (render_width * 0.5);
@@ -1569,7 +1569,7 @@ void handle_player_input(Player *player)
 
         // reset render dimensions and projection matrix
         player->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
-        set_render_dimensions(player->render_scale_factor, true);
+        set_render_dimensions(player->render_scale_factor, false, true);
 
         // center camera on player
         player->camera->position[0] = player->relative_position[0] - (0.5 * render_width);

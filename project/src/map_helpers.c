@@ -78,7 +78,7 @@ void init_map(Map *map)
     p2_spawn_point_array[0][1] = p2_spawn_1[1];
 
     vec2 *enemy_spawn_point_array = malloc(sizeof(vec2) * map->num_enemy_spawns);
-    vec2 enemy_spawn_1 = {250, 250};
+    vec2 enemy_spawn_1 = {1100, 280};
     enemy_spawn_point_array[0][0] = enemy_spawn_1[0];
     enemy_spawn_point_array[0][1] = enemy_spawn_1[1];
 
