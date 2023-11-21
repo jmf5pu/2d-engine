@@ -191,4 +191,11 @@ typedef struct map
     vec2 *enemy_spawn_points;
 } Map;
 
+typedef struct hud
+{
+    SDL_Window *window;
+    Sprite *p1_health_display;
+    Sprite *p2_health_display;
+} HUD;
+
 #endif
