@@ -27,6 +27,7 @@
 #include "player_helpers.h"
 #include "map_helpers.h"
 #include "weapon_types.h"
+#include "hud.h"
 
 static u32 texture_slots[32] = {0}; // texture slots array for batch rendering
 static bool should_quit = false;    // quit flag
@@ -79,7 +80,6 @@ int main(int argc, char *argv[])
     time_init(frame_rate);
     config_init();
     SDL_Window *window = render_init();
-
     camera_init();
     physics_init();
     entity_init();
@@ -91,6 +91,9 @@ int main(int argc, char *argv[])
 
     // initialize map & props
     init_map(&map);
+
+    // init hud
+    init_hud(window);
 
     // init player one
     player_one = malloc(sizeof(Player));
@@ -347,18 +350,19 @@ int main(int argc, char *argv[])
 
         set_render_dimensions(DEFAULT_RENDER_SCALE_FACTOR, true, true);
         render_begin_hud();
-        AABB weapon_hud_aabb;
-        weapon_hud_aabb.half_size[0] = 100;
-        weapon_hud_aabb.half_size[1] = 50;
-        weapon_hud_aabb.position[0] = 100;
-        weapon_hud_aabb.position[1] = 50;
-        AABB health_hud_aabb;
-        health_hud_aabb.half_size[0] = 50;
-        health_hud_aabb.half_size[1] = 50;
-        health_hud_aabb.position[0] = 50;
-        health_hud_aabb.position[1] = window_height - 50;
-        render_aabb((f32 *)(&weapon_hud_aabb), BLUE);
-        render_aabb((f32 *)(&health_hud_aabb), RED);
+        // AABB weapon_hud_aabb;
+        // weapon_hud_aabb.half_size[0] = 100;
+        // weapon_hud_aabb.half_size[1] = 50;
+        // weapon_hud_aabb.position[0] = 100;
+        // weapon_hud_aabb.position[1] = 50;
+        // AABB health_hud_aabb;
+        // health_hud_aabb.half_size[0] = 50;
+        // health_hud_aabb.half_size[1] = 50;
+        // health_hud_aabb.position[0] = 50;
+        // health_hud_aabb.position[1] = window_height - 50;
+        // render_aabb((f32 *)(&weapon_hud_aabb), BLUE);
+        // render_aabb((f32 *)(&health_hud_aabb), RED);
+        render_health(window, texture_slots);
         render_end(window, texture_slots, true);
 
         time_update_late();
@@ -369,5 +373,6 @@ int main(int argc, char *argv[])
     if (SPLIT_SCREEN)
         free_player(player_two);
     free_weapon_types();
+    free_hud();
     return 0;
 }
