@@ -351,10 +351,10 @@ int main(int argc, char *argv[])
         set_render_dimensions(DEFAULT_RENDER_SCALE_FACTOR, true, true);
         render_begin_hud();
         // AABB weapon_hud_aabb;
-        // weapon_hud_aabb.half_size[0] = 100;
-        // weapon_hud_aabb.half_size[1] = 50;
-        // weapon_hud_aabb.position[0] = 100;
-        // weapon_hud_aabb.position[1] = 50;
+        // weapon_hud_aabb.half_size[0] = 25;
+        // weapon_hud_aabb.half_size[1] = 35;
+        // weapon_hud_aabb.position[0] = 25;
+        // weapon_hud_aabb.position[1] = 35;
         // AABB health_hud_aabb;
         // health_hud_aabb.half_size[0] = 50;
         // health_hud_aabb.half_size[1] = 50;
@@ -362,7 +362,7 @@ int main(int argc, char *argv[])
         // health_hud_aabb.position[1] = window_height - 50;
         // render_aabb((f32 *)(&weapon_hud_aabb), BLUE);
         // render_aabb((f32 *)(&health_hud_aabb), RED);
-        render_health(window, texture_slots);
+        render_hud(window, texture_slots);
         render_end(window, texture_slots, true);
 
         time_update_late();

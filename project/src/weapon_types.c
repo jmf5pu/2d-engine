@@ -25,9 +25,9 @@ void init_weapon_types(void)
     m16->max_fire_rate = 900; // rounds per minute
     m16->burst_count = 3;
     m16->burst_delay = 0.4; // seconds
-    m16->damage = 5;
+    m16->damage = 30;
     m16->bullet_velocity = 1500;
-    m16->aiming_scale_factor = 0.72;
+    m16->aiming_scale_factor = 1.2;
 
     m44 = malloc(sizeof(Weapon_Type));
     m44->name = "m44";
