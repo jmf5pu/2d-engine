@@ -66,6 +66,7 @@ Sprite_Sheet sprite_sheet_ammo_6;
 Sprite_Sheet sprite_sheet_ammo_7;
 Sprite_Sheet sprite_sheet_ammo_8;
 Sprite_Sheet sprite_sheet_ammo_9;
+Sprite_Sheet sprite_sheet_forward_slash;
 
 Animation_Definition *adef_ammo_0;
 Animation_Definition *adef_ammo_1;
@@ -77,6 +78,7 @@ Animation_Definition *adef_ammo_6;
 Animation_Definition *adef_ammo_7;
 Animation_Definition *adef_ammo_8;
 Animation_Definition *adef_ammo_9;
+Animation_Definition *adef_forward_slash;
 
 Animation *anim_ammo_0;
 Animation *anim_ammo_1;
@@ -88,6 +90,7 @@ Animation *anim_ammo_6;
 Animation *anim_ammo_7;
 Animation *anim_ammo_8;
 Animation *anim_ammo_9;
+Animation *anim_forward_slash;
 
 extern HUD *hud;
 

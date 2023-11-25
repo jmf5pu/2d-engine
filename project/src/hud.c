@@ -231,6 +231,15 @@ void init_ammo_anims(void)
         (u8[]){0},
         1);
     anim_ammo_9 = animation_create(adef_ammo_9, false);
+
+    render_sprite_sheet_init(&sprite_sheet_forward_slash, "assets/forward_slash.png", 50, 70);
+    adef_forward_slash = animation_definition_create(
+        &sprite_sheet_forward_slash,
+        (f32[]){0},
+        (u8[]){0},
+        (u8[]){0},
+        1);
+    anim_forward_slash = animation_create(adef_forward_slash, false);
 }
 
 // initializes heads up display
@@ -254,7 +263,7 @@ void init_hud(SDL_Window *window)
 void render_hud(SDL_Window *window, u32 texture_slots[32])
 {
     // render player one displays (health + ammo)
-    render_health(window, texture_slots, player_one, (vec2){50, window_height - 50});
+    render_health(window, texture_slots, player_one, (vec2){50, (window_height * DEFAULT_RENDER_SCALE_FACTOR) - 50});
     render_ammo(window, texture_slots, player_one, (vec2){25 + 50 * 6, 35});
 
     // render player two displays if relevant
@@ -330,7 +339,6 @@ void render_health(SDL_Window *window, u32 texture_slots[32], Player *player, ve
 u16 render_ammo_digit(SDL_Window *window, u32 texture_slots[32], vec2 position, u16 value)
 {
     u16 digit = value % 10;
-    printf("digit: %u\n", digit);
 
     if (digit == 0)
         animation_render(anim_ammo_0, window, position, 0, WHITE, texture_slots);
@@ -354,25 +362,51 @@ u16 render_ammo_digit(SDL_Window *window, u32 texture_slots[32], vec2 position, 
         animation_render(anim_ammo_9, window, position, 9, WHITE, texture_slots);
 
     // remove the digit we just rendered and return
-    printf("value: %u\n", value / 10);
     return value / 10;
 }
 
+// Renders the ammo display. Renders the digits in each value from left to right
 void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player, vec2 position)
 {
     u16 capacity = player->weapon->capacity;
     u16 reserve = player->weapon->reserve;
+
+    // tracks how many digits of each attribute we have written
+    u16 reserve_digits = 0;
+    u16 capacity_digits = 0;
 
     // keep rendering digits for the capacity while there are digits left
     while (reserve > 0)
     {
         reserve = render_ammo_digit(window, texture_slots, position, reserve);
         position[0] -= 50;
+        reserve_digits++;
     }
+
+    // add trailing 0's to get it up to 3 digits
+    while (reserve_digits < 3)
+    {
+        animation_render(anim_ammo_0, window, position, 0, WHITE, texture_slots);
+        position[0] -= 50;
+        reserve_digits++;
+    }
+
+    // add slash in between reserve and capacity
+    animation_render(anim_forward_slash, window, position, 0, WHITE, texture_slots);
+    position[0] -= 50;
+
+    // repeat logic for capacity attribute
     while (capacity > 0)
     {
         capacity = render_ammo_digit(window, texture_slots, position, capacity);
         position[0] -= 50; // move the render position over after each digit
+        capacity_digits++;
+    }
+    while (capacity_digits < 3)
+    {
+        animation_render(anim_ammo_0, window, position, 0, WHITE, texture_slots);
+        position[0] -= 50;
+        capacity_digits++;
     }
 }
 
