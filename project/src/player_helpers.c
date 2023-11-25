@@ -994,6 +994,7 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
     player->weapon->aiming_scale_factor = starting_weapon->aiming_scale_factor;
     player->weapon->frames_since_last_shot = 0;
     player->weapon->ready_to_fire = true;
+    player->weapon->hud_ammo_icon = starting_weapon->hud_ammo_icon;
 
     // populate armor
     player->armor = malloc(sizeof(Armor));
@@ -1061,6 +1062,7 @@ void spawn_player(Player *player, Weapon_Type *starting_weapon)
     player->weapon->aiming_scale_factor = starting_weapon->aiming_scale_factor;
     player->weapon->frames_since_last_shot = 0;
     player->weapon->ready_to_fire = true;
+    player->weapon->hud_ammo_icon = starting_weapon->hud_ammo_icon;
 
     // make player visible
     player->entity->is_active = true;

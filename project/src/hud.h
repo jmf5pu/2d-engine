@@ -6,6 +6,11 @@
 #include "engine/render.h"
 #include "engine/util.h"
 
+// ammo display
+#define DIGIT_WIDTH 20
+#define DIGIT_HEIGHT 44
+#define ICON_SPACE 10
+
 // health display sprite sheets, animation definitions, animations
 Sprite_Sheet sprite_sheet_health_cross_0;
 Sprite_Sheet sprite_sheet_health_cross_1;

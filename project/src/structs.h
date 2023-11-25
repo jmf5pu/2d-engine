@@ -68,6 +68,7 @@ typedef struct weapon_type
     i16 damage;
     i16 bullet_velocity;
     f32 aiming_scale_factor; // factor by which the rendering dimensions change when player is crouching
+    Animation *hud_ammo_icon;
 } Weapon_Type;
 
 // contains weapon info as well as player-specific data
@@ -88,6 +89,7 @@ typedef struct weapon
     f32 aiming_scale_factor;
     u16 frames_since_last_shot;
     bool ready_to_fire;
+    Animation *hud_ammo_icon;
 } Weapon;
 
 typedef struct pickup_animation_set

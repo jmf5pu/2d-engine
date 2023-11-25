@@ -4,7 +4,7 @@ HUD *hud;
 
 void init_health_anims(void)
 {
-    render_sprite_sheet_init(&sprite_sheet_health_cross_0, "assets/health_cross_0.png", 100, 100);
+    render_sprite_sheet_init(&sprite_sheet_health_cross_0, "assets/hud/health_cross_0.png", 100, 100);
     adef_health_cross_0 = animation_definition_create(
         &sprite_sheet_health_cross_0,
         (f32[]){0},
@@ -13,7 +13,7 @@ void init_health_anims(void)
         1);
     anim_health_cross_0 = animation_create(adef_health_cross_0, false);
 
-    render_sprite_sheet_init(&sprite_sheet_health_cross_1, "assets/health_cross_1.png", 100, 100);
+    render_sprite_sheet_init(&sprite_sheet_health_cross_1, "assets/hud/health_cross_1.png", 100, 100);
     adef_health_cross_1 = animation_definition_create(
         &sprite_sheet_health_cross_1,
         (f32[]){0},
@@ -22,7 +22,7 @@ void init_health_anims(void)
         1);
     anim_health_cross_1 = animation_create(adef_health_cross_1, false);
 
-    render_sprite_sheet_init(&sprite_sheet_health_cross_2, "assets/health_cross_2.png", 100, 100);
+    render_sprite_sheet_init(&sprite_sheet_health_cross_2, "assets/hud/health_cross_2.png", 100, 100);
     adef_health_cross_2 = animation_definition_create(
         &sprite_sheet_health_cross_2,
         (f32[]){0},
@@ -31,7 +31,7 @@ void init_health_anims(void)
         1);
     anim_health_cross_2 = animation_create(adef_health_cross_2, false);
 
-    render_sprite_sheet_init(&sprite_sheet_health_cross_3, "assets/health_cross_3.png", 100, 100);
+    render_sprite_sheet_init(&sprite_sheet_health_cross_3, "assets/hud/health_cross_3.png", 100, 100);
     adef_health_cross_3 = animation_definition_create(
         &sprite_sheet_health_cross_3,
         (f32[]){0},
@@ -40,7 +40,7 @@ void init_health_anims(void)
         1);
     anim_health_cross_3 = animation_create(adef_health_cross_3, false);
 
-    render_sprite_sheet_init(&sprite_sheet_health_cross_4, "assets/health_cross_4.png", 100, 100);
+    render_sprite_sheet_init(&sprite_sheet_health_cross_4, "assets/hud/health_cross_4.png", 100, 100);
     adef_health_cross_4 = animation_definition_create(
         &sprite_sheet_health_cross_4,
         (f32[]){0},
@@ -49,7 +49,7 @@ void init_health_anims(void)
         1);
     anim_health_cross_4 = animation_create(adef_health_cross_4, false);
 
-    render_sprite_sheet_init(&sprite_sheet_health_cross_5, "assets/health_cross_5.png", 100, 100);
+    render_sprite_sheet_init(&sprite_sheet_health_cross_5, "assets/hud/health_cross_5.png", 100, 100);
     adef_health_cross_5 = animation_definition_create(
         &sprite_sheet_health_cross_5,
         (f32[]){0},
@@ -58,7 +58,7 @@ void init_health_anims(void)
         1);
     anim_health_cross_5 = animation_create(adef_health_cross_5, false);
 
-    render_sprite_sheet_init(&sprite_sheet_health_cross_6, "assets/health_cross_6.png", 100, 100);
+    render_sprite_sheet_init(&sprite_sheet_health_cross_6, "assets/hud/health_cross_6.png", 100, 100);
     adef_health_cross_6 = animation_definition_create(
         &sprite_sheet_health_cross_6,
         (f32[]){0},
@@ -67,7 +67,7 @@ void init_health_anims(void)
         1);
     anim_health_cross_6 = animation_create(adef_health_cross_6, false);
 
-    render_sprite_sheet_init(&sprite_sheet_health_cross_7, "assets/health_cross_7.png", 100, 100);
+    render_sprite_sheet_init(&sprite_sheet_health_cross_7, "assets/hud/health_cross_7.png", 100, 100);
     adef_health_cross_7 = animation_definition_create(
         &sprite_sheet_health_cross_7,
         (f32[]){0},
@@ -76,7 +76,7 @@ void init_health_anims(void)
         1);
     anim_health_cross_7 = animation_create(adef_health_cross_7, false);
 
-    render_sprite_sheet_init(&sprite_sheet_health_cross_8, "assets/health_cross_8.png", 100, 100);
+    render_sprite_sheet_init(&sprite_sheet_health_cross_8, "assets/hud/health_cross_8.png", 100, 100);
     adef_health_cross_8 = animation_definition_create(
         &sprite_sheet_health_cross_8,
         (f32[]){0},
@@ -85,7 +85,7 @@ void init_health_anims(void)
         1);
     anim_health_cross_8 = animation_create(adef_health_cross_8, false);
 
-    render_sprite_sheet_init(&sprite_sheet_health_cross_9, "assets/health_cross_9.png", 100, 100);
+    render_sprite_sheet_init(&sprite_sheet_health_cross_9, "assets/hud/health_cross_9.png", 100, 100);
     adef_health_cross_9 = animation_definition_create(
         &sprite_sheet_health_cross_9,
         (f32[]){0},
@@ -94,7 +94,7 @@ void init_health_anims(void)
         1);
     anim_health_cross_9 = animation_create(adef_health_cross_9, false);
 
-    render_sprite_sheet_init(&sprite_sheet_health_cross_10, "assets/health_cross_10.png", 100, 100);
+    render_sprite_sheet_init(&sprite_sheet_health_cross_10, "assets/hud/health_cross_10.png", 100, 100);
     adef_health_cross_10 = animation_definition_create(
         &sprite_sheet_health_cross_10,
         (f32[]){0.5, 0.5},
@@ -103,7 +103,7 @@ void init_health_anims(void)
         2);
     anim_health_cross_10 = animation_create(adef_health_cross_10, true);
 
-    render_sprite_sheet_init(&sprite_sheet_health_cross_11, "assets/health_cross_11.png", 100, 100);
+    render_sprite_sheet_init(&sprite_sheet_health_cross_11, "assets/hud/health_cross_11.png", 100, 100);
     adef_health_cross_11 = animation_definition_create(
         &sprite_sheet_health_cross_11,
         (f32[]){0.5, 0.5},
@@ -112,7 +112,7 @@ void init_health_anims(void)
         2);
     anim_health_cross_11 = animation_create(adef_health_cross_11, true);
 
-    render_sprite_sheet_init(&sprite_sheet_health_cross_12, "assets/health_cross_12.png", 100, 100);
+    render_sprite_sheet_init(&sprite_sheet_health_cross_12, "assets/hud/health_cross_12.png", 100, 100);
     adef_health_cross_12 = animation_definition_create(
         &sprite_sheet_health_cross_12,
         (f32[]){0.5, 0.5},
@@ -121,7 +121,7 @@ void init_health_anims(void)
         2);
     anim_health_cross_12 = animation_create(adef_health_cross_12, true);
 
-    render_sprite_sheet_init(&sprite_sheet_health_cross_13, "assets/health_cross_13.png", 100, 100);
+    render_sprite_sheet_init(&sprite_sheet_health_cross_13, "assets/hud/health_cross_13.png", 100, 100);
     adef_health_cross_13 = animation_definition_create(
         &sprite_sheet_health_cross_13,
         (f32[]){0.5, 0.5},
@@ -130,7 +130,7 @@ void init_health_anims(void)
         2);
     anim_health_cross_13 = animation_create(adef_health_cross_13, true);
 
-    render_sprite_sheet_init(&sprite_sheet_health_cross_14, "assets/health_cross_14.png", 100, 100);
+    render_sprite_sheet_init(&sprite_sheet_health_cross_14, "assets/hud/health_cross_14.png", 100, 100);
     adef_health_cross_14 = animation_definition_create(
         &sprite_sheet_health_cross_14,
         (f32[]){0},
@@ -142,7 +142,7 @@ void init_health_anims(void)
 
 void init_ammo_anims(void)
 {
-    render_sprite_sheet_init(&sprite_sheet_ammo_0, "assets/0.png", 50, 70);
+    render_sprite_sheet_init(&sprite_sheet_ammo_0, "assets/hud/0.png", DIGIT_WIDTH, DIGIT_HEIGHT);
     adef_ammo_0 = animation_definition_create(
         &sprite_sheet_ammo_0,
         (f32[]){0},
@@ -151,7 +151,7 @@ void init_ammo_anims(void)
         1);
     anim_ammo_0 = animation_create(adef_ammo_0, false);
 
-    render_sprite_sheet_init(&sprite_sheet_ammo_1, "assets/1.png", 50, 70);
+    render_sprite_sheet_init(&sprite_sheet_ammo_1, "assets/hud/1.png", DIGIT_WIDTH, DIGIT_HEIGHT);
     adef_ammo_1 = animation_definition_create(
         &sprite_sheet_ammo_1,
         (f32[]){0},
@@ -160,7 +160,7 @@ void init_ammo_anims(void)
         1);
     anim_ammo_1 = animation_create(adef_ammo_1, false);
 
-    render_sprite_sheet_init(&sprite_sheet_ammo_2, "assets/2.png", 50, 70);
+    render_sprite_sheet_init(&sprite_sheet_ammo_2, "assets/hud/2.png", DIGIT_WIDTH, DIGIT_HEIGHT);
     adef_ammo_2 = animation_definition_create(
         &sprite_sheet_ammo_2,
         (f32[]){0},
@@ -169,7 +169,7 @@ void init_ammo_anims(void)
         1);
     anim_ammo_2 = animation_create(adef_ammo_2, false);
 
-    render_sprite_sheet_init(&sprite_sheet_ammo_3, "assets/3.png", 50, 70);
+    render_sprite_sheet_init(&sprite_sheet_ammo_3, "assets/hud/3.png", DIGIT_WIDTH, DIGIT_HEIGHT);
     adef_ammo_3 = animation_definition_create(
         &sprite_sheet_ammo_3,
         (f32[]){0},
@@ -178,7 +178,7 @@ void init_ammo_anims(void)
         1);
     anim_ammo_3 = animation_create(adef_ammo_3, false);
 
-    render_sprite_sheet_init(&sprite_sheet_ammo_4, "assets/4.png", 50, 70);
+    render_sprite_sheet_init(&sprite_sheet_ammo_4, "assets/hud/4.png", DIGIT_WIDTH, DIGIT_HEIGHT);
     adef_ammo_4 = animation_definition_create(
         &sprite_sheet_ammo_4,
         (f32[]){0},
@@ -187,7 +187,7 @@ void init_ammo_anims(void)
         1);
     anim_ammo_4 = animation_create(adef_ammo_4, false);
 
-    render_sprite_sheet_init(&sprite_sheet_ammo_5, "assets/5.png", 50, 70);
+    render_sprite_sheet_init(&sprite_sheet_ammo_5, "assets/hud/5.png", DIGIT_WIDTH, DIGIT_HEIGHT);
     adef_ammo_5 = animation_definition_create(
         &sprite_sheet_ammo_5,
         (f32[]){0},
@@ -196,7 +196,7 @@ void init_ammo_anims(void)
         1);
     anim_ammo_5 = animation_create(adef_ammo_5, false);
 
-    render_sprite_sheet_init(&sprite_sheet_ammo_6, "assets/6.png", 50, 70);
+    render_sprite_sheet_init(&sprite_sheet_ammo_6, "assets/hud/6.png", DIGIT_WIDTH, DIGIT_HEIGHT);
     adef_ammo_6 = animation_definition_create(
         &sprite_sheet_ammo_6,
         (f32[]){0},
@@ -205,7 +205,7 @@ void init_ammo_anims(void)
         1);
     anim_ammo_6 = animation_create(adef_ammo_6, false);
 
-    render_sprite_sheet_init(&sprite_sheet_ammo_7, "assets/7.png", 50, 70);
+    render_sprite_sheet_init(&sprite_sheet_ammo_7, "assets/hud/7.png", DIGIT_WIDTH, DIGIT_HEIGHT);
     adef_ammo_7 = animation_definition_create(
         &sprite_sheet_ammo_7,
         (f32[]){0},
@@ -214,7 +214,7 @@ void init_ammo_anims(void)
         1);
     anim_ammo_7 = animation_create(adef_ammo_7, false);
 
-    render_sprite_sheet_init(&sprite_sheet_ammo_8, "assets/8.png", 50, 70);
+    render_sprite_sheet_init(&sprite_sheet_ammo_8, "assets/hud/8.png", DIGIT_WIDTH, DIGIT_HEIGHT);
     adef_ammo_8 = animation_definition_create(
         &sprite_sheet_ammo_8,
         (f32[]){0},
@@ -223,7 +223,7 @@ void init_ammo_anims(void)
         1);
     anim_ammo_8 = animation_create(adef_ammo_8, false);
 
-    render_sprite_sheet_init(&sprite_sheet_ammo_9, "assets/9.png", 50, 70);
+    render_sprite_sheet_init(&sprite_sheet_ammo_9, "assets/hud/9.png", DIGIT_WIDTH, DIGIT_HEIGHT);
     adef_ammo_9 = animation_definition_create(
         &sprite_sheet_ammo_9,
         (f32[]){0},
@@ -232,7 +232,7 @@ void init_ammo_anims(void)
         1);
     anim_ammo_9 = animation_create(adef_ammo_9, false);
 
-    render_sprite_sheet_init(&sprite_sheet_forward_slash, "assets/forward_slash.png", 50, 70);
+    render_sprite_sheet_init(&sprite_sheet_forward_slash, "assets/hud/forward_slash.png", DIGIT_WIDTH, DIGIT_HEIGHT);
     adef_forward_slash = animation_definition_create(
         &sprite_sheet_forward_slash,
         (f32[]){0},
@@ -264,11 +264,14 @@ void render_hud(SDL_Window *window, u32 texture_slots[32])
 {
     // render player one displays (health + ammo)
     render_health(window, texture_slots, player_one, (vec2){50, (window_height * DEFAULT_RENDER_SCALE_FACTOR) - 50});
-    render_ammo(window, texture_slots, player_one, (vec2){25 + 50 * 6, 35});
+    render_ammo(window, texture_slots, player_one, (vec2){0.5 * DIGIT_WIDTH + DIGIT_WIDTH * 7 + ICON_SPACE, 0.5 * DIGIT_HEIGHT});
 
     // render player two displays if relevant
     if (SPLIT_SCREEN)
+    {
         render_health(window, texture_slots, player_two, (vec2){window_width - 50, window_height - 50});
+        render_ammo(window, texture_slots, player_two, (vec2){window_width - 0.5 * DIGIT_WIDTH, 0.5 * DIGIT_HEIGHT});
+    }
 }
 
 void render_health(SDL_Window *window, u32 texture_slots[32], Player *player, vec2 position)
@@ -375,11 +378,18 @@ void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player, vec2
     u16 reserve_digits = 0;
     u16 capacity_digits = 0;
 
+    // render the player's weapon's ammo icon before numbers if on left side of the screen
+    if (player->weapon->hud_ammo_icon && player->is_left_player)
+    {
+        animation_render(player->weapon->hud_ammo_icon, window, position, 0, WHITE, texture_slots);
+        position[0] -= DIGIT_WIDTH + ICON_SPACE; // add a bit of space between icon and the numbers
+    }
+
     // keep rendering digits for the capacity while there are digits left
     while (reserve > 0)
     {
         reserve = render_ammo_digit(window, texture_slots, position, reserve);
-        position[0] -= 50;
+        position[0] -= DIGIT_WIDTH;
         reserve_digits++;
     }
 
@@ -387,26 +397,34 @@ void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player, vec2
     while (reserve_digits < 3)
     {
         animation_render(anim_ammo_0, window, position, 0, WHITE, texture_slots);
-        position[0] -= 50;
+        position[0] -= DIGIT_WIDTH;
         reserve_digits++;
     }
 
     // add slash in between reserve and capacity
     animation_render(anim_forward_slash, window, position, 0, WHITE, texture_slots);
-    position[0] -= 50;
+    position[0] -= DIGIT_WIDTH;
 
     // repeat logic for capacity attribute
     while (capacity > 0)
     {
         capacity = render_ammo_digit(window, texture_slots, position, capacity);
-        position[0] -= 50; // move the render position over after each digit
+        position[0] -= DIGIT_WIDTH;
         capacity_digits++;
     }
     while (capacity_digits < 3)
     {
         animation_render(anim_ammo_0, window, position, 0, WHITE, texture_slots);
-        position[0] -= 50;
+        position[0] -= DIGIT_WIDTH;
         capacity_digits++;
+    }
+
+    // render the player's weapon's ammo icon after numbers if on right side of the screen
+    if (player->weapon->hud_ammo_icon && !player->is_left_player)
+    {
+        position[0] - ICON_SPACE;
+        animation_render(player->weapon->hud_ammo_icon, window, position, 0, WHITE, texture_slots);
+        position[0] -= DIGIT_WIDTH; // add a bit of space between icon and the numbers
     }
 }
 
