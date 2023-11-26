@@ -422,7 +422,7 @@ void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player, vec2
     // render the player's weapon's ammo icon after numbers if on right side of the screen
     if (player->weapon->hud_ammo_icon && !player->is_left_player)
     {
-        position[0] - ICON_SPACE;
+        position[0] -= ICON_SPACE;
         animation_render(player->weapon->hud_ammo_icon, window, position, 0, WHITE, texture_slots);
         position[0] -= DIGIT_WIDTH; // add a bit of space between icon and the numbers
     }
