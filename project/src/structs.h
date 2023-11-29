@@ -108,6 +108,7 @@ typedef struct crosshair
 {
     Entity *entity;
     vec2 relative_position;
+    vec2 percentage_of_screen; // x/y position in screen in terms of percentage of pixels in each direction (0.5, 0.5) would be center of screen
 } Crosshair;
 
 typedef struct bullet

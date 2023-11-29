@@ -143,14 +143,15 @@ void init_all_anims()
     anim_player_placeholder = animation_create(adef_player_placeholder, false);
 
     // init crosshair anims
-    render_sprite_sheet_init(&sprite_sheet_crosshair_red, "assets/crosshair_red.png", 27, 27);
-    adef_crosshair_red = animation_definition_create(
-        &sprite_sheet_crosshair_red,
+    render_sprite_sheet_init(&sprite_sheet_player_crosshair, "assets/crosshair_red.png", 27, 27);
+    adef_player_crosshair = animation_definition_create(
+        &sprite_sheet_player_crosshair,
         (f32[]){0.1, 0.1, 0.1, 0.1},
         (u8[]){0, 0, 0, 0},
         (u8[]){1, 2, 3, 4},
         4);
-    anim_crosshair_red = animation_create(adef_crosshair_red, true);
+    anim_p1_crosshair = animation_create(adef_player_crosshair, true);
+    anim_p2_crosshair = animation_create(adef_player_crosshair, true);
 
     // init bullet anims
     render_sprite_sheet_init(&sprite_sheet_bullet_0, "assets/bullet_0.png", 3, 1);
@@ -1513,7 +1514,7 @@ void handle_player_input(Player *player)
 
             // activate entity and set anim
             player->crosshair->entity->is_active = true;
-            player->crosshair->entity->animation = anim_crosshair_red;
+            player->crosshair->entity->animation = player->is_left_player ? anim_p1_crosshair : anim_p2_crosshair;
         }
 
         // movement inputs now move crosshair instead of player
@@ -1647,19 +1648,19 @@ void free_player(Player *player)
     free(player);
 }
 
-// helper to get the player from a body (if associated), used in on_hit helpers
-Player *get_player_from_body(Player *player_one, Player *player_two, Body *body, bool return_other_player)
+// helper to update the percentage_of_screen attribute of a player's crosshair
+// used to map the crosshairs position on the screen across different render width when rendering the hud
+void update_crosshair_position_percentage(Player *player)
 {
-    if (player_one->entity->body == body)
-    {
-        return !return_other_player ? player_one : player_two;
-    }
-    else if (SPLIT_SCREEN && player_two->entity->body == body)
-    {
-        return !return_other_player ? player_two : player_one;
-    }
-    else
-    {
-        return NULL;
-    }
+    player->crosshair->percentage_of_screen[0] = player->crosshair->entity->body->aabb.position[0] / render_width;
+    player->crosshair->percentage_of_screen[1] = player->crosshair->entity->body->aabb.position[1] / render_height;
+}
+
+// parent function for all the necessary player updates made each frame
+void player_per_frame_updates(Player *player)
+{
+    handle_player_input(player);
+    update_player_status(player);
+    update_player_animations(player);
+    update_crosshair_position_percentage(player);
 }

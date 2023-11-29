@@ -46,7 +46,7 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
 
         // shift all bodies EXCEPT the active player and crosshairs
         bool is_active_player_body = (body == player_one->entity->body && left_player_is_active) || (SPLIT_SCREEN && body == player_two->entity->body && !left_player_is_active);
-        bool is_crosshair = body == player_one->crosshair->entity->body || (SPLIT_SCREEN && body == player_two->crosshair->entity->body);
+        bool is_crosshair = SPLIT_SCREEN ? (body == player_one->crosshair->entity->body || body == player_two->crosshair->entity->body) : body == player_one->crosshair->entity->body;
         if (!is_active_player_body && !is_crosshair)
         {
             body->aabb.position[0] += shift[0];
@@ -146,14 +146,16 @@ int main(int argc, char *argv[])
         {
             player_one->relative_position[0] = player_one->entity->body->aabb.position[0] + left_cam.position[0];
             player_one->relative_position[1] = player_one->entity->body->aabb.position[1] + left_cam.position[1];
+            player_one->crosshair->relative_position[0] = player_one->crosshair->entity->body->aabb.position[0] + left_cam.position[0];
+            player_one->crosshair->relative_position[1] = player_one->crosshair->entity->body->aabb.position[1] + left_cam.position[1];
         }
         else // otherwise use main cam TODO: perhaps make left_cam and main_cam the same object?
         {
             player_one->relative_position[0] = player_one->entity->body->aabb.position[0] + main_cam.position[0];
             player_one->relative_position[1] = player_one->entity->body->aabb.position[1] + main_cam.position[1];
+            player_one->crosshair->relative_position[0] = player_one->crosshair->entity->body->aabb.position[0] + main_cam.position[0];
+            player_one->crosshair->relative_position[1] = player_one->crosshair->entity->body->aabb.position[1] + main_cam.position[1];
         }
-        player_one->crosshair->relative_position[0] = player_one->crosshair->entity->body->aabb.position[0] + left_cam.position[0];
-        player_one->crosshair->relative_position[1] = player_one->crosshair->entity->body->aabb.position[1] + left_cam.position[1];
 
         // need to pass the RELATIVE position of the players into the physics engine to properly detect collisions
         p1_pos_holder[0] = player_one->entity->body->aabb.position[0];
@@ -205,27 +207,21 @@ int main(int argc, char *argv[])
                 set_render_dimensions(player_one->render_scale_factor, false, true);
                 camera_update(&left_cam, player_one, &map);
                 render_begin_left();
-                handle_player_input(player_one);
-                update_player_status(player_one);
-                update_player_animations(player_one);
+                player_per_frame_updates(player_one);
             }
             else if (SPLIT_SCREEN && i == 1)
             {
                 set_render_dimensions(player_two->render_scale_factor, false, true);
                 camera_update(&right_cam, player_two, &map);
                 render_begin_right();
-                handle_player_input(player_two);
-                update_player_status(player_two);
-                update_player_animations(player_two);
+                player_per_frame_updates(player_two);
             }
             else // hit when screen is not being split
             {
                 set_render_dimensions(player_one->render_scale_factor, false, true);
                 camera_update(&main_cam, player_one, &map);
                 render_begin();
-                handle_player_input(player_one);
-                update_player_status(player_one);
-                update_player_animations(player_one);
+                player_per_frame_updates(player_one);
             }
 
             // save aabb positions again
@@ -261,12 +257,11 @@ int main(int argc, char *argv[])
                 Entity *entity = entity_get(j);
 
                 // for debugging
-                if (RENDER_PHYSICS_BODIES)
+                if (RENDER_PHYSICS_BODIES && entity->is_active)
                     render_aabb((f32 *)&entity->body->aabb, WHITE);
 
                 // destroy any entities that are inactive or have physics bodies that are inactive and aren't associated with players, crosshairs, or pickups
-                bool is_left_crosshair = entity == player_one->crosshair->entity;
-                bool is_right_crosshair = SPLIT_SCREEN ? (entity == player_two->crosshair->entity) : false;
+                bool is_crosshair = SPLIT_SCREEN ? (entity == player_one->crosshair->entity || entity == player_two->crosshair->entity) : (entity == player_one->crosshair->entity);
                 bool is_player = SPLIT_SCREEN ? (entity == player_one->entity || entity == player_two->entity) : (entity == player_one->entity);
 
                 bool is_pickup = false;
@@ -275,13 +270,13 @@ int main(int argc, char *argv[])
                     if (entity == map.pickups[k].entity)
                         is_pickup = true;
                 }
-                if ((!entity->is_active || !entity->body->is_active) && !is_player && !is_pickup && !is_left_crosshair && !is_right_crosshair)
+                if ((!entity->is_active || !entity->body->is_active) && !is_player && !is_pickup && !is_crosshair)
                 {
                     entity_destroy(entity);
                 }
 
                 // skip entities with no associated animations, check if players and pickups are inactive
-                if (!entity->animation || !entity->is_active || !entity->body->is_active || i == 0 && is_right_crosshair || i == 1 && is_left_crosshair)
+                if (!entity->animation || !entity->is_active || !entity->body->is_active || is_crosshair)
                 {
                     continue;
                 }
@@ -349,6 +344,7 @@ int main(int argc, char *argv[])
         render_end(window, texture_slots, false);
 
         set_render_dimensions(DEFAULT_RENDER_SCALE_FACTOR, true, true);
+
         render_begin_hud();
         // AABB weapon_hud_aabb;
         // weapon_hud_aabb.half_size[0] = 25;

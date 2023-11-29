@@ -259,21 +259,6 @@ void init_hud(SDL_Window *window)
     }
 }
 
-// renders the heads up display (should be called once per frame)
-void render_hud(SDL_Window *window, u32 texture_slots[32])
-{
-    // render player one displays (health + ammo)
-    render_health(window, texture_slots, player_one, (vec2){50, (window_height * DEFAULT_RENDER_SCALE_FACTOR) - 50});
-    render_ammo(window, texture_slots, player_one, (vec2){0.5 * DIGIT_WIDTH + DIGIT_WIDTH * 7 + ICON_SPACE, 0.5 * DIGIT_HEIGHT});
-
-    // render player two displays if relevant
-    if (SPLIT_SCREEN)
-    {
-        render_health(window, texture_slots, player_two, (vec2){window_width - 50, window_height - 50});
-        render_ammo(window, texture_slots, player_two, (vec2){window_width - 0.5 * DIGIT_WIDTH, 0.5 * DIGIT_HEIGHT});
-    }
-}
-
 void render_health(SDL_Window *window, u32 texture_slots[32], Player *player, vec2 position)
 {
     i16 health = player->health;
@@ -433,4 +418,31 @@ void free_hud(void)
 {
     if (hud)
         free(hud);
+}
+
+// renders the heads up display (should be called once per frame)
+void render_hud(SDL_Window *window, u32 texture_slots[32])
+{
+    // render player one displays (health + ammo)
+    render_health(window, texture_slots, player_one, (vec2){50, (window_height * DEFAULT_RENDER_SCALE_FACTOR) - 50});
+    render_ammo(window, texture_slots, player_one, (vec2){0.5 * DIGIT_WIDTH + DIGIT_WIDTH * 7 + ICON_SPACE, 0.5 * DIGIT_HEIGHT});
+    if (player_one->crosshair->entity->is_active)
+    {
+        vec2 animation_position;
+        animation_position[0] = player_one->crosshair->percentage_of_screen[0] * render_width;
+        animation_position[1] = player_one->crosshair->percentage_of_screen[1] * render_height;
+        if (SPLIT_SCREEN)
+            animation_position[0] *= 0.5; // render width on the left side of the screen will be half the render width of the hud
+        animation_render(player_one->crosshair->entity->animation, window, animation_position, 0, WHITE, texture_slots);
+    }
+    // render player two displays if relevant
+    if (SPLIT_SCREEN)
+    {
+        render_health(window, texture_slots, player_two, (vec2){window_width - 50, window_height - 50});
+        render_ammo(window, texture_slots, player_two, (vec2){window_width - 0.5 * DIGIT_WIDTH, 0.5 * DIGIT_HEIGHT});
+        if (player_two->crosshair->entity->is_active)
+        {
+            animation_render(player_two->crosshair->entity->animation, window, (vec2){player_two->crosshair->percentage_of_screen[0] * 0.5 * render_width + 0.5 * render_width, player_two->crosshair->percentage_of_screen[1] * render_height}, 0, WHITE, texture_slots);
+        }
+    }
 }
