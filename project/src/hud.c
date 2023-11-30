@@ -2,6 +2,31 @@
 
 HUD *hud;
 
+void init_ammo_anim_hashmap(void)
+{
+    ammo_anim_map = create_hash_map(AMMO_ANIM_COUNT);
+    insert(ammo_anim_map, "anim_ammo_0", anim_ammo_0);
+    insert(ammo_anim_map, "anim_ammo_1", anim_ammo_1);
+    insert(ammo_anim_map, "anim_ammo_2", anim_ammo_2);
+    insert(ammo_anim_map, "anim_ammo_3", anim_ammo_3);
+    insert(ammo_anim_map, "anim_ammo_4", anim_ammo_4);
+    insert(ammo_anim_map, "anim_ammo_5", anim_ammo_5);
+    insert(ammo_anim_map, "anim_ammo_6", anim_ammo_6);
+    insert(ammo_anim_map, "anim_ammo_7", anim_ammo_7);
+    insert(ammo_anim_map, "anim_ammo_8", anim_ammo_8);
+    insert(ammo_anim_map, "anim_ammo_9", anim_ammo_9);
+    insert(ammo_anim_map, "anim_ammo_0_blinking", anim_ammo_0_blinking);
+    insert(ammo_anim_map, "anim_ammo_1_blinking", anim_ammo_1_blinking);
+    insert(ammo_anim_map, "anim_ammo_2_blinking", anim_ammo_2_blinking);
+    insert(ammo_anim_map, "anim_ammo_3_blinking", anim_ammo_3_blinking);
+    insert(ammo_anim_map, "anim_ammo_4_blinking", anim_ammo_4_blinking);
+    insert(ammo_anim_map, "anim_ammo_5_blinking", anim_ammo_5_blinking);
+    insert(ammo_anim_map, "anim_ammo_6_blinking", anim_ammo_6_blinking);
+    insert(ammo_anim_map, "anim_ammo_7_blinking", anim_ammo_7_blinking);
+    insert(ammo_anim_map, "anim_ammo_8_blinking", anim_ammo_8_blinking);
+    insert(ammo_anim_map, "anim_ammo_9_blinking", anim_ammo_9_blinking);
+}
+
 void init_health_anims(void)
 {
     render_sprite_sheet_init(&sprite_sheet_health_cross_0, "assets/hud/health_cross_0.png", 100, 100);
@@ -232,6 +257,96 @@ void init_ammo_anims(void)
         1);
     anim_ammo_9 = animation_create(adef_ammo_9, false);
 
+    render_sprite_sheet_init(&sprite_sheet_ammo_0_blinking, "assets/hud/0_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
+    adef_ammo_0_blinking = animation_definition_create(
+        &sprite_sheet_ammo_0_blinking,
+        (f32[]){0.5, 0.5},
+        (u8[]){0, 0},
+        (u8[]){1, 2},
+        2);
+    anim_ammo_0_blinking = animation_create(adef_ammo_0_blinking, false);
+
+    render_sprite_sheet_init(&sprite_sheet_ammo_1_blinking, "assets/hud/1_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
+    adef_ammo_1_blinking = animation_definition_create(
+        &sprite_sheet_ammo_1_blinking,
+        (f32[]){0.5, 0.5},
+        (u8[]){0, 0},
+        (u8[]){1, 2},
+        2);
+    anim_ammo_1_blinking = animation_create(adef_ammo_1_blinking, false);
+
+    render_sprite_sheet_init(&sprite_sheet_ammo_2_blinking, "assets/hud/2_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
+    adef_ammo_2_blinking = animation_definition_create(
+        &sprite_sheet_ammo_2_blinking,
+        (f32[]){0.5, 0.5},
+        (u8[]){0, 0},
+        (u8[]){1, 2},
+        2);
+    anim_ammo_2_blinking = animation_create(adef_ammo_2_blinking, false);
+
+    render_sprite_sheet_init(&sprite_sheet_ammo_3_blinking, "assets/hud/3_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
+    adef_ammo_3_blinking = animation_definition_create(
+        &sprite_sheet_ammo_3_blinking,
+        (f32[]){0.5, 0.5},
+        (u8[]){0, 0},
+        (u8[]){1, 2},
+        2);
+    anim_ammo_3_blinking = animation_create(adef_ammo_3_blinking, false);
+
+    render_sprite_sheet_init(&sprite_sheet_ammo_4_blinking, "assets/hud/4_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
+    adef_ammo_4_blinking = animation_definition_create(
+        &sprite_sheet_ammo_4_blinking,
+        (f32[]){0.5, 0.5},
+        (u8[]){0, 0},
+        (u8[]){1, 2},
+        2);
+    anim_ammo_4_blinking = animation_create(adef_ammo_4_blinking, false);
+
+    render_sprite_sheet_init(&sprite_sheet_ammo_5_blinking, "assets/hud/5_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
+    adef_ammo_5_blinking = animation_definition_create(
+        &sprite_sheet_ammo_5_blinking,
+        (f32[]){0.5, 0.5},
+        (u8[]){0, 0},
+        (u8[]){1, 2},
+        2);
+    anim_ammo_5_blinking = animation_create(adef_ammo_5_blinking, false);
+
+    render_sprite_sheet_init(&sprite_sheet_ammo_6_blinking, "assets/hud/6_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
+    adef_ammo_6_blinking = animation_definition_create(
+        &sprite_sheet_ammo_6_blinking,
+        (f32[]){0.5, 0.5},
+        (u8[]){0, 0},
+        (u8[]){1, 2},
+        2);
+    anim_ammo_6_blinking = animation_create(adef_ammo_6_blinking, false);
+
+    render_sprite_sheet_init(&sprite_sheet_ammo_7_blinking, "assets/hud/7_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
+    adef_ammo_7_blinking = animation_definition_create(
+        &sprite_sheet_ammo_7_blinking,
+        (f32[]){0.5, 0.5},
+        (u8[]){0, 0},
+        (u8[]){1, 2},
+        2);
+    anim_ammo_7_blinking = animation_create(adef_ammo_7_blinking, false);
+
+    render_sprite_sheet_init(&sprite_sheet_ammo_8_blinking, "assets/hud/8_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
+    adef_ammo_8_blinking = animation_definition_create(
+        &sprite_sheet_ammo_8_blinking,
+        (f32[]){0.5, 0.5},
+        (u8[]){0, 0},
+        (u8[]){1, 2},
+        2);
+    anim_ammo_8_blinking = animation_create(adef_ammo_8_blinking, false);
+
+    render_sprite_sheet_init(&sprite_sheet_ammo_9_blinking, "assets/hud/9_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
+    adef_ammo_9_blinking = animation_definition_create(
+        &sprite_sheet_ammo_9_blinking,
+        (f32[]){0.5, 0.5},
+        (u8[]){0, 0},
+        (u8[]){1, 2},
+        2);
+    anim_ammo_9_blinking = animation_create(adef_ammo_9_blinking, false);
+
     render_sprite_sheet_init(&sprite_sheet_forward_slash, "assets/hud/forward_slash.png", DIGIT_WIDTH, DIGIT_HEIGHT);
     adef_forward_slash = animation_definition_create(
         &sprite_sheet_forward_slash,
@@ -240,24 +355,6 @@ void init_ammo_anims(void)
         (u8[]){0},
         1);
     anim_forward_slash = animation_create(adef_forward_slash, false);
-}
-
-// initializes heads up display
-void init_hud(SDL_Window *window)
-{
-    // init anims used by the hud
-    init_health_anims();
-    init_ammo_anims();
-    render_sprite_sheet_init(&sprite_sheet_divider, "assets/hud/divider.png", 10, 1500);
-
-    // initialize struct
-    hud = malloc(sizeof(HUD));
-    hud->window = window;
-
-    // init right side of the hud (if there is a second player)
-    if (SPLIT_SCREEN)
-    {
-    }
 }
 
 void render_health(SDL_Window *window, u32 texture_slots[32], Player *player, vec2 position)
@@ -325,30 +422,27 @@ void render_health(SDL_Window *window, u32 texture_slots[32], Player *player, ve
     }
 }
 
-u16 render_ammo_digit(SDL_Window *window, u32 texture_slots[32], vec2 position, u16 value)
+// renders the ammo display digit and returns the updated value for calculating the next position
+u16 render_ammo_digit(SDL_Window *window, u32 texture_slots[32], vec2 position, Weapon *weapon, u16 value)
 {
+    printf("calculating digit anim name\n");
+    // get least significant digit and convert to string for use with anim hashmap
     u16 digit = value % 10;
+    char digit_str[2]; // 1 digit null terminated
+    sprintf(digit_str, "%u", digit);
 
-    if (digit == 0)
-        animation_render(anim_ammo_0, window, position, 0, WHITE, texture_slots);
-    if (digit == 1)
-        animation_render(anim_ammo_1, window, position, 1, WHITE, texture_slots);
-    if (digit == 2)
-        animation_render(anim_ammo_2, window, position, 2, WHITE, texture_slots);
-    if (digit == 3)
-        animation_render(anim_ammo_3, window, position, 3, WHITE, texture_slots);
-    if (digit == 4)
-        animation_render(anim_ammo_4, window, position, 4, WHITE, texture_slots);
-    if (digit == 5)
-        animation_render(anim_ammo_5, window, position, 5, WHITE, texture_slots);
-    if (digit == 6)
-        animation_render(anim_ammo_6, window, position, 6, WHITE, texture_slots);
-    if (digit == 7)
-        animation_render(anim_ammo_7, window, position, 7, WHITE, texture_slots);
-    if (digit == 8)
-        animation_render(anim_ammo_8, window, position, 8, WHITE, texture_slots);
-    if (digit == 9)
-        animation_render(anim_ammo_9, window, position, 9, WHITE, texture_slots);
+    char *digit_anim_name = calloc(50, sizeof(char));
+    strcat(digit_anim_name, "anim_ammo_");
+    strcat(digit_anim_name, digit_str);
+    if ((f32)weapon->capacity / weapon->max_capacity <= 0.25)
+        strcat(digit_anim_name, "_blinking");
+
+    printf("digit_anim_name: %s\n", digit_anim_name);
+    Animation *digit_anim = get(ammo_anim_map, digit_anim_name);
+    printf("digit_anim address: %p\n", digit_anim);
+    animation_render(digit_anim, window, position, 0, WHITE, texture_slots);
+    printf("rendered animation\n");
+    free(digit_anim_name);
 
     // remove the digit we just rendered and return
     return value / 10;
@@ -357,6 +451,7 @@ u16 render_ammo_digit(SDL_Window *window, u32 texture_slots[32], vec2 position, 
 // Renders the ammo display. Renders the digits in each value from left to right
 void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player, vec2 position)
 {
+    printf("rendering ammo\n");
     u16 capacity = player->weapon->capacity;
     u16 reserve = player->weapon->reserve;
 
@@ -370,11 +465,10 @@ void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player, vec2
         animation_render(player->weapon->hud_ammo_icon, window, position, 0, WHITE, texture_slots);
         position[0] -= DIGIT_WIDTH + ICON_SPACE; // add a bit of space between icon and the numbers
     }
-
     // keep rendering digits for the capacity while there are digits left
     while (reserve > 0)
     {
-        reserve = render_ammo_digit(window, texture_slots, position, reserve);
+        reserve = render_ammo_digit(window, texture_slots, position, player->weapon, reserve);
         position[0] -= DIGIT_WIDTH;
         reserve_digits++;
     }
@@ -386,15 +480,13 @@ void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player, vec2
         position[0] -= DIGIT_WIDTH;
         reserve_digits++;
     }
-
     // add slash in between reserve and capacity
     animation_render(anim_forward_slash, window, position, 0, WHITE, texture_slots);
     position[0] -= DIGIT_WIDTH;
-
     // repeat logic for capacity attribute
     while (capacity > 0)
     {
-        capacity = render_ammo_digit(window, texture_slots, position, capacity);
+        capacity = render_ammo_digit(window, texture_slots, position, player->weapon, capacity);
         position[0] -= DIGIT_WIDTH;
         capacity_digits++;
     }
@@ -412,6 +504,7 @@ void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player, vec2
         animation_render(player->weapon->hud_ammo_icon, window, position, 0, WHITE, texture_slots);
         position[0] -= DIGIT_WIDTH; // add a bit of space between icon and the numbers
     }
+    printf("done rendering ammo\n");
 }
 
 // frees the dynamic hud memory
@@ -421,9 +514,29 @@ void free_hud(void)
         free(hud);
 }
 
+// initializes heads up display
+void init_hud(SDL_Window *window)
+{
+    // init anims used by the hud
+    init_health_anims();
+    init_ammo_anims();
+    init_ammo_anim_hashmap();
+    render_sprite_sheet_init(&sprite_sheet_divider, "assets/hud/divider.png", 10, 1500);
+
+    // initialize struct
+    hud = malloc(sizeof(HUD));
+    hud->window = window;
+
+    // init right side of the hud (if there is a second player)
+    if (SPLIT_SCREEN)
+    {
+    }
+}
+
 // renders the heads up display (should be called once per frame)
 void render_hud(SDL_Window *window, u32 texture_slots[32])
 {
+    printf("beginning hud rendering\n");
     // render player one displays (health + ammo)
     render_health(window, texture_slots, player_one, (vec2){50, (window_height * DEFAULT_RENDER_SCALE_FACTOR) - 50});
     render_ammo(window, texture_slots, player_one, (vec2){0.5 * DIGIT_WIDTH + DIGIT_WIDTH * 7 + ICON_SPACE, 0.5 * DIGIT_HEIGHT});
@@ -439,15 +552,20 @@ void render_hud(SDL_Window *window, u32 texture_slots[32])
     // render player two displays if relevant
     if (SPLIT_SCREEN)
     {
+        printf("rendering p2\n");
         // render the line separating the viewports
         render_sprite_sheet_frame(&sprite_sheet_divider, window, 0, 0, (vec2){render_width * 0.5 - 5, render_height * 0.5}, 0, false, RENDER_PHYSICS_BODIES ? (vec4){0.9, 0.9, 0.9, 0.9} : WHITE, texture_slots);
 
         // render player two's displays
         render_health(window, texture_slots, player_two, (vec2){window_width - 50, window_height - 50});
+        printf("rendering p2 ammo\n");
         render_ammo(window, texture_slots, player_two, (vec2){window_width - 0.5 * DIGIT_WIDTH, 0.5 * DIGIT_HEIGHT});
+        printf("rendered p2 ammo\n");
+
         if (player_two->crosshair->entity->is_active)
         {
             animation_render(player_two->crosshair->entity->animation, window, (vec2){player_two->crosshair->percentage_of_screen[0] * 0.5 * render_width + 0.5 * render_width, player_two->crosshair->percentage_of_screen[1] * render_height}, 0, WHITE, texture_slots);
         }
     }
+    printf("done rendering hud\n");
 }
