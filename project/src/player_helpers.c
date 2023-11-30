@@ -143,15 +143,22 @@ void init_all_anims()
     anim_player_placeholder = animation_create(adef_player_placeholder, false);
 
     // init crosshair anims
-    render_sprite_sheet_init(&sprite_sheet_player_crosshair, "assets/crosshair_red.png", 27, 27);
-    adef_player_crosshair = animation_definition_create(
-        &sprite_sheet_player_crosshair,
-        (f32[]){0.1, 0.1, 0.1, 0.1},
-        (u8[]){0, 0, 0, 0},
-        (u8[]){1, 2, 3, 4},
-        4);
-    anim_p1_crosshair = animation_create(adef_player_crosshair, true);
-    anim_p2_crosshair = animation_create(adef_player_crosshair, true);
+    render_sprite_sheet_init(&sprite_sheet_player_1_crosshair, "assets/hud/red_crosshair.png", 200, 200);
+    adef_player_1_crosshair = animation_definition_create(
+        &sprite_sheet_player_1_crosshair,
+        (f32[]){0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
+        12);
+    render_sprite_sheet_init(&sprite_sheet_player_2_crosshair, "assets/hud/blue_crosshair.png", 200, 200);
+    adef_player_2_crosshair = animation_definition_create(
+        &sprite_sheet_player_2_crosshair,
+        (f32[]){0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
+        12);
+    anim_p1_crosshair = animation_create(adef_player_1_crosshair, true);
+    anim_p2_crosshair = animation_create(adef_player_2_crosshair, true);
 
     // init bullet anims
     render_sprite_sheet_init(&sprite_sheet_bullet_0, "assets/bullet_0.png", 3, 1);
@@ -973,7 +980,7 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
     player->entity = entity_create((vec2){render_width * 0.5, render_height * 0.5}, (vec2){40, 75}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
     player->entity->body->parent = player;
     player->crosshair = malloc(sizeof(Crosshair));
-    player->crosshair->entity = entity_create((vec2){player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]}, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static);
+    player->crosshair->entity = entity_create((vec2){player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]}, (vec2){200, 200}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static);
     player->crosshair->relative_position[0] = player->entity->body->aabb.position[0];
     player->crosshair->relative_position[1] = player->entity->body->aabb.position[1];
     player->crosshair->entity->is_active = false;

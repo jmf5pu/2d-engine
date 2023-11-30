@@ -27,8 +27,10 @@ Hash_Map *bullet_anim_map;
 Hash_Map *player_anim_map;
 
 // crosshair sprites & anims
-Sprite_Sheet sprite_sheet_player_crosshair;
-Animation_Definition *adef_player_crosshair;
+Sprite_Sheet sprite_sheet_player_1_crosshair;
+Sprite_Sheet sprite_sheet_player_2_crosshair;
+Animation_Definition *adef_player_1_crosshair;
+Animation_Definition *adef_player_2_crosshair;
 Animation *anim_p1_crosshair;
 Animation *anim_p2_crosshair;
 
