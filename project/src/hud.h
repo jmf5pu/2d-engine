@@ -97,6 +97,9 @@ Animation *anim_ammo_8;
 Animation *anim_ammo_9;
 Animation *anim_forward_slash;
 
+// diviiding line sprite sheet
+Sprite_Sheet sprite_sheet_divider;
+
 extern HUD *hud;
 
 void init_hud(SDL_Window *window);

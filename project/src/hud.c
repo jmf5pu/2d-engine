@@ -248,6 +248,7 @@ void init_hud(SDL_Window *window)
     // init anims used by the hud
     init_health_anims();
     init_ammo_anims();
+    render_sprite_sheet_init(&sprite_sheet_divider, "assets/hud/divider.png", 10, 1500);
 
     // initialize struct
     hud = malloc(sizeof(HUD));
@@ -438,6 +439,10 @@ void render_hud(SDL_Window *window, u32 texture_slots[32])
     // render player two displays if relevant
     if (SPLIT_SCREEN)
     {
+        // render the line separating the viewports
+        render_sprite_sheet_frame(&sprite_sheet_divider, window, 0, 0, (vec2){render_width * 0.5 - 5, render_height * 0.5}, 0, false, RENDER_PHYSICS_BODIES ? (vec4){0.9, 0.9, 0.9, 0.9} : WHITE, texture_slots);
+
+        // render player two's displays
         render_health(window, texture_slots, player_two, (vec2){window_width - 50, window_height - 50});
         render_ammo(window, texture_slots, player_two, (vec2){window_width - 0.5 * DIGIT_WIDTH, 0.5 * DIGIT_HEIGHT});
         if (player_two->crosshair->entity->is_active)
