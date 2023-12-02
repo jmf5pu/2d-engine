@@ -273,6 +273,7 @@ int main(int argc, char *argv[])
                 if ((!entity->is_active || !entity->body->is_active) && !is_player && !is_pickup && !is_crosshair)
                 {
                     entity_destroy(entity);
+                    continue;
                 }
 
                 // skip entities with no associated animations, check if players and pickups are inactive

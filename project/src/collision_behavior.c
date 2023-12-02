@@ -110,9 +110,6 @@ void bullet_on_hit_static(Body *self, Static_Body *other, Hit hit)
 
     // mark for body (and entity) for destruction
     self->is_active = false;
-
-    // free parent struct
-    free(self->parent);
 }
 
 void enemy_on_hit(Body *self, Body *other, Hit hit)

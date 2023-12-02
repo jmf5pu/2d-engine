@@ -168,16 +168,11 @@ void free_map_attributes(Map *map)
 {
     for (int i = 0; i < map->num_props; i++)
     {
-        free(&map->props[i].sprite);
+        free(map->props[i].sprite);
         for (int j = 0; j < map->props[i].num_static_bodies; j++)
         {
             free(map->props[i].static_bodies[j]);
         }
-        free(&map->props[i]);
-    }
-    for (int i = 0; i < map->num_pickups; i++)
-    {
-        free(&map->pickups[i]);
     }
 
     free(map->props);
