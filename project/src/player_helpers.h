@@ -17,6 +17,7 @@
 
 #define DEFAULT_PLAYER_MOVEMENT_SPEED 250
 #define DEFAULT_CROSSHAIR_MOVEMENT_SPEED 350
+#define CROSSHAIR_SIZE 200
 
 // declare players
 extern Player *player_one;

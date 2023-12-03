@@ -980,7 +980,7 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
     player->entity = entity_create((vec2){render_width * 0.5, render_height * 0.5}, (vec2){40, 75}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
     player->entity->body->parent = player;
     player->crosshair = malloc(sizeof(Crosshair));
-    player->crosshair->entity = entity_create((vec2){player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]}, (vec2){200, 200}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static);
+    player->crosshair->entity = entity_create((vec2){player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]}, (vec2){CROSSHAIR_SIZE, CROSSHAIR_SIZE}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static);
     player->crosshair->relative_position[0] = player->entity->body->aabb.position[0];
     player->crosshair->relative_position[1] = player->entity->body->aabb.position[1];
     player->crosshair->entity->is_active = false;
@@ -1535,24 +1535,24 @@ void handle_player_input(Player *player)
             vely -= DEFAULT_PLAYER_MOVEMENT_SPEED;
 
         // check if crosshair is out of bounds, if so, put in bounds, set velocity to 0
-        if (player->crosshair->entity->body->aabb.position[0] < 0)
+        if (player->crosshair->entity->body->aabb.position[0] < 0 + CROSSHAIR_SIZE * 0.5)
         {
-            player->crosshair->entity->body->aabb.position[0] = 0;
+            player->crosshair->entity->body->aabb.position[0] = CROSSHAIR_SIZE * 0.5;
             velx = 0;
         }
-        if (player->crosshair->entity->body->aabb.position[0] > render_width)
+        if (player->crosshair->entity->body->aabb.position[0] > render_width - CROSSHAIR_SIZE * 0.5)
         {
-            player->crosshair->entity->body->aabb.position[0] = render_width;
+            player->crosshair->entity->body->aabb.position[0] = render_width - CROSSHAIR_SIZE * 0.5;
             velx = 0;
         }
-        if (player->crosshair->entity->body->aabb.position[1] < 0)
+        if (player->crosshair->entity->body->aabb.position[1] < 0 + CROSSHAIR_SIZE * 0.5)
         {
-            player->crosshair->entity->body->aabb.position[1] = 0;
+            player->crosshair->entity->body->aabb.position[1] = CROSSHAIR_SIZE * 0.5;
             vely = 0;
         }
-        if (player->crosshair->entity->body->aabb.position[1] > render_height)
+        if (player->crosshair->entity->body->aabb.position[1] > render_height - CROSSHAIR_SIZE * 0.5)
         {
-            player->crosshair->entity->body->aabb.position[1] = render_height;
+            player->crosshair->entity->body->aabb.position[1] = render_height - CROSSHAIR_SIZE * 0.5;
             vely = 0;
         }
 

@@ -532,31 +532,56 @@ void init_hud(SDL_Window *window)
 // renders the heads up display (should be called once per frame)
 void render_hud(SDL_Window *window, u32 texture_slots[32])
 {
-    // render player one displays (health + ammo)
-    render_health(window, texture_slots, player_one, (vec2){50, (window_height * DEFAULT_RENDER_SCALE_FACTOR) - 50});
-    render_ammo(window, texture_slots, player_one, (vec2){0.5 * DIGIT_WIDTH + DIGIT_WIDTH * 7 + ICON_SPACE, 0.5 * DIGIT_HEIGHT});
+    // render the player crosshairs (if active)
     if (player_one->crosshair->entity->is_active)
     {
         vec2 animation_position;
-        animation_position[0] = player_one->crosshair->percentage_of_screen[0] * render_width;
-        animation_position[1] = player_one->crosshair->percentage_of_screen[1] * render_height;
-        if (SPLIT_SCREEN)
-            animation_position[0] *= 0.5; // render width on the left side of the screen will be half the render width of the hud
+        f32 x_pos = SPLIT_SCREEN ? player_one->crosshair->percentage_of_screen[0] * render_width * 0.5 : player_one->crosshair->percentage_of_screen[0] * render_width;
+        f32 y_pos = player_one->crosshair->percentage_of_screen[1] * render_height;
+        f32 crosshair_buffer = CROSSHAIR_SIZE * 0.5;
+        if (x_pos > (SPLIT_SCREEN ? render_width * 0.5 - crosshair_buffer : render_width - crosshair_buffer))
+            x_pos = (SPLIT_SCREEN ? render_width * 0.5 - crosshair_buffer : render_width - crosshair_buffer);
+        if (x_pos < crosshair_buffer)
+            x_pos = crosshair_buffer;
+        animation_position[0] = x_pos;
+        if (y_pos > render_height - crosshair_buffer)
+            y_pos = render_height - crosshair_buffer;
+        if (y_pos < crosshair_buffer)
+            y_pos = crosshair_buffer;
+        animation_position[1] = y_pos;
         animation_render(player_one->crosshair->entity->animation, window, animation_position, 0, WHITE, texture_slots);
     }
+
+    // render player one displays (health + ammo)
+    render_health(window, texture_slots, player_one, (vec2){50, (window_height * DEFAULT_RENDER_SCALE_FACTOR) - 50});
+    render_ammo(window, texture_slots, player_one, (vec2){0.5 * DIGIT_WIDTH + DIGIT_WIDTH * 7 + ICON_SPACE, 0.5 * DIGIT_HEIGHT});
+
     // render player two displays if relevant
     if (SPLIT_SCREEN)
     {
-        // render the line separating the viewports
-        render_sprite_sheet_frame(&sprite_sheet_divider, window, 0, 0, (vec2){render_width * 0.5 - 5, render_height * 0.5}, 0, false, RENDER_PHYSICS_BODIES ? (vec4){0.9, 0.9, 0.9, 0.9} : WHITE, texture_slots);
-
         // render player two's displays
+        if (player_two->crosshair->entity->is_active)
+        {
+            vec2 animation_position;
+            f32 x_pos = player_two->crosshair->percentage_of_screen[0] * render_width * 0.5 + render_width * 0.5;
+            f32 y_pos = player_two->crosshair->percentage_of_screen[1] * render_height;
+            f32 crosshair_buffer = CROSSHAIR_SIZE * 0.5;
+            if (x_pos > render_width - crosshair_buffer)
+                x_pos = render_width - crosshair_buffer;
+            if (x_pos < render_width * 0.5 + crosshair_buffer)
+                x_pos = render_width * 0.5 + crosshair_buffer;
+            animation_position[0] = x_pos;
+            if (y_pos > render_height - crosshair_buffer)
+                y_pos = render_height - crosshair_buffer;
+            if (y_pos < crosshair_buffer)
+                y_pos = crosshair_buffer;
+            animation_position[1] = y_pos;
+            animation_render(player_two->crosshair->entity->animation, window, animation_position, 0, WHITE, texture_slots);
+        }
         render_health(window, texture_slots, player_two, (vec2){window_width - 50, window_height - 50});
         render_ammo(window, texture_slots, player_two, (vec2){window_width - 0.5 * DIGIT_WIDTH, 0.5 * DIGIT_HEIGHT});
 
-        if (player_two->crosshair->entity->is_active)
-        {
-            animation_render(player_two->crosshair->entity->animation, window, (vec2){player_two->crosshair->percentage_of_screen[0] * 0.5 * render_width + 0.5 * render_width, player_two->crosshair->percentage_of_screen[1] * render_height}, 0, WHITE, texture_slots);
-        }
+        // render viewport divider
+        render_sprite_sheet_frame(&sprite_sheet_divider, window, 0, 0, (vec2){render_width * 0.5, render_height * 0.5}, 0, false, RENDER_PHYSICS_BODIES ? (vec4){0.9, 0.9, 0.9, 0.9} : WHITE, texture_slots);
     }
 }
