@@ -12,6 +12,7 @@
 #define DIGIT_HEIGHT 44
 #define ICON_SPACE 10
 #define AMMO_ANIM_COUNT 20
+#define AMMO_BLINKING_THRESHOLD 0.25 // fraction at which blinking starts
 
 // holds ammo display animations
 Hash_Map *ammo_anim_map;

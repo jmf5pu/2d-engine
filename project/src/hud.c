@@ -423,7 +423,7 @@ void render_health(SDL_Window *window, u32 texture_slots[32], Player *player, ve
 }
 
 // renders the ammo display digit and returns the updated value for calculating the next position
-u16 render_ammo_digit(SDL_Window *window, u32 texture_slots[32], vec2 position, u16 value, f32 ammo_percentage)
+u16 render_ammo_digit(SDL_Window *window, u32 texture_slots[32], vec2 position, u16 value, f32 current_ammo_fraction)
 {
     // get least significant digit and convert to string for use with anim hashmap
     u16 digit = value % 10;
@@ -433,7 +433,7 @@ u16 render_ammo_digit(SDL_Window *window, u32 texture_slots[32], vec2 position, 
     char *digit_anim_name = calloc(50, sizeof(char));
     strcat(digit_anim_name, "anim_ammo_");
     strcat(digit_anim_name, digit_str);
-    if (ammo_percentage <= 0.25)
+    if (current_ammo_fraction <= AMMO_BLINKING_THRESHOLD)
         strcat(digit_anim_name, "_blinking");
     Animation *digit_anim = get(ammo_anim_map, digit_anim_name);
     animation_render(digit_anim, window, position, 0, WHITE, texture_slots);
@@ -446,8 +446,8 @@ u16 render_ammo_digit(SDL_Window *window, u32 texture_slots[32], vec2 position, 
 // Renders the ammo display. Renders the digits in each value from left to right
 void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player, vec2 position)
 {
-    f32 ammo_percentage = (f32)player->weapon->capacity / player->weapon->max_capacity;
-    
+    f32 current_ammo_fraction = (f32)player->weapon->capacity / player->weapon->max_capacity;
+
     u16 capacity = player->weapon->capacity;
     u16 reserve = player->weapon->reserve;
 
@@ -464,7 +464,7 @@ void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player, vec2
     // keep rendering digits for the capacity while there are digits left
     while (reserve > 0)
     {
-        reserve = render_ammo_digit(window, texture_slots, position, reserve, 1); // pass 1 as ammo_percentage so we never render blinking digits for reserve
+        reserve = render_ammo_digit(window, texture_slots, position, reserve, 1); // pass 1 as current_ammo_fraction so we never render blinking digits for reserve
         position[0] -= DIGIT_WIDTH;
         reserve_digits++;
     }
@@ -482,13 +482,14 @@ void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player, vec2
     // repeat logic for capacity attribute
     while (capacity > 0)
     {
-        capacity = render_ammo_digit(window, texture_slots, position, capacity, ammo_percentage);
+        capacity = render_ammo_digit(window, texture_slots, position, capacity, current_ammo_fraction);
         position[0] -= DIGIT_WIDTH;
         capacity_digits++;
     }
     while (capacity_digits < 3)
     {
-        animation_render(anim_ammo_0, window, position, 0, WHITE, texture_slots);
+        // for capacity, make the trailing 0's blink when appropriate
+        animation_render(current_ammo_fraction <= AMMO_BLINKING_THRESHOLD ? anim_ammo_0_blinking : anim_ammo_0, window, position, 0, WHITE, texture_slots);
         position[0] -= DIGIT_WIDTH;
         capacity_digits++;
     }
