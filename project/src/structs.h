@@ -6,6 +6,14 @@
 #include "engine/animation.h"
 #include "engine/render.h"
 
+// used to determine when to render (or not render) whichS menus
+enum Game_State
+{
+    GS_RUNNING,
+    GS_PAUSE_MENU,
+    GS_MAIN_MENU,
+};
+
 enum Direction
 {
     UP,
