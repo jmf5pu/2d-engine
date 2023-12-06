@@ -9,9 +9,11 @@
 // used to determine when to render (or not render) whichS menus
 enum Game_State
 {
-    GS_RUNNING,
-    GS_PAUSE_MENU,
     GS_MAIN_MENU,
+    GS_GAME_MODE_MENU,
+    GS_MAP_SELECT,
+    GS_PAUSE_MENU,
+    GS_RUNNING,
 };
 
 enum Direction

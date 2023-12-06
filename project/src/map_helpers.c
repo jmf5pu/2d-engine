@@ -1,6 +1,7 @@
 #include "engine./util.h"
 #include "engine/global.h"
 #include "enemy_helpers.h"
+#include "player_helpers.h"
 #include "map_helpers.h"
 #include "collision_behavior.h"
 #include <stdlib.h>
@@ -196,4 +197,45 @@ Pickup *get_pickup_from_body(Body *body)
     }
 
     return NULL;
+}
+
+// moves all sprites in the particular vec2 direction. Used for camera movement
+void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
+{
+    // update all bodies' positions (includes pickups, players, etc)
+    Body *body;
+    Array_List *body_list = get_all_bodies();
+    for (u32 i = 0; i < body_list->len; ++i)
+    {
+        body = array_list_get(body_list, i);
+
+        // shift all bodies EXCEPT the active player and crosshairs
+        bool is_active_player_body = (body == player_one->entity->body && left_player_is_active) || (SPLIT_SCREEN && body == player_two->entity->body && !left_player_is_active);
+        bool is_crosshair = SPLIT_SCREEN ? (body == player_one->crosshair->entity->body || body == player_two->crosshair->entity->body) : body == player_one->crosshair->entity->body;
+        if (!is_active_player_body && !is_crosshair)
+        {
+            body->aabb.position[0] += shift[0];
+            body->aabb.position[1] += shift[1];
+        }
+    }
+
+    // update all static bodies' positions
+    Static_Body *static_body;
+    Array_List *static_body_list = get_all_static_bodies();
+    for (u32 i = 0; i < static_body_list->len; ++i)
+    {
+        static_body = array_list_get(static_body_list, i);
+        static_body->aabb.position[0] += shift[0];
+        static_body->aabb.position[1] += shift[1];
+    }
+
+    // update positions of all props on the map
+    for (int i = 0; i < map->num_props; i++)
+    {
+        Prop prop = map->props[i];
+        prop.sprite->position[0] += shift[0];
+        prop.sprite->position[1] += shift[1];
+    }
+
+    // spawn points are relative, no need to shift them
 }
