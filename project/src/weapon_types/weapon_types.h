@@ -1,7 +1,7 @@
 #ifndef WEAPON_TYPES_H
 #define WEAPON_TYPES_H
 
-#include "structs.h"
+#include "../structs.h"
 
 extern Weapon_Type *base;
 extern Weapon_Type *m16;

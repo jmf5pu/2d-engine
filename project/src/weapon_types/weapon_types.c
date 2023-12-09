@@ -1,5 +1,5 @@
 #include "weapon_types.h"
-#include "engine/render.h"
+#include "../engine/render.h"
 
 Weapon_Type *base;
 Weapon_Type *m16;

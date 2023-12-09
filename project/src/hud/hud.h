@@ -1,11 +1,11 @@
 #ifndef HUD_H
 #define HUD_H
 
-#include "structs.h"
-#include "player_helpers/player_helpers.h"
-#include "engine/render.h"
-#include "engine/util.h"
-#include "engine/hash_map.h"
+#include "../structs.h"
+#include "../player_helpers/player_helpers.h"
+#include "../engine/render.h"
+#include "../engine/util.h"
+#include "../engine/hash_map.h"
 
 // ammo display
 #define DIGIT_WIDTH 20

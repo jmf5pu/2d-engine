@@ -23,11 +23,11 @@
 
 // game specific headers
 #include "structs.h"
-#include "collision_behavior.h"
+#include "collision_behavior/collision_behavior.h"
 #include "player_helpers/player_helpers.h"
 #include "map_helpers/map_helpers.h"
-#include "weapon_types.h"
-#include "hud.h"
+#include "weapon_types/weapon_types.h"
+#include "hud/hud.h"
 
 static u32 texture_slots[32] = {0}; // texture slots array for batch rendering
 static bool should_quit = false;    // quit flag

@@ -1,5 +1,6 @@
-#include "hud.h"
 #include <float.h>
+#include "hud.h"
+
 HUD *hud;
 
 void init_ammo_anim_hashmap(void)

@@ -1,10 +1,10 @@
 #include <assert.h>
-#include "engine/physics.h"
 #include "collision_behavior.h"
-#include "structs.h"
-#include "player_helpers/player_helpers.h"
-#include "map_helpers/map_helpers.h"
-#include "weapon_types.h"
+#include "../engine/physics.h"
+#include "../structs.h"
+#include "../player_helpers/player_helpers.h"
+#include "../map_helpers/map_helpers.h"
+#include "../weapon_types/weapon_types.h"
 
 const u8 enemy_mask = COLLISION_LAYER_PLAYER | COLLISION_LAYER_TERRAIN | COLLISION_LAYER_BULLET;
 const u8 player_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRAIN | COLLISION_LAYER_BULLET | COLLISION_LAYER_PICKUP;

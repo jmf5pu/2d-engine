@@ -3,8 +3,8 @@
 #include "../engine/global.h"
 #include "../engine/util.h"
 #include "../engine/camera.h"
-#include "../collision_behavior.h"
-#include "../weapon_types.h"
+#include "../collision_behavior/collision_behavior.h"
+#include "../weapon_types/weapon_types.h"
 
 // declare players
 Player *player_one;
