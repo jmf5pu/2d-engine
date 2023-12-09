@@ -24,8 +24,8 @@
 // game specific headers
 #include "structs.h"
 #include "collision_behavior.h"
-#include "player_helpers.h"
-#include "map_helpers.h"
+#include "player_helpers/player_helpers.h"
+#include "map_helpers/map_helpers.h"
 #include "weapon_types.h"
 #include "hud.h"
 
@@ -72,8 +72,13 @@ int main(int argc, char *argv[])
     {
         switch (game_state)
         {
+        case GS_MAIN_MENU:
+            break;
+        case GS_GAME_MODE_MENU:
+            break;
+        case GS_MAP_SELECT:
+            break;
         case GS_RUNNING:
-
             // main gameplay loop
             while (game_state == GS_RUNNING)
             {
