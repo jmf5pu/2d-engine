@@ -1,10 +1,10 @@
-#include "engine./util.h"
-#include "engine/global.h"
-#include "enemy_helpers.h"
-#include "player_helpers.h"
-#include "map_helpers.h"
-#include "collision_behavior.h"
 #include <stdlib.h>
+#include "map_helpers.h"
+#include "../engine./util.h"
+#include "../engine/global.h"
+#include "../enemy_helpers.h"
+#include "../player_helpers/player_helpers.h"
+#include "../collision_behavior.h"
 
 Map map;
 

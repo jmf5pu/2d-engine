@@ -1,10 +1,10 @@
 #ifndef PLAYER_HELPERS_H
 #define PLAYER_HELPERS_H
 
-#include "engine/hash_map.h"
-#include "engine/animation.h"
-#include "engine/global.h"
-#include "structs.h"
+#include "../engine/hash_map.h"
+#include "../engine/animation.h"
+#include "../engine/global.h"
+#include "../structs.h"
 
 // number of animations to be stored in player_anim_map
 #define PLAYER_ANIM_COUNT 56

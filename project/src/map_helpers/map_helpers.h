@@ -1,9 +1,9 @@
 #ifndef MAP_HELPERS_H
 #define MAP_HELPERS_H
 
-#include "engine/render.h"
-#include "engine/physics.h"
-#include "structs.h"
+#include "../engine/render.h"
+#include "../engine/physics.h"
+#include "../structs.h"
 
 extern Map map;
 

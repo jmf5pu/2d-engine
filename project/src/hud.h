@@ -2,7 +2,7 @@
 #define HUD_H
 
 #include "structs.h"
-#include "player_helpers.h"
+#include "player_helpers/player_helpers.h"
 #include "engine/render.h"
 #include "engine/util.h"
 #include "engine/hash_map.h"

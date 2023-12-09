@@ -1,10 +1,10 @@
 #include <math.h>
-#include "engine/global.h"
-#include "engine/util.h"
-#include "engine/camera.h"
 #include "player_helpers.h"
-#include "collision_behavior.h"
-#include "weapon_types.h"
+#include "../engine/global.h"
+#include "../engine/util.h"
+#include "../engine/camera.h"
+#include "../collision_behavior.h"
+#include "../weapon_types.h"
 
 // declare players
 Player *player_one;
