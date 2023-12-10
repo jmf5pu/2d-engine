@@ -141,12 +141,15 @@ static void stationary_response(Body *body)
     for (u32 i = 0; i < state.static_body_list->len; ++i)
     {
         Static_Body *static_body = physics_static_body_get(i);
-
+        if ((static_body->collision_layer & body->collision_mask) == 0)
+        {
+            continue;
+        }
         AABB aabb = aabb_minkowski_difference(static_body->aabb, body->aabb);
         vec2 min, max;
         aabb_min_max(min, max, aabb);
 
-        if (min[0] <= 0 && max[0] >= 0 && min[1] <= 0 && max[1] >= 0 && (static_body->collision_layer & body->collision_layer) == 0)
+        if (min[0] <= 0 && max[0] >= 0 && min[1] <= 0 && max[1] >= 0)
         {
             vec2 penetration_vector;
             aabb_penetration_vector(penetration_vector, aabb);

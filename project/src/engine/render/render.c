@@ -38,11 +38,11 @@ SDL_Window *render_init(void)
     // create main window
     SDL_DisplayMode display_mode;
     SDL_GetCurrentDisplayMode(0, &display_mode);
-    printf("Dislpay Mode Resolution: %dx%d\n", display_mode.w, display_mode.h);
+    printf("Display Mode Resolution: %dx%d\n", display_mode.w, display_mode.h);
     window_width = display_mode.w;
     window_height = display_mode.h;
 
-    set_render_dimensions(DEFAULT_RENDER_SCALE_FACTOR, false);
+    set_render_dimensions(DEFAULT_RENDER_SCALE_FACTOR, false, false);
     if (!render_height || !render_width)
         ERROR_EXIT("ERROR: render dimensions not initialized properly");
     SDL_Window *window = render_init_window(window_width, window_height);
@@ -65,9 +65,9 @@ SDL_Window *render_init(void)
 
 // util to set rendering dimensions, updates shader projection matrix if desired
 // scale_factor: float representing the fraction of the window dimensions the render dimensions should be
-void set_render_dimensions(f32 scale_factor, bool update_shaders)
+void set_render_dimensions(f32 scale_factor, bool rendering_hud, bool update_shaders)
 {
-    render_width = SPLIT_SCREEN ? window_width * scale_factor * 0.5 : window_width * scale_factor;
+    render_width = SPLIT_SCREEN && !rendering_hud ? window_width * scale_factor * 0.5 : window_width * scale_factor;
     render_height = window_height * scale_factor;
     if (update_shaders)
     {
@@ -145,6 +145,12 @@ void render_begin_right(void)
 {
     list_batch->len = 0;
     glViewport(window_width * 0.5, 0, window_width * 0.5, window_height);
+}
+
+void render_begin_hud(void)
+{
+    list_batch->len = 0;
+    glViewport(0, 0, window_width, window_height);
 }
 
 static void render_batch(Batch_Vertex *vertices, usize count, u32 texture_ids[32])

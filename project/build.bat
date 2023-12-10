@@ -9,8 +9,8 @@ set animation=src\engine\animation\animation.c
 set camera=src\engine\camera\camera.c
 set array_list=src\engine\array_list\array_list.c
 set hash_map=src\engine\hash_map\hash_map.c
-set game=src\collision_behavior.c src\player_helpers.c src\enemy_helpers.c src\map_helpers.c src\weapon_types.c
+set game=src\collision_behavior\collision_behavior.c src\player_helpers\player_helpers.c src\enemy_helpers\enemy_helpers.c src\map_helpers\map_helpers.c src\weapon_types\weapon_types.c src\hud\hud.c
 set files=src\glad.c src\main.c src\engine\global.c %render% %io% %config% %input% %time% %physics% %entity% %animation% %camera% %array_list% %hash_map% %game%
 set libs=..\lib\SDL2main.lib ..\lib\SDL2.lib
-
-CL /Zi /I ..\include %files% /link %libs% /OUT:mygame.exe
+@REM  /fsanitize=address
+CL /Zi /I ..\include %files% /link %libs% /OUT:mygame.exe  

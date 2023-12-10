@@ -2,7 +2,7 @@
 #define RENDER_H
 
 #define SPLIT_SCREEN true
-#define RENDER_PHYSICS_BODIES true
+#define RENDER_PHYSICS_BODIES false
 
 #define MAX_BATCH_QUADS 10000
 #define MAX_BATCH_VERTICES 40000
@@ -63,7 +63,7 @@ typedef struct sprite
 } Sprite;
 
 SDL_Window *render_init();
-void set_render_dimensions(f32 scale_factor, bool update_shaders);
+void set_render_dimensions(f32 scale_factor, bool rendering_hud, bool update_shaders);
 void render_begin(void);
 void render_begin_left(void);
 void render_begin_right(void);

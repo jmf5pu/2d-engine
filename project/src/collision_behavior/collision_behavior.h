@@ -1,7 +1,7 @@
 #ifndef COLLISION_BEHAVIOR_H
 #define COLLISION_BEHAVIOR_H
 
-#include "engine/physics.h"
+#include "../engine/physics.h"
 
 typedef enum collision_layer
 {

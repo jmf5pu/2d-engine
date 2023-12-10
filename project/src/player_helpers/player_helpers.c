@@ -1,10 +1,10 @@
 #include <math.h>
-#include "engine/global.h"
-#include "engine/util.h"
-#include "engine/camera.h"
 #include "player_helpers.h"
-#include "collision_behavior.h"
-#include "weapon_types.h"
+#include "../engine/global.h"
+#include "../engine/util.h"
+#include "../engine/camera.h"
+#include "../collision_behavior/collision_behavior.h"
+#include "../weapon_types/weapon_types.h"
 
 // declare players
 Player *player_one;
@@ -143,14 +143,22 @@ void init_all_anims()
     anim_player_placeholder = animation_create(adef_player_placeholder, false);
 
     // init crosshair anims
-    render_sprite_sheet_init(&sprite_sheet_crosshair_red, "assets/crosshair_red.png", 27, 27);
-    adef_crosshair_red = animation_definition_create(
-        &sprite_sheet_crosshair_red,
-        (f32[]){0.1, 0.1, 0.1, 0.1},
-        (u8[]){0, 0, 0, 0},
-        (u8[]){1, 2, 3, 4},
-        4);
-    anim_crosshair_red = animation_create(adef_crosshair_red, true);
+    render_sprite_sheet_init(&sprite_sheet_player_1_crosshair, "assets/hud/red_crosshair.png", 200, 200);
+    adef_player_1_crosshair = animation_definition_create(
+        &sprite_sheet_player_1_crosshair,
+        (f32[]){0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
+        12);
+    render_sprite_sheet_init(&sprite_sheet_player_2_crosshair, "assets/hud/blue_crosshair.png", 200, 200);
+    adef_player_2_crosshair = animation_definition_create(
+        &sprite_sheet_player_2_crosshair,
+        (f32[]){0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
+        12);
+    anim_p1_crosshair = animation_create(adef_player_1_crosshair, true);
+    anim_p2_crosshair = animation_create(adef_player_2_crosshair, true);
 
     // init bullet anims
     render_sprite_sheet_init(&sprite_sheet_bullet_0, "assets/bullet_0.png", 3, 1);
@@ -972,7 +980,7 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
     player->entity = entity_create((vec2){render_width * 0.5, render_height * 0.5}, (vec2){40, 75}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
     player->entity->body->parent = player;
     player->crosshair = malloc(sizeof(Crosshair));
-    player->crosshair->entity = entity_create((vec2){player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]}, (vec2){27, 27}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static);
+    player->crosshair->entity = entity_create((vec2){player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]}, (vec2){CROSSHAIR_SIZE, CROSSHAIR_SIZE}, (vec2){0, 0}, COLLISION_LAYER_CROSSHAIR, crosshair_mask, crosshair_on_hit, crosshair_on_hit_static);
     player->crosshair->relative_position[0] = player->entity->body->aabb.position[0];
     player->crosshair->relative_position[1] = player->entity->body->aabb.position[1];
     player->crosshair->entity->is_active = false;
@@ -994,6 +1002,7 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
     player->weapon->aiming_scale_factor = starting_weapon->aiming_scale_factor;
     player->weapon->frames_since_last_shot = 0;
     player->weapon->ready_to_fire = true;
+    player->weapon->hud_ammo_icon = starting_weapon->hud_ammo_icon;
 
     // populate armor
     player->armor = malloc(sizeof(Armor));
@@ -1061,6 +1070,7 @@ void spawn_player(Player *player, Weapon_Type *starting_weapon)
     player->weapon->aiming_scale_factor = starting_weapon->aiming_scale_factor;
     player->weapon->frames_since_last_shot = 0;
     player->weapon->ready_to_fire = true;
+    player->weapon->hud_ammo_icon = starting_weapon->hud_ammo_icon;
 
     // make player visible
     player->entity->is_active = true;
@@ -1444,7 +1454,7 @@ void handle_player_input(Player *player)
             player->render_scale_factor = player->weapon->aiming_scale_factor;
 
             // update rendering dimensions and projection matrix
-            set_render_dimensions(player->render_scale_factor, true);
+            set_render_dimensions(player->render_scale_factor, false, true);
 
             // set aabb location to center of screen
             player->entity->body->aabb.position[0] = (render_width * 0.5);
@@ -1511,7 +1521,7 @@ void handle_player_input(Player *player)
 
             // activate entity and set anim
             player->crosshair->entity->is_active = true;
-            player->crosshair->entity->animation = anim_crosshair_red;
+            player->crosshair->entity->animation = player->is_left_player ? anim_p1_crosshair : anim_p2_crosshair;
         }
 
         // movement inputs now move crosshair instead of player
@@ -1525,24 +1535,24 @@ void handle_player_input(Player *player)
             vely -= DEFAULT_PLAYER_MOVEMENT_SPEED;
 
         // check if crosshair is out of bounds, if so, put in bounds, set velocity to 0
-        if (player->crosshair->entity->body->aabb.position[0] < 0)
+        if (player->crosshair->entity->body->aabb.position[0] < 0 + CROSSHAIR_SIZE * 0.5)
         {
-            player->crosshair->entity->body->aabb.position[0] = 0;
+            player->crosshair->entity->body->aabb.position[0] = CROSSHAIR_SIZE * 0.5;
             velx = 0;
         }
-        if (player->crosshair->entity->body->aabb.position[0] > render_width)
+        if (player->crosshair->entity->body->aabb.position[0] > render_width - CROSSHAIR_SIZE * 0.5)
         {
-            player->crosshair->entity->body->aabb.position[0] = render_width;
+            player->crosshair->entity->body->aabb.position[0] = render_width - CROSSHAIR_SIZE * 0.5;
             velx = 0;
         }
-        if (player->crosshair->entity->body->aabb.position[1] < 0)
+        if (player->crosshair->entity->body->aabb.position[1] < 0 + CROSSHAIR_SIZE * 0.5)
         {
-            player->crosshair->entity->body->aabb.position[1] = 0;
+            player->crosshair->entity->body->aabb.position[1] = CROSSHAIR_SIZE * 0.5;
             vely = 0;
         }
-        if (player->crosshair->entity->body->aabb.position[1] > render_height)
+        if (player->crosshair->entity->body->aabb.position[1] > render_height - CROSSHAIR_SIZE * 0.5)
         {
-            player->crosshair->entity->body->aabb.position[1] = render_height;
+            player->crosshair->entity->body->aabb.position[1] = render_height - CROSSHAIR_SIZE * 0.5;
             vely = 0;
         }
 
@@ -1569,7 +1579,7 @@ void handle_player_input(Player *player)
 
         // reset render dimensions and projection matrix
         player->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
-        set_render_dimensions(player->render_scale_factor, true);
+        set_render_dimensions(player->render_scale_factor, false, true);
 
         // center camera on player
         player->camera->position[0] = player->relative_position[0] - (0.5 * render_width);
@@ -1645,19 +1655,19 @@ void free_player(Player *player)
     free(player);
 }
 
-// helper to get the player from a body (if associated), used in on_hit helpers
-Player *get_player_from_body(Player *player_one, Player *player_two, Body *body, bool return_other_player)
+// helper to update the percentage_of_screen attribute of a player's crosshair
+// used to map the crosshairs position on the screen across different render width when rendering the hud
+void update_crosshair_position_percentage(Player *player)
 {
-    if (player_one->entity->body == body)
-    {
-        return !return_other_player ? player_one : player_two;
-    }
-    else if (SPLIT_SCREEN && player_two->entity->body == body)
-    {
-        return !return_other_player ? player_two : player_one;
-    }
-    else
-    {
-        return NULL;
-    }
+    player->crosshair->percentage_of_screen[0] = player->crosshair->entity->body->aabb.position[0] / render_width;
+    player->crosshair->percentage_of_screen[1] = player->crosshair->entity->body->aabb.position[1] / render_height;
+}
+
+// parent function for all the necessary player updates made each frame
+void player_per_frame_updates(Player *player)
+{
+    handle_player_input(player);
+    update_player_status(player);
+    update_player_animations(player);
+    update_crosshair_position_percentage(player);
 }
