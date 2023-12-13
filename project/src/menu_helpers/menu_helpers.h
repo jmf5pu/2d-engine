@@ -1,11 +1,13 @@
-#ifndef MAP_HELPERS_H
-#define MAP_HELPERS_H
-
-#define LETTER_ANIM_COUNT 26
+#ifndef MENU_HELPERS_H
+#define MENU_HELPERS_H
 
 #include "../engine/render.h"
 #include "../engine/hash_map.h"
 #include "../engine/animation.h"
+
+#define LETTER_ANIM_COUNT 26
+#define LETTER_WIDTH 40
+#define LETTER_HEIGHT 50
 
 Hash_Map * letter_anim_map;
 
@@ -94,6 +96,6 @@ void init_menus(void);
 void render_main_menu(void);
 void render_game_mode_menu(void);
 void render_map_select_menu(void);
-void render_pause_menu(void);
+void render_pause_menu(SDL_Window *window, u32 texture_slots[32]);
 
 #endif

@@ -28,6 +28,7 @@
 #include "map_helpers/map_helpers.h"
 #include "weapon_types/weapon_types.h"
 #include "hud/hud.h"
+#include "menu_helpers/menu_helpers.h"
 
 static u32 texture_slots[32] = {0}; // texture slots array for batch rendering
 static bool should_quit = false;    // quit flag
@@ -48,14 +49,10 @@ int main(int argc, char *argv[])
     animation_init(); // creates animation storage
     init_all_anims(); // initializes all our animations
 
-    // define weapon types
     init_weapon_types();
-
-    // initialize map & props
     init_map(&map);
-
-    // init hud
     init_hud(window);
+    init_menus();
 
     // init player one
     player_one = malloc(sizeof(Player));
@@ -330,6 +327,7 @@ int main(int argc, char *argv[])
             break;
         case GS_PAUSE_MENU:
             // PAUSE MENU
+            render_begin();
             if (global.input.escape == KS_UNPRESSED)
             {
                 escape_unpressed = true;
@@ -338,6 +336,8 @@ int main(int argc, char *argv[])
             {
                 should_quit = true;
             }
+            render_pause_menu(window, texture_slots);
+            render_end(window, texture_slots, true);
             break;
         default:
             printf("game state not specified");

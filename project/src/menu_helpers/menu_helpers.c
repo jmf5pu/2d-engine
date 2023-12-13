@@ -1,4 +1,6 @@
 #include "menu_helpers.h"
+#include "../engine/util.h"
+#include <string.h>
 
 void init_letter_hashmap(void){
     letter_anim_map = create_hash_map(LETTER_ANIM_COUNT);
@@ -271,6 +273,24 @@ void init_menus(void){
     init_letter_hashmap();
 }
 
+// renders a line of text letter by letter starting at the specified positon on the screen
+void render_text_line(SDL_Window *window, u32 texture_slots[32], char * text, vec2 starting_position){
+    char * character = text;
+
+    // loop through each character in the input string
+    while(*character != '\0'){
+        printf("current character: %c\n", *character);
+
+        // render associated anim
+        Animation * char_anim = get(letter_anim_map, (char[]){*character, '\0'});
+        animation_render(char_anim, window, starting_position, 0, WHITE, texture_slots);
+        
+        // update the starting position and go to next character
+        vec2_add(starting_position, starting_position, (vec2){LETTER_WIDTH,0});
+        character++;
+    }
+}
+
 void render_main_menu(void){
     return;
 }
@@ -283,6 +303,6 @@ void render_map_select_menu(void){
     return;
 }
 
-void render_pause_menu(void){
-    return;
+void render_pause_menu(SDL_Window *window, u32 texture_slots[32]){
+    render_text_line(window, texture_slots, "TESTMENULINEITEM", (vec2){window_width/2, window_height/2});
 }
