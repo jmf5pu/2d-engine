@@ -1,9 +1,9 @@
-#include "engine/array_list.h"
-#include "enemy_helpers.h"
-#include "player_helpers.h"
-#include "collision_behavior.h"
 #include <math.h>
 #include <float.h>
+#include "enemy_helpers.h"
+#include "../engine/array_list.h"
+#include "../player_helpers/player_helpers.h"
+#include "../collision_behavior/collision_behavior.h"
 
 static Array_List *current_enemies;
 

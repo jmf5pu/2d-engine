@@ -6,6 +6,16 @@
 #include "engine/animation.h"
 #include "engine/render.h"
 
+// used to determine when to render (or not render) whichS menus
+enum Game_State
+{
+    GS_MAIN_MENU,
+    GS_GAME_MODE_MENU,
+    GS_MAP_SELECT,
+    GS_PAUSE_MENU,
+    GS_RUNNING,
+};
+
 enum Direction
 {
     UP,
@@ -68,6 +78,7 @@ typedef struct weapon_type
     i16 damage;
     i16 bullet_velocity;
     f32 aiming_scale_factor; // factor by which the rendering dimensions change when player is crouching
+    Animation *hud_ammo_icon;
 } Weapon_Type;
 
 // contains weapon info as well as player-specific data
@@ -88,6 +99,7 @@ typedef struct weapon
     f32 aiming_scale_factor;
     u16 frames_since_last_shot;
     bool ready_to_fire;
+    Animation *hud_ammo_icon;
 } Weapon;
 
 typedef struct pickup_animation_set
@@ -106,6 +118,7 @@ typedef struct crosshair
 {
     Entity *entity;
     vec2 relative_position;
+    vec2 percentage_of_screen; // x/y position in screen in terms of percentage of pixels in each direction (0.5, 0.5) would be center of screen
 } Crosshair;
 
 typedef struct bullet
@@ -190,5 +203,12 @@ typedef struct map
     vec2 *player_two_spawn_points; // player two's spawn points
     vec2 *enemy_spawn_points;
 } Map;
+
+typedef struct hud
+{
+    SDL_Window *window;
+    Sprite *p1_health_display;
+    Sprite *p2_health_display;
+} HUD;
 
 #endif

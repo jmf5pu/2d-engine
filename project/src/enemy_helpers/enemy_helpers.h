@@ -1,7 +1,7 @@
 #ifndef ENEMY_HELPERS_H
 #define ENEMY_HELPERS_H
 
-#include "structs.h"
+#include "../structs.h"
 
 #define ZOMBIE_MOVEMENT_SPEED 100
 

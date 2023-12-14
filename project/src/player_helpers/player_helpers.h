@@ -1,10 +1,10 @@
 #ifndef PLAYER_HELPERS_H
 #define PLAYER_HELPERS_H
 
-#include "engine/hash_map.h"
-#include "engine/animation.h"
-#include "engine/global.h"
-#include "structs.h"
+#include "../engine/hash_map.h"
+#include "../engine/animation.h"
+#include "../engine/global.h"
+#include "../structs.h"
 
 // number of animations to be stored in player_anim_map
 #define PLAYER_ANIM_COUNT 56
@@ -17,6 +17,7 @@
 
 #define DEFAULT_PLAYER_MOVEMENT_SPEED 250
 #define DEFAULT_CROSSHAIR_MOVEMENT_SPEED 350
+#define CROSSHAIR_SIZE 200
 
 // declare players
 extern Player *player_one;
@@ -27,9 +28,12 @@ Hash_Map *bullet_anim_map;
 Hash_Map *player_anim_map;
 
 // crosshair sprites & anims
-Sprite_Sheet sprite_sheet_crosshair_red;
-Animation_Definition *adef_crosshair_red;
-Animation *anim_crosshair_red;
+Sprite_Sheet sprite_sheet_player_1_crosshair;
+Sprite_Sheet sprite_sheet_player_2_crosshair;
+Animation_Definition *adef_player_1_crosshair;
+Animation_Definition *adef_player_2_crosshair;
+Animation *anim_p1_crosshair;
+Animation *anim_p2_crosshair;
 
 // placeholder animation if one is missing
 Sprite_Sheet sprite_sheet_player_placeholder;
@@ -369,6 +373,7 @@ void update_player_animations(Player *player);
 void handle_player_shooting(Player *player, Key_State shoot);
 void handle_player_input(Player *player);
 void free_player(Player *player);
-Player *get_player_from_body(Player *player_one, Player *player_two, Body *body, bool return_other_player);
+void update_crosshair_position_percentage(Player *player);
+void player_per_frame_updates(Player *player);
 
 #endif
