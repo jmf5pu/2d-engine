@@ -2,7 +2,8 @@
 #include "../engine/util.h"
 #include <string.h>
 
-void init_letter_hashmap(void){
+void init_letter_hashmap(void)
+{
     letter_anim_map = create_hash_map(LETTER_ANIM_COUNT);
     insert(letter_anim_map, "A", anim_A);
     insert(letter_anim_map, "B", anim_B);
@@ -32,7 +33,8 @@ void init_letter_hashmap(void){
     insert(letter_anim_map, "Z", anim_Z);
 }
 
-void init_letter_anims(void){
+void init_letter_anims(void)
+{
     render_sprite_sheet_init(&sprite_sheet_A, "assets/letters/A.png", 40, 50);
     adef_A = animation_definition_create(
         &sprite_sheet_A,
@@ -267,60 +269,75 @@ void init_letter_anims(void){
     anim_Z = animation_create(adef_Z, false);
 }
 
-void init_menu_structs(void){
-    pause_menu = malloc(sizeof(Menu *));
+void init_menu_structs(void)
+{
+    // Allocate memory for Menu structure
+    pause_menu = malloc(sizeof(Menu));
+
+    // Initialize other fields
+    pause_menu->items_count = 3;
+    pause_menu->selected_item = 0;
+
+    // Initialize each menu item
     snprintf(pause_menu->items[0], MENU_MAX_LINE_LENGTH, "TEST LINE ITEM ONE");
     snprintf(pause_menu->items[1], MENU_MAX_LINE_LENGTH, "SECOND MENU LINE ITEM");
     snprintf(pause_menu->items[2], MENU_MAX_LINE_LENGTH, "MENU LINE ITEM THREE");
-    pause_menu->items_count = 3;
-    pause_menu->selected_item = 0;
 }
 
-void free_menus(void){
+void free_menus(void)
+{
     free(pause_menu);
 }
 
 // initializes all menu-related assets at game start up
-void init_menus(void){
+void init_menus(void)
+{
     init_letter_anims();
     init_letter_hashmap();
     init_menu_structs();
 }
 
 // renders a line of text letter by letter starting at the specified positon on the screen
-void render_text_line(SDL_Window *window, u32 texture_slots[32], char * text, vec2 starting_position){
-    char * character = text;
+void render_text_line(SDL_Window *window, u32 texture_slots[32], char *text, vec2 starting_position)
+{
+    char *character = text;
 
     // loop through each character in the input string
-    while(*character != '\0'){
-        if(*character != ' '){
+    while (*character != '\0')
+    {
+        if (*character != ' ')
+        {
             // render associated anim
-            Animation * char_anim = get(letter_anim_map, (char[]){*character, '\0'});
+            Animation *char_anim = get(letter_anim_map, (char[]){*character, '\0'});
             animation_render(char_anim, window, starting_position, 0, WHITE, texture_slots);
         }
 
         // update the starting position and go to next character
-        vec2_add(starting_position, starting_position, (vec2){LETTER_WIDTH,0});
+        vec2_add(starting_position, starting_position, (vec2){LETTER_WIDTH, 0});
         character++;
     }
 }
 
-void render_main_menu(void){
+void render_main_menu(void)
+{
     return;
 }
 
-void render_game_mode_menu(void){
+void render_game_mode_menu(void)
+{
     return;
 }
 
-void render_map_select_menu(void){
+void render_map_select_menu(void)
+{
     return;
 }
 
-void render_pause_menu(SDL_Window *window, u32 texture_slots[32]){
-    for(int i = 0; i < pause_menu->items_count; i++){
+void render_pause_menu(SDL_Window *window, u32 texture_slots[32])
+{
+    for (int i = 0; i < pause_menu->items_count; i++)
+    {
         printf("i: %d\n", i);
-        render_text_line(window, texture_slots, "SOME TEXT", (vec2){window_width/2, window_height/2});
+        render_text_line(window, texture_slots, "SOME TEXT", (vec2){window_width / 2, window_height / 2});
     }
-    
 }

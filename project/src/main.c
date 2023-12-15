@@ -30,8 +30,8 @@
 #include "hud/hud.h"
 #include "menu_helpers/menu_helpers.h"
 
-static u32 texture_slots[32] = {0}; // texture slots array for batch rendering
-static bool should_quit = false;    // quit flag
+static u32 texture_slots[32] = {0};   // texture slots array for batch rendering
+static bool should_quit = false;      // quit flag
 static bool escape_unpressed = false; // TODO: used for pause menu currently, will be replaced by other logic
 
 const u8 frame_rate = 60; // frame rate
@@ -56,8 +56,8 @@ int main(int argc, char *argv[])
 
     // init player one
     player_one = malloc(sizeof(Player));
-    init_player(player_one, &map, m16, 2.9, 5, 2, true);
-    spawn_player(player_one, m16);
+    init_player(player_one, &map, base, 2.9, 5, 2, true);
+    spawn_player(player_one, base);
 
     // init player two
     if (SPLIT_SCREEN)
@@ -266,11 +266,11 @@ int main(int argc, char *argv[])
                     Prop prop = map.props[l];
 
                     /*
-                        * Determining the props z_index based on position relative to player
-                        * z_index should be below the players (0) if the lowest point of the player is under the y
-                        * threshold we set OR they are above the prop entirely. Also the main background, (index 0)
-                        * is rendered beneath the player no matter what
-                        */
+                     * Determining the props z_index based on position relative to player
+                     * z_index should be below the players (0) if the lowest point of the player is under the y
+                     * threshold we set OR they are above the prop entirely. Also the main background, (index 0)
+                     * is rendered beneath the player no matter what
+                     */
                     f32 player_y_min;
                     if (i == 0)
                     { // rendering left side
@@ -324,7 +324,7 @@ int main(int argc, char *argv[])
             render_hud(window, texture_slots);
 
             // don't swap windows if game state changed (want this in the background for pause menus)
-            if(game_state != GS_PAUSE_MENU)
+            if (game_state != GS_PAUSE_MENU)
                 render_end(window, texture_slots, true);
             break;
         case GS_PAUSE_MENU:
