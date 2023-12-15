@@ -6,10 +6,20 @@
 
 static const char *CONFIG_DEFAULT =
     "[controls]\n"
-    "left = A\n"
-    "right = D\n"
-    "up = W\n"
-    "down = S\n"
+    "l_left = A\n"
+    "l_right = D\n"
+    "l_up = W\n"
+    "l_down = S\n"
+    "l_shoot = Space\n"
+    "l_crouch = Left Ctrl\n"
+    "l_reload = R\n"
+    "r_left = J\n"
+    "r_right = L\n"
+    "r_up = I\n"
+    "r_down = K\n"
+    "r_shoot = ,\n"
+    "r_crouch = N\n"
+    "r_reload = P\n"
     "escape = Escape\n"
     "\n";
 
@@ -46,17 +56,32 @@ static char *config_get_value(const char *config_buffer, const char *value)
         *tmp_ptr++ = *curr++;
     }
 
-    *(tmp_ptr + 1) = 0;
+    *tmp_ptr = '\0'; // null terminate char *
 
     return tmp_buffer;
 }
 
+// TODO: figure out why this only works if right keys are before left keys
 static void load_controls(const char *config_buffer)
 {
-    config_key_bind(INPUT_KEY_LEFT, config_get_value(config_buffer, "left"));
-    config_key_bind(INPUT_KEY_RIGHT, config_get_value(config_buffer, "right"));
-    config_key_bind(INPUT_KEY_UP, config_get_value(config_buffer, "up"));
-    config_key_bind(INPUT_KEY_DOWN, config_get_value(config_buffer, "down"));
+    // left player keybinds
+    config_key_bind(INPUT_KEY_L_LEFT, config_get_value(config_buffer, "l_left"));
+    config_key_bind(INPUT_KEY_L_RIGHT, config_get_value(config_buffer, "l_right"));
+    config_key_bind(INPUT_KEY_L_UP, config_get_value(config_buffer, "l_up"));
+    config_key_bind(INPUT_KEY_L_DOWN, config_get_value(config_buffer, "l_down"));
+    config_key_bind(INPUT_KEY_L_SHOOT, config_get_value(config_buffer, "l_shoot"));
+    config_key_bind(INPUT_KEY_L_CROUCH, config_get_value(config_buffer, "l_crouch"));
+    config_key_bind(INPUT_KEY_L_RELOAD, config_get_value(config_buffer, "l_reload"));
+
+    // right player keybinds
+    config_key_bind(INPUT_KEY_R_LEFT, config_get_value(config_buffer, "r_left"));
+    config_key_bind(INPUT_KEY_R_RIGHT, config_get_value(config_buffer, "r_right"));
+    config_key_bind(INPUT_KEY_R_UP, config_get_value(config_buffer, "r_up"));
+    config_key_bind(INPUT_KEY_R_DOWN, config_get_value(config_buffer, "r_down"));
+    config_key_bind(INPUT_KEY_R_SHOOT, config_get_value(config_buffer, "r_shoot"));
+    config_key_bind(INPUT_KEY_R_CROUCH, config_get_value(config_buffer, "r_crouch"));
+    config_key_bind(INPUT_KEY_R_RELOAD, config_get_value(config_buffer, "r_reload"));
+
     config_key_bind(INPUT_KEY_ESCAPE, config_get_value(config_buffer, "escape"));
 }
 
@@ -94,7 +119,8 @@ void config_key_bind(Input_Key key, const char *key_name)
     SDL_Scancode scan_code = SDL_GetScancodeFromName(key_name);
     if (scan_code == SDL_SCANCODE_UNKNOWN)
     {
-        ERROR_RETURN("Invalid scan code when binding key: %s\n", key_name)
+        printf("ERROR: Invalid scan code when binding key: %s\n", key_name);
+        return;
     }
     global.config.keybinds[key] = scan_code;
 }

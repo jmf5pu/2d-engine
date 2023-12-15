@@ -17,6 +17,8 @@ typedef struct time_state
     u32 frame_count; // used to calculate frame rate
 } Time_State;
 
+void time_update(void);
+void time_update_late(void);
 void time_init(u32 frame_rate);
 void time_update(void);
 void time_update_late(void);
