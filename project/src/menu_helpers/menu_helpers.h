@@ -4,6 +4,7 @@
 #include "../engine/render.h"
 #include "../engine/hash_map.h"
 #include "../engine/animation.h"
+#include "../structs.h"
 
 #define LETTER_ANIM_COUNT 26
 #define LETTER_WIDTH 40
@@ -92,10 +93,13 @@ Animation * anim_X;
 Animation * anim_Y;
 Animation * anim_Z;
 
+Menu * pause_menu;
+
 void init_menus(void);
 void render_main_menu(void);
 void render_game_mode_menu(void);
 void render_map_select_menu(void);
 void render_pause_menu(SDL_Window *window, u32 texture_slots[32]);
+void free_menus(void);
 
 #endif

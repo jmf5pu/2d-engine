@@ -267,10 +267,24 @@ void init_letter_anims(void){
     anim_Z = animation_create(adef_Z, false);
 }
 
+void init_menu_structs(void){
+    pause_menu = malloc(sizeof(Menu *));
+    snprintf(pause_menu->items[0], MENU_MAX_LINE_LENGTH, "TEST LINE ITEM ONE");
+    snprintf(pause_menu->items[1], MENU_MAX_LINE_LENGTH, "SECOND MENU LINE ITEM");
+    snprintf(pause_menu->items[2], MENU_MAX_LINE_LENGTH, "MENU LINE ITEM THREE");
+    pause_menu->items_count = 3;
+    pause_menu->selected_item = 0;
+}
+
+void free_menus(void){
+    free(pause_menu);
+}
+
 // initializes all menu-related assets at game start up
 void init_menus(void){
     init_letter_anims();
     init_letter_hashmap();
+    init_menu_structs();
 }
 
 // renders a line of text letter by letter starting at the specified positon on the screen
@@ -279,12 +293,12 @@ void render_text_line(SDL_Window *window, u32 texture_slots[32], char * text, ve
 
     // loop through each character in the input string
     while(*character != '\0'){
-        printf("current character: %c\n", *character);
+        if(*character != ' '){
+            // render associated anim
+            Animation * char_anim = get(letter_anim_map, (char[]){*character, '\0'});
+            animation_render(char_anim, window, starting_position, 0, WHITE, texture_slots);
+        }
 
-        // render associated anim
-        Animation * char_anim = get(letter_anim_map, (char[]){*character, '\0'});
-        animation_render(char_anim, window, starting_position, 0, WHITE, texture_slots);
-        
         // update the starting position and go to next character
         vec2_add(starting_position, starting_position, (vec2){LETTER_WIDTH,0});
         character++;
@@ -304,5 +318,9 @@ void render_map_select_menu(void){
 }
 
 void render_pause_menu(SDL_Window *window, u32 texture_slots[32]){
-    render_text_line(window, texture_slots, "TESTMENULINEITEM", (vec2){window_width/2, window_height/2});
+    for(int i = 0; i < pause_menu->items_count; i++){
+        printf("i: %d\n", i);
+        render_text_line(window, texture_slots, "SOME TEXT", (vec2){window_width/2, window_height/2});
+    }
+    
 }

@@ -1,6 +1,9 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
+#define MENU_MAX_LINES 10
+#define MENU_MAX_LINE_LENGTH 50
+
 #include "engine/entity.h"
 #include "engine/types.h"
 #include "engine/animation.h"
@@ -210,5 +213,12 @@ typedef struct hud
     Sprite *p1_health_display;
     Sprite *p2_health_display;
 } HUD;
+
+typedef struct menu
+{
+    char items[MENU_MAX_LINES][MENU_MAX_LINE_LENGTH];
+    u8 items_count;
+    u8 selected_item;
+} Menu;
 
 #endif

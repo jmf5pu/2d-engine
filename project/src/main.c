@@ -106,7 +106,6 @@ int main(int argc, char *argv[])
             {
                 game_state = GS_PAUSE_MENU;
                 escape_unpressed = false;
-                break;
             }
 
             // update map
@@ -323,11 +322,13 @@ int main(int argc, char *argv[])
 
             render_begin_hud();
             render_hud(window, texture_slots);
-            render_end(window, texture_slots, true);
+
+            // don't swap windows if game state changed (want this in the background for pause menus)
+            if(game_state != GS_PAUSE_MENU)
+                render_end(window, texture_slots, true);
             break;
         case GS_PAUSE_MENU:
             // PAUSE MENU
-            render_begin();
             if (global.input.escape == KS_UNPRESSED)
             {
                 escape_unpressed = true;
@@ -352,6 +353,7 @@ int main(int argc, char *argv[])
         free_player(player_two);
     free_weapon_types();
     free_hud();
+    free_menus();
 
     return 0;
 }
