@@ -609,8 +609,6 @@ void update_player_animations(Player *player)
         return;
     }
 
-    printf("player direction: %d\n", player->direction);
-
     // cache old anim to check if we are SWITCHING anims
     Animation *prev_anim = player->entity->animation;
 
@@ -669,8 +667,6 @@ void update_player_animations(Player *player)
     // ensure we are starting new anims at the first frame
     if (player->entity->animation != prev_anim)
         player->entity->animation->current_frame_index = 0;
-
-    printf("anim name: %s\n", anim_name);
 
     free(anim_name);
 }

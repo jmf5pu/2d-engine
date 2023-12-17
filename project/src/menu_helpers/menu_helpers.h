@@ -9,9 +9,12 @@
 #define LETTER_ANIM_COUNT 26
 #define LETTER_WIDTH 40
 #define LETTER_HEIGHT 50
+#define SELECTED_ANIM_WIDTH 100
+#define SELECTED_ANIM_HEIGHT 70
 
 Hash_Map * letter_anim_map;
 
+// CAPITAL LETTERS
 Sprite_Sheet sprite_sheet_A;
 Sprite_Sheet sprite_sheet_B;
 Sprite_Sheet sprite_sheet_C;
@@ -92,6 +95,16 @@ Animation * anim_W;
 Animation * anim_X;
 Animation * anim_Y;
 Animation * anim_Z;
+
+// SELECTED ITEM INDICATORS
+Sprite_Sheet sprite_sheet_selected_bracket_left;
+Sprite_Sheet sprite_sheet_selected_bracket_right;
+
+Animation_Definition * adef_selected_bracket_left;
+Animation_Definition * adef_selected_bracket_right;
+
+Animation * anim_selected_bracket_left;
+Animation * anim_selected_bracket_right;
 
 Menu * pause_menu;
 

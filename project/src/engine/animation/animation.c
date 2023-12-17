@@ -54,15 +54,15 @@ Animation *animation_create(Animation_Definition *adef, bool does_loop)
     }
 
     // check if anims are inactive, if so replace one, otherwise append to end
-    for (usize i = 0; i < animation_storage->len; ++i)
-    {
-        Animation *animation = array_list_get(animation_storage, i);
-        if (!animation->is_active)
-        {
-            id = i;
-            break;
-        }
-    }
+    // for (usize i = 0; i < animation_storage->len; ++i)
+    // {
+    //     Animation *animation = array_list_get(animation_storage, i);
+    //     if (!animation->is_active)
+    //     {
+    //         id = i;
+    //         break;
+    //     }
+    // }
 
     if (id == animation_storage->len)
     {
@@ -79,6 +79,7 @@ Animation *animation_create(Animation_Definition *adef, bool does_loop)
     Animation *animation = array_list_get(animation_storage, id);
 
     // Other fields default to 0 when using field dot syntax.
+    // mark anims that don't loop as inactive
     *animation = (Animation){
         .animation_definition = adef,
         .does_loop = does_loop,
@@ -106,33 +107,36 @@ void animation_update(f32 dt)
     for (usize i = 0; i < animation_storage->len; ++i)
     {
         Animation *animation = array_list_get(animation_storage, i);
-        Animation_Definition *adef = animation->animation_definition; // get associated animation definition
-        animation->current_frame_time -= dt;
+        if(animation->is_active){
+            Animation_Definition *adef = animation->animation_definition; // get associated animation definition
+            animation->current_frame_time -= dt;
 
-        if (animation->current_frame_time <= 0)
-        {
-            animation->current_frame_index += 1;
-
-            // Loop or stay on last frame.
-            if (animation->current_frame_index == adef->frame_count)
+            if (animation->current_frame_time <= 0)
             {
-                if (animation->does_loop)
-                {
-                    animation->current_frame_index = 0;
-                }
-                else
-                {
-                    animation->current_frame_index -= 1;
-                }
-            }
+                animation->current_frame_index += 1;
 
-            animation->current_frame_time = adef->frames[animation->current_frame_index].duration;
+                // Loop or stay on last frame.
+                if (animation->current_frame_index == adef->frame_count)
+                {
+                    if (animation->does_loop)
+                    {
+                        animation->current_frame_index = 0;
+                    }
+                    else
+                    {
+                        animation->current_frame_index -= 1;
+                    }
+                }
+
+                animation->current_frame_time = adef->frames[animation->current_frame_index].duration;
+            }
         }
     }
 }
 
 void animation_render(Animation *animation, SDL_Window *window, vec2 position, i32 z_index, vec4 color, u32 texture_slots[32])
 {
+    animation->is_active = true;
     Animation_Definition *adef = animation->animation_definition;
     Animation_Frame *aframe = &adef->frames[animation->current_frame_index];
     render_sprite_sheet_frame(adef->sprite_sheet, window, aframe->row, aframe->column, position, z_index, animation->is_flipped, color, texture_slots);

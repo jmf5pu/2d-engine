@@ -33,8 +33,9 @@ void init_letter_hashmap(void)
     insert(letter_anim_map, "Z", anim_Z);
 }
 
-void init_letter_anims(void)
+void init_menu_anims(void)
 {
+    // CAPITAL LETTERS
     render_sprite_sheet_init(&sprite_sheet_A, "assets/letters/A.png", 40, 50);
     adef_A = animation_definition_create(
         &sprite_sheet_A,
@@ -267,6 +268,27 @@ void init_letter_anims(void)
         (u8[]){0},
         1);
     anim_Z = animation_create(adef_Z, false);
+
+    // SELECTED ITEM INDICATORS
+    render_sprite_sheet_init(&sprite_sheet_selected_bracket_left, "assets/menus/selected_bracket_left.png", 62, 62);
+    adef_selected_bracket_left = animation_definition_create(
+        &sprite_sheet_selected_bracket_left,
+        (f32[]){0.005,0.005,0.005,0.005,0.005,0.005,0.005,0.005,0.005,0.005,0.005},
+        (u8[]){0,0,0,0,0,0,0,0,0,0,0},
+        (u8[]){1,2,3,4,5,6,7,8,9,10,11},
+        11);
+    anim_selected_bracket_left = animation_create(adef_selected_bracket_left, false);
+    anim_selected_bracket_left->is_active = false;
+
+    render_sprite_sheet_init(&sprite_sheet_selected_bracket_right, "assets/menus/selected_bracket_right.png", 62, 62);
+    adef_selected_bracket_right = animation_definition_create(
+        &sprite_sheet_selected_bracket_right,
+        (f32[]){0.005,0.005,0.005,0.005,0.005,0.005,0.005,0.005,0.005,0.005,0.005},
+        (u8[]){0,0,0,0,0,0,0,0,0,0,0},
+        (u8[]){1,2,3,4,5,6,7,8,9,10,11},
+        11);
+    anim_selected_bracket_right = animation_create(adef_selected_bracket_right, false);
+    anim_selected_bracket_right->is_active = false;
 }
 
 void init_menu_structs(void)
@@ -292,7 +314,7 @@ void free_menus(void)
 // initializes all menu-related assets at game start up
 void init_menus(void)
 {
-    init_letter_anims();
+    init_menu_anims();
     init_letter_hashmap();
     init_menu_structs();
 }
@@ -318,6 +340,24 @@ void render_text_line(SDL_Window *window, u32 texture_slots[32], char *text, vec
     }
 }
 
+void render_menu_item(SDL_Window *window, u32 texture_slots[32], char *text, vec2 starting_position, bool is_selected){
+    printf("animation current frame index: %u\n", anim_selected_bracket_left->current_frame_index);
+
+    // if selected render left bracket anim
+    if(is_selected)
+        animation_render(anim_selected_bracket_left, window, starting_position, 0, WHITE, texture_slots);
+
+    // render the item's text
+    vec2_add(starting_position, starting_position, (vec2){SELECTED_ANIM_WIDTH, 0.5 * (SELECTED_ANIM_HEIGHT - LETTER_HEIGHT)});
+    render_text_line(window, texture_slots, text, starting_position);
+
+    // if selected render left bracket anim
+    if(is_selected){
+        vec2_add(starting_position, starting_position, (vec2){0, -0.5 * (SELECTED_ANIM_HEIGHT - LETTER_HEIGHT)});
+        animation_render(anim_selected_bracket_right, window, starting_position, 0, WHITE, texture_slots);
+    }
+}
+
 void render_main_menu(void)
 {
     return;
@@ -337,7 +377,6 @@ void render_pause_menu(SDL_Window *window, u32 texture_slots[32])
 {
     for (int i = 0; i < pause_menu->items_count; i++)
     {
-        // printf("i: %d\n", i);
-        render_text_line(window, texture_slots, "SOME TEXT", (vec2){window_width / 2, window_height / 2});
+        render_menu_item(window, texture_slots, pause_menu->items[i], (vec2){window_width / 2, (window_height / 2) - i * LETTER_HEIGHT}, pause_menu->selected_item == i);
     }
 }

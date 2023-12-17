@@ -85,7 +85,10 @@ int main(int argc, char *argv[])
                 break;
             }
         }
+
         input_update();
+        animation_update(global.time.delta);
+
 
         switch (game_state)
         {
@@ -98,11 +101,12 @@ int main(int argc, char *argv[])
         case GS_MAP_SELECT:
             // MAP SELECTION MENU
             break;
+        case GS_PAUSE_MENU:
         case GS_RUNNING:
             // GAMEPLAY IS ACTIVE
 
             // check if pause was hit, update game state
-            if (global.input.escape)
+            if (game_state == GS_RUNNING && global.input.escape)
             {
                 game_state = GS_PAUSE_MENU;
                 escape_unpressed = false;
@@ -162,8 +166,6 @@ int main(int argc, char *argv[])
                 player_two->entity->body->aabb.position[1] = p2_pos_holder[1] + (player_two->entity->body->aabb.position[1] - player_two->relative_position[1]);
             }
 
-            animation_update(global.time.delta);
-
             // need to run render loop twice if we are actively splitting the screen
             int player_count = SPLIT_SCREEN ? 2 : 1;
             for (int i = 0; i < player_count; i++)
@@ -181,21 +183,24 @@ int main(int argc, char *argv[])
                     set_render_dimensions(player_one->render_scale_factor, false, true);
                     camera_update(&left_cam, player_one, &map);
                     render_begin_left();
-                    player_per_frame_updates(player_one);
+                    if(game_state == GS_RUNNING)
+                        player_per_frame_updates(player_one);
                 }
                 else if (SPLIT_SCREEN && i == 1)
                 {
                     set_render_dimensions(player_two->render_scale_factor, false, true);
                     camera_update(&right_cam, player_two, &map);
                     render_begin_right();
-                    player_per_frame_updates(player_two);
+                    if(game_state == GS_RUNNING)
+                        player_per_frame_updates(player_two);
                 }
                 else // hit when screen is not being split
                 {
                     set_render_dimensions(player_one->render_scale_factor, false, true);
                     camera_update(&main_cam, player_one, &map);
                     render_begin();
-                    player_per_frame_updates(player_one);
+                    if(game_state == GS_RUNNING)
+                        player_per_frame_updates(player_one);
                 }
 
                 // save aabb positions again
@@ -322,22 +327,19 @@ int main(int argc, char *argv[])
 
             render_begin_hud();
             render_hud(window, texture_slots);
-
-            // don't swap windows if game state changed (want this in the background for pause menus)
-            if (game_state != GS_PAUSE_MENU)
-                render_end(window, texture_slots, true);
-            break;
-        case GS_PAUSE_MENU:
+            
             // PAUSE MENU
-            if (global.input.escape == KS_UNPRESSED)
-            {
-                escape_unpressed = true;
+            if(game_state == GS_PAUSE_MENU){
+                if (global.input.escape == KS_UNPRESSED)
+                {
+                    escape_unpressed = true;
+                }
+                if (global.input.escape && escape_unpressed)
+                {
+                    should_quit = true;
+                }
+                render_pause_menu(window, texture_slots);
             }
-            if (global.input.escape && escape_unpressed)
-            {
-                should_quit = true;
-            }
-            render_pause_menu(window, texture_slots);
             render_end(window, texture_slots, true);
             break;
         default:
