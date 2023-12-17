@@ -337,7 +337,7 @@ void render_pause_menu(SDL_Window *window, u32 texture_slots[32])
 {
     for (int i = 0; i < pause_menu->items_count; i++)
     {
-        printf("i: %d\n", i);
+        // printf("i: %d\n", i);
         render_text_line(window, texture_slots, "SOME TEXT", (vec2){window_width / 2, window_height / 2});
     }
 }

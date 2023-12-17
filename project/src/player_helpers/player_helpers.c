@@ -125,7 +125,7 @@ void init_player_anim_hashmap()
     insert(player_anim_map, "p1_anim_soldier_purple_base_idle_down_left", p1_anim_soldier_purple_base_idle_down_left);
     insert(player_anim_map, "p1_anim_soldier_purple_base_idle_down_right", p1_anim_soldier_purple_base_idle_down_right);
     insert(player_anim_map, "p1_anim_soldier_purple_base_idle_up", p1_anim_soldier_purple_base_idle_up);
-    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_up_left", p1_anim_soldier_purple_base_idle_up_right);
+    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_up_left", p1_anim_soldier_purple_base_idle_up_left);
     insert(player_anim_map, "p1_anim_soldier_purple_base_idle_up_right", p1_anim_soldier_purple_base_idle_up_right);
 
     insert(player_anim_map, "p2_anim_soldier_purple_base_idle_right", p2_anim_soldier_purple_base_idle_right);
@@ -134,7 +134,7 @@ void init_player_anim_hashmap()
     insert(player_anim_map, "p2_anim_soldier_purple_base_idle_down_left", p2_anim_soldier_purple_base_idle_down_left);
     insert(player_anim_map, "p2_anim_soldier_purple_base_idle_down_right", p2_anim_soldier_purple_base_idle_down_right);
     insert(player_anim_map, "p2_anim_soldier_purple_base_idle_up", p2_anim_soldier_purple_base_idle_up);
-    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_up_left", p2_anim_soldier_purple_base_idle_up_right);
+    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_up_left", p2_anim_soldier_purple_base_idle_up_left);
     insert(player_anim_map, "p2_anim_soldier_purple_base_idle_up_right", p2_anim_soldier_purple_base_idle_up_right);
 }
 
@@ -609,6 +609,8 @@ void update_player_animations(Player *player)
         return;
     }
 
+    printf("player direction: %d\n", player->direction);
+
     // cache old anim to check if we are SWITCHING anims
     Animation *prev_anim = player->entity->animation;
 
@@ -635,8 +637,12 @@ void update_player_animations(Player *player)
         direction = "up";
     else if (player->direction == UP_RIGHT)
         direction = "up_right";
+    else if (player->direction == UP_LEFT)
+        direction = "up_left";
     else if (player->direction == DOWN_RIGHT)
         direction = "down_right";
+    else if (player->direction == DOWN_LEFT)
+        direction = "down_left";
     else // player->direction == DOWN
         direction = "down";
     strcat(anim_name, player_side);
