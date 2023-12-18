@@ -2,6 +2,8 @@
 #include "../engine/util.h"
 #include <string.h>
 
+int game_state;
+
 void init_letter_hashmap(void)
 {
     letter_anim_map = create_hash_map(LETTER_ANIM_COUNT);
@@ -297,13 +299,16 @@ void init_menu_structs(void)
     pause_menu = malloc(sizeof(Menu));
 
     // Initialize other fields
-    pause_menu->items_count = 3;
+    pause_menu->items_count = 2;
     pause_menu->selected_item = 0;
 
     // Initialize each menu item
-    snprintf(pause_menu->items[0], MENU_MAX_LINE_LENGTH, "TEST LINE ITEM ONE");
-    snprintf(pause_menu->items[1], MENU_MAX_LINE_LENGTH, "SECOND MENU LINE ITEM");
-    snprintf(pause_menu->items[2], MENU_MAX_LINE_LENGTH, "MENU LINE ITEM THREE");
+    snprintf(pause_menu->items[0], MENU_MAX_LINE_LENGTH, "RESUME");
+    snprintf(pause_menu->items[1], MENU_MAX_LINE_LENGTH, "EXIT");
+}
+
+void init_game_state(void){
+    game_state = GS_RUNNING;
 }
 
 void free_menus(void)
@@ -373,9 +378,21 @@ void render_map_select_menu(void)
 
 void render_pause_menu(SDL_Window *window, u32 texture_slots[32])
 {
-    printf("pause menu selected item: %u\n", pause_menu->selected_item);
     for (int i = 0; i < pause_menu->items_count; i++)
     {
         render_menu_item(window, texture_slots, pause_menu->items[i], (vec2){window_width / 2, (window_height / 2) - i * LETTER_HEIGHT}, pause_menu->selected_item == i);
+    }
+}
+
+void handle_pause_menu_input(void){
+    switch(pause_menu->selected_item){
+        case 0:
+            game_state = GS_RUNNING;
+            break;
+        case 1:
+            game_state = GS_EXITING;
+            break;
+        default:
+            ERROR_EXIT("Got unexpected case on pause menu: %d\n", pause_menu->selected_item);
     }
 }

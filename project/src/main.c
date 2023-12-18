@@ -36,8 +36,6 @@ static bool escape_unpressed = false; // TODO: used for pause menu currently, wi
 
 const u8 frame_rate = 60; // frame rate
 
-static int game_state = GS_RUNNING;
-
 int main(int argc, char *argv[])
 {
     time_init(frame_rate);
@@ -48,7 +46,7 @@ int main(int argc, char *argv[])
     entity_init();
     animation_init(); // creates animation storage
     init_all_anims(); // initializes all our animations
-
+    init_game_state();
     init_weapon_types();
     init_map(&map);
     init_hud(window);
@@ -338,15 +336,21 @@ int main(int argc, char *argv[])
                 {
                     should_quit = true;
                 }
-                if(global.input.r_down == KS_PRESSED && pause_menu->selected_item < pause_menu->items_count - 1){
+                if(global.input.r_down == KS_PRESSED && pause_menu->selected_item < pause_menu->items_count - 1){ // k
                     pause_menu->selected_item++;
                 }
-                else if(global.input.r_up == KS_PRESSED && pause_menu->selected_item > 0){
+                else if(global.input.r_up == KS_PRESSED && pause_menu->selected_item > 0){ // i
                     pause_menu->selected_item--;
+                }
+                else if(global.input.l_shoot){ // space
+                    handle_pause_menu_input();
                 }
                 render_pause_menu(window, texture_slots);
             }
             render_end(window, texture_slots, true);
+            break;
+        case GS_EXITING:
+            should_quit = true;
             break;
         default:
             printf("game state not specified");

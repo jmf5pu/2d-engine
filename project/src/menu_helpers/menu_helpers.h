@@ -4,6 +4,7 @@
 #include "../engine/render.h"
 #include "../engine/hash_map.h"
 #include "../engine/animation.h"
+#include "../engine/input.h"
 #include "../structs.h"
 
 #define LETTER_ANIM_COUNT 26
@@ -12,7 +13,16 @@
 #define SELECTED_ANIM_WIDTH 100
 #define SELECTED_ANIM_HEIGHT 70
 
-Hash_Map * letter_anim_map;
+// used to determine when to render (or not render) whichS menus
+enum Game_State
+{
+    GS_MAIN_MENU,
+    GS_GAME_MODE_MENU,
+    GS_MAP_SELECT,
+    GS_PAUSE_MENU,
+    GS_RUNNING,
+    GS_EXITING,
+};
 
 // CAPITAL LETTERS
 Sprite_Sheet sprite_sheet_A;
@@ -96,6 +106,8 @@ Animation * anim_X;
 Animation * anim_Y;
 Animation * anim_Z;
 
+Hash_Map * letter_anim_map;
+
 // SELECTED ITEM INDICATORS
 Sprite_Sheet sprite_sheet_selected_bracket_left;
 Sprite_Sheet sprite_sheet_selected_bracket_right;
@@ -106,13 +118,17 @@ Animation_Definition * adef_selected_bracket_right;
 Animation * anim_selected_bracket_left;
 Animation * anim_selected_bracket_right;
 
+// MENUS
 Menu * pause_menu;
+
+extern int game_state;
 
 void init_menus(void);
 void render_main_menu(void);
 void render_game_mode_menu(void);
 void render_map_select_menu(void);
 void render_pause_menu(SDL_Window *window, u32 texture_slots[32]);
+void handle_pause_menu_input(void);
 void free_menus(void);
 
 #endif
