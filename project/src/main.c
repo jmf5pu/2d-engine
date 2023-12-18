@@ -32,7 +32,6 @@
 
 static u32 texture_slots[32] = {0};   // texture slots array for batch rendering
 static bool should_quit = false;      // quit flag
-static bool escape_unpressed = false; // TODO: used for pause menu currently, will be replaced by other logic
 
 const u8 frame_rate = 60; // frame rate
 
@@ -107,7 +106,6 @@ int main(int argc, char *argv[])
             if (game_state == GS_RUNNING && global.input.escape)
             {
                 game_state = GS_PAUSE_MENU;
-                escape_unpressed = false;
             }
 
             // update map
@@ -328,18 +326,12 @@ int main(int argc, char *argv[])
             
             // PAUSE MENU
             if(game_state == GS_PAUSE_MENU){
-                if (global.input.escape == KS_UNPRESSED)
-                {
-                    escape_unpressed = true;
-                }
-                if (global.input.escape && escape_unpressed)
-                {
-                    should_quit = true;
-                }
                 if(global.input.r_down == KS_PRESSED && pause_menu->selected_item < pause_menu->items_count - 1){ // k
+                    reset_selector_anims();
                     pause_menu->selected_item++;
                 }
                 else if(global.input.r_up == KS_PRESSED && pause_menu->selected_item > 0){ // i
+                    reset_selector_anims();
                     pause_menu->selected_item--;
                 }
                 else if(global.input.l_shoot){ // space

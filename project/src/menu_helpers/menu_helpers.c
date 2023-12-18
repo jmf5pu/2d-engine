@@ -277,7 +277,7 @@ void init_menu_anims(void)
         &sprite_sheet_selected_bracket_left,
         (f32[]){0.005,0.005,0.005,0.005,0.005,0.005,0.005,0.005,0.005,0.005,0.005},
         (u8[]){0,0,0,0,0,0,0,0,0,0,0},
-        (u8[]){1,2,3,4,5,6,7,8,9,10,11},
+        (u8[]){0,1,2,3,4,5,6,7,8,9,10},
         11);
     anim_selected_bracket_left = animation_create(adef_selected_bracket_left, false);
     anim_selected_bracket_left->is_active = false;
@@ -287,7 +287,7 @@ void init_menu_anims(void)
         &sprite_sheet_selected_bracket_right,
         (f32[]){0.005,0.005,0.005,0.005,0.005,0.005,0.005,0.005,0.005,0.005,0.005},
         (u8[]){0,0,0,0,0,0,0,0,0,0,0},
-        (u8[]){1,2,3,4,5,6,7,8,9,10,11},
+        (u8[]){0,1,2,3,4,5,6,7,8,9,10},
         11);
     anim_selected_bracket_right = animation_create(adef_selected_bracket_right, false);
     anim_selected_bracket_right->is_active = false;
@@ -343,6 +343,13 @@ void render_text_line(SDL_Window *window, u32 texture_slots[32], char *text, vec
         vec2_add(starting_position, starting_position, (vec2){LETTER_WIDTH, 0});
         character++;
     }
+}
+
+void reset_selector_anims(void){
+    anim_selected_bracket_left->current_frame_index = 0;
+    anim_selected_bracket_right->current_frame_index = 0;
+    anim_selected_bracket_left->is_active = false;
+    anim_selected_bracket_right->is_active = false;
 }
 
 void render_menu_item(SDL_Window *window, u32 texture_slots[32], char *text, vec2 starting_position, bool is_selected){

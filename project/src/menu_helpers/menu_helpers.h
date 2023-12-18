@@ -10,8 +10,8 @@
 #define LETTER_ANIM_COUNT 26
 #define LETTER_WIDTH 40
 #define LETTER_HEIGHT 50
-#define SELECTED_ANIM_WIDTH 100
-#define SELECTED_ANIM_HEIGHT 70
+#define SELECTED_ANIM_WIDTH 62
+#define SELECTED_ANIM_HEIGHT 62
 
 // used to determine when to render (or not render) whichS menus
 enum Game_State
@@ -124,6 +124,7 @@ Menu * pause_menu;
 extern int game_state;
 
 void init_menus(void);
+void reset_selector_anims(void);
 void render_main_menu(void);
 void render_game_mode_menu(void);
 void render_map_select_menu(void);
