@@ -338,6 +338,12 @@ int main(int argc, char *argv[])
                 {
                     should_quit = true;
                 }
+                if(global.input.r_down == KS_PRESSED && pause_menu->selected_item < pause_menu->items_count - 1){
+                    pause_menu->selected_item++;
+                }
+                else if(global.input.r_up == KS_PRESSED && pause_menu->selected_item > 0){
+                    pause_menu->selected_item--;
+                }
                 render_pause_menu(window, texture_slots);
             }
             render_end(window, texture_slots, true);

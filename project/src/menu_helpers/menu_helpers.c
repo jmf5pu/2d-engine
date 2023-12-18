@@ -341,8 +341,6 @@ void render_text_line(SDL_Window *window, u32 texture_slots[32], char *text, vec
 }
 
 void render_menu_item(SDL_Window *window, u32 texture_slots[32], char *text, vec2 starting_position, bool is_selected){
-    printf("animation current frame index: %u\n", anim_selected_bracket_left->current_frame_index);
-
     // if selected render left bracket anim
     if(is_selected)
         animation_render(anim_selected_bracket_left, window, starting_position, 0, WHITE, texture_slots);
@@ -375,6 +373,7 @@ void render_map_select_menu(void)
 
 void render_pause_menu(SDL_Window *window, u32 texture_slots[32])
 {
+    printf("pause menu selected item: %u\n", pause_menu->selected_item);
     for (int i = 0; i < pause_menu->items_count; i++)
     {
         render_menu_item(window, texture_slots, pause_menu->items[i], (vec2){window_width / 2, (window_height / 2) - i * LETTER_HEIGHT}, pause_menu->selected_item == i);
