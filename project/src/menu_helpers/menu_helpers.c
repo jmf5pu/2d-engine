@@ -295,20 +295,36 @@ void init_menu_anims(void)
 
 void init_menu_structs(void)
 {
-    // Allocate memory for Menu structure
-    pause_menu = malloc(sizeof(Menu));
+    // MAIN MENU
+    main_menu = malloc(sizeof(Menu));
+    main_menu->items_count = 2;
+    main_menu->selected_item = 0;
+    snprintf(main_menu->items[0], MENU_MAX_LINE_LENGTH, "START");
+    snprintf(main_menu->items[1], MENU_MAX_LINE_LENGTH, "EXIT"); 
 
-    // Initialize other fields
+    // MODE SELECT MENU
+    mode_menu = malloc(sizeof(Menu));
+    mode_menu->items_count = 2;
+    mode_menu->selected_item = 0;
+    snprintf(mode_menu->items[1], MENU_MAX_LINE_LENGTH, "CAMPAIGN"); 
+    snprintf(mode_menu->items[0], MENU_MAX_LINE_LENGTH, "SURVIVAL");
+
+    // SURVIVAL MENU
+    survival_menu = malloc(sizeof(Menu));
+    survival_menu->items_count = 1;
+    survival_menu->selected_item = 0;
+    snprintf(survival_menu->items[1], MENU_MAX_LINE_LENGTH, "DEMO"); 
+
+    // PAUSE MENU
+    pause_menu = malloc(sizeof(Menu));
     pause_menu->items_count = 2;
     pause_menu->selected_item = 0;
-
-    // Initialize each menu item
     snprintf(pause_menu->items[0], MENU_MAX_LINE_LENGTH, "RESUME");
-    snprintf(pause_menu->items[1], MENU_MAX_LINE_LENGTH, "EXIT");
+    snprintf(pause_menu->items[1], MENU_MAX_LINE_LENGTH, "EXIT TO MAIN MENU");
 }
 
 void init_game_state(void){
-    game_state = GS_RUNNING;
+    game_state = GS_MAIN_MENU;
 }
 
 void free_menus(void)
@@ -368,19 +384,61 @@ void render_menu_item(SDL_Window *window, u32 texture_slots[32], char *text, vec
     }
 }
 
-void render_main_menu(void)
-{
-    return;
+void render_main_menu(SDL_Window *window, u32 texture_slots[32]){
+    for (int i = 0; i < main_menu->items_count; i++)
+    {
+        render_menu_item(window, texture_slots, main_menu->items[i], (vec2){window_width / 2, (window_height / 2) - i * LETTER_HEIGHT}, main_menu->selected_item == i);
+    }
 }
 
-void render_game_mode_menu(void)
-{
-    return;
+void handle_main_menu_input(void){
+    switch(main_menu->selected_item){
+        case 0:
+            game_state = GS_GAME_MODE_MENU;
+            break;
+        case 1:
+            game_state = GS_EXITING;
+            break;
+        default:
+            ERROR_EXIT("Got unexpected case on pause menu: %d\n", main_menu->selected_item);
+    }
 }
 
-void render_map_select_menu(void)
-{
-    return;
+void render_mode_menu(SDL_Window *window, u32 texture_slots[32]){
+    for (int i = 0; i < mode_menu->items_count; i++)
+    {
+        render_menu_item(window, texture_slots, mode_menu->items[i], (vec2){window_width / 2, (window_height / 2) - i * LETTER_HEIGHT}, mode_menu->selected_item == i);
+    }
+}
+
+void handle_mode_menu_input(void){
+    switch(mode_menu->selected_item){
+        case 0:
+            game_state = GS_RUNNING;
+            break;
+        case 1:
+            game_state = GS_SURVIVAL_MENU;
+            break;
+        default:
+            ERROR_EXIT("Got unexpected case on pause menu: %d\n", mode_menu->selected_item);
+    }
+}
+
+void render_survival_menu(SDL_Window *window, u32 texture_slots[32]){
+    for (int i = 0; i < survival_menu->items_count; i++)
+    {
+        render_menu_item(window, texture_slots, survival_menu->items[i], (vec2){window_width / 2, (window_height / 2) - i * LETTER_HEIGHT}, survival_menu->selected_item == i);
+    }
+}
+
+void handle_survival_menu_input(void){
+    switch(survival_menu->selected_item){
+        case 0:
+            game_state = GS_RUNNING;
+            break;
+        default:
+            ERROR_EXIT("Got unexpected case on pause menu: %d\n", survival_menu->selected_item);
+    }
 }
 
 void render_pause_menu(SDL_Window *window, u32 texture_slots[32])
@@ -397,7 +455,7 @@ void handle_pause_menu_input(void){
             game_state = GS_RUNNING;
             break;
         case 1:
-            game_state = GS_EXITING;
+            game_state = GS_MAIN_MENU;
             break;
         default:
             ERROR_EXIT("Got unexpected case on pause menu: %d\n", pause_menu->selected_item);

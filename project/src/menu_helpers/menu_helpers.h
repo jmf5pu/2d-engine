@@ -18,7 +18,7 @@ enum Game_State
 {
     GS_MAIN_MENU,
     GS_GAME_MODE_MENU,
-    GS_MAP_SELECT,
+    GS_SURVIVAL_MENU,
     GS_PAUSE_MENU,
     GS_RUNNING,
     GS_EXITING,
@@ -119,15 +119,21 @@ Animation * anim_selected_bracket_left;
 Animation * anim_selected_bracket_right;
 
 // MENUS
+Menu * main_menu;
+Menu * mode_menu;
+Menu * survival_menu;
 Menu * pause_menu;
 
 extern int game_state;
 
 void init_menus(void);
 void reset_selector_anims(void);
-void render_main_menu(void);
-void render_game_mode_menu(void);
-void render_map_select_menu(void);
+void render_main_menu(SDL_Window *window, u32 texture_slots[32]);
+void handle_main_menu_input(void);
+void render_mode_menu(SDL_Window *window, u32 texture_slots[32]);
+void handle_mode_menu_input(void);
+void render_survival_menu(SDL_Window *window, u32 texture_slots[32]);
+void handle_survival_menu_input(void);
 void render_pause_menu(SDL_Window *window, u32 texture_slots[32]);
 void handle_pause_menu_input(void);
 void free_menus(void);

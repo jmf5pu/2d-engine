@@ -90,16 +90,62 @@ int main(int argc, char *argv[])
         switch (game_state)
         {
         case GS_MAIN_MENU:
-            // MAIN MENU
+            printf("on main menu\n");
+            render_begin();
+            if(global.input.r_down == KS_PRESSED && main_menu->selected_item < main_menu->items_count - 1){ // k
+                reset_selector_anims();
+                main_menu->selected_item++;
+            }
+            else if(global.input.r_up == KS_PRESSED && main_menu->selected_item > 0){ // i
+                reset_selector_anims();
+                main_menu->selected_item--;
+            }
+            else if(global.input.l_shoot == KS_PRESSED){ // space
+                handle_main_menu_input();
+            }
+            render_main_menu(window, texture_slots);
+            render_end(window, texture_slots, true);
             break;
         case GS_GAME_MODE_MENU:
-            // MODE SELECTION MENU
+            printf("on game mode menu\n");
+            render_begin();
+            if(global.input.r_down == KS_PRESSED && mode_menu->selected_item < mode_menu->items_count - 1){ // k
+                reset_selector_anims();
+                mode_menu->selected_item++;
+            }
+            else if(global.input.r_up == KS_PRESSED && mode_menu->selected_item > 0){ // i
+                reset_selector_anims();
+                mode_menu->selected_item--;
+            }
+            else if(global.input.l_shoot == KS_PRESSED){ // space
+                handle_mode_menu_input();
+            }
+            render_mode_menu(window, texture_slots);
+            render_end(window, texture_slots, true);
             break;
-        case GS_MAP_SELECT:
-            // MAP SELECTION MENU
+        case GS_SURVIVAL_MENU:
+            printf("on survival menu\n");
+            render_begin();
+            if(global.input.r_down == KS_PRESSED && survival_menu->selected_item < survival_menu->items_count - 1){ // k
+                reset_selector_anims();
+                survival_menu->selected_item++;
+            }
+            else if(global.input.r_up == KS_PRESSED && survival_menu->selected_item > 0){ // i
+                reset_selector_anims();
+                survival_menu->selected_item--;
+            }
+            else if(global.input.l_shoot == KS_PRESSED){ // space
+                handle_mode_menu_input();
+            }
+            render_survival_menu(window, texture_slots);
+            render_end(window, texture_slots, true);
             break;
         case GS_PAUSE_MENU:
         case GS_RUNNING:
+            if(game_state == GS_PAUSE_MENU)
+                printf("game paused\n");
+            else
+                printf("game running\n");
             // GAMEPLAY IS ACTIVE
 
             // check if pause was hit, update game state
@@ -334,7 +380,7 @@ int main(int argc, char *argv[])
                     reset_selector_anims();
                     pause_menu->selected_item--;
                 }
-                else if(global.input.l_shoot){ // space
+                else if(global.input.l_shoot == KS_PRESSED){ // space
                     handle_pause_menu_input();
                 }
                 render_pause_menu(window, texture_slots);
