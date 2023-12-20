@@ -128,6 +128,7 @@ extern int game_state;
 
 void init_menus(void);
 void reset_selector_anims(void);
+void update_menu(Menu * menu, Input_State input);
 void render_main_menu(SDL_Window *window, u32 texture_slots[32]);
 void handle_main_menu_input(void);
 void render_mode_menu(SDL_Window *window, u32 texture_slots[32]);

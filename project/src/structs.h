@@ -206,6 +206,7 @@ typedef struct hud
 
 typedef struct menu
 {
+    void (*input_handler)(void);
     char items[MENU_MAX_LINES][MENU_MAX_LINE_LENGTH];
     u8 items_count;
     u8 selected_item;

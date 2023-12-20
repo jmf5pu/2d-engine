@@ -293,36 +293,6 @@ void init_menu_anims(void)
     anim_selected_bracket_right->is_active = false;
 }
 
-void init_menu_structs(void)
-{
-    // MAIN MENU
-    main_menu = malloc(sizeof(Menu));
-    main_menu->items_count = 2;
-    main_menu->selected_item = 0;
-    snprintf(main_menu->items[0], MENU_MAX_LINE_LENGTH, "START");
-    snprintf(main_menu->items[1], MENU_MAX_LINE_LENGTH, "EXIT"); 
-
-    // MODE SELECT MENU
-    mode_menu = malloc(sizeof(Menu));
-    mode_menu->items_count = 2;
-    mode_menu->selected_item = 0;
-    snprintf(mode_menu->items[1], MENU_MAX_LINE_LENGTH, "CAMPAIGN"); 
-    snprintf(mode_menu->items[0], MENU_MAX_LINE_LENGTH, "SURVIVAL");
-
-    // SURVIVAL MENU
-    survival_menu = malloc(sizeof(Menu));
-    survival_menu->items_count = 1;
-    survival_menu->selected_item = 0;
-    snprintf(survival_menu->items[1], MENU_MAX_LINE_LENGTH, "DEMO"); 
-
-    // PAUSE MENU
-    pause_menu = malloc(sizeof(Menu));
-    pause_menu->items_count = 2;
-    pause_menu->selected_item = 0;
-    snprintf(pause_menu->items[0], MENU_MAX_LINE_LENGTH, "RESUME");
-    snprintf(pause_menu->items[1], MENU_MAX_LINE_LENGTH, "EXIT TO MAIN MENU");
-}
-
 void init_game_state(void){
     game_state = GS_MAIN_MENU;
 }
@@ -330,14 +300,6 @@ void init_game_state(void){
 void free_menus(void)
 {
     free(pause_menu);
-}
-
-// initializes all menu-related assets at game start up
-void init_menus(void)
-{
-    init_menu_anims();
-    init_letter_hashmap();
-    init_menu_structs();
 }
 
 // renders a line of text letter by letter starting at the specified positon on the screen
@@ -381,6 +343,20 @@ void render_menu_item(SDL_Window *window, u32 texture_slots[32], char *text, vec
     if(is_selected){
         vec2_add(starting_position, starting_position, (vec2){0, -0.5 * (SELECTED_ANIM_HEIGHT - LETTER_HEIGHT)});
         animation_render(anim_selected_bracket_right, window, starting_position, 0, WHITE, texture_slots);
+    }
+}
+
+void update_menu(Menu * menu, Input_State input){
+    if(input.r_down == KS_PRESSED && menu->selected_item < menu->items_count - 1){ // k TODO: update with different keys
+        reset_selector_anims();
+        menu->selected_item++;
+    }
+    else if(input.r_up == KS_PRESSED && menu->selected_item > 0){ // i
+        reset_selector_anims();
+        menu->selected_item--;
+    }
+    else if(input.l_shoot == KS_PRESSED){ // space
+        menu->input_handler();
     }
 }
 
@@ -460,4 +436,46 @@ void handle_pause_menu_input(void){
         default:
             ERROR_EXIT("Got unexpected case on pause menu: %d\n", pause_menu->selected_item);
     }
+}
+
+void init_menu_structs(void)
+{
+    // MAIN MENU
+    main_menu = malloc(sizeof(Menu));
+    main_menu->input_handler = handle_main_menu_input;
+    main_menu->items_count = 2;
+    main_menu->selected_item = 0;
+    snprintf(main_menu->items[0], MENU_MAX_LINE_LENGTH, "START");
+    snprintf(main_menu->items[1], MENU_MAX_LINE_LENGTH, "EXIT"); 
+
+    // MODE SELECT MENU
+    mode_menu = malloc(sizeof(Menu));
+    mode_menu->input_handler = handle_mode_menu_input;
+    mode_menu->items_count = 2;
+    mode_menu->selected_item = 0;
+    snprintf(mode_menu->items[0], MENU_MAX_LINE_LENGTH, "CAMPAIGN"); 
+    snprintf(mode_menu->items[1], MENU_MAX_LINE_LENGTH, "SURVIVAL");
+
+    // SURVIVAL MENU
+    survival_menu = malloc(sizeof(Menu));
+    survival_menu->input_handler = handle_survival_menu_input;
+    survival_menu->items_count = 1;
+    survival_menu->selected_item = 0;
+    snprintf(survival_menu->items[0], MENU_MAX_LINE_LENGTH, "DEMO"); 
+
+    // PAUSE MENU
+    pause_menu = malloc(sizeof(Menu));
+    pause_menu->input_handler = handle_pause_menu_input;
+    pause_menu->items_count = 2;
+    pause_menu->selected_item = 0;
+    snprintf(pause_menu->items[0], MENU_MAX_LINE_LENGTH, "RESUME");
+    snprintf(pause_menu->items[1], MENU_MAX_LINE_LENGTH, "EXIT TO MAIN MENU");
+}
+
+// initializes all menu-related assets at game start up
+void init_menus(void)
+{
+    init_menu_anims();
+    init_letter_hashmap();
+    init_menu_structs();
 }
