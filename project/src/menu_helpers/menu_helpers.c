@@ -363,7 +363,7 @@ void update_menu(Menu * menu, Input_State input){
 void render_main_menu(SDL_Window *window, u32 texture_slots[32]){
     for (int i = 0; i < main_menu->items_count; i++)
     {
-        render_menu_item(window, texture_slots, main_menu->items[i], (vec2){window_width / 2, (window_height / 2) - i * LETTER_HEIGHT}, main_menu->selected_item == i);
+        render_menu_item(window, texture_slots, main_menu->items[i], (vec2){window_width / 2, (window_height / 2) - i * SELECTED_ANIM_HEIGHT}, main_menu->selected_item == i);
     }
 }
 
@@ -383,7 +383,7 @@ void handle_main_menu_input(void){
 void render_mode_menu(SDL_Window *window, u32 texture_slots[32]){
     for (int i = 0; i < mode_menu->items_count; i++)
     {
-        render_menu_item(window, texture_slots, mode_menu->items[i], (vec2){window_width / 2, (window_height / 2) - i * LETTER_HEIGHT}, mode_menu->selected_item == i);
+        render_menu_item(window, texture_slots, mode_menu->items[i], (vec2){window_width / 2, (window_height / 2) - i * SELECTED_ANIM_HEIGHT}, mode_menu->selected_item == i);
     }
 }
 
@@ -403,7 +403,7 @@ void handle_mode_menu_input(void){
 void render_survival_menu(SDL_Window *window, u32 texture_slots[32]){
     for (int i = 0; i < survival_menu->items_count; i++)
     {
-        render_menu_item(window, texture_slots, survival_menu->items[i], (vec2){window_width / 2, (window_height / 2) - i * LETTER_HEIGHT}, survival_menu->selected_item == i);
+        render_menu_item(window, texture_slots, survival_menu->items[i], (vec2){window_width / 2, (window_height / 2) - i * SELECTED_ANIM_HEIGHT}, survival_menu->selected_item == i);
     }
 }
 
@@ -421,7 +421,7 @@ void render_pause_menu(SDL_Window *window, u32 texture_slots[32])
 {
     for (int i = 0; i < pause_menu->items_count; i++)
     {
-        render_menu_item(window, texture_slots, pause_menu->items[i], (vec2){window_width / 2, (window_height / 2) - i * LETTER_HEIGHT}, pause_menu->selected_item == i);
+        render_menu_item(window, texture_slots, pause_menu->items[i], (vec2){window_width / 2, (window_height / 2) - i * SELECTED_ANIM_HEIGHT}, pause_menu->selected_item == i);
     }
 }
 

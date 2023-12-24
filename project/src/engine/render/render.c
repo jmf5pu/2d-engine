@@ -42,7 +42,7 @@ SDL_Window *render_init(void)
     window_width = display_mode.w;
     window_height = display_mode.h;
 
-    set_render_dimensions(DEFAULT_RENDER_SCALE_FACTOR, false, false);
+    set_render_dimensions(DEFAULT_RENDER_SCALE_FACTOR, true, false);
     if (!render_height || !render_width)
         ERROR_EXIT("ERROR: render dimensions not initialized properly");
     SDL_Window *window = render_init_window(window_width, window_height);
