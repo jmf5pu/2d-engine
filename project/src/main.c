@@ -32,6 +32,7 @@
 
 static u32 texture_slots[32] = {0};   // texture slots array for batch rendering
 static bool should_quit = false;      // quit flag
+vec4 game_color;
 
 const u8 frame_rate = 60; // frame rate
 
@@ -95,6 +96,9 @@ int main(int argc, char *argv[])
             break;
         case GS_PAUSE_MENU:
         case GS_RUNNING:
+            // grey everything out if game is paused
+            vec4_dup(game_color, game_state == GS_RUNNING ? WHITE : GREYED_OUT);
+
             // init players and camera and spawn players if game is just starting up
             if(!player_one){
                 if(SPLIT_SCREEN)
@@ -269,7 +273,7 @@ int main(int argc, char *argv[])
                     }
 
                     // render the entity's animation
-                    animation_render(entity->animation, window, entity->body->aabb.position, 0, WHITE, texture_slots);
+                    animation_render(entity->animation, window, entity->body->aabb.position, 0, game_color, texture_slots);
                 }
 
                 // render map sprites
@@ -294,7 +298,7 @@ int main(int argc, char *argv[])
                     }
                     bool is_below_player = player_y_min < (prop.sprite->position[1] - prop.sprite->half_size[1] + prop.layer_threshold) || player_y_min > (prop.sprite->position[1] + prop.sprite->half_size[1]) || l == 0;
                     i32 z_index = is_below_player ? prop.sprite->z_index : 1;
-                    render_sprite_sheet_frame(prop.sprite->sprite_sheet, window, prop.sprite->row, prop.sprite->column, prop.sprite->position, z_index, prop.sprite->is_flipped, RENDER_PHYSICS_BODIES ? (vec4){0.9, 0.9, 0.9, 0.9} : prop.sprite->color, texture_slots);
+                    render_sprite_sheet_frame(prop.sprite->sprite_sheet, window, prop.sprite->row, prop.sprite->column, prop.sprite->position, z_index, prop.sprite->is_flipped, RENDER_PHYSICS_BODIES ? SEMI_TRANSPARENT : game_color, texture_slots);
 
                     // render the static bodies
                     if (RENDER_PHYSICS_BODIES)
@@ -333,7 +337,7 @@ int main(int argc, char *argv[])
             set_render_dimensions(DEFAULT_RENDER_SCALE_FACTOR, true, true);
 
             render_begin_hud();
-            render_hud(window, texture_slots);
+            render_hud(window, texture_slots, game_color);
             
             // PAUSE MENU
             if(game_state == GS_PAUSE_MENU){

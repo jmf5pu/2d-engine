@@ -35,5 +35,9 @@
     (vec4) { 0.5, 0, 1, 1 }
 #define TURQUOISE \
     (vec4) { 0, 1, 0.5, 1 }
+#define GREYED_OUT \
+    (vec4) { 0.3, 0.3, 0.3, 1 }
+#define SEMI_TRANSPARENT \
+    (vec4) { 1, 1, 1, 0.8 }
 
 #endif
