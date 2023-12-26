@@ -1,20 +1,13 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
+#define MENU_MAX_LINES 10
+#define MENU_MAX_LINE_LENGTH 50
+
 #include "engine/entity.h"
 #include "engine/types.h"
 #include "engine/animation.h"
 #include "engine/render.h"
-
-// used to determine when to render (or not render) whichS menus
-enum Game_State
-{
-    GS_MAIN_MENU,
-    GS_GAME_MODE_MENU,
-    GS_MAP_SELECT,
-    GS_PAUSE_MENU,
-    GS_RUNNING,
-};
 
 enum Direction
 {
@@ -210,5 +203,13 @@ typedef struct hud
     Sprite *p1_health_display;
     Sprite *p2_health_display;
 } HUD;
+
+typedef struct menu
+{
+    void (*input_handler)(void);
+    char items[MENU_MAX_LINES][MENU_MAX_LINE_LENGTH];
+    u8 items_count;
+    u8 selected_item;
+} Menu;
 
 #endif

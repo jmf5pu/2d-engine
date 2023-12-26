@@ -38,7 +38,7 @@ void init_weapon_types(void)
     m16->burst_delay = 0.4; // seconds
     m16->damage = 30;
     m16->bullet_velocity = 1500;
-    m16->aiming_scale_factor = 1.5;
+    m16->aiming_scale_factor = DEFAULT_RENDER_SCALE_FACTOR * 1.5;
     m16->hud_ammo_icon = anim_556_burst;
 
     m44 = malloc(sizeof(Weapon_Type));
@@ -49,7 +49,7 @@ void init_weapon_types(void)
     m44->max_fire_rate = 30;
     m44->damage = 100;
     m44->bullet_velocity = 2000;
-    m44->aiming_scale_factor = 0.6;
+    m44->aiming_scale_factor = DEFAULT_RENDER_SCALE_FACTOR * 0.6;
 }
 
 void free_weapon_types(void)
