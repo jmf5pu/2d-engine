@@ -20,10 +20,14 @@ static const char *CONFIG_DEFAULT =
     "r_shoot = ,\n"
     "r_crouch = N\n"
     "r_reload = P\n"
+    "menu_up = Up\n"
+    "menu_down = Down\n"
+    "menu_left = Left\n"
+    "menu_right = Right\n"
     "escape = Escape\n"
-    "\n";
+    "enter = Return\n";
 
-static char tmp_buffer[20] = {0};
+static char tmp_buffer[20] = {0}; // must be able to hold the longest line in config.ini
 
 static char *config_get_value(const char *config_buffer, const char *value)
 {
@@ -61,7 +65,6 @@ static char *config_get_value(const char *config_buffer, const char *value)
     return tmp_buffer;
 }
 
-// TODO: figure out why this only works if right keys are before left keys
 static void load_controls(const char *config_buffer)
 {
     // left player keybinds
@@ -82,7 +85,13 @@ static void load_controls(const char *config_buffer)
     config_key_bind(INPUT_KEY_R_CROUCH, config_get_value(config_buffer, "r_crouch"));
     config_key_bind(INPUT_KEY_R_RELOAD, config_get_value(config_buffer, "r_reload"));
 
+    // menu inputs
+    config_key_bind(INPUT_KEY_UP, config_get_value(config_buffer, "menu_up"));
+    config_key_bind(INPUT_KEY_DOWN, config_get_value(config_buffer, "menu_down"));
+    config_key_bind(INPUT_KEY_LEFT, config_get_value(config_buffer, "menu_left"));
+    config_key_bind(INPUT_KEY_RIGHT, config_get_value(config_buffer, "menu_right"));
     config_key_bind(INPUT_KEY_ESCAPE, config_get_value(config_buffer, "escape"));
+    config_key_bind(INPUT_KEY_ENTER, config_get_value(config_buffer, "enter"));
 }
 
 static int config_load(void)
