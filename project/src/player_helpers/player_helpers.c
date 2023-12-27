@@ -312,25 +312,7 @@ void init_all_anims()
         (u8[]){0},
         1);
     anim_bullet_15 = animation_create(adef_bullet_15, false);
-
-    // bullet stuff
-    render_sprite_sheet_init(&sprite_sheet_bullet_1_horizontal, "assets/bullet_round_small.png", 2, 2);
-    render_sprite_sheet_init(&sprite_sheet_bullet_1_vertical, "assets/bullet_round_small.png", 2, 2);
-    adef_bullet_1_horizontal = animation_definition_create(
-        &sprite_sheet_bullet_1_horizontal,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){0},
-        1);
-    adef_bullet_1_vertical = animation_definition_create(
-        &sprite_sheet_bullet_1_vertical,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){0},
-        1);
-    anim_bullet_1_horizontal = animation_create(adef_bullet_1_horizontal, false);
-    anim_bullet_1_vertical = animation_create(adef_bullet_1_vertical, false);
-
+    
     /*
     NEW PLAYER ANIMS 11/12
     */
