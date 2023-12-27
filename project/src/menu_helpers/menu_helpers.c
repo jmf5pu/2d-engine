@@ -440,6 +440,29 @@ void handle_pause_menu_input(void){
     }
 }
 
+/// @brief Smoothly transitions the game's color between WHITE and GREYED_OUT when the game state switches between GS_PAUSE_MENU and GS_RUNNING
+/// @param game_color the game's current color
+void update_game_color(vec4 game_color){
+    if(game_state == GS_RUNNING){
+        if(vec4_color_cmp(game_color, WHITE)){ // game color RGB is less than WHITE
+            vec4_add(game_color, game_color, (vec4){COLOR_DELTA, COLOR_DELTA, COLOR_DELTA, 0});
+        }
+        else if(!vec4_is_equal(game_color, WHITE)){ // game color RGB is somehow greater than WHITE
+            vec4_dup(game_color, WHITE); 
+        }
+    }
+    if(game_state == GS_PAUSE_MENU){
+        if(vec4_color_cmp(GREYED_OUT, game_color)){ // game color RGB is greater than GREYED_OUT
+            vec4_add(game_color, game_color, (vec4){-COLOR_DELTA, -COLOR_DELTA, -COLOR_DELTA, 0});
+        }
+        else if(!vec4_is_equal(game_color, GREYED_OUT)){ // game color RGB is somehow less than GREYED_OUT
+            vec4_dup(game_color, GREYED_OUT); 
+        }
+    }
+}
+
+/// @brief Initializes all menu structures used by the game
+/// @param  
 void init_menu_structs(void)
 {
     // MAIN MENU
@@ -474,7 +497,8 @@ void init_menu_structs(void)
     snprintf(pause_menu->items[1], MENU_MAX_LINE_LENGTH, "EXIT TO MAIN MENU");
 }
 
-// initializes all menu-related assets at game start up
+/// @brief Wrapper method for all menu-related initialization methods
+/// @param  
 void init_menus(void)
 {
     init_menu_anims();

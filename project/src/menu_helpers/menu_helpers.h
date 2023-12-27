@@ -12,6 +12,7 @@
 #define LETTER_HEIGHT 50
 #define SELECTED_ANIM_WIDTH 62
 #define SELECTED_ANIM_HEIGHT 62
+#define COLOR_DELTA 0.05
 
 // used to determine when to render (or not render) whichS menus
 enum Game_State
@@ -137,6 +138,7 @@ void render_survival_menu(SDL_Window *window, u32 texture_slots[32]);
 void handle_survival_menu_input(void);
 void render_pause_menu(SDL_Window *window, u32 texture_slots[32]);
 void handle_pause_menu_input(void);
+void update_game_color(vec4 game_color);
 void free_menus(void);
 
 #endif

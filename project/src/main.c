@@ -36,6 +36,15 @@ vec4 game_color;
 
 const u8 frame_rate = 60; // frame rate
 
+// TODO: move this out of main.c
+bool vec4_is_equal(vec4 first, vec4 second){
+    return first[0] == second[0] && first[1] == second[1] && first[2] == second[2] && first[3] == second[3]; 
+}
+// returns TRUE if the first RGB value is less than the second for each value in RGB, otherwise returns false
+bool vec4_color_cmp(vec4 first, vec4 second){
+    return first[0] < second[0] && first[1] < second[1] && first[2] < second[2];
+}
+
 int main(int argc, char *argv[])
 {
     time_init(frame_rate);
@@ -50,6 +59,9 @@ int main(int argc, char *argv[])
     init_map(&map);
     init_hud(window);
     init_menus();
+    
+    // init game color
+    vec4_dup(game_color, WHITE);
 
     // MAIN GAMEPLAY LOOP
     while (!should_quit)
@@ -97,7 +109,7 @@ int main(int argc, char *argv[])
         case GS_PAUSE_MENU:
         case GS_RUNNING:
             // grey everything out if game is paused
-            vec4_dup(game_color, game_state == GS_RUNNING ? WHITE : GREYED_OUT);
+            update_game_color(game_color);
 
             // init players and camera and spawn players if game is just starting up
             if(!player_one){
