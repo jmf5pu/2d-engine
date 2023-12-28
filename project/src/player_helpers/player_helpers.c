@@ -312,7 +312,7 @@ void init_all_anims()
         (u8[]){0},
         1);
     anim_bullet_15 = animation_create(adef_bullet_15, false);
-    
+
     /*
     NEW PLAYER ANIMS 11/12
     */
@@ -885,14 +885,11 @@ void handle_player_input(Player *player)
             // update rendering dimensions and projection matrix
             set_render_dimensions(player->render_scale_factor, false, true);
 
-            // set aabb location to center of screen
-            player->entity->body->aabb.position[0] = (render_width * 0.5);
-            player->entity->body->aabb.position[1] = (render_height * 0.5);
-
             // set camera location to center the player
-            player->camera->position[0] = player->relative_position[0] - (0.5 * render_width);
-            player->camera->position[1] = player->relative_position[1] - (0.5 * render_height);
-
+            if(!player->camera->target_position)
+                player->camera->target_position = malloc(sizeof(vec2));
+            player->camera->target_position[0][0] = player->relative_position[0] - (0.5 * render_width);
+            player->camera->target_position[0][1] = player->relative_position[1] - (0.5 * render_height);
             // update status
             player->status = PLAYER_CROUCHED;
         }

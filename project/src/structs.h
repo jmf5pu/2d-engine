@@ -123,6 +123,7 @@ typedef struct bullet
 typedef struct camera
 {
     vec2 position;
+    vec2 * target_position;
     vec4 buffer;
 } Camera;
 

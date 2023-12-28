@@ -2,6 +2,7 @@
 #define CAMERA_H
 
 #define WINDOW_BUFFER 100 // how close the player can get to the window edge
+#define CENTER_PLAYER_CAMERA_DELTA  25// how many pixels the camera will move per frame (used when centering player)
 
 #include <linmath.h>
 #include "../structs.h"
@@ -12,7 +13,8 @@ extern Camera left_cam;
 extern Camera right_cam;
 
 void camera_init(void);
-void shift_camera(Camera *camera, vec2 position);
-void camera_update(Camera *camera, Player *player, Map *map);
+void shift_camera(Player * player, vec2 position);
+void shift_camera_smooth(Player * player, u32 delta);
+void camera_update(Player *player, Map *map);
 
 #endif

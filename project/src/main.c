@@ -204,7 +204,7 @@ int main(int argc, char *argv[])
                 if (SPLIT_SCREEN && i == 0)
                 {
                     set_render_dimensions(player_one->render_scale_factor, false, true);
-                    camera_update(&left_cam, player_one, &map);
+                    camera_update(player_one, &map);
                     render_begin_left();
                     if(game_state == GS_RUNNING)
                         player_per_frame_updates(player_one);
@@ -212,7 +212,7 @@ int main(int argc, char *argv[])
                 else if (SPLIT_SCREEN && i == 1)
                 {
                     set_render_dimensions(player_two->render_scale_factor, false, true);
-                    camera_update(&right_cam, player_two, &map);
+                    camera_update(player_two, &map);
                     render_begin_right();
                     if(game_state == GS_RUNNING)
                         player_per_frame_updates(player_two);
@@ -220,7 +220,7 @@ int main(int argc, char *argv[])
                 else // hit when screen is not being split
                 {
                     set_render_dimensions(player_one->render_scale_factor, false, true);
-                    camera_update(&main_cam, player_one, &map);
+                    camera_update(player_one, &map);
                     render_begin();
                     if(game_state == GS_RUNNING)
                         player_per_frame_updates(player_one);
