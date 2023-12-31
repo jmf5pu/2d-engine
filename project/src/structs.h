@@ -125,6 +125,7 @@ typedef struct camera
     vec2 position;
     vec2 * target_position;
     vec4 buffer;
+    f32 target_position_step; // how far the camera will jump each step in `shift_camera_smooth`
 } Camera;
 
 typedef struct player
@@ -138,7 +139,8 @@ typedef struct player
     vec2 relative_position; // position relative to the rest of the map NOT to the window
     enum Direction direction;
     enum Player_Status status;
-    f32 render_scale_factor; // render scale factor (determines FOV of the player). Normal is 0.5, render width is 0.5 of window width
+    f32 render_scale_factor; // current render scale factor (determines FOV of the player). Normal is 0.5, render width is 0.5 of window width
+    f32 target_render_scale_factor; // render scale factor that will be updated towards each frame
     f32 despawn_time;        // time it takes for animation to complete after health <= 0
     f32 spawn_delay;         // time in s from INACTIVE status to SPAWNING status
     f32 spawn_time;          // time in s from SPAWNING status to ACTIVE status

@@ -10,8 +10,24 @@ Camera main_cam;
 Camera left_cam;
 Camera right_cam;
 
-bool vec2_is_equal(vec2 first, vec2 second){
+/// @brief Checks if the values of 2 vec2 structs are equivalent
+/// @param first the first vec2
+/// @param second the second vec2 
+/// @param check_to_hundredths_place specifies if we should truncate float values to the hundreth place between doing the comparison
+/// @return bool representing if the vec2 structs have equal values
+bool vec2_is_equal(vec2 first, vec2 second, bool check_to_hundredths_place){
+    if(check_to_hundredths_place){
+        return (int)first[0]*100.0 / 100.0 == (int)second[0]*100.0 / 100.0 && (int)first[1]*100.0 / 100.0 == (int)second[1]*100.0 / 100.0;
+    }
     return first[0] == second[0] && first[1] == second[1];
+}
+
+/// @brief returns the distance between two vec2s representing x/y coordinates in the form of a 32 bit float
+/// @param first the first vec2 xy coordinate
+/// @param second the second vec2 xy coordinate
+/// @return the distance between the parameters 
+f32 vec2_get_distance(vec2 first, vec2 second){
+    return sqrt(pow(first[0] - second[0], 2) + pow(first[1] - second[1], 2));
 }
 
 void camera_init(void)
@@ -50,23 +66,26 @@ void shift_camera(Player * player, vec2 shift)
 /// @brief Shifts the camera gradually, frame by frame. Typically used when centering the camera on an entity
 /// @param player pointer to the active player
 /// @param delta unsigned int representing the magnitude of the camera movement per frame
-void shift_camera_smooth(Player * player, u32 delta){
+void shift_camera_smooth(Player * player){
+    f32 step = player->camera->target_position_step;
     f32 dx = player->camera->position[0] - player->camera->target_position[0][0];
     f32 dy = player->camera->position[1] - player->camera->target_position[0][1];
-    if(sqrt(pow(dx, 2) + pow(dy, 2)) <= delta){
-        vec2_dup(player->camera->position, player->camera->target_position[0]);
-        free(player->camera->target_position);
-        player->camera->target_position = NULL;
-        return;
+    f32 distance = vec2_get_distance(player->camera->position, player->camera->target_position[0]);
+    if(distance <= player->camera->target_position_step){
+        step = distance;
     }
     f32 angle = fabs((player->camera->target_position[0][0] > player->camera->position[0] && player->camera->target_position[0][1] > player->camera->position[1]) || (player->camera->target_position[0][0] < player->camera->position[0] && player->camera->target_position[0][1] < player->camera->position[1]) ? atan(dy / dx) : -1 * atan(dy / dx));
     vec2 xy_magnitudes;
-    xy_magnitudes[0] = player->camera->target_position[0][0] >= player->camera->position[0] ? delta * cos(angle) : delta * cos(angle) * -1;
-    xy_magnitudes[1] = player->camera->target_position[0][1] >= player->camera->position[1] ? delta * sin(angle) : delta * sin(angle) * -1;
+    xy_magnitudes[0] = player->camera->target_position[0][0] >= player->camera->position[0] ? step * cos(angle) : step * cos(angle) * -1;
+    xy_magnitudes[1] = player->camera->target_position[0][1] >= player->camera->position[1] ? step * sin(angle) : step * sin(angle) * -1;
 
     vec2_add(player->camera->position, player->camera->position, xy_magnitudes);
     vec2_sub(player->entity->body->aabb.position, player->entity->body->aabb.position, xy_magnitudes);
     vec2_sub(player->crosshair->entity->body->aabb.position, player->crosshair->entity->body->aabb.position, xy_magnitudes);
+    if(vec2_is_equal(player->camera->position, player->camera->target_position[0], true)){
+        free(player->camera->target_position);
+        player->camera->target_position = NULL;
+    }
 }
 
 void camera_update(Player *player, Map *map)
@@ -105,8 +124,8 @@ void camera_update(Player *player, Map *map)
     {
         shift[1] = -1 * fabsf(position_y - player->camera->buffer[3]);
     }
-    if(player->camera->target_position){
-        shift_camera_smooth(player, CENTER_PLAYER_CAMERA_DELTA);
+    if(player->camera->target_position && player->camera->target_position_step){
+        shift_camera_smooth(player);
     }
     else{
         shift_camera(player, shift);

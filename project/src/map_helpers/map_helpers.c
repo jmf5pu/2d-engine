@@ -159,7 +159,7 @@ void update_map(Map *map)
     // update the enemies (generate if needed)
     if (map->num_enemy_spawns > 0)
     {
-        update_enemy_spawns(map);
+        // update_enemy_spawns(map);
     }
     update_current_enemies();
 }

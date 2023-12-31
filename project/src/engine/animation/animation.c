@@ -134,6 +134,13 @@ void animation_update(f32 dt)
     }
 }
 
+/// @brief Renders an animation to the window
+/// @param animation reference to animation struct that will be renderered
+/// @param window reference to the window that will be rendered to
+/// @param position 32 bit float array that represents the CENTER of where the animation will be rendered
+/// @param z_index represents the layering priority of the animation, lower z_index'd sprites will be rendered first
+/// @param color color the animation will be rendered
+/// @param texture_slots batch of textures that will be rendered
 void animation_render(Animation *animation, SDL_Window *window, vec2 position, i32 z_index, vec4 color, u32 texture_slots[32])
 {
     animation->is_active = true;

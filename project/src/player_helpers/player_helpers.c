@@ -37,87 +37,6 @@ void init_player_anim_hashmap()
 {
     player_anim_map = create_hash_map(PLAYER_ANIM_COUNT);
 
-    // player one stuff
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_idle_side", p1_anim_soldier_1_m16_idle_side);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_running_side", p1_anim_soldier_1_m16_running_side);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_idle_back", p1_anim_soldier_1_m16_idle_back);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_running_back", p1_anim_soldier_1_m16_running_back);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_idle_front", p1_anim_soldier_1_m16_idle_front);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_running_front", p1_anim_soldier_1_m16_running_front);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_idle_up_right", p1_anim_soldier_1_m16_idle_up_right);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_running_up_right", p1_anim_soldier_1_m16_running_up_right);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_idle_down_right", p1_anim_soldier_1_m16_idle_down_right);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_running_down_right", p1_anim_soldier_1_m16_running_down_right);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_spawning_side", p1_anim_soldier_1_m16_spawning_side);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_dying_side", p1_anim_soldier_1_m16_dying_side);
-
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_idle_side", p1_anim_soldier_1_m16_brewster_idle_side);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_running_side", p1_anim_soldier_1_m16_brewster_running_side);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_idle_back", p1_anim_soldier_1_m16_brewster_idle_back);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_running_back", p1_anim_soldier_1_m16_brewster_running_back);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_idle_front", p1_anim_soldier_1_m16_brewster_idle_front);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_running_front", p1_anim_soldier_1_m16_brewster_running_front);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_spawning_side", p1_anim_soldier_1_m16_brewster_spawning_side);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_dying_side", p1_anim_soldier_1_m16_brewster_dying_side);
-
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_idle_side", p1_anim_soldier_1_m44_idle_side);
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_running_side", p1_anim_soldier_1_m44_running_side);
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_idle_back", p1_anim_soldier_1_m44_idle_back);
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_running_back", p1_anim_soldier_1_m44_running_back);
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_idle_front", p1_anim_soldier_1_m44_idle_front);
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_running_front", p1_anim_soldier_1_m44_running_front);
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_spawning_side", p1_anim_soldier_1_m44_spawning_side);
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_dying_side", p1_anim_soldier_1_m44_dying_side);
-
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_idle_side", p1_anim_soldier_1_m44_brewster_idle_side);
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_running_side", p1_anim_soldier_1_m44_brewster_running_side);
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_idle_back", p1_anim_soldier_1_m44_brewster_idle_back);
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_running_back", p1_anim_soldier_1_m44_brewster_running_back);
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_idle_front", p1_anim_soldier_1_m44_brewster_idle_front);
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_running_front", p1_anim_soldier_1_m44_brewster_running_front);
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_spawning_side", p1_anim_soldier_1_m44_brewster_spawning_side);
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_dying_side", p1_anim_soldier_1_m44_brewster_dying_side);
-
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_idle_side", p2_anim_soldier_1_m16_idle_side);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_running_side", p2_anim_soldier_1_m16_running_side);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_idle_back", p2_anim_soldier_1_m16_idle_back);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_running_back", p2_anim_soldier_1_m16_running_back);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_idle_front", p2_anim_soldier_1_m16_idle_front);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_running_front", p2_anim_soldier_1_m16_running_front);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_idle_up_right", p2_anim_soldier_1_m16_idle_up_right);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_running_up_right", p2_anim_soldier_1_m16_running_up_right);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_idle_down_right", p2_anim_soldier_1_m16_idle_down_right);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_running_down_right", p2_anim_soldier_1_m16_running_down_right);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_spawning_side", p2_anim_soldier_1_m16_spawning_side);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_dying_side", p2_anim_soldier_1_m16_dying_side);
-
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_idle_side", p2_anim_soldier_1_m16_brewster_idle_side);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_running_side", p2_anim_soldier_1_m16_brewster_running_side);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_idle_back", p2_anim_soldier_1_m16_brewster_idle_back);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_running_back", p2_anim_soldier_1_m16_brewster_running_back);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_idle_front", p2_anim_soldier_1_m16_brewster_idle_front);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_running_front", p2_anim_soldier_1_m16_brewster_running_front);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_spawning_side", p2_anim_soldier_1_m16_brewster_spawning_side);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_dying_side", p2_anim_soldier_1_m16_brewster_dying_side);
-
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_idle_side", p2_anim_soldier_1_m44_idle_side);
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_running_side", p2_anim_soldier_1_m44_running_side);
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_idle_back", p2_anim_soldier_1_m44_idle_back);
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_running_back", p2_anim_soldier_1_m44_running_back);
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_idle_front", p2_anim_soldier_1_m44_idle_front);
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_running_front", p2_anim_soldier_1_m44_running_front);
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_spawning_side", p2_anim_soldier_1_m44_spawning_side);
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_dying_side", p2_anim_soldier_1_m44_dying_side);
-
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_brewster_idle_side", p2_anim_soldier_1_m44_brewster_idle_side);
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_brewster_running_side", p2_anim_soldier_1_m44_brewster_running_side);
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_brewster_idle_back", p2_anim_soldier_1_m44_brewster_idle_back);
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_brewster_running_back", p2_anim_soldier_1_m44_brewster_running_back);
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_brewster_idle_front", p2_anim_soldier_1_m44_brewster_idle_front);
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_brewster_running_front", p2_anim_soldier_1_m44_brewster_running_front);
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_brewster_spawning_side", p2_anim_soldier_1_m44_brewster_spawning_side);
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_brewster_dying_side", p2_anim_soldier_1_m44_brewster_dying_side);
-
     // new player stuff 11/12
     insert(player_anim_map, "p1_anim_soldier_purple_base_idle_right", p1_anim_soldier_purple_base_idle_right);
     insert(player_anim_map, "p1_anim_soldier_purple_base_idle_left", p1_anim_soldier_purple_base_idle_left);
@@ -472,6 +391,7 @@ void spawn_player(Player *player, Weapon_Type *starting_weapon)
 
     // reset render scale factor
     player->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
+    player->target_render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
 
     // reset health and armor
     player->armor->name = "";
@@ -525,7 +445,6 @@ void update_player_status(Player *player)
     else if (player->health <= 0 && player->status == PLAYER_ACTIVE)
     {
         player->status = PLAYER_DESPAWNING;
-        player->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
         player->frames_on_status = 0;
 
         // shouldn't be moving on death anim
@@ -844,6 +763,23 @@ void handle_player_shooting(Player *player, Key_State shoot)
     }
 }
 
+/// @brief upates the player's camera's target_position and target_position_step fields based on the current render scale factor and the desired render scale factor
+/// @param player reference to the active player
+void set_smooth_zoom_transition(Player * player){
+    // the existence of this pointer acts as a flag in the camera engine logic to perform a smooth transition
+    if(!player->camera->target_position)
+        player->camera->target_position = malloc(sizeof(vec2));
+
+    // set the camera target position to the center of the player's viewport
+    player->camera->target_position[0][0] = player->relative_position[0] - ((SPLIT_SCREEN ? 0.25 : 0.5) * window_width * player->target_render_scale_factor);
+    player->camera->target_position[0][1] = player->relative_position[1] - (0.5 * window_height * player->target_render_scale_factor);
+
+    // calculate the total number of "steps" that will be needed
+    u32 num_steps = ceil(fabsf(player->target_render_scale_factor - player->render_scale_factor) / ZOOM_DELTA);
+    f32 total_distance = vec2_get_distance(player->camera->target_position[0], player->camera->position);
+    player->camera->target_position_step = total_distance / num_steps;
+}
+
 /*
  *   handles key inputs of players, typically updates player status, other attributes
  *
@@ -880,16 +816,11 @@ void handle_player_input(Player *player)
     {
         if (player->status != PLAYER_CROUCHED)
         {
-            player->render_scale_factor = player->weapon->aiming_scale_factor;
-
-            // update rendering dimensions and projection matrix
-            set_render_dimensions(player->render_scale_factor, false, true);
+            player->target_render_scale_factor = player->weapon->aiming_scale_factor;
 
             // set camera location to center the player
-            if(!player->camera->target_position)
-                player->camera->target_position = malloc(sizeof(vec2));
-            player->camera->target_position[0][0] = player->relative_position[0] - (0.5 * render_width);
-            player->camera->target_position[0][1] = player->relative_position[1] - (0.5 * render_height);
+            set_smooth_zoom_transition(player);
+            printf("crouching, player target position: %f, %f\n", player->camera->target_position[0][0], player->camera->target_position[0][1]);
             // update status
             player->status = PLAYER_CROUCHED;
         }
@@ -1004,16 +935,11 @@ void handle_player_input(Player *player)
         player->crosshair->entity->is_active = false;
 
         // reset render dimensions and projection matrix
-        player->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
-        set_render_dimensions(player->render_scale_factor, false, true);
-
+        player->target_render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
+    
         // center camera on player
-        player->camera->position[0] = player->relative_position[0] - (0.5 * render_width);
-        player->camera->position[1] = player->relative_position[1] - (0.5 * render_height);
-
-        // center player aabb
-        player->entity->body->aabb.position[0] = (render_width * 0.5);
-        player->entity->body->aabb.position[1] = (render_height * 0.5);
+        set_smooth_zoom_transition(player);
+        printf("UNcrouching, player target position: %f, %f\n", player->camera->target_position[0][0], player->camera->target_position[0][1]);
     }
 
     // 8 directional movement
@@ -1089,10 +1015,34 @@ void update_crosshair_position_percentage(Player *player)
     player->crosshair->percentage_of_screen[1] = player->crosshair->entity->body->aabb.position[1] / render_height;
 }
 
-// parent function for all the necessary player updates made each frame
+/// @brief Logic to smoothly transition between two render scale factors for the player, called each frame
+/// @param player Pointer to an active player
+void update_player_render_scale_factor(Player * player){
+    if(player->render_scale_factor < player->target_render_scale_factor){ // Zooming out
+        if(player->render_scale_factor + ZOOM_DELTA > player->target_render_scale_factor){
+            player->render_scale_factor = player->target_render_scale_factor;
+        }
+        else{
+            player->render_scale_factor += ZOOM_DELTA;
+        }
+    }
+    else if(player->render_scale_factor > player->target_render_scale_factor){ // Zooming in
+        if(player->render_scale_factor - ZOOM_DELTA < player->target_render_scale_factor){
+            player->render_scale_factor = player->target_render_scale_factor;
+        }
+        else{
+            player->render_scale_factor -= ZOOM_DELTA;
+        }
+    }
+    // Do nothing if we are already at the desired render scale factor
+}
+
+/// @brief Wrapper method for all the per-frame updates being made to a player
+/// @param player Pointer to an active player
 void player_per_frame_updates(Player *player)
 {
     handle_player_input(player);
+    update_player_render_scale_factor(player);
     update_player_status(player);
     update_player_animations(player);
     update_crosshair_position_percentage(player);
