@@ -816,11 +816,15 @@ void handle_player_input(Player *player)
     {
         if (player->status != PLAYER_CROUCHED)
         {
+            // don't update zoom until current transitions are complete
+            if(player->render_scale_factor != player->target_render_scale_factor){
+                return;
+            }
             player->target_render_scale_factor = player->weapon->aiming_scale_factor;
 
             // set camera location to center the player
             set_smooth_zoom_transition(player);
-            printf("crouching, player target position: %f, %f\n", player->camera->target_position[0][0], player->camera->target_position[0][1]);
+
             // update status
             player->status = PLAYER_CROUCHED;
         }
@@ -930,6 +934,10 @@ void handle_player_input(Player *player)
     // if player isn't crouched updated status, make sure the crosshair isn't activated, and reset view to normal
     if (player->status == PLAYER_CROUCHED)
     {
+        // don't update zoom until current transitions are complete
+        if(player->render_scale_factor != player->target_render_scale_factor){
+            return;
+        }
         // update player and crosshair status
         player->status = PLAYER_ACTIVE;
         player->crosshair->entity->is_active = false;
@@ -939,7 +947,6 @@ void handle_player_input(Player *player)
     
         // center camera on player
         set_smooth_zoom_transition(player);
-        printf("UNcrouching, player target position: %f, %f\n", player->camera->target_position[0][0], player->camera->target_position[0][1]);
     }
 
     // 8 directional movement
