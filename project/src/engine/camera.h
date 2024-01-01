@@ -2,8 +2,8 @@
 #define CAMERA_H
 
 #define WINDOW_BUFFER 200 // how close the player can get to the window edge
-#define CENTER_PLAYER_CAMERA_DELTA  10 // how many pixels the camera will move per frame (used when centering player)
-#define ZOOM_DELTA 0.05
+#define ZOOM_DELTA 0.05 // how much render_scale_factor will change per frame when zooming in/out
+#define CENTER_PLAYER_DELTA 15 // how many pixels the camera will shift per frame when centering the player (this is only used when the step is not computed elsewhere, i.e. no zoom change)
 
 #include <linmath.h>
 #include "../structs.h"

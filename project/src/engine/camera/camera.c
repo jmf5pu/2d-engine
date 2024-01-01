@@ -67,6 +67,12 @@ void shift_camera(Player * player, vec2 shift)
 /// @param player pointer to the active player
 /// @param delta unsigned int representing the magnitude of the camera movement per frame
 void shift_camera_smooth(Player * player){
+    // cleanup if we have reached the target position
+    if(vec2_is_equal(player->camera->position, player->camera->target_position[0], true)){
+        free(player->camera->target_position);
+        player->camera->target_position = NULL;
+        return;
+    }
     f32 step = player->camera->target_position_step;
     f32 dx = player->camera->position[0] - player->camera->target_position[0][0];
     f32 dy = player->camera->position[1] - player->camera->target_position[0][1];
@@ -82,10 +88,6 @@ void shift_camera_smooth(Player * player){
     vec2_add(player->camera->position, player->camera->position, xy_magnitudes);
     vec2_sub(player->entity->body->aabb.position, player->entity->body->aabb.position, xy_magnitudes);
     vec2_sub(player->crosshair->entity->body->aabb.position, player->crosshair->entity->body->aabb.position, xy_magnitudes);
-    if(vec2_is_equal(player->camera->position, player->camera->target_position[0], true)){
-        free(player->camera->target_position);
-        player->camera->target_position = NULL;
-    }
 }
 
 void camera_update(Player *player, Map *map)

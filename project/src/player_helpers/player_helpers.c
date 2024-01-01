@@ -775,9 +775,14 @@ void set_smooth_zoom_transition(Player * player){
     player->camera->target_position[0][1] = player->relative_position[1] - (0.5 * window_height * player->target_render_scale_factor);
 
     // calculate the total number of "steps" that will be needed
-    u32 num_steps = ceil(fabsf(player->target_render_scale_factor - player->render_scale_factor) / ZOOM_DELTA);
-    f32 total_distance = vec2_get_distance(player->camera->target_position[0], player->camera->position);
-    player->camera->target_position_step = total_distance / num_steps;
+    if(player->render_scale_factor != player->target_render_scale_factor){
+        u32 num_steps = ceil(fabsf(player->target_render_scale_factor - player->render_scale_factor) / ZOOM_DELTA);
+        f32 total_distance = vec2_get_distance(player->camera->target_position[0], player->camera->position);
+        player->camera->target_position_step = total_distance / num_steps;
+    }
+    else{
+        player->camera->target_position_step = CENTER_PLAYER_DELTA;
+    }
 }
 
 /*
