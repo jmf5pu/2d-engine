@@ -1,0 +1,32 @@
+S. Haven
+    * hub of survivors in the center of the city
+    * indoor armory, medical bay, shooting range, and communications room
+    * armory contains the weapons found in levels that players can now start with
+    * medical bay contains medical items found in levels already that players can stock up on before leaving
+    * shooting range allows players to practice with infinite ammo and dummy enemy robots that can be spawned with a switch
+    * exiting will start players at the beginning of the first "real" level
+1. Ruined City
+    * dark alleyways and crumbling skyscrapers make up the backdrop
+    * enemies are former inhabitants, zombie-like and aggressive
+    * weapons found here would be police related, smg, shotgun, pistols
+    * boss is an armored riot cop that is fast but weak from behind, this boss guards the gates of the city
+2. Toxic Wasteland
+    * swamp like area with hazardous poison puddles
+    * enemies are corrupted plants and fauna
+    * weapons found here would be flamethrower, machete, some kind of gas or poison grenades
+    * boss would be a giant plant that has regenerating limbs
+3. Underground Bunker
+    * network of underground tunnels 
+    * enemies are evil soldiers with guns and automated machine gun turrets
+    * weapons found here would be lmgs, assault rifles, grenade launchers, rocket launchers
+    * boss is a large mech suit that has weak points that need to be destroyed to be defeated
+4. Haunted Forest
+    * trails through a dark forest that are inhabited by possessed cultists worshipping the entity. Clearings include bonfires and campsites for the cultists
+    * hazards include various traps (beartraps, punji pits, tripwire grenades)
+    * enemies are cultists with both long range and short range primitive weapons such as spears, knives, bows, and blowguns
+    * weapons found would be the blowgun and beartrap mines
+    * boss is a possessed bear that is being controlled by a hidden cultist, the bear regenerates health until the cultist is destroyed
+5. Rocket Facility
+    * a lablike facility with white or glass walls and square rooms that contain advanced technology ending in a rocket launch site
+    * enemies include AI controlled robots that shoot at the players with lasers and the occasional possessed scientist 
+    * boss is an AI that controls the facility and is trying to defend it from intruders. 
