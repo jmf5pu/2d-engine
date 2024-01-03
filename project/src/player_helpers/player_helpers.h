@@ -4,6 +4,7 @@
 #include "../engine/hash_map.h"
 #include "../engine/animation.h"
 #include "../engine/global.h"
+#include "../engine/camera.h"
 #include "../structs.h"
 
 // number of animations to be stored in player_anim_map

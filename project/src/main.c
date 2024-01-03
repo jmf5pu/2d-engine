@@ -113,18 +113,20 @@ int main(int argc, char *argv[])
 
             // init players and camera and spawn players if game is just starting up
             if(!player_one){
+                Weapon_Type * player_starting_weapon = m16;
+
                 if(SPLIT_SCREEN)
                     set_render_dimensions(DEFAULT_RENDER_SCALE_FACTOR, false, false); // update the render width if split screen so that players will be centered correctly
                 camera_init();
 
                 player_one = malloc(sizeof(Player));
-                init_player(player_one, &map, base, 2.9, 5, 2, true);
-                spawn_player(player_one, base);
+                init_player(player_one, &map, player_starting_weapon, 2.9, 5, 2, true);
+                spawn_player(player_one, player_starting_weapon);
                 if (SPLIT_SCREEN && !player_two)
                 {
                     player_two = malloc(sizeof(Player));
-                    init_player(player_two, &map, base, 2.9, 5, 2, false);
-                    spawn_player(player_two, base);
+                    init_player(player_two, &map, player_starting_weapon, 2.9, 5, 2, false);
+                    spawn_player(player_two, player_starting_weapon);
                 }
             }
 
