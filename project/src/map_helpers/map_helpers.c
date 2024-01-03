@@ -22,7 +22,7 @@ void init_map(Map *map)
     map->frames_since_last_spawn = 0;
 
     Sprite_Sheet *sprite_sheet_map_1_main_bg = malloc(sizeof(Sprite_Sheet));
-    render_sprite_sheet_init(sprite_sheet_map_1_main_bg, "assets/shooting_range_map.png", 1215, 560);
+    render_sprite_sheet_init(sprite_sheet_map_1_main_bg, "assets/wip/shooting_range_map.png", 1199, 560);
     Sprite *map_1_main_bg = malloc(sizeof(Sprite));
     map_1_main_bg->sprite_sheet = sprite_sheet_map_1_main_bg;
     map_1_main_bg->row = 0;
@@ -159,7 +159,7 @@ void update_map(Map *map)
     // update the enemies (generate if needed)
     if (map->num_enemy_spawns > 0)
     {
-        // update_enemy_spawns(map);
+        update_enemy_spawns(map);
     }
     update_current_enemies();
 }
