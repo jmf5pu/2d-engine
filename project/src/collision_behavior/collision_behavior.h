@@ -3,14 +3,13 @@
 
 #include "../engine/physics.h"
 
-typedef enum collision_layer
-{
-    COLLISION_LAYER_PLAYER = 1,
-    COLLISION_LAYER_ENEMY = 1 << 1,
-    COLLISION_LAYER_TERRAIN = 1 << 2,
-    COLLISION_LAYER_BULLET = 1 << 3,
-    COLLISION_LAYER_PICKUP = 1 << 4,
-    COLLISION_LAYER_CROSSHAIR = 1 << 5,
+typedef enum collision_layer {
+  COLLISION_LAYER_PLAYER = 1,
+  COLLISION_LAYER_ENEMY = 1 << 1,
+  COLLISION_LAYER_TERRAIN = 1 << 2,
+  COLLISION_LAYER_BULLET = 1 << 3,
+  COLLISION_LAYER_PICKUP = 1 << 4,
+  COLLISION_LAYER_CROSSHAIR = 1 << 5,
 } Collision_Layer;
 
 // collision masks

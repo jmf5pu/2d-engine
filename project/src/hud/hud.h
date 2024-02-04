@@ -1,11 +1,11 @@
 #ifndef HUD_H
 #define HUD_H
 
-#include "../structs.h"
-#include "../player_helpers/player_helpers.h"
+#include "../engine/hash_map.h"
 #include "../engine/render.h"
 #include "../engine/util.h"
-#include "../engine/hash_map.h"
+#include "../player_helpers/player_helpers.h"
+#include "../structs.h"
 
 // ammo display
 #define DIGIT_WIDTH 20
@@ -140,8 +140,10 @@ extern HUD *hud;
 
 void init_hud(SDL_Window *window);
 void render_hud(SDL_Window *window, u32 texture_slots[32], vec4 color);
-void render_health(SDL_Window *window, u32 texture_slots[32], Player *player, vec2 position, vec4 color);
-void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player, vec2 position, vec4 color);
+void render_health(SDL_Window *window, u32 texture_slots[32], Player *player,
+                   vec2 position, vec4 color);
+void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player,
+                 vec2 position, vec4 color);
 void free_hud(void);
 
 #endif

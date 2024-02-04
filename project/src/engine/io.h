@@ -1,13 +1,12 @@
 #pragma once
 
-#include <stdlib.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
-typedef struct file
-{
-    char *data;
-    size_t len;
-    bool is_valid;
+typedef struct file {
+  char *data;
+  size_t len;
+  bool is_valid;
 } File;
 
 File io_file_read(const char *path);
