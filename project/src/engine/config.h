@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "input.h"
+#include "input/input.h"
 #include "types.h"
 
 typedef struct config {

@@ -54,4 +54,7 @@ typedef struct input_state {
 
 void input_update(void);
 
+// controller methods
+void update_joysticks_and_print(void);
+
 #endif

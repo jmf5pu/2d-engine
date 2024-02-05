@@ -2,7 +2,7 @@
 #define GLOBAL_H
 
 #include "config.h"
-#include "input.h"
+#include "input/input.h"
 #include "render.h"
 #include "time.h"
 

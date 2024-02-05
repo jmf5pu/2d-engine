@@ -14,12 +14,12 @@ SDL_Window *render_init_window(u32 width, u32 height)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {
         ERROR_EXIT("Could not init SDL: %s\n", SDL_GetError());
     }
 
     // Hide the cursor
-    SDL_ShowCursor(SDL_DISABLE);
+    SDL_ShowCursor(SDL_ENABLE);
 
     SDL_Window *window = SDL_CreateWindow(
         "MyGame",

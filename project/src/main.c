@@ -14,7 +14,7 @@
 #include "engine/entity.h"
 #include "engine/global.h"
 #include "engine/hash_map.h"
-#include "engine/input.h"
+#include "engine/input/input.h"
 #include "engine/physics.h"
 #include "engine/render.h"
 #include "engine/render/render_internal.h"
@@ -492,6 +492,6 @@ int main(int argc, char *argv[])
     free_weapon_types();
     free_hud();
     free_menus();
-
+    SDL_Quit();
     return 0;
 }

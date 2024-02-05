@@ -2,7 +2,7 @@
 RENDER = src\engine\render\render.c src\engine\render\render_init.c src\engine\render\render_util.c
 IO = src\engine\io\io.c
 CONFIG = src\engine\config\config.c
-INPUT = src\engine\input\input.c
+INPUT = src\engine\input\keyboard_input.c src\engine\input\controller_input.c
 TIME = src\engine\time\time.c
 PHYSICS = src\engine\physics\physics.c
 ENTITY = src\engine\entity\entity.c

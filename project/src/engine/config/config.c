@@ -1,6 +1,6 @@
 #include "../config.h"
 #include "../global.h"
-#include "../input.h"
+#include "../input/input.h"
 #include "../io.h"
 #include "../util.h"
 

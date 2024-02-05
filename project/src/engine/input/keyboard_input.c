@@ -1,6 +1,6 @@
-#include "../input.h"
 #include "../global.h"
 #include "../types.h"
+#include "input.h"
 
 static void update_key_state(u8 current_state, Key_State *key_state)
 {
@@ -19,6 +19,10 @@ static void update_key_state(u8 current_state, Key_State *key_state)
 
 void input_update()
 {
+    // start controller testing logic
+    update_joysticks_and_print();
+    // end controller testing logic
+
     const u8 *keyboard_state = SDL_GetKeyboardState(NULL);
     update_key_state(
         keyboard_state[global.config.keybinds[INPUT_KEY_L_LEFT]],
