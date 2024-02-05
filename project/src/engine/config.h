@@ -5,7 +5,7 @@
 #include "types.h"
 
 typedef struct config {
-  u8 keybinds[20];
+    u8 keybinds[20];
 } Config_State;
 
 void config_init(void);

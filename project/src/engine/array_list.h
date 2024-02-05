@@ -4,10 +4,10 @@
 #include "types.h"
 
 typedef struct array_list {
-  usize len;
-  usize capacity;
-  usize item_size;
-  void *items;
+    usize len;
+    usize capacity;
+    usize item_size;
+    void *items;
 } Array_List;
 
 Array_List *array_list_create(usize item_size, usize initial_capacity);

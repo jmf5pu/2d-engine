@@ -14,78 +14,81 @@
 
 // Adapted from https://stackoverflow.com/a/44894946 (not the chosen answer) by
 // Nominal Animal
-File io_file_read(const char *path) {
-  File file = {.is_valid = false};
+File io_file_read(const char *path)
+{
+    File file = {.is_valid = false};
 
-  FILE *fp = fopen(path, "rb");
-  if (!fp || ferror(fp)) {
-    ERROR_RETURN(file, IO_READ_ERROR_GENERAL, path, errno);
-  }
-
-  char *data = NULL;
-  char *tmp;
-  size_t used = 0;
-  size_t size = 0;
-  size_t n;
-
-  while (true) {
-    if (used + IO_READ_CHUNK_SIZE + 1 > size) {
-      size = used + IO_READ_CHUNK_SIZE + 1;
-
-      if (size <= used) {
-        ERROR_RETURN(file, "Input file too large: %s\n", path);
-      }
-
-      tmp = realloc(data, size);
-      if (!tmp) {
-        free(data);
-        ERROR_RETURN(file, IO_READ_ERROR_MEMORY, path);
-      }
-      data = tmp;
+    FILE *fp = fopen(path, "rb");
+    if (!fp || ferror(fp)) {
+        ERROR_RETURN(file, IO_READ_ERROR_GENERAL, path, errno);
     }
 
-    n = fread(data + used, 1, IO_READ_CHUNK_SIZE, fp);
-    if (n == 0)
-      break;
+    char *data = NULL;
+    char *tmp;
+    size_t used = 0;
+    size_t size = 0;
+    size_t n;
 
-    used += n;
-  }
+    while (true) {
+        if (used + IO_READ_CHUNK_SIZE + 1 > size) {
+            size = used + IO_READ_CHUNK_SIZE + 1;
 
-  if (ferror(fp)) {
-    free(data);
-    ERROR_RETURN(file, IO_READ_ERROR_GENERAL, path, errno);
-  }
+            if (size <= used) {
+                ERROR_RETURN(file, "Input file too large: %s\n", path);
+            }
 
-  tmp = realloc(data, used + 1);
-  if (!tmp) {
-    free(data);
-    ERROR_RETURN(file, IO_READ_ERROR_MEMORY, path);
-  }
-  data = tmp;
-  data[used] = 0;
+            tmp = realloc(data, size);
+            if (!tmp) {
+                free(data);
+                ERROR_RETURN(file, IO_READ_ERROR_MEMORY, path);
+            }
+            data = tmp;
+        }
 
-  file.data = data;
-  file.len = used;
-  file.is_valid = true;
+        n = fread(data + used, 1, IO_READ_CHUNK_SIZE, fp);
+        if (n == 0)
+            break;
 
-  return file;
+        used += n;
+    }
+
+    if (ferror(fp)) {
+        free(data);
+        ERROR_RETURN(file, IO_READ_ERROR_GENERAL, path, errno);
+    }
+
+    tmp = realloc(data, used + 1);
+    if (!tmp) {
+        free(data);
+        ERROR_RETURN(file, IO_READ_ERROR_MEMORY, path);
+    }
+    data = tmp;
+    data[used] = 0;
+
+    file.data = data;
+    file.len = used;
+    file.is_valid = true;
+
+    return file;
 }
 
-int io_file_write(void *buffer, size_t size, const char *path) {
-  FILE *fp = fopen(path, "wb");
-  if (!fp || ferror(fp)) {
-    ERROR_RETURN(1, "Cannot write file: %s.\n", path);
-  }
+int io_file_write(void *buffer, size_t size, const char *path)
+{
+    FILE *fp = fopen(path, "wb");
+    if (!fp || ferror(fp)) {
+        ERROR_RETURN(1, "Cannot write file: %s.\n", path);
+    }
 
-  size_t chunks_written = fwrite(buffer, size, 1, fp);
+    size_t chunks_written = fwrite(buffer, size, 1, fp);
 
-  fclose(fp);
+    fclose(fp);
 
-  if (chunks_written != 1)
-    ERROR_RETURN(1,
-                 "Write error. "
-                 "Expected 1 chunk, got %zu.\n",
-                 chunks_written);
+    if (chunks_written != 1)
+        ERROR_RETURN(
+            1,
+            "Write error. "
+            "Expected 1 chunk, got %zu.\n",
+            chunks_written);
 
-  return 0;
+    return 0;
 }
