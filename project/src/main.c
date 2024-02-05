@@ -47,6 +47,19 @@ bool vec4_color_cmp(vec4 first, vec4 second) {
   return first[0] < second[0] && first[1] < second[1] && first[2] < second[2];
 }
 
+void init_gamecontrollers(void) {
+  if (SDL_Init(SDL_INIT_GAMECONTROLLER) < 0) {
+    return 1;
+  }
+}
+
+void update_joysticks_and_print(void) {
+  SDL_JoystickEventState(SDL_ENABLE);
+  SDL_JoystickUpdate();
+  int num_joysticks = SDL_NumJoysticks();
+  printf("%d\n", num_joysticks);
+}
+
 int main(int argc, char *argv[]) {
   time_init(frame_rate);
   config_init();
@@ -60,6 +73,7 @@ int main(int argc, char *argv[]) {
   init_map(&map);
   init_hud(window);
   init_menus();
+  init_gamecontrollers();
 
   // init game color
   vec4_dup(game_color, WHITE);
@@ -79,6 +93,7 @@ int main(int argc, char *argv[]) {
         break;
       }
     }
+    update_joysticks_and_print();
 
     input_update();
     animation_update(global.time.delta);

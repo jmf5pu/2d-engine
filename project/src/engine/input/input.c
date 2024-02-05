@@ -16,6 +16,10 @@ static void update_key_state(u8 current_state, Key_State *key_state) {
 
 void input_update() {
   const u8 *keyboard_state = SDL_GetKeyboardState(NULL);
+  // for (int i = 0; i < SDL_NUM_SCANCODES; ++i)
+  //   printf("%" PRIu8 " ", keyboard_state[i]);
+
+  // printf("\n");
   update_key_state(keyboard_state[global.config.keybinds[INPUT_KEY_L_LEFT]],
                    &global.input.l_left);
   update_key_state(keyboard_state[global.config.keybinds[INPUT_KEY_L_RIGHT]],
