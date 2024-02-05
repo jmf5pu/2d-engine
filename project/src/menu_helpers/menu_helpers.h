@@ -16,12 +16,12 @@
 
 // used to determine when to render (or not render) whichS menus
 enum Game_State {
-  GS_MAIN_MENU,
-  GS_GAME_MODE_MENU,
-  GS_SURVIVAL_MENU,
-  GS_PAUSE_MENU,
-  GS_RUNNING,
-  GS_EXITING,
+    GS_MAIN_MENU,
+    GS_GAME_MODE_MENU,
+    GS_SURVIVAL_MENU,
+    GS_PAUSE_MENU,
+    GS_RUNNING,
+    GS_EXITING,
 };
 
 // CAPITAL LETTERS

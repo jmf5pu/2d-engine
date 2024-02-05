@@ -1,5 +1,6 @@
 BasedOnStyle: llvm
 IndentWidth: 4
+AccessModifierOffset: 0
 BreakBeforeBraces: Stroustrup
 BinPackArguments: false
 BinPackParameters: false

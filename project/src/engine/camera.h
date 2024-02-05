@@ -3,8 +3,8 @@
 
 #define WINDOW_BUFFER 100 // how close the player can get to the window edge
 #define CENTER_PLAYER_CAMERA_DELTA                                             \
-  25 // how many pixels the camera will move per frame (used when centering
-     // player)
+    25 // how many pixels the camera will move per frame (used when
+       // centering player)
 
 #include "../structs.h"
 #include <linmath.h>
