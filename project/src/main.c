@@ -63,6 +63,7 @@ int main(int argc, char *argv[])
     init_map(&map);
     init_hud(window);
     init_menus();
+    init_game_controllers();
 
     // init game color
     vec4_dup(game_color, WHITE);

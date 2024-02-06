@@ -1,6 +1,9 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#include <SDL2/SDL.h>
+#include <stdbool.h>
+
 typedef enum input_key {
     INPUT_KEY_L_LEFT,
     INPUT_KEY_L_RIGHT,
@@ -55,6 +58,10 @@ typedef struct input_state {
 void input_update(void);
 
 // controller methods
-void update_joysticks_and_print(void);
+void init_game_controllers(void);
+void assign_game_controllers(void);
+bool game_controller_change_detected(void);
+bool joystick_guids_are_identical(
+    SDL_JoystickGUID first_guid, SDL_JoystickGUID second_guid);
 
 #endif
