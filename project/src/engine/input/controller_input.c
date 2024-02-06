@@ -18,8 +18,6 @@ void init_game_controllers(void)
     SDL_GameControllerEventState(SDL_ENABLE);
 }
 
-void assign_game_controllers(void) {}
-
 /// @brief compares current game controllers/joysticks with the ones from the
 /// previous frame
 /// @param
