@@ -59,8 +59,8 @@ void input_update(void);
 
 // controller methods
 void init_game_controllers(void);
-bool game_controller_change_detected(void);
-bool joystick_guids_are_identical(
-    SDL_JoystickGUID first_guid, SDL_JoystickGUID second_guid);
+bool detect_game_controller_changes_and_update_state(void);
+bool joystick_ids_are_identical(
+    SDL_JoystickID first_guid, SDL_JoystickID second_guid);
 
 #endif
