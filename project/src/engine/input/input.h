@@ -4,6 +4,10 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
 
+#define MAX_CONTROLLERS 2
+
+SDL_JoystickID open_controller_ids[MAX_CONTROLLERS];
+
 typedef enum input_key {
     INPUT_KEY_L_LEFT,
     INPUT_KEY_L_RIGHT,

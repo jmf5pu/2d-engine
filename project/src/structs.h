@@ -118,6 +118,9 @@ typedef struct player {
                             // to the window
     enum Direction direction;
     enum Player_Status status;
+    int controller_id; // controller id of the controller associated with this
+                       // player. If no controllers are associated with the
+                       // player, this value defaults to -1
     f32 render_scale_factor; // render scale factor (determines FOV of the
                              // player). Normal is 0.5, render width is 0.5
                              // of window width

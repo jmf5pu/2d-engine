@@ -472,6 +472,9 @@ void init_player(
     else {
         player->camera = &right_cam;
     }
+
+    // set controller_id default value:
+    player->controller_id = -1;
 }
 
 // Spawns the player and resets their attributes to default values
