@@ -20,9 +20,7 @@ static void update_key_state(u8 current_state, Key_State *key_state)
 void input_update()
 {
     // start controller testing logic
-    if (detect_game_controller_changes_and_update_state()) {
-        printf("game controller state change detected!\n");
-    }
+    detect_game_controller_changes_and_update_state();
     // end controller testing logic
 
     const u8 *keyboard_state = SDL_GetKeyboardState(NULL);
