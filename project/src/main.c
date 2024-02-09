@@ -24,6 +24,7 @@
 // game specific headers
 #include "collision_behavior/collision_behavior.h"
 #include "hud/hud.h"
+#include "main_helpers/main_helpers.h"
 #include "map_helpers/map_helpers.h"
 #include "menu_helpers/menu_helpers.h"
 #include "player_helpers/player_helpers.h"
@@ -266,20 +267,7 @@ int main(int argc, char *argv[])
                     if (RENDER_PHYSICS_BODIES && entity->is_active)
                         render_aabb((f32 *)&entity->body->aabb, WHITE);
 
-                    // destroy any entities that are
-                    // inactive or have physics bodies that
-                    // are inactive and aren't associated
-                    // with players, crosshairs, or pickups
-                    bool is_crosshair =
-                        SPLIT_SCREEN ? (entity == player_one->crosshair->entity || entity == player_two->crosshair->entity) : (entity == player_one->crosshair->entity);
-                    bool is_player = SPLIT_SCREEN ? (entity == player_one->entity || entity == player_two->entity) : (entity == player_one->entity);
-
-                    bool is_pickup = false;
-                    for (int k = 0; k < map.num_pickups; k++) {
-                        if (entity == map.pickups[k].entity)
-                            is_pickup = true;
-                    }
-                    if ((!entity->is_active || !entity->body->is_active) && !is_player && !is_pickup && !is_crosshair) {
+                    if (should_destroy_entity(entity, &map)) {
                         entity_destroy(entity);
                         continue;
                     }
@@ -287,7 +275,7 @@ int main(int argc, char *argv[])
                     // skip entities with no associated
                     // animations, check if players and
                     // pickups are inactive
-                    if (!entity->animation || !entity->is_active || !entity->body->is_active || is_crosshair) {
+                    if (!entity->animation || !entity->is_active || !entity->body->is_active || entity_is_crosshair(entity)) {
                         continue;
                     }
 
