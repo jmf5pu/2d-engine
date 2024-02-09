@@ -17,14 +17,12 @@ void init_map(Map *map)
     map->num_p1_spawns = 1;
     map->num_p2_spawns = 1;
     map->num_enemy_spawns = 1;
-    map->max_enemies =
-        1; // max number of enemies that can be present at the same time
+    map->max_enemies = 1;         // max number of enemies that can be present at the same time
     map->enemy_spawn_delay = 120; // in frames
     map->frames_since_last_spawn = 0;
 
     Sprite_Sheet *sprite_sheet_map_1_main_bg = malloc(sizeof(Sprite_Sheet));
-    render_sprite_sheet_init(
-        sprite_sheet_map_1_main_bg, "assets/shooting_range_map.png", 1215, 560);
+    render_sprite_sheet_init(sprite_sheet_map_1_main_bg, "assets/shooting_range_map.png", 1215, 560);
     Sprite *map_1_main_bg = malloc(sizeof(Sprite));
     map_1_main_bg->sprite_sheet = sprite_sheet_map_1_main_bg;
     map_1_main_bg->row = 0;
@@ -45,20 +43,13 @@ void init_map(Map *map)
                                       // before (underneath) everything else
         .num_static_bodies = 4,
     };
-    background_prop.static_bodies =
-        malloc(background_prop.num_static_bodies * sizeof(Static_Body *));
-    background_prop.static_bodies[0] = physics_static_body_create(
-        (vec2){607, 45},
-        (vec2){1230, 5},
-        COLLISION_LAYER_TERRAIN); // bottom
-    background_prop.static_bodies[1] = physics_static_body_create(
-        (vec2){607, 525}, (vec2){1230, 5}, COLLISION_LAYER_TERRAIN); // top
-    background_prop.static_bodies[2] = physics_static_body_create(
-        (vec2){40, 280}, (vec2){5, 560}, COLLISION_LAYER_TERRAIN); // left
-    background_prop.static_bodies[3] = physics_static_body_create(
-        (vec2){1180, 280},
-        (vec2){5, 560},
-        COLLISION_LAYER_TERRAIN); // right
+    background_prop.static_bodies = malloc(background_prop.num_static_bodies * sizeof(Static_Body *));
+    background_prop.static_bodies[0] = physics_static_body_create((vec2){607, 45}, (vec2){1230, 5},
+                                                                  COLLISION_LAYER_TERRAIN);                                    // bottom
+    background_prop.static_bodies[1] = physics_static_body_create((vec2){607, 525}, (vec2){1230, 5}, COLLISION_LAYER_TERRAIN); // top
+    background_prop.static_bodies[2] = physics_static_body_create((vec2){40, 280}, (vec2){5, 560}, COLLISION_LAYER_TERRAIN);   // left
+    background_prop.static_bodies[3] = physics_static_body_create((vec2){1180, 280}, (vec2){5, 560},
+                                                                  COLLISION_LAYER_TERRAIN); // right
 
     /*
     Create props
@@ -89,8 +80,7 @@ void init_map(Map *map)
     p2_spawn_point_array[0][0] = p2_spawn_1[0];
     p2_spawn_point_array[0][1] = p2_spawn_1[1];
 
-    vec2 *enemy_spawn_point_array =
-        malloc(sizeof(vec2) * map->num_enemy_spawns);
+    vec2 *enemy_spawn_point_array = malloc(sizeof(vec2) * map->num_enemy_spawns);
     vec2 enemy_spawn_1 = {1100, 280};
     enemy_spawn_point_array[0][0] = enemy_spawn_1[0];
     enemy_spawn_point_array[0][1] = enemy_spawn_1[1];
@@ -115,19 +105,14 @@ void init_map(Map *map)
 void update_pickup_status(Pickup *pickup)
 {
     // inactive to spawning
-    if (pickup->status == PICKUP_INACTIVE &&
-        pickup->frames_on_status >=
-            (pickup->spawn_delay * global.time.frame_rate)) {
+    if (pickup->status == PICKUP_INACTIVE && pickup->frames_on_status >= (pickup->spawn_delay * global.time.frame_rate)) {
 
         pickup->status = PICKUP_SPAWNING;
         pickup->entity->body->is_active = true;
         pickup->frames_on_status = 0;
     }
     // spawning to active
-    else if (
-        pickup->status == PICKUP_SPAWNING &&
-        pickup->frames_on_status >=
-            (pickup->spawn_time * global.time.frame_rate)) {
+    else if (pickup->status == PICKUP_SPAWNING && pickup->frames_on_status >= (pickup->spawn_time * global.time.frame_rate)) {
 
         pickup->status = PICKUP_ACTIVE;
         pickup->frames_on_status = 0;
@@ -154,8 +139,7 @@ void update_pickup_animations(Pickup *pickup)
 // to a struct attribute, will vary from map to map
 void update_enemy_spawns(Map *map)
 {
-    if (get_all_enemies()->len < map->max_enemies &&
-        map->frames_since_last_spawn >= map->enemy_spawn_delay) {
+    if (get_all_enemies()->len < map->max_enemies && map->frames_since_last_spawn >= map->enemy_spawn_delay) {
         create_enemy(map->enemy_spawn_points[0], (vec2){70, 70});
         map->frames_since_last_spawn = 0;
     }
@@ -220,14 +204,9 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
         body = array_list_get(body_list, i);
 
         // shift all bodies EXCEPT the active player and crosshairs
-        bool is_active_player_body =
-            (body == player_one->entity->body && left_player_is_active) ||
-            (SPLIT_SCREEN && body == player_two->entity->body &&
-             !left_player_is_active);
+        bool is_active_player_body = (body == player_one->entity->body && left_player_is_active) || (SPLIT_SCREEN && body == player_two->entity->body && !left_player_is_active);
         bool is_crosshair =
-            SPLIT_SCREEN ? (body == player_one->crosshair->entity->body ||
-                            body == player_two->crosshair->entity->body)
-                         : body == player_one->crosshair->entity->body;
+            SPLIT_SCREEN ? (body == player_one->crosshair->entity->body || body == player_two->crosshair->entity->body) : body == player_one->crosshair->entity->body;
         if (!is_active_player_body && !is_crosshair) {
             body->aabb.position[0] += shift[0];
             body->aabb.position[1] += shift[1];

@@ -191,71 +191,23 @@ void init_player_anim_hashmap()
     // p2_anim_soldier_1_m44_brewster_dying_side);
 
     // new player stuff 11/12
-    insert(
-        player_anim_map,
-        "p1_anim_soldier_purple_base_idle_right",
-        p1_anim_soldier_purple_base_idle_right);
-    insert(
-        player_anim_map,
-        "p1_anim_soldier_purple_base_idle_left",
-        p1_anim_soldier_purple_base_idle_left);
-    insert(
-        player_anim_map,
-        "p1_anim_soldier_purple_base_idle_down",
-        p1_anim_soldier_purple_base_idle_down);
-    insert(
-        player_anim_map,
-        "p1_anim_soldier_purple_base_idle_down_left",
-        p1_anim_soldier_purple_base_idle_down_left);
-    insert(
-        player_anim_map,
-        "p1_anim_soldier_purple_base_idle_down_right",
-        p1_anim_soldier_purple_base_idle_down_right);
-    insert(
-        player_anim_map,
-        "p1_anim_soldier_purple_base_idle_up",
-        p1_anim_soldier_purple_base_idle_up);
-    insert(
-        player_anim_map,
-        "p1_anim_soldier_purple_base_idle_up_left",
-        p1_anim_soldier_purple_base_idle_up_left);
-    insert(
-        player_anim_map,
-        "p1_anim_soldier_purple_base_idle_up_right",
-        p1_anim_soldier_purple_base_idle_up_right);
+    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_right", p1_anim_soldier_purple_base_idle_right);
+    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_left", p1_anim_soldier_purple_base_idle_left);
+    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_down", p1_anim_soldier_purple_base_idle_down);
+    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_down_left", p1_anim_soldier_purple_base_idle_down_left);
+    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_down_right", p1_anim_soldier_purple_base_idle_down_right);
+    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_up", p1_anim_soldier_purple_base_idle_up);
+    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_up_left", p1_anim_soldier_purple_base_idle_up_left);
+    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_up_right", p1_anim_soldier_purple_base_idle_up_right);
 
-    insert(
-        player_anim_map,
-        "p2_anim_soldier_purple_base_idle_right",
-        p2_anim_soldier_purple_base_idle_right);
-    insert(
-        player_anim_map,
-        "p2_anim_soldier_purple_base_idle_left",
-        p2_anim_soldier_purple_base_idle_left);
-    insert(
-        player_anim_map,
-        "p2_anim_soldier_purple_base_idle_down",
-        p2_anim_soldier_purple_base_idle_down);
-    insert(
-        player_anim_map,
-        "p2_anim_soldier_purple_base_idle_down_left",
-        p2_anim_soldier_purple_base_idle_down_left);
-    insert(
-        player_anim_map,
-        "p2_anim_soldier_purple_base_idle_down_right",
-        p2_anim_soldier_purple_base_idle_down_right);
-    insert(
-        player_anim_map,
-        "p2_anim_soldier_purple_base_idle_up",
-        p2_anim_soldier_purple_base_idle_up);
-    insert(
-        player_anim_map,
-        "p2_anim_soldier_purple_base_idle_up_left",
-        p2_anim_soldier_purple_base_idle_up_left);
-    insert(
-        player_anim_map,
-        "p2_anim_soldier_purple_base_idle_up_right",
-        p2_anim_soldier_purple_base_idle_up_right);
+    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_right", p2_anim_soldier_purple_base_idle_right);
+    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_left", p2_anim_soldier_purple_base_idle_left);
+    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_down", p2_anim_soldier_purple_base_idle_down);
+    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_down_left", p2_anim_soldier_purple_base_idle_down_left);
+    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_down_right", p2_anim_soldier_purple_base_idle_down_right);
+    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_up", p2_anim_soldier_purple_base_idle_up);
+    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_up_left", p2_anim_soldier_purple_base_idle_up_left);
+    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_up_right", p2_anim_soldier_purple_base_idle_up_right);
 }
 
 // sets up animations for players and bullets
@@ -263,56 +215,22 @@ void init_all_anims()
 {
     // TODO: separate player and non-player anims to separate methods
     // init placeholder anims
-    render_sprite_sheet_init(
-        &sprite_sheet_player_placeholder, "assets/question_mark.png", 36, 36);
-    adef_player_placeholder = animation_definition_create(
-        &sprite_sheet_player_placeholder, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_player_placeholder, "assets/question_mark.png", 36, 36);
+    adef_player_placeholder = animation_definition_create(&sprite_sheet_player_placeholder, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_player_placeholder = animation_create(adef_player_placeholder, false);
 
     // init crosshair anims
-    render_sprite_sheet_init(
-        &sprite_sheet_player_1_crosshair,
-        "assets/hud/red_crosshair.png",
-        200,
-        200);
+    render_sprite_sheet_init(&sprite_sheet_player_1_crosshair, "assets/hud/red_crosshair.png", 200, 200);
     adef_player_1_crosshair = animation_definition_create(
         &sprite_sheet_player_1_crosshair,
-        (f32[]){
-            0.08,
-            0.08,
-            0.08,
-            0.08,
-            0.08,
-            0.08,
-            0.08,
-            0.08,
-            0.08,
-            0.08,
-            0.08,
-            0.08},
+        (f32[]){0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08},
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
         12);
-    render_sprite_sheet_init(
-        &sprite_sheet_player_2_crosshair,
-        "assets/hud/blue_crosshair.png",
-        200,
-        200);
+    render_sprite_sheet_init(&sprite_sheet_player_2_crosshair, "assets/hud/blue_crosshair.png", 200, 200);
     adef_player_2_crosshair = animation_definition_create(
         &sprite_sheet_player_2_crosshair,
-        (f32[]){
-            0.08,
-            0.08,
-            0.08,
-            0.08,
-            0.08,
-            0.08,
-            0.08,
-            0.08,
-            0.08,
-            0.08,
-            0.08,
-            0.08},
+        (f32[]){0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08},
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
         12);
@@ -320,269 +238,132 @@ void init_all_anims()
     anim_p2_crosshair = animation_create(adef_player_2_crosshair, true);
 
     // init bullet anims
-    render_sprite_sheet_init(
-        &sprite_sheet_bullet_0, "assets/bullet_0.png", 3, 1);
-    adef_bullet_0 = animation_definition_create(
-        &sprite_sheet_bullet_0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_0, "assets/bullet_0.png", 3, 1);
+    adef_bullet_0 = animation_definition_create(&sprite_sheet_bullet_0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_0 = animation_create(adef_bullet_0, false);
-    render_sprite_sheet_init(
-        &sprite_sheet_bullet_1, "assets/bullet_1.png", 3, 2);
-    adef_bullet_1 = animation_definition_create(
-        &sprite_sheet_bullet_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_1, "assets/bullet_1.png", 3, 2);
+    adef_bullet_1 = animation_definition_create(&sprite_sheet_bullet_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_1 = animation_create(adef_bullet_1, false);
-    render_sprite_sheet_init(
-        &sprite_sheet_bullet_2, "assets/bullet_2.png", 3, 3);
-    adef_bullet_2 = animation_definition_create(
-        &sprite_sheet_bullet_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_2, "assets/bullet_2.png", 3, 3);
+    adef_bullet_2 = animation_definition_create(&sprite_sheet_bullet_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_2 = animation_create(adef_bullet_2, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_bullet_3, "assets/bullet_3.png", 2, 3);
-    adef_bullet_3 = animation_definition_create(
-        &sprite_sheet_bullet_3, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_3, "assets/bullet_3.png", 2, 3);
+    adef_bullet_3 = animation_definition_create(&sprite_sheet_bullet_3, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_3 = animation_create(adef_bullet_3, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_bullet_4, "assets/bullet_4.png", 1, 3);
-    adef_bullet_4 = animation_definition_create(
-        &sprite_sheet_bullet_4, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_4, "assets/bullet_4.png", 1, 3);
+    adef_bullet_4 = animation_definition_create(&sprite_sheet_bullet_4, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_4 = animation_create(adef_bullet_4, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_bullet_5, "assets/bullet_5.png", 2, 3);
-    adef_bullet_5 = animation_definition_create(
-        &sprite_sheet_bullet_5, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_5, "assets/bullet_5.png", 2, 3);
+    adef_bullet_5 = animation_definition_create(&sprite_sheet_bullet_5, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_5 = animation_create(adef_bullet_5, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_bullet_6, "assets/bullet_6.png", 3, 3);
-    adef_bullet_6 = animation_definition_create(
-        &sprite_sheet_bullet_6, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_6, "assets/bullet_6.png", 3, 3);
+    adef_bullet_6 = animation_definition_create(&sprite_sheet_bullet_6, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_6 = animation_create(adef_bullet_6, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_bullet_7, "assets/bullet_7.png", 3, 2);
-    adef_bullet_7 = animation_definition_create(
-        &sprite_sheet_bullet_7, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_7, "assets/bullet_7.png", 3, 2);
+    adef_bullet_7 = animation_definition_create(&sprite_sheet_bullet_7, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_7 = animation_create(adef_bullet_7, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_bullet_8, "assets/bullet_8.png", 3, 1);
-    adef_bullet_8 = animation_definition_create(
-        &sprite_sheet_bullet_8, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_8, "assets/bullet_8.png", 3, 1);
+    adef_bullet_8 = animation_definition_create(&sprite_sheet_bullet_8, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_8 = animation_create(adef_bullet_8, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_bullet_9, "assets/bullet_9.png", 3, 2);
-    adef_bullet_9 = animation_definition_create(
-        &sprite_sheet_bullet_9, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_9, "assets/bullet_9.png", 3, 2);
+    adef_bullet_9 = animation_definition_create(&sprite_sheet_bullet_9, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_9 = animation_create(adef_bullet_9, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_bullet_10, "assets/bullet_10.png", 3, 3);
-    adef_bullet_10 = animation_definition_create(
-        &sprite_sheet_bullet_10, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_10, "assets/bullet_10.png", 3, 3);
+    adef_bullet_10 = animation_definition_create(&sprite_sheet_bullet_10, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_10 = animation_create(adef_bullet_10, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_bullet_11, "assets/bullet_11.png", 2, 3);
-    adef_bullet_11 = animation_definition_create(
-        &sprite_sheet_bullet_11, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_11, "assets/bullet_11.png", 2, 3);
+    adef_bullet_11 = animation_definition_create(&sprite_sheet_bullet_11, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_11 = animation_create(adef_bullet_11, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_bullet_12, "assets/bullet_12.png", 1, 3);
-    adef_bullet_12 = animation_definition_create(
-        &sprite_sheet_bullet_12, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_12, "assets/bullet_12.png", 1, 3);
+    adef_bullet_12 = animation_definition_create(&sprite_sheet_bullet_12, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_12 = animation_create(adef_bullet_12, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_bullet_13, "assets/bullet_13.png", 2, 3);
-    adef_bullet_13 = animation_definition_create(
-        &sprite_sheet_bullet_13, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_13, "assets/bullet_13.png", 2, 3);
+    adef_bullet_13 = animation_definition_create(&sprite_sheet_bullet_13, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_13 = animation_create(adef_bullet_13, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_bullet_14, "assets/bullet_14.png", 3, 3);
-    adef_bullet_14 = animation_definition_create(
-        &sprite_sheet_bullet_14, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_14, "assets/bullet_14.png", 3, 3);
+    adef_bullet_14 = animation_definition_create(&sprite_sheet_bullet_14, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_14 = animation_create(adef_bullet_14, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_bullet_15, "assets/bullet_15.png", 3, 2);
-    adef_bullet_15 = animation_definition_create(
-        &sprite_sheet_bullet_15, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_15, "assets/bullet_15.png", 3, 2);
+    adef_bullet_15 = animation_definition_create(&sprite_sheet_bullet_15, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_15 = animation_create(adef_bullet_15, false);
 
     /*
     NEW PLAYER ANIMS 11/12
     */
-    render_sprite_sheet_init(
-        &sprite_sheet_soldier_purple_base_idle_right,
-        "assets/soldier_purple_base_idle_right.png",
-        175,
-        175);
-    adef_soldier_purple_base_idle_right = animation_definition_create(
-        &sprite_sheet_soldier_purple_base_idle_right,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){0},
-        1);
-    p1_anim_soldier_purple_base_idle_right =
-        animation_create(adef_soldier_purple_base_idle_right, false);
-    p2_anim_soldier_purple_base_idle_right =
-        animation_create(adef_soldier_purple_base_idle_right, false);
+    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_right, "assets/soldier_purple_base_idle_right.png", 175, 175);
+    adef_soldier_purple_base_idle_right = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_right, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    p1_anim_soldier_purple_base_idle_right = animation_create(adef_soldier_purple_base_idle_right, false);
+    p2_anim_soldier_purple_base_idle_right = animation_create(adef_soldier_purple_base_idle_right, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_soldier_purple_base_idle_left,
-        "assets/soldier_purple_base_idle_left.png",
-        175,
-        175);
-    adef_soldier_purple_base_idle_left = animation_definition_create(
-        &sprite_sheet_soldier_purple_base_idle_left,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){0},
-        1);
-    p1_anim_soldier_purple_base_idle_left =
-        animation_create(adef_soldier_purple_base_idle_left, false);
-    p2_anim_soldier_purple_base_idle_left =
-        animation_create(adef_soldier_purple_base_idle_left, false);
+    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_left, "assets/soldier_purple_base_idle_left.png", 175, 175);
+    adef_soldier_purple_base_idle_left = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_left, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    p1_anim_soldier_purple_base_idle_left = animation_create(adef_soldier_purple_base_idle_left, false);
+    p2_anim_soldier_purple_base_idle_left = animation_create(adef_soldier_purple_base_idle_left, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_soldier_purple_base_idle_down,
-        "assets/soldier_purple_base_idle_down.png",
-        175,
-        175);
-    adef_soldier_purple_base_idle_down = animation_definition_create(
-        &sprite_sheet_soldier_purple_base_idle_down,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){0},
-        1);
-    p1_anim_soldier_purple_base_idle_down =
-        animation_create(adef_soldier_purple_base_idle_down, false);
-    p2_anim_soldier_purple_base_idle_down =
-        animation_create(adef_soldier_purple_base_idle_down, false);
+    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_down, "assets/soldier_purple_base_idle_down.png", 175, 175);
+    adef_soldier_purple_base_idle_down = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_down, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    p1_anim_soldier_purple_base_idle_down = animation_create(adef_soldier_purple_base_idle_down, false);
+    p2_anim_soldier_purple_base_idle_down = animation_create(adef_soldier_purple_base_idle_down, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_soldier_purple_base_idle_down_right,
-        "assets/soldier_purple_base_idle_down_right.png",
-        175,
-        175);
-    adef_soldier_purple_base_idle_down_right = animation_definition_create(
-        &sprite_sheet_soldier_purple_base_idle_down_right,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){0},
-        1);
-    p1_anim_soldier_purple_base_idle_down_right =
-        animation_create(adef_soldier_purple_base_idle_down_right, false);
-    p2_anim_soldier_purple_base_idle_down_right =
-        animation_create(adef_soldier_purple_base_idle_down_right, false);
+    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_down_right, "assets/soldier_purple_base_idle_down_right.png", 175, 175);
+    adef_soldier_purple_base_idle_down_right = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_down_right, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    p1_anim_soldier_purple_base_idle_down_right = animation_create(adef_soldier_purple_base_idle_down_right, false);
+    p2_anim_soldier_purple_base_idle_down_right = animation_create(adef_soldier_purple_base_idle_down_right, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_soldier_purple_base_idle_down_left,
-        "assets/soldier_purple_base_idle_down_left.png",
-        175,
-        175);
-    adef_soldier_purple_base_idle_down_left = animation_definition_create(
-        &sprite_sheet_soldier_purple_base_idle_down_left,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){0},
-        1);
-    p1_anim_soldier_purple_base_idle_down_left =
-        animation_create(adef_soldier_purple_base_idle_down_left, false);
-    p2_anim_soldier_purple_base_idle_down_left =
-        animation_create(adef_soldier_purple_base_idle_down_left, false);
+    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_down_left, "assets/soldier_purple_base_idle_down_left.png", 175, 175);
+    adef_soldier_purple_base_idle_down_left = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_down_left, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    p1_anim_soldier_purple_base_idle_down_left = animation_create(adef_soldier_purple_base_idle_down_left, false);
+    p2_anim_soldier_purple_base_idle_down_left = animation_create(adef_soldier_purple_base_idle_down_left, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_soldier_purple_base_idle_up,
-        "assets/soldier_purple_base_idle_up.png",
-        175,
-        175);
-    adef_soldier_purple_base_idle_up = animation_definition_create(
-        &sprite_sheet_soldier_purple_base_idle_up,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){0},
-        1);
-    p1_anim_soldier_purple_base_idle_up =
-        animation_create(adef_soldier_purple_base_idle_up, false);
-    p2_anim_soldier_purple_base_idle_up =
-        animation_create(adef_soldier_purple_base_idle_up, false);
+    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_up, "assets/soldier_purple_base_idle_up.png", 175, 175);
+    adef_soldier_purple_base_idle_up = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_up, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    p1_anim_soldier_purple_base_idle_up = animation_create(adef_soldier_purple_base_idle_up, false);
+    p2_anim_soldier_purple_base_idle_up = animation_create(adef_soldier_purple_base_idle_up, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_soldier_purple_base_idle_up_right,
-        "assets/soldier_purple_base_idle_up_right.png",
-        175,
-        175);
-    adef_soldier_purple_base_idle_up_right = animation_definition_create(
-        &sprite_sheet_soldier_purple_base_idle_up_right,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){0},
-        1);
-    p1_anim_soldier_purple_base_idle_up_right =
-        animation_create(adef_soldier_purple_base_idle_up_right, false);
-    p2_anim_soldier_purple_base_idle_up_right =
-        animation_create(adef_soldier_purple_base_idle_up_right, false);
+    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_up_right, "assets/soldier_purple_base_idle_up_right.png", 175, 175);
+    adef_soldier_purple_base_idle_up_right = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_up_right, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    p1_anim_soldier_purple_base_idle_up_right = animation_create(adef_soldier_purple_base_idle_up_right, false);
+    p2_anim_soldier_purple_base_idle_up_right = animation_create(adef_soldier_purple_base_idle_up_right, false);
 
-    render_sprite_sheet_init(
-        &sprite_sheet_soldier_purple_base_idle_up_left,
-        "assets/soldier_purple_base_idle_up_left.png",
-        175,
-        175);
-    adef_soldier_purple_base_idle_up_left = animation_definition_create(
-        &sprite_sheet_soldier_purple_base_idle_up_left,
-        (f32[]){0},
-        (u8[]){0},
-        (u8[]){0},
-        1);
-    p1_anim_soldier_purple_base_idle_up_left =
-        animation_create(adef_soldier_purple_base_idle_up_left, false);
-    p2_anim_soldier_purple_base_idle_up_left =
-        animation_create(adef_soldier_purple_base_idle_up_left, false);
+    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_up_left, "assets/soldier_purple_base_idle_up_left.png", 175, 175);
+    adef_soldier_purple_base_idle_up_left = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_up_left, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    p1_anim_soldier_purple_base_idle_up_left = animation_create(adef_soldier_purple_base_idle_up_left, false);
+    p2_anim_soldier_purple_base_idle_up_left = animation_create(adef_soldier_purple_base_idle_up_left, false);
 
     init_bullet_anim_hashmap();
     init_player_anim_hashmap();
 }
 
 // initializes the player struct
-void init_player(
-    Player *player,
-    Map *map,
-    Weapon_Type *starting_weapon,
-    f32 despawn_time,
-    f32 spawn_delay,
-    f32 spawn_time,
-    bool is_left_player)
+void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 despawn_time, f32 spawn_delay, f32 spawn_time, bool is_left_player)
 {
-    player->entity = entity_create(
-        (vec2){render_width * 0.5, render_height * 0.5},
-        (vec2){40, 75},
-        (vec2){0, 0},
-        COLLISION_LAYER_PLAYER,
-        player_mask,
-        player_on_hit,
-        player_on_hit_static);
+    player->entity =
+        entity_create((vec2){render_width * 0.5, render_height * 0.5}, (vec2){40, 75}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
     player->entity->body->parent = player;
     player->crosshair = malloc(sizeof(Crosshair));
     player->crosshair->entity = entity_create(
-        (vec2){
-            player->entity->body->aabb.position[0],
-            player->entity->body->aabb.position[1]},
+        (vec2){player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]},
         (vec2){CROSSHAIR_SIZE, CROSSHAIR_SIZE},
         (vec2){0, 0},
         COLLISION_LAYER_CROSSHAIR,
         crosshair_mask,
         crosshair_on_hit,
         crosshair_on_hit_static);
-    player->crosshair->relative_position[0] =
-        player->entity->body->aabb.position[0];
-    player->crosshair->relative_position[1] =
-        player->entity->body->aabb.position[1];
+    player->crosshair->relative_position[0] = player->entity->body->aabb.position[0];
+    player->crosshair->relative_position[1] = player->entity->body->aabb.position[1];
     player->crosshair->entity->is_active = false;
     player->direction = RIGHT;
 
@@ -609,12 +390,8 @@ void init_player(
     player->armor->name = "";
     player->armor->integrity = 0;
 
-    player->spawn_point[0] = is_left_player
-                                 ? map->player_one_spawn_points[0][0]
-                                 : map->player_two_spawn_points[0][0];
-    player->spawn_point[1] = is_left_player
-                                 ? map->player_one_spawn_points[0][1]
-                                 : map->player_two_spawn_points[0][1];
+    player->spawn_point[0] = is_left_player ? map->player_one_spawn_points[0][0] : map->player_two_spawn_points[0][0];
+    player->spawn_point[1] = is_left_player ? map->player_one_spawn_points[0][1] : map->player_two_spawn_points[0][1];
     player->despawn_time = despawn_time;
     player->spawn_delay = spawn_delay;
     player->spawn_time = spawn_time;
@@ -644,8 +421,7 @@ void spawn_player(Player *player, Weapon_Type *starting_weapon)
 
     // set camera to center the spawn point
     player->camera->position[0] = player->spawn_point[0] - (0.5 * render_width);
-    player->camera->position[1] =
-        player->spawn_point[1] - (0.5 * render_height);
+    player->camera->position[1] = player->spawn_point[1] - (0.5 * render_height);
 
     // reset render scale factor
     player->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
@@ -685,17 +461,12 @@ void update_player_status(Player *player)
 {
     // SPAWN LOGIC
     // check if spawn delay is up
-    if (player->status == PLAYER_INACTIVE &&
-        player->frames_on_status >=
-            (player->spawn_delay * global.time.frame_rate)) {
+    if (player->status == PLAYER_INACTIVE && player->frames_on_status >= (player->spawn_delay * global.time.frame_rate)) {
         spawn_player(player, m16);
     }
 
     // check if spawn time is up
-    else if (
-        player->status == PLAYER_SPAWNING &&
-        player->frames_on_status >=
-            (player->spawn_time * global.time.frame_rate)) {
+    else if (player->status == PLAYER_SPAWNING && player->frames_on_status >= (player->spawn_time * global.time.frame_rate)) {
         player->status = PLAYER_ACTIVE;
         player->frames_on_status = 0;
     }
@@ -712,10 +483,7 @@ void update_player_status(Player *player)
         player->entity->body->velocity[1] = 0;
     }
     // check if death animation is complete
-    else if (
-        player->status == PLAYER_DESPAWNING &&
-        player->frames_on_status >=
-            (player->despawn_time * global.time.frame_rate)) {
+    else if (player->status == PLAYER_DESPAWNING && player->frames_on_status >= (player->despawn_time * global.time.frame_rate)) {
         player->status = PLAYER_INACTIVE;
         player->frames_on_status = 0;
 
@@ -729,9 +497,7 @@ void update_player_status(Player *player)
     if (player->status == PLAYER_RELOADING) {
         // reload either the missing bullets in the magazine or whatever
         // the player has left in reserve
-        u16 reload_amount =
-            MIN(player->weapon->reserve,
-                (player->weapon->max_capacity - player->weapon->capacity));
+        u16 reload_amount = MIN(player->weapon->reserve, (player->weapon->max_capacity - player->weapon->capacity));
         player->weapon->capacity += reload_amount;
         player->weapon->reserve -= reload_amount;
         // TODO: add animation / reload wait time logic
@@ -740,11 +506,8 @@ void update_player_status(Player *player)
 
     // update weapon status (check if weapon is ready to fire again)
     if (player->status != PLAYER_RELOADING && !player->weapon->ready_to_fire &&
-        player->weapon->frames_since_last_shot >=
-            ((1.0 / (player->weapon->max_fire_rate / 60.0)) *
-             global.time.frame_rate)) {
-        if (player->weapon->fire_mode == AUTO ||
-            player->weapon->fire_mode == SEMI) {
+        player->weapon->frames_since_last_shot >= ((1.0 / (player->weapon->max_fire_rate / 60.0)) * global.time.frame_rate)) {
+        if (player->weapon->fire_mode == AUTO || player->weapon->fire_mode == SEMI) {
             player->weapon->ready_to_fire = true;
         }
 
@@ -752,15 +515,9 @@ void update_player_status(Player *player)
         // if burst shots are left OR if burst delay is complete
         else if (
             player->weapon->fire_mode == BURST &&
-            (player->weapon->burst_shots_remaining > 0 ||
-             (player->weapon->frames_since_last_shot *
-              (1.0 / global.time.frame_rate)) >= player->weapon->burst_delay)) {
-            if (player->weapon->burst_shots_remaining == 0 &&
-                (player->weapon->frames_since_last_shot *
-                     (1.0 / global.time.frame_rate) >=
-                 player->weapon->burst_delay)) {
-                player->weapon->burst_shots_remaining =
-                    player->weapon->burst_count; // reset burst
+            (player->weapon->burst_shots_remaining > 0 || (player->weapon->frames_since_last_shot * (1.0 / global.time.frame_rate)) >= player->weapon->burst_delay)) {
+            if (player->weapon->burst_shots_remaining == 0 && (player->weapon->frames_since_last_shot * (1.0 / global.time.frame_rate) >= player->weapon->burst_delay)) {
+                player->weapon->burst_shots_remaining = player->weapon->burst_count; // reset burst
             }
             player->weapon->ready_to_fire = true;
         }
@@ -796,8 +553,7 @@ void update_player_animations(Player *player)
         status = "spawning";
     else if (player->status == PLAYER_DESPAWNING)
         status = "dying";
-    else if (
-        player->entity->body->velocity[0] || player->entity->body->velocity[1])
+    else if (player->entity->body->velocity[0] || player->entity->body->velocity[1])
         status = "running";
     else // player NOT moving
         status = "idle";
@@ -849,29 +605,22 @@ void handle_player_shooting(Player *player, Key_State shoot)
 {
     // check if key presses are correct based on fire mode
     bool key_state_ready = false;
-    if ((player->weapon->fire_mode == AUTO && shoot == KS_HELD) ||
-        (player->weapon->fire_mode == SEMI && shoot == KS_PRESSED)) {
+    if ((player->weapon->fire_mode == AUTO && shoot == KS_HELD) || (player->weapon->fire_mode == SEMI && shoot == KS_PRESSED)) {
         key_state_ready = true;
     }
     else if (
-        player->weapon->fire_mode == BURST &&
-        ((player->weapon->burst_shots_remaining ==
-              player->weapon->burst_count &&
-          shoot == KS_PRESSED) ||
-         (player->weapon->burst_shots_remaining < player->weapon->burst_count &&
-          shoot == KS_HELD))) {
+        player->weapon->fire_mode == BURST && ((player->weapon->burst_shots_remaining == player->weapon->burst_count && shoot == KS_PRESSED) ||
+                                               (player->weapon->burst_shots_remaining < player->weapon->burst_count && shoot == KS_HELD))) {
         key_state_ready = true;
     }
 
     // generate bullet if weapon is loaded and key state is correct
-    if (player->weapon->capacity > 0 && player->weapon->ready_to_fire &&
-        key_state_ready) {
+    if (player->weapon->capacity > 0 && player->weapon->ready_to_fire && key_state_ready) {
         f32 cx = 0;
         f32 cy = 0;
         f32 px = player->relative_position[0];
         f32 py = player->relative_position[1];
-        vec2 bullet_position = {
-            player->relative_position[0], player->relative_position[1]};
+        vec2 bullet_position = {player->relative_position[0], player->relative_position[1]};
         vec2 bullet_velocity = {0, 0};
 
         // shoot at crosshair if present
@@ -918,25 +667,19 @@ void handle_player_shooting(Player *player, Key_State shoot)
         // calculate angle
         f32 dx = px - cx;
         f32 dy = py - cy;
-        f32 angle = fabs(
-            (cx > px && cy > py) || (cx < px && cy < py) ? atan(dy / dx)
-                                                         : -1 * atan(dy / dx));
+        f32 angle = fabs((cx > px && cy > py) || (cx < px && cy < py) ? atan(dy / dx) : -1 * atan(dy / dx));
 
         // calculate bullet starting position using angle
-        f32 bullet_x = cx >= px ? BULLET_DISTANCE_FROM_PLAYER * cos(angle)
-                                : BULLET_DISTANCE_FROM_PLAYER * cos(angle) * -1;
-        f32 bullet_y = cy >= py ? BULLET_DISTANCE_FROM_PLAYER * sin(angle)
-                                : BULLET_DISTANCE_FROM_PLAYER * sin(angle) * -1;
+        f32 bullet_x = cx >= px ? BULLET_DISTANCE_FROM_PLAYER * cos(angle) : BULLET_DISTANCE_FROM_PLAYER * cos(angle) * -1;
+        f32 bullet_y = cy >= py ? BULLET_DISTANCE_FROM_PLAYER * sin(angle) : BULLET_DISTANCE_FROM_PLAYER * sin(angle) * -1;
 
         // calculate starting position using angle
         bullet_position[0] = player->relative_position[0] + bullet_x;
         bullet_position[1] = player->relative_position[1] + bullet_y;
 
         // calculate velocity using angle
-        f32 vx = cx >= px ? player->weapon->bullet_velocity * cos(angle)
-                          : player->weapon->bullet_velocity * cos(angle) * -1;
-        f32 vy = cy >= py ? player->weapon->bullet_velocity * sin(angle)
-                          : player->weapon->bullet_velocity * sin(angle) * -1;
+        f32 vx = cx >= px ? player->weapon->bullet_velocity * cos(angle) : player->weapon->bullet_velocity * cos(angle) * -1;
+        f32 vy = cy >= py ? player->weapon->bullet_velocity * sin(angle) : player->weapon->bullet_velocity * sin(angle) * -1;
         bullet_velocity[0] = vx;
         bullet_velocity[1] = vy;
 
@@ -1001,14 +744,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
 
         // create bullet struct and calculated anim and velocity
         Bullet *bullet = malloc(sizeof(Bullet));
-        bullet->entity = entity_create(
-            bullet_position,
-            (vec2){5, 5},
-            (vec2){0, 0},
-            COLLISION_LAYER_BULLET,
-            bullet_mask,
-            bullet_on_hit,
-            bullet_on_hit_static);
+        bullet->entity = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
         bullet->damage = player->weapon->damage;
         bullet->entity->animation = get(bullet_anim_map, bullet_anim_name);
         bullet->entity->body->velocity[0] = bullet_velocity[0];
@@ -1039,28 +775,18 @@ void handle_player_shooting(Player *player, Key_State shoot)
  */
 void handle_player_input(Player *player)
 {
-    if (player->status == PLAYER_SPAWNING ||
-        player->status == PLAYER_DESPAWNING ||
-        player->status ==
-            PLAYER_INACTIVE) // don't allow inputs on inactive players
+    if (player->status == PLAYER_SPAWNING || player->status == PLAYER_DESPAWNING || player->status == PLAYER_INACTIVE) // don't allow inputs on inactive players
     {
         return;
     }
 
-    Key_State left =
-        player->is_left_player ? global.input.l_left : global.input.r_left;
-    Key_State right =
-        player->is_left_player ? global.input.l_right : global.input.r_right;
-    Key_State up =
-        player->is_left_player ? global.input.l_up : global.input.r_up;
-    Key_State down =
-        player->is_left_player ? global.input.l_down : global.input.r_down;
-    Key_State shoot =
-        player->is_left_player ? global.input.l_shoot : global.input.r_shoot;
-    Key_State crouch =
-        player->is_left_player ? global.input.l_crouch : global.input.r_crouch;
-    Key_State reload =
-        player->is_left_player ? global.input.l_reload : global.input.r_reload;
+    Key_State left = player->is_left_player ? global.input.l_left : global.input.r_left;
+    Key_State right = player->is_left_player ? global.input.l_right : global.input.r_right;
+    Key_State up = player->is_left_player ? global.input.l_up : global.input.r_up;
+    Key_State down = player->is_left_player ? global.input.l_down : global.input.r_down;
+    Key_State shoot = player->is_left_player ? global.input.l_shoot : global.input.r_shoot;
+    Key_State crouch = player->is_left_player ? global.input.l_crouch : global.input.r_crouch;
+    Key_State reload = player->is_left_player ? global.input.l_reload : global.input.r_reload;
 
     f32 velx = 0;
     f32 vely = 0;
@@ -1082,10 +808,8 @@ void handle_player_input(Player *player)
             // set camera location to center the player
             if (!player->camera->target_position)
                 player->camera->target_position = malloc(sizeof(vec2));
-            player->camera->target_position[0][0] =
-                player->relative_position[0] - (0.5 * render_width);
-            player->camera->target_position[0][1] =
-                player->relative_position[1] - (0.5 * render_height);
+            player->camera->target_position[0][0] = player->relative_position[0] - (0.5 * render_width);
+            player->camera->target_position[0][1] = player->relative_position[1] - (0.5 * render_height);
             // update status
             player->status = PLAYER_CROUCHED;
         }
@@ -1100,73 +824,50 @@ void handle_player_input(Player *player)
             // calculate where the crosshair will start using the
             // player's direction
             const f32 crosshair_starting_distance_from_player = 50;
-            f32 crosshair_xy_distance_at_45_deg =
-                0.707106781 *
-                crosshair_starting_distance_from_player; // sin/cos(45)
-                                                         // * hypotenuse
+            f32 crosshair_xy_distance_at_45_deg = 0.707106781 * crosshair_starting_distance_from_player; // sin/cos(45)
+                                                                                                         // * hypotenuse
             vec2 crosshair_starting_distance_vector = {0, 0};
 
             if (player->direction == UP)
-                crosshair_starting_distance_vector[1] =
-                    crosshair_starting_distance_from_player;
+                crosshair_starting_distance_vector[1] = crosshair_starting_distance_from_player;
             if (player->direction == RIGHT)
-                crosshair_starting_distance_vector[0] =
-                    crosshair_starting_distance_from_player;
+                crosshair_starting_distance_vector[0] = crosshair_starting_distance_from_player;
             if (player->direction == DOWN)
-                crosshair_starting_distance_vector[1] =
-                    -1 * crosshair_starting_distance_from_player;
+                crosshair_starting_distance_vector[1] = -1 * crosshair_starting_distance_from_player;
             if (player->direction == LEFT)
-                crosshair_starting_distance_vector[0] =
-                    -1 * crosshair_starting_distance_from_player;
+                crosshair_starting_distance_vector[0] = -1 * crosshair_starting_distance_from_player;
             if (player->direction == UP_RIGHT) {
-                crosshair_starting_distance_vector[0] =
-                    crosshair_xy_distance_at_45_deg;
-                crosshair_starting_distance_vector[1] =
-                    crosshair_xy_distance_at_45_deg;
+                crosshair_starting_distance_vector[0] = crosshair_xy_distance_at_45_deg;
+                crosshair_starting_distance_vector[1] = crosshair_xy_distance_at_45_deg;
             }
             if (player->direction == DOWN_RIGHT) {
-                crosshair_starting_distance_vector[0] =
-                    crosshair_xy_distance_at_45_deg;
-                crosshair_starting_distance_vector[1] =
-                    -1 * crosshair_xy_distance_at_45_deg;
+                crosshair_starting_distance_vector[0] = crosshair_xy_distance_at_45_deg;
+                crosshair_starting_distance_vector[1] = -1 * crosshair_xy_distance_at_45_deg;
             }
 
             if (player->direction == DOWN_LEFT) {
-                crosshair_starting_distance_vector[0] =
-                    -1 * crosshair_xy_distance_at_45_deg;
-                crosshair_starting_distance_vector[1] =
-                    -1 * crosshair_xy_distance_at_45_deg;
+                crosshair_starting_distance_vector[0] = -1 * crosshair_xy_distance_at_45_deg;
+                crosshair_starting_distance_vector[1] = -1 * crosshair_xy_distance_at_45_deg;
             }
 
             if (player->direction == UP_LEFT) {
-                crosshair_starting_distance_vector[0] =
-                    -1 * crosshair_xy_distance_at_45_deg;
-                crosshair_starting_distance_vector[1] =
-                    crosshair_xy_distance_at_45_deg;
+                crosshair_starting_distance_vector[0] = -1 * crosshair_xy_distance_at_45_deg;
+                crosshair_starting_distance_vector[1] = crosshair_xy_distance_at_45_deg;
             }
 
             // set crosshair aabb position with respect to player
             // aabb position
-            player->crosshair->entity->body->aabb.position[0] =
-                player->entity->body->aabb.position[0] +
-                crosshair_starting_distance_vector[0];
-            player->crosshair->entity->body->aabb.position[1] =
-                player->entity->body->aabb.position[1] +
-                crosshair_starting_distance_vector[1];
+            player->crosshair->entity->body->aabb.position[0] = player->entity->body->aabb.position[0] + crosshair_starting_distance_vector[0];
+            player->crosshair->entity->body->aabb.position[1] = player->entity->body->aabb.position[1] + crosshair_starting_distance_vector[1];
 
             // set crosshair relative position with respect to
             // player relative position
-            player->crosshair->relative_position[0] =
-                player->relative_position[0] +
-                crosshair_starting_distance_vector[0];
-            player->crosshair->relative_position[1] =
-                player->relative_position[1] +
-                crosshair_starting_distance_vector[1];
+            player->crosshair->relative_position[0] = player->relative_position[0] + crosshair_starting_distance_vector[0];
+            player->crosshair->relative_position[1] = player->relative_position[1] + crosshair_starting_distance_vector[1];
 
             // activate entity and set anim
             player->crosshair->entity->is_active = true;
-            player->crosshair->entity->animation =
-                player->is_left_player ? anim_p1_crosshair : anim_p2_crosshair;
+            player->crosshair->entity->animation = player->is_left_player ? anim_p1_crosshair : anim_p2_crosshair;
         }
 
         // movement inputs now move crosshair instead of player
@@ -1181,28 +882,20 @@ void handle_player_input(Player *player)
 
         // check if crosshair is out of bounds, if so, put in bounds,
         // set velocity to 0
-        if (player->crosshair->entity->body->aabb.position[0] <
-            0 + CROSSHAIR_SIZE * 0.5) {
-            player->crosshair->entity->body->aabb.position[0] =
-                CROSSHAIR_SIZE * 0.5;
+        if (player->crosshair->entity->body->aabb.position[0] < 0 + CROSSHAIR_SIZE * 0.5) {
+            player->crosshair->entity->body->aabb.position[0] = CROSSHAIR_SIZE * 0.5;
             velx = 0;
         }
-        if (player->crosshair->entity->body->aabb.position[0] >
-            render_width - CROSSHAIR_SIZE * 0.5) {
-            player->crosshair->entity->body->aabb.position[0] =
-                render_width - CROSSHAIR_SIZE * 0.5;
+        if (player->crosshair->entity->body->aabb.position[0] > render_width - CROSSHAIR_SIZE * 0.5) {
+            player->crosshair->entity->body->aabb.position[0] = render_width - CROSSHAIR_SIZE * 0.5;
             velx = 0;
         }
-        if (player->crosshair->entity->body->aabb.position[1] <
-            0 + CROSSHAIR_SIZE * 0.5) {
-            player->crosshair->entity->body->aabb.position[1] =
-                CROSSHAIR_SIZE * 0.5;
+        if (player->crosshair->entity->body->aabb.position[1] < 0 + CROSSHAIR_SIZE * 0.5) {
+            player->crosshair->entity->body->aabb.position[1] = CROSSHAIR_SIZE * 0.5;
             vely = 0;
         }
-        if (player->crosshair->entity->body->aabb.position[1] >
-            render_height - CROSSHAIR_SIZE * 0.5) {
-            player->crosshair->entity->body->aabb.position[1] =
-                render_height - CROSSHAIR_SIZE * 0.5;
+        if (player->crosshair->entity->body->aabb.position[1] > render_height - CROSSHAIR_SIZE * 0.5) {
+            player->crosshair->entity->body->aabb.position[1] = render_height - CROSSHAIR_SIZE * 0.5;
             vely = 0;
         }
 
@@ -1231,10 +924,8 @@ void handle_player_input(Player *player)
         set_render_dimensions(player->render_scale_factor, false, true);
 
         // center camera on player
-        player->camera->position[0] =
-            player->relative_position[0] - (0.5 * render_width);
-        player->camera->position[1] =
-            player->relative_position[1] - (0.5 * render_height);
+        player->camera->position[0] = player->relative_position[0] - (0.5 * render_width);
+        player->camera->position[1] = player->relative_position[1] - (0.5 * render_height);
 
         // center player aabb
         player->entity->body->aabb.position[0] = (render_width * 0.5);
@@ -1304,10 +995,8 @@ void free_player(Player *player)
 // width when rendering the hud
 void update_crosshair_position_percentage(Player *player)
 {
-    player->crosshair->percentage_of_screen[0] =
-        player->crosshair->entity->body->aabb.position[0] / render_width;
-    player->crosshair->percentage_of_screen[1] =
-        player->crosshair->entity->body->aabb.position[1] / render_height;
+    player->crosshair->percentage_of_screen[0] = player->crosshair->entity->body->aabb.position[0] / render_width;
+    player->crosshair->percentage_of_screen[1] = player->crosshair->entity->body->aabb.position[1] / render_height;
 }
 
 // parent function for all the necessary player updates made each frame

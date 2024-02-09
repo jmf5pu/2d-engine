@@ -37,17 +37,10 @@ vec4 game_color;
 const u8 frame_rate = 60; // frame rate
 
 // TODO: move this out of main.c
-bool vec4_is_equal(vec4 first, vec4 second)
-{
-    return first[0] == second[0] && first[1] == second[1] &&
-           first[2] == second[2] && first[3] == second[3];
-}
+bool vec4_is_equal(vec4 first, vec4 second) { return first[0] == second[0] && first[1] == second[1] && first[2] == second[2] && first[3] == second[3]; }
 // returns TRUE if the first RGB value is less than the second for each value in
 // RGB, otherwise returns false
-bool vec4_color_cmp(vec4 first, vec4 second)
-{
-    return first[0] < second[0] && first[1] < second[1] && first[2] < second[2];
-}
+bool vec4_color_cmp(vec4 first, vec4 second) { return first[0] < second[0] && first[1] < second[1] && first[2] < second[2]; }
 
 int main(int argc, char *argv[])
 {
@@ -150,65 +143,37 @@ int main(int argc, char *argv[])
             // using camera as a vector)
             if (SPLIT_SCREEN) // use left cam if screen is split
             {
-                player_one->relative_position[0] =
-                    player_one->entity->body->aabb.position[0] +
-                    left_cam.position[0];
-                player_one->relative_position[1] =
-                    player_one->entity->body->aabb.position[1] +
-                    left_cam.position[1];
-                player_one->crosshair->relative_position[0] =
-                    player_one->crosshair->entity->body->aabb.position[0] +
-                    left_cam.position[0];
-                player_one->crosshair->relative_position[1] =
-                    player_one->crosshair->entity->body->aabb.position[1] +
-                    left_cam.position[1];
+                player_one->relative_position[0] = player_one->entity->body->aabb.position[0] + left_cam.position[0];
+                player_one->relative_position[1] = player_one->entity->body->aabb.position[1] + left_cam.position[1];
+                player_one->crosshair->relative_position[0] = player_one->crosshair->entity->body->aabb.position[0] + left_cam.position[0];
+                player_one->crosshair->relative_position[1] = player_one->crosshair->entity->body->aabb.position[1] + left_cam.position[1];
             }
             else // otherwise use main cam TODO: perhaps make
                  // left_cam and main_cam the same object?
             {
-                player_one->relative_position[0] =
-                    player_one->entity->body->aabb.position[0] +
-                    main_cam.position[0];
-                player_one->relative_position[1] =
-                    player_one->entity->body->aabb.position[1] +
-                    main_cam.position[1];
-                player_one->crosshair->relative_position[0] =
-                    player_one->crosshair->entity->body->aabb.position[0] +
-                    main_cam.position[0];
-                player_one->crosshair->relative_position[1] =
-                    player_one->crosshair->entity->body->aabb.position[1] +
-                    main_cam.position[1];
+                player_one->relative_position[0] = player_one->entity->body->aabb.position[0] + main_cam.position[0];
+                player_one->relative_position[1] = player_one->entity->body->aabb.position[1] + main_cam.position[1];
+                player_one->crosshair->relative_position[0] = player_one->crosshair->entity->body->aabb.position[0] + main_cam.position[0];
+                player_one->crosshair->relative_position[1] = player_one->crosshair->entity->body->aabb.position[1] + main_cam.position[1];
             }
 
             // need to pass the RELATIVE position of the players
             // into the physics engine to properly detect collisions
             p1_pos_holder[0] = player_one->entity->body->aabb.position[0];
             p1_pos_holder[1] = player_one->entity->body->aabb.position[1];
-            player_one->entity->body->aabb.position[0] =
-                player_one->relative_position[0];
-            player_one->entity->body->aabb.position[1] =
-                player_one->relative_position[1];
+            player_one->entity->body->aabb.position[0] = player_one->relative_position[0];
+            player_one->entity->body->aabb.position[1] = player_one->relative_position[1];
 
             if (SPLIT_SCREEN) {
-                player_two->relative_position[0] =
-                    player_two->entity->body->aabb.position[0] +
-                    right_cam.position[0];
-                player_two->relative_position[1] =
-                    player_two->entity->body->aabb.position[1] +
-                    right_cam.position[1];
-                player_two->crosshair->relative_position[0] =
-                    player_two->crosshair->entity->body->aabb.position[0] +
-                    right_cam.position[0];
-                player_two->crosshair->relative_position[1] =
-                    player_two->crosshair->entity->body->aabb.position[1] +
-                    right_cam.position[1];
+                player_two->relative_position[0] = player_two->entity->body->aabb.position[0] + right_cam.position[0];
+                player_two->relative_position[1] = player_two->entity->body->aabb.position[1] + right_cam.position[1];
+                player_two->crosshair->relative_position[0] = player_two->crosshair->entity->body->aabb.position[0] + right_cam.position[0];
+                player_two->crosshair->relative_position[1] = player_two->crosshair->entity->body->aabb.position[1] + right_cam.position[1];
 
                 p2_pos_holder[0] = player_two->entity->body->aabb.position[0];
                 p2_pos_holder[1] = player_two->entity->body->aabb.position[1];
-                player_two->entity->body->aabb.position[0] =
-                    player_two->relative_position[0];
-                player_two->entity->body->aabb.position[1] =
-                    player_two->relative_position[1];
+                player_two->entity->body->aabb.position[0] = player_two->relative_position[0];
+                player_two->entity->body->aabb.position[1] = player_two->relative_position[1];
             }
 
             // update physics bodies
@@ -217,21 +182,11 @@ int main(int argc, char *argv[])
 
             // update the actual positions (saved value plus the
             // difference generated by the physics engine)
-            player_one->entity->body->aabb.position[0] =
-                p1_pos_holder[0] + (player_one->entity->body->aabb.position[0] -
-                                    player_one->relative_position[0]);
-            player_one->entity->body->aabb.position[1] =
-                p1_pos_holder[1] + (player_one->entity->body->aabb.position[1] -
-                                    player_one->relative_position[1]);
+            player_one->entity->body->aabb.position[0] = p1_pos_holder[0] + (player_one->entity->body->aabb.position[0] - player_one->relative_position[0]);
+            player_one->entity->body->aabb.position[1] = p1_pos_holder[1] + (player_one->entity->body->aabb.position[1] - player_one->relative_position[1]);
             if (SPLIT_SCREEN) {
-                player_two->entity->body->aabb.position[0] =
-                    p2_pos_holder[0] +
-                    (player_two->entity->body->aabb.position[0] -
-                     player_two->relative_position[0]);
-                player_two->entity->body->aabb.position[1] =
-                    p2_pos_holder[1] +
-                    (player_two->entity->body->aabb.position[1] -
-                     player_two->relative_position[1]);
+                player_two->entity->body->aabb.position[0] = p2_pos_holder[0] + (player_two->entity->body->aabb.position[0] - player_two->relative_position[0]);
+                player_two->entity->body->aabb.position[1] = p2_pos_holder[1] + (player_two->entity->body->aabb.position[1] - player_two->relative_position[1]);
             }
 
             // need to run render loop twice if we are actively
@@ -249,16 +204,14 @@ int main(int argc, char *argv[])
                 // BEFORE rendering because entities can be
                 // created in `handle_player_shooting`
                 if (SPLIT_SCREEN && i == 0) {
-                    set_render_dimensions(
-                        player_one->render_scale_factor, false, true);
+                    set_render_dimensions(player_one->render_scale_factor, false, true);
                     camera_update(player_one, &map);
                     render_begin_left();
                     if (game_state == GS_RUNNING)
                         player_per_frame_updates(player_one);
                 }
                 else if (SPLIT_SCREEN && i == 1) {
-                    set_render_dimensions(
-                        player_two->render_scale_factor, false, true);
+                    set_render_dimensions(player_two->render_scale_factor, false, true);
                     camera_update(player_two, &map);
                     render_begin_right();
                     if (game_state == GS_RUNNING)
@@ -266,8 +219,7 @@ int main(int argc, char *argv[])
                 }
                 else // hit when screen is not being split
                 {
-                    set_render_dimensions(
-                        player_one->render_scale_factor, false, true);
+                    set_render_dimensions(player_one->render_scale_factor, false, true);
                     camera_update(player_one, &map);
                     render_begin();
                     if (game_state == GS_RUNNING)
@@ -279,46 +231,25 @@ int main(int argc, char *argv[])
                 p1_pos_holder[1] = player_one->entity->body->aabb.position[1];
 
                 if (SPLIT_SCREEN) {
-                    p2_pos_holder[0] =
-                        player_two->entity->body->aabb.position[0];
-                    p2_pos_holder[1] =
-                        player_two->entity->body->aabb.position[1];
+                    p2_pos_holder[0] = player_two->entity->body->aabb.position[0];
+                    p2_pos_holder[1] = player_two->entity->body->aabb.position[1];
                 }
 
                 // move all positions to relative position based
                 // on camera except for the active player and
                 // crosshairs
                 if (SPLIT_SCREEN && i == 0) {
-                    player_two->entity->body->aabb.position[0] =
-                        player_two->relative_position[0];
-                    player_two->entity->body->aabb.position[1] =
-                        player_two->relative_position[1];
-                    update_all_positions(
-                        &map,
-                        (vec2){
-                            -1 * left_cam.position[0],
-                            -1 * left_cam.position[1]},
-                        true);
+                    player_two->entity->body->aabb.position[0] = player_two->relative_position[0];
+                    player_two->entity->body->aabb.position[1] = player_two->relative_position[1];
+                    update_all_positions(&map, (vec2){-1 * left_cam.position[0], -1 * left_cam.position[1]}, true);
                 }
                 else if (SPLIT_SCREEN && i == 1) {
-                    player_one->entity->body->aabb.position[0] =
-                        player_one->relative_position[0];
-                    player_one->entity->body->aabb.position[1] =
-                        player_one->relative_position[1];
-                    update_all_positions(
-                        &map,
-                        (vec2){
-                            -1 * right_cam.position[0],
-                            -1 * right_cam.position[1]},
-                        false);
+                    player_one->entity->body->aabb.position[0] = player_one->relative_position[0];
+                    player_one->entity->body->aabb.position[1] = player_one->relative_position[1];
+                    update_all_positions(&map, (vec2){-1 * right_cam.position[0], -1 * right_cam.position[1]}, false);
                 }
                 else // not split
-                    update_all_positions(
-                        &map,
-                        (vec2){
-                            -1 * main_cam.position[0],
-                            -1 * main_cam.position[1]},
-                        true);
+                    update_all_positions(&map, (vec2){-1 * main_cam.position[0], -1 * main_cam.position[1]}, true);
 
                 // render animated entities, check if any are
                 // marked for deletion (not active OR body is
@@ -336,22 +267,15 @@ int main(int argc, char *argv[])
                     // are inactive and aren't associated
                     // with players, crosshairs, or pickups
                     bool is_crosshair =
-                        SPLIT_SCREEN
-                            ? (entity == player_one->crosshair->entity ||
-                               entity == player_two->crosshair->entity)
-                            : (entity == player_one->crosshair->entity);
-                    bool is_player = SPLIT_SCREEN
-                                         ? (entity == player_one->entity ||
-                                            entity == player_two->entity)
-                                         : (entity == player_one->entity);
+                        SPLIT_SCREEN ? (entity == player_one->crosshair->entity || entity == player_two->crosshair->entity) : (entity == player_one->crosshair->entity);
+                    bool is_player = SPLIT_SCREEN ? (entity == player_one->entity || entity == player_two->entity) : (entity == player_one->entity);
 
                     bool is_pickup = false;
                     for (int k = 0; k < map.num_pickups; k++) {
                         if (entity == map.pickups[k].entity)
                             is_pickup = true;
                     }
-                    if ((!entity->is_active || !entity->body->is_active) &&
-                        !is_player && !is_pickup && !is_crosshair) {
+                    if ((!entity->is_active || !entity->body->is_active) && !is_player && !is_pickup && !is_crosshair) {
                         entity_destroy(entity);
                         continue;
                     }
@@ -359,19 +283,12 @@ int main(int argc, char *argv[])
                     // skip entities with no associated
                     // animations, check if players and
                     // pickups are inactive
-                    if (!entity->animation || !entity->is_active ||
-                        !entity->body->is_active || is_crosshair) {
+                    if (!entity->animation || !entity->is_active || !entity->body->is_active || is_crosshair) {
                         continue;
                     }
 
                     // render the entity's animation
-                    animation_render(
-                        entity->animation,
-                        window,
-                        entity->body->aabb.position,
-                        0,
-                        game_color,
-                        texture_slots);
+                    animation_render(entity->animation, window, entity->body->aabb.position, 0, game_color, texture_slots);
                 }
 
                 // render map sprites
@@ -391,23 +308,14 @@ int main(int argc, char *argv[])
                      */
                     f32 player_y_min;
                     if (i == 0) { // rendering left side
-                        player_y_min =
-                            player_one->entity->body->aabb.position[1] -
-                            player_one->entity->body->aabb.half_size[1];
+                        player_y_min = player_one->entity->body->aabb.position[1] - player_one->entity->body->aabb.half_size[1];
                     }
                     else { // rendering right side (if it
                            // exists)
-                        player_y_min =
-                            player_two->entity->body->aabb.position[1] -
-                            player_two->entity->body->aabb.half_size[1];
+                        player_y_min = player_two->entity->body->aabb.position[1] - player_two->entity->body->aabb.half_size[1];
                     }
-                    bool is_below_player =
-                        player_y_min < (prop.sprite->position[1] -
-                                        prop.sprite->half_size[1] +
-                                        prop.layer_threshold) ||
-                        player_y_min > (prop.sprite->position[1] +
-                                        prop.sprite->half_size[1]) ||
-                        l == 0;
+                    bool is_below_player = player_y_min < (prop.sprite->position[1] - prop.sprite->half_size[1] + prop.layer_threshold) ||
+                                           player_y_min > (prop.sprite->position[1] + prop.sprite->half_size[1]) || l == 0;
                     i32 z_index = is_below_player ? prop.sprite->z_index : 1;
                     render_sprite_sheet_frame(
                         prop.sprite->sprite_sheet,
@@ -423,8 +331,7 @@ int main(int argc, char *argv[])
                     // render the static bodies
                     if (RENDER_PHYSICS_BODIES) {
                         for (int k = 0; k < prop.num_static_bodies; k++) {
-                            render_aabb(
-                                (f32 *)&prop.static_bodies[k]->aabb, WHITE);
+                            render_aabb((f32 *)&prop.static_bodies[k]->aabb, WHITE);
                         }
                     }
                 }
@@ -440,23 +347,16 @@ int main(int argc, char *argv[])
                 // back
                 if (SPLIT_SCREEN && i == 0) {
                     update_all_positions(&map, left_cam.position, true);
-                    player_two->entity->body->aabb.position[0] =
-                        p2_pos_holder[0];
-                    player_two->entity->body->aabb.position[1] =
-                        p2_pos_holder[1];
+                    player_two->entity->body->aabb.position[0] = p2_pos_holder[0];
+                    player_two->entity->body->aabb.position[1] = p2_pos_holder[1];
                 }
                 else if (SPLIT_SCREEN && i == 1) {
                     update_all_positions(&map, right_cam.position, false);
-                    player_one->entity->body->aabb.position[0] =
-                        p1_pos_holder[0];
-                    player_one->entity->body->aabb.position[1] =
-                        p1_pos_holder[1];
+                    player_one->entity->body->aabb.position[0] = p1_pos_holder[0];
+                    player_one->entity->body->aabb.position[1] = p1_pos_holder[1];
                 }
                 else // not split
-                    update_all_positions(
-                        &map,
-                        (vec2){main_cam.position[0], main_cam.position[1]},
-                        true);
+                    update_all_positions(&map, (vec2){main_cam.position[0], main_cam.position[1]}, true);
             }
             render_end(window, texture_slots, false);
 

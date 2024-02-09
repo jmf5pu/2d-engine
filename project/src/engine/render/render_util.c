@@ -30,8 +30,7 @@ u32 render_shader_create(const char *path_vert, const char *path_frag)
     }
 
     u32 shader_fragment = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(
-        shader_fragment, 1, (const char *const *)&file_fragment, NULL);
+    glShaderSource(shader_fragment, 1, (const char *const *)&file_fragment, NULL);
     glCompileShader(shader_fragment);
     glGetShaderiv(shader_fragment, GL_COMPILE_STATUS, &success);
     if (!success) {

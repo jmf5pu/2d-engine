@@ -36,8 +36,7 @@ usize array_list_append(Array_List *list, void *item)
 {
     if (list->len == list->capacity) {
         list->capacity = list->capacity > 0 ? list->capacity * 2 : 1;
-        void **items =
-            (void **)realloc(list->items, sizeof(void *) * list->capacity);
+        void **items = (void **)realloc(list->items, sizeof(void *) * list->capacity);
 
         if (!items) {
             ERROR_EXIT("ERROR: Could not allocate memory for "
@@ -67,8 +66,7 @@ void array_list_remove(Array_List *list, usize index)
     // Move elements after the removed index one position back
     for (usize i = index; i < list->len - 1; ++i) {
         void **current_item = (void **)((u8 *)list->items + i * sizeof(void *));
-        void **next_item =
-            (void **)((u8 *)list->items + (i + 1) * sizeof(void *));
+        void **next_item = (void **)((u8 *)list->items + (i + 1) * sizeof(void *));
         *current_item = *next_item;
     }
 
@@ -83,8 +81,7 @@ void array_list_remove(Array_List *list, usize index)
 
         // Reallocate memory to fit the new capacity (frees old excess
         // memory)
-        void **new_items =
-            (void **)realloc(list->items, sizeof(void *) * new_capacity);
+        void **new_items = (void **)realloc(list->items, sizeof(void *) * new_capacity);
         if (new_items) {
             list->items = new_items;
             list->capacity = new_capacity;

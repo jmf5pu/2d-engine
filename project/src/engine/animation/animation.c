@@ -9,22 +9,15 @@ static Array_List *animation_storage;
 
 void animation_init(void)
 {
-    animation_definition_storage =
-        array_list_create(sizeof(struct Animation_Definition *), 0);
+    animation_definition_storage = array_list_create(sizeof(struct Animation_Definition *), 0);
     animation_storage = array_list_create(sizeof(struct Animation *), 0);
 }
 
-Animation_Definition *animation_definition_create(
-    Sprite_Sheet *sprite_sheet,
-    f32 *durations,
-    u8 *rows,
-    u8 *columns,
-    u8 frame_count)
+Animation_Definition *animation_definition_create(Sprite_Sheet *sprite_sheet, f32 *durations, u8 *rows, u8 *columns, u8 frame_count)
 {
     assert(frame_count <= MAX_FRAMES);
 
-    Animation_Definition *def =
-        (Animation_Definition *)malloc(sizeof(Animation_Definition));
+    Animation_Definition *def = (Animation_Definition *)malloc(sizeof(Animation_Definition));
     if (def == NULL) {
         ERROR_EXIT("Memory allocation failed\n");
     }
@@ -74,8 +67,7 @@ Animation *animation_create(Animation_Definition *adef, bool does_loop)
         }
         *new_animation = (Animation){0}; // Initialize the allocated memory
         array_list_append(animation_storage, new_animation);
-        id =
-            animation_storage->len - 1; // Update id to the newly appended index
+        id = animation_storage->len - 1; // Update id to the newly appended index
     }
 
     Animation *animation = array_list_get(animation_storage, id);
@@ -98,10 +90,7 @@ void animation_destroy(usize id)
     array_list_remove(animation_storage, id);
 }
 
-Animation *animation_get(usize id)
-{
-    return array_list_get(animation_storage, id);
-}
+Animation *animation_get(usize id) { return array_list_get(animation_storage, id); }
 
 void animation_update(f32 dt)
 {
@@ -109,9 +98,8 @@ void animation_update(f32 dt)
     for (usize i = 0; i < animation_storage->len; ++i) {
         Animation *animation = array_list_get(animation_storage, i);
         if (animation->is_active) {
-            Animation_Definition *adef =
-                animation->animation_definition; // get associated
-                                                 // animation definition
+            Animation_Definition *adef = animation->animation_definition; // get associated
+                                                                          // animation definition
             animation->current_frame_time -= dt;
 
             if (animation->current_frame_time <= 0) {
@@ -127,32 +115,16 @@ void animation_update(f32 dt)
                     }
                 }
 
-                animation->current_frame_time =
-                    adef->frames[animation->current_frame_index].duration;
+                animation->current_frame_time = adef->frames[animation->current_frame_index].duration;
             }
         }
     }
 }
 
-void animation_render(
-    Animation *animation,
-    SDL_Window *window,
-    vec2 position,
-    i32 z_index,
-    vec4 color,
-    u32 texture_slots[32])
+void animation_render(Animation *animation, SDL_Window *window, vec2 position, i32 z_index, vec4 color, u32 texture_slots[32])
 {
     animation->is_active = true;
     Animation_Definition *adef = animation->animation_definition;
     Animation_Frame *aframe = &adef->frames[animation->current_frame_index];
-    render_sprite_sheet_frame(
-        adef->sprite_sheet,
-        window,
-        aframe->row,
-        aframe->column,
-        position,
-        z_index,
-        animation->is_flipped,
-        color,
-        texture_slots);
+    render_sprite_sheet_frame(adef->sprite_sheet, window, aframe->row, aframe->column, position, z_index, animation->is_flipped, color, texture_slots);
 }

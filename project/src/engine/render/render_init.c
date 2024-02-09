@@ -9,8 +9,7 @@
 
 SDL_Window *render_init_window(u32 width, u32 height)
 {
-    SDL_GL_SetAttribute(
-        SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 
@@ -21,13 +20,7 @@ SDL_Window *render_init_window(u32 width, u32 height)
     // Hide the cursor
     SDL_ShowCursor(SDL_DISABLE);
 
-    SDL_Window *window = SDL_CreateWindow(
-        "MyGame",
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        width,
-        height,
-        SDL_WINDOW_OPENGL);
+    SDL_Window *window = SDL_CreateWindow("MyGame", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL);
 
     if (!window) {
         ERROR_EXIT("Failed to init window: %s\n", SDL_GetError());
@@ -48,36 +41,23 @@ SDL_Window *render_init_window(u32 width, u32 height)
     return window;
 }
 
-void render_init_shaders(
-    u32 *shader_default, u32 *shader_batch, f32 render_width, f32 render_height)
+void render_init_shaders(u32 *shader_default, u32 *shader_batch, f32 render_width, f32 render_height)
 {
-    *shader_default = render_shader_create(
-        "./shaders/default.vert", "./shaders/default.frag");
-    *shader_batch = render_shader_create(
-        "./shaders/batch_quad.vert", "./shaders/batch_quad.frag");
-    update_projection_matrix(
-        shader_default, shader_batch, render_width, render_height);
+    *shader_default = render_shader_create("./shaders/default.vert", "./shaders/default.frag");
+    *shader_batch = render_shader_create("./shaders/batch_quad.vert", "./shaders/batch_quad.frag");
+    update_projection_matrix(shader_default, shader_batch, render_width, render_height);
 }
 
-void update_projection_matrix(
-    u32 *shader_default, u32 *shader_batch, f32 render_width, f32 render_height)
+void update_projection_matrix(u32 *shader_default, u32 *shader_batch, f32 render_width, f32 render_height)
 {
     mat4x4 projection;
     mat4x4_ortho(projection, 0, render_width, 0, render_height, -2, 2);
 
     glUseProgram(*shader_default);
-    glUniformMatrix4fv(
-        glGetUniformLocation(*shader_default, "projection"),
-        1,
-        GL_FALSE,
-        &projection[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(*shader_default, "projection"), 1, GL_FALSE, &projection[0][0]);
 
     glUseProgram(*shader_batch);
-    glUniformMatrix4fv(
-        glGetUniformLocation(*shader_batch, "projection"),
-        1,
-        GL_FALSE,
-        &projection[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(*shader_batch, "projection"), 1, GL_FALSE, &projection[0][0]);
 
     for (u32 i = 0; i < 32; ++i) {
         char name[] = "texture_slot_N";
@@ -92,16 +72,7 @@ void render_init_color_texture(u32 *texture)
     glBindTexture(GL_TEXTURE_2D, *texture);
 
     u8 solid_white[4] = {255, 255, 255, 255};
-    glTexImage2D(
-        GL_TEXTURE_2D,
-        0,
-        GL_RGBA,
-        1,
-        1,
-        0,
-        GL_RGBA,
-        GL_UNSIGNED_BYTE,
-        solid_white);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, solid_white);
 
     glBindTexture(GL_TEXTURE_2D, 0);
 }
@@ -109,8 +80,7 @@ void render_init_color_texture(u32 *texture)
 void render_init_quad(u32 *vao, u32 *vbo, u32 *ebo)
 {
     // x, y, z, u, v
-    f32 vertices[] = {0.5,  0.5,  0, 0, 0, 0.5,  -0.5, 0, 0, 1,
-                      -0.5, -0.5, 0, 1, 1, -0.5, 0.5,  0, 1, 0};
+    f32 vertices[] = {0.5, 0.5, 0, 0, 0, 0.5, -0.5, 0, 0, 1, -0.5, -0.5, 0, 1, 1, -0.5, 0.5, 0, 1, 0};
     u32 indices[] = {0, 1, 3, 1, 2, 3};
 
     glGenVertexArrays(1, vao);
@@ -123,16 +93,14 @@ void render_init_quad(u32 *vao, u32 *vbo, u32 *ebo)
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *ebo);
-    glBufferData(
-        GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // xyz
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(f32), NULL);
     glEnableVertexAttribArray(0);
 
     // uv
-    glVertexAttribPointer(
-        1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(f32), (void *)(3 * sizeof(f32)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(f32), (void *)(3 * sizeof(f32)));
     glad_glEnableVertexAttribArray(1);
 
     // unbind vao
@@ -172,53 +140,21 @@ void render_init_batch_quads(u32 *vao, u32 *vbo, u32 *ebo)
 
     glGenBuffers(1, vbo);
     glBindBuffer(GL_ARRAY_BUFFER, *vbo);
-    glBufferData(
-        GL_ARRAY_BUFFER,
-        MAX_BATCH_VERTICES * sizeof(Batch_Vertex),
-        NULL,
-        GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, MAX_BATCH_VERTICES * sizeof(Batch_Vertex), NULL, GL_DYNAMIC_DRAW);
 
     // [x, y], [u, v], [r, g, b, a], [texture_slot]
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(
-        0,
-        2,
-        GL_FLOAT,
-        GL_FALSE,
-        sizeof(Batch_Vertex),
-        (void *)offsetof(Batch_Vertex, position));
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Batch_Vertex), (void *)offsetof(Batch_Vertex, position));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(
-        1,
-        2,
-        GL_FLOAT,
-        GL_FALSE,
-        sizeof(Batch_Vertex),
-        (void *)offsetof(Batch_Vertex, uvs));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Batch_Vertex), (void *)offsetof(Batch_Vertex, uvs));
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(
-        2,
-        4,
-        GL_FLOAT,
-        GL_FALSE,
-        sizeof(Batch_Vertex),
-        (void *)offsetof(Batch_Vertex, color));
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Batch_Vertex), (void *)offsetof(Batch_Vertex, color));
     glEnableVertexAttribArray(3);
-    glVertexAttribPointer(
-        3,
-        1,
-        GL_FLOAT,
-        GL_FALSE,
-        sizeof(Batch_Vertex),
-        (void *)offsetof(Batch_Vertex, texture_slot));
+    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Batch_Vertex), (void *)offsetof(Batch_Vertex, texture_slot));
 
     glGenBuffers(1, ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *ebo);
-    glBufferData(
-        GL_ELEMENT_ARRAY_BUFFER,
-        MAX_BATCH_ELEMENTS * sizeof(u32),
-        indices,
-        GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, MAX_BATCH_ELEMENTS * sizeof(u32), indices, GL_STATIC_DRAW);
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

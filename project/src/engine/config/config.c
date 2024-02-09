@@ -26,8 +26,7 @@ static const char *CONFIG_DEFAULT = "[controls]\n"
                                     "escape = Escape\n"
                                     "enter = Return\n";
 
-static char tmp_buffer[20] = {
-    0}; // must be able to hold the longest line in config.ini
+static char tmp_buffer[20] = {0}; // must be able to hold the longest line in config.ini
 
 static char *config_get_value(const char *config_buffer, const char *value)
 {
@@ -67,45 +66,29 @@ static char *config_get_value(const char *config_buffer, const char *value)
 static void load_controls(const char *config_buffer)
 {
     // left player keybinds
-    config_key_bind(
-        INPUT_KEY_L_LEFT, config_get_value(config_buffer, "l_left"));
-    config_key_bind(
-        INPUT_KEY_L_RIGHT, config_get_value(config_buffer, "l_right"));
+    config_key_bind(INPUT_KEY_L_LEFT, config_get_value(config_buffer, "l_left"));
+    config_key_bind(INPUT_KEY_L_RIGHT, config_get_value(config_buffer, "l_right"));
     config_key_bind(INPUT_KEY_L_UP, config_get_value(config_buffer, "l_up"));
-    config_key_bind(
-        INPUT_KEY_L_DOWN, config_get_value(config_buffer, "l_down"));
-    config_key_bind(
-        INPUT_KEY_L_SHOOT, config_get_value(config_buffer, "l_shoot"));
-    config_key_bind(
-        INPUT_KEY_L_CROUCH, config_get_value(config_buffer, "l_crouch"));
-    config_key_bind(
-        INPUT_KEY_L_RELOAD, config_get_value(config_buffer, "l_reload"));
+    config_key_bind(INPUT_KEY_L_DOWN, config_get_value(config_buffer, "l_down"));
+    config_key_bind(INPUT_KEY_L_SHOOT, config_get_value(config_buffer, "l_shoot"));
+    config_key_bind(INPUT_KEY_L_CROUCH, config_get_value(config_buffer, "l_crouch"));
+    config_key_bind(INPUT_KEY_L_RELOAD, config_get_value(config_buffer, "l_reload"));
 
     // right player keybinds
-    config_key_bind(
-        INPUT_KEY_R_LEFT, config_get_value(config_buffer, "r_left"));
-    config_key_bind(
-        INPUT_KEY_R_RIGHT, config_get_value(config_buffer, "r_right"));
+    config_key_bind(INPUT_KEY_R_LEFT, config_get_value(config_buffer, "r_left"));
+    config_key_bind(INPUT_KEY_R_RIGHT, config_get_value(config_buffer, "r_right"));
     config_key_bind(INPUT_KEY_R_UP, config_get_value(config_buffer, "r_up"));
-    config_key_bind(
-        INPUT_KEY_R_DOWN, config_get_value(config_buffer, "r_down"));
-    config_key_bind(
-        INPUT_KEY_R_SHOOT, config_get_value(config_buffer, "r_shoot"));
-    config_key_bind(
-        INPUT_KEY_R_CROUCH, config_get_value(config_buffer, "r_crouch"));
-    config_key_bind(
-        INPUT_KEY_R_RELOAD, config_get_value(config_buffer, "r_reload"));
+    config_key_bind(INPUT_KEY_R_DOWN, config_get_value(config_buffer, "r_down"));
+    config_key_bind(INPUT_KEY_R_SHOOT, config_get_value(config_buffer, "r_shoot"));
+    config_key_bind(INPUT_KEY_R_CROUCH, config_get_value(config_buffer, "r_crouch"));
+    config_key_bind(INPUT_KEY_R_RELOAD, config_get_value(config_buffer, "r_reload"));
 
     // menu inputs
     config_key_bind(INPUT_KEY_UP, config_get_value(config_buffer, "menu_up"));
-    config_key_bind(
-        INPUT_KEY_DOWN, config_get_value(config_buffer, "menu_down"));
-    config_key_bind(
-        INPUT_KEY_LEFT, config_get_value(config_buffer, "menu_left"));
-    config_key_bind(
-        INPUT_KEY_RIGHT, config_get_value(config_buffer, "menu_right"));
-    config_key_bind(
-        INPUT_KEY_ESCAPE, config_get_value(config_buffer, "escape"));
+    config_key_bind(INPUT_KEY_DOWN, config_get_value(config_buffer, "menu_down"));
+    config_key_bind(INPUT_KEY_LEFT, config_get_value(config_buffer, "menu_left"));
+    config_key_bind(INPUT_KEY_RIGHT, config_get_value(config_buffer, "menu_right"));
+    config_key_bind(INPUT_KEY_ESCAPE, config_get_value(config_buffer, "escape"));
     config_key_bind(INPUT_KEY_ENTER, config_get_value(config_buffer, "enter"));
 }
 
@@ -129,8 +112,7 @@ void config_init(void)
         return;
     }
 
-    io_file_write(
-        (void *)CONFIG_DEFAULT, strlen(CONFIG_DEFAULT), "./config.ini");
+    io_file_write((void *)CONFIG_DEFAULT, strlen(CONFIG_DEFAULT), "./config.ini");
 
     if (config_load() != 0) {
         ERROR_EXIT("Could not create or load config file.\n");

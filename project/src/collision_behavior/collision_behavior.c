@@ -6,10 +6,8 @@
 #include "../weapon_types/weapon_types.h"
 #include <assert.h>
 
-const u8 enemy_mask =
-    COLLISION_LAYER_PLAYER | COLLISION_LAYER_TERRAIN | COLLISION_LAYER_BULLET;
-const u8 player_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRAIN |
-                       COLLISION_LAYER_BULLET | COLLISION_LAYER_PICKUP;
+const u8 enemy_mask = COLLISION_LAYER_PLAYER | COLLISION_LAYER_TERRAIN | COLLISION_LAYER_BULLET;
+const u8 player_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRAIN | COLLISION_LAYER_BULLET | COLLISION_LAYER_PICKUP;
 const u8 bullet_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRAIN;
 const u8 pickup_mask = COLLISION_LAYER_PLAYER;
 const u8 crosshair_mask = 0;
@@ -32,8 +30,7 @@ void player_on_hit(Body *self, Body *other, Hit hit)
                     player->armor->integrity -= bullet->damage;
                 }
                 else {
-                    player->health -=
-                        (bullet->damage - player->armor->integrity);
+                    player->health -= (bullet->damage - player->armor->integrity);
                     player->armor->integrity = 0;
                 }
             }
@@ -48,13 +45,11 @@ void player_on_hit(Body *self, Body *other, Hit hit)
     }
 
     // prevents players from pushing through enemies
-    if (other->collision_layer == COLLISION_LAYER_ENEMY && other->is_active &&
-        self->is_active) {
+    if (other->collision_layer == COLLISION_LAYER_ENEMY && other->is_active && self->is_active) {
         vec2_add(self->aabb.position, self->aabb.position, hit.normal);
     }
 
-    if (other->collision_layer == COLLISION_LAYER_PICKUP && other->is_active &&
-        self->is_active) {
+    if (other->collision_layer == COLLISION_LAYER_PICKUP && other->is_active && self->is_active) {
         Pickup *pickup = get_pickup_from_body(other);
         if (pickup->name == M44_PICKUP && pickup->status == PICKUP_ACTIVE) {
             // update player weapon
@@ -71,9 +66,7 @@ void player_on_hit(Body *self, Body *other, Hit hit)
             player->weapon->frames_since_last_shot = 0;
             player->weapon->ready_to_fire = true;
         }
-        else if (
-            pickup->name == BREWSTER_PICKUP &&
-            pickup->status == PICKUP_ACTIVE) {
+        else if (pickup->name == BREWSTER_PICKUP && pickup->status == PICKUP_ACTIVE) {
 
             // apply armor to player
             player->armor->name = "brewster";
