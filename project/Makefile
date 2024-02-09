@@ -33,5 +33,6 @@ run:
 	mygame.exe
 
 format:
-	$(foreach file,$(wildcard src/**/*.h src/**/*.c src/**/*.cpp),clang-format -style=file -i $(file);)
+	# $(foreach file,$(wildcard src/**/*.h src/**/*.c src/**/*.cpp),clang-format -style=file -i $(file);)
+	find src/ -iname *.h -o -iname *.c -o -iname *.cpp | xargs clang-format -style=file -i
 	
