@@ -31,13 +31,10 @@ bool detect_game_controller_changes_and_update_state(void)
 
     for (int i = 0; i < MAX_CONTROLLERS; i++) {
         if (i < num_joysticks) {
-            SDL_JoystickID device_joystick_id =
-                SDL_JoystickGetDeviceInstanceID(i);
-            if (!joystick_ids_are_identical(
-                    open_controller_ids[i], device_joystick_id)) {
+            SDL_JoystickID device_joystick_id = SDL_JoystickGetDeviceInstanceID(i);
+            if (!joystick_ids_are_identical(open_controller_ids[i], device_joystick_id)) {
                 printf("Controller %d changed to: %d\n", i, device_joystick_id);
-                SDL_Joystick *old_joystick =
-                    SDL_JoystickFromInstanceID(open_controller_ids[i]);
+                SDL_Joystick *old_joystick = SDL_JoystickFromInstanceID(open_controller_ids[i]);
                 SDL_JoystickClose(old_joystick);
                 SDL_JoystickOpen(i);
                 open_controller_ids[i] = device_joystick_id;
@@ -45,21 +42,12 @@ bool detect_game_controller_changes_and_update_state(void)
             }
         }
         else {
-            open_controller_ids[i] =
-                -1; // assign default value of -1 to slots with no associated
-                    // joystick/controller
+            open_controller_ids[i] = -1; // assign default value of -1 to slots with no associated
+                                         // joystick/controller
         }
-    }
-    printf("Controller Joystick IDs:\n");
-    for (int j = 0; j < MAX_CONTROLLERS; j++) {
-        printf("Controller %d: %d\n", j, open_controller_ids[j]);
     }
 
     return game_controller_change_detected;
 }
 
-bool joystick_ids_are_identical(
-    SDL_JoystickID first_guid, SDL_JoystickID second_guid)
-{
-    return SDL_memcmp(&first_guid, &second_guid, sizeof(SDL_JoystickID)) == 0;
-}
+bool joystick_ids_are_identical(SDL_JoystickID first_guid, SDL_JoystickID second_guid) { return SDL_memcmp(&first_guid, &second_guid, sizeof(SDL_JoystickID)) == 0; }

@@ -27,14 +27,8 @@ void physics_init(void)
     tick_rate = 1.f / iterations;
 }
 
-static void update_sweep_result(
-    Hit *result,
-    usize other_id,
-    AABB a,
-    AABB b,
-    vec2 velocity,
-    u8 a_collision_mask,
-    u8 b_collision_layer) // TODO: bug here
+static void update_sweep_result(Hit *result, usize other_id, AABB a, AABB b, vec2 velocity, u8 a_collision_mask,
+                                u8 b_collision_layer) // TODO: bug here
 {
     if ((a_collision_mask & b_collision_layer) == 0) {
         return;
@@ -55,8 +49,7 @@ static void update_sweep_result(
             if (fabsf(velocity[0]) > fabsf(velocity[1]) && hit.normal[0] != 0) {
                 *result = hit;
             }
-            else if (
-                fabsf(velocity[1]) > fabsf(velocity[0]) && hit.normal[1] != 0) {
+            else if (fabsf(velocity[1]) > fabsf(velocity[0]) && hit.normal[1] != 0) {
                 *result = hit;
             }
         }
@@ -70,14 +63,7 @@ static Hit sweep_static_bodies(Body *body, vec2 velocity) // TODO: bug here
 
     for (u32 i = 0; i < state.static_body_list->len; ++i) {
         Static_Body *static_body = physics_static_body_get(i);
-        update_sweep_result(
-            &result,
-            i,
-            body->aabb,
-            static_body->aabb,
-            velocity,
-            body->collision_mask,
-            static_body->collision_layer);
+        update_sweep_result(&result, i, body->aabb, static_body->aabb, velocity, body->collision_mask, static_body->collision_layer);
     }
     return result;
 }
@@ -93,14 +79,7 @@ static Hit sweep_bodies(Body *body, vec2 velocity)
             continue;
         }
 
-        update_sweep_result(
-            &result,
-            i,
-            body->aabb,
-            other->aabb,
-            velocity,
-            body->collision_mask,
-            other->collision_layer);
+        update_sweep_result(&result, i, body->aabb, other->aabb, velocity, body->collision_mask, other->collision_layer);
     }
     return result;
 }
@@ -111,8 +90,7 @@ static void sweep_response(Body *body, vec2 velocity)
     Hit hit_moving = sweep_bodies(body, velocity);
     if (hit_moving.is_hit) {
         if (body->on_hit != NULL) {
-            body->on_hit(
-                body, physics_body_get(hit_moving.other_id), hit_moving);
+            body->on_hit(body, physics_body_get(hit_moving.other_id), hit_moving);
         }
     }
 
@@ -130,8 +108,7 @@ static void sweep_response(Body *body, vec2 velocity)
         }
 
         if (body->on_hit_static != NULL) {
-            body->on_hit_static(
-                body, physics_static_body_get(hit.other_id), hit);
+            body->on_hit_static(body, physics_static_body_get(hit.other_id), hit);
         }
     }
     else {
@@ -155,8 +132,7 @@ static void stationary_response(Body *body)
             vec2 penetration_vector;
             aabb_penetration_vector(penetration_vector, aabb);
 
-            vec2_add(
-                body->aabb.position, body->aabb.position, penetration_vector);
+            vec2_add(body->aabb.position, body->aabb.position, penetration_vector);
         }
     }
 }
@@ -173,8 +149,7 @@ void physics_update(void)
         body->velocity[1] += body->acceleration[1];
 
         vec2 scaled_velocity;
-        vec2_scale(
-            scaled_velocity, body->velocity, global.time.delta * tick_rate);
+        vec2_scale(scaled_velocity, body->velocity, global.time.delta * tick_rate);
 
         for (u32 j = 0; j < iterations; ++j) {
             sweep_response(body, scaled_velocity);
@@ -183,17 +158,9 @@ void physics_update(void)
     }
 }
 
-Body *physics_body_create(
-    vec2 position,
-    vec2 size,
-    vec2 velocity,
-    u8 collision_layer,
-    u8 collision_mask,
-    On_Hit on_hit,
-    On_Hit_Static on_hit_static)
+Body *physics_body_create(vec2 position, vec2 size, vec2 velocity, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static)
 {
-    Body *body =
-        (Body *)malloc(sizeof(Body)); // Allocate memory for the Body struct
+    Body *body = (Body *)malloc(sizeof(Body)); // Allocate memory for the Body struct
 
     if (body == NULL) {
         ERROR_EXIT("Memory allocation failed\n");
@@ -226,10 +193,7 @@ Body *physics_body_create(
 
 usize physics_body_count() { return state.body_list->len; }
 
-Body *physics_body_get(usize index)
-{
-    return array_list_get(state.body_list, index);
-}
+Body *physics_body_get(usize index) { return array_list_get(state.body_list, index); }
 
 usize physics_body_get_id(Body *target_body)
 {
@@ -238,8 +202,7 @@ usize physics_body_get_id(Body *target_body)
             return i;
         }
     }
-    ERROR_EXIT(
-        "ERROR: Could not find the specified entity in the Array_List\n");
+    ERROR_EXIT("ERROR: Could not find the specified entity in the Array_List\n");
 }
 
 void physics_body_destroy(Body *body)
@@ -249,11 +212,9 @@ void physics_body_destroy(Body *body)
     free(body);
 }
 
-Static_Body *
-physics_static_body_create(vec2 position, vec2 size, u8 collision_layer)
+Static_Body *physics_static_body_create(vec2 position, vec2 size, u8 collision_layer)
 {
-    Static_Body *static_body = (Static_Body *)malloc(
-        sizeof(Static_Body)); // Allocate memory for the Static_Body
+    Static_Body *static_body = (Static_Body *)malloc(sizeof(Static_Body)); // Allocate memory for the Static_Body
 
     if (static_body == NULL) {
         ERROR_EXIT("Memory allocation failed\n");
@@ -275,10 +236,7 @@ physics_static_body_create(vec2 position, vec2 size, u8 collision_layer)
     return static_body;
 }
 
-Static_Body *physics_static_body_get(usize index)
-{
-    return array_list_get(state.static_body_list, index);
-}
+Static_Body *physics_static_body_get(usize index) { return array_list_get(state.static_body_list, index); }
 
 // gets the minimium and maximum position of the aabb
 void aabb_min_max(vec2 min, vec2 max, AABB aabb)
@@ -292,8 +250,7 @@ bool physics_point_intersect_aabb(vec2 point, AABB aabb)
 {
     vec2 min, max;
     aabb_min_max(min, max, aabb);
-    return point[0] >= min[0] && point[0] <= max[0] && point[1] >= min[1] &&
-           point[1] <= max[1];
+    return point[0] >= min[0] && point[0] <= max[0] && point[1] >= min[1] && point[1] <= max[1];
 }
 
 // gets minkowski difference of the two boxes, gets min and max of result
@@ -302,8 +259,7 @@ bool physics_aabb_intersect_aabb(AABB a, AABB b)
 {
     vec2 min, max;
     aabb_min_max(min, max, aabb_minkowski_difference(a, b));
-    bool contains_origin =
-        (min[0] <= 0 && max[0] >= 0 && min[1] <= 0 && max[1] >= 0);
+    bool contains_origin = (min[0] <= 0 && max[0] >= 0 && min[1] <= 0 && max[1] >= 0);
     return contains_origin;
 }
 

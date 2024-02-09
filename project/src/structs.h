@@ -118,18 +118,18 @@ typedef struct player {
                             // to the window
     enum Direction direction;
     enum Player_Status status;
-    int controller_id; // controller id of the controller associated with this
-                       // player. If no controllers are associated with the
-                       // player, this value defaults to -1
+    int controller_id;       // controller id of the controller associated with this
+                             // player. If no controllers are associated with the
+                             // player, this value defaults to -1
     f32 render_scale_factor; // render scale factor (determines FOV of the
                              // player). Normal is 0.5, render width is 0.5
                              // of window width
     f32 despawn_time;        // time it takes for animation to complete after
                              // health <=
                              // 0
-    f32 spawn_delay;      // time in s from INACTIVE status to SPAWNING status
-    f32 spawn_time;       // time in s from SPAWNING status to ACTIVE status
-    u32 frames_on_status; // # of frames since last status change
+    f32 spawn_delay;         // time in s from INACTIVE status to SPAWNING status
+    f32 spawn_time;          // time in s from SPAWNING status to ACTIVE status
+    u32 frames_on_status;    // # of frames since last status change
     i16 health;
     bool is_left_player;
 } Player;
@@ -155,11 +155,11 @@ typedef struct pickup {
 } Pickup;
 
 typedef struct prop {
-    Sprite *sprite;          // sprite to render for this prop
-    i32 layer_threshold;     // if entity is ABOVE this y coordinate, the entity
-                             // will render BEFORE this prop, and vice-versa
-    usize num_static_bodies; // number of static bodies associated with this
-                             // prop
+    Sprite *sprite;              // sprite to render for this prop
+    i32 layer_threshold;         // if entity is ABOVE this y coordinate, the entity
+                                 // will render BEFORE this prop, and vice-versa
+    usize num_static_bodies;     // number of static bodies associated with this
+                                 // prop
     Static_Body **static_bodies; // holds the references of the static
                                  // bodies for this prop
 } Prop;

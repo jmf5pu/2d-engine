@@ -8,10 +8,8 @@ Weapon_Type *m44;
 void init_weapon_types(void)
 {
 
-    render_sprite_sheet_init(
-        &sprite_sheet_556_burst, "assets/hud/556_burst.png", 20, 44);
-    adef_556_burst = animation_definition_create(
-        &sprite_sheet_556_burst, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_556_burst, "assets/hud/556_burst.png", 20, 44);
+    adef_556_burst = animation_definition_create(&sprite_sheet_556_burst, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_556_burst = animation_create(adef_556_burst, false);
 
     base = malloc(sizeof(Weapon_Type));

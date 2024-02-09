@@ -59,33 +59,18 @@ typedef struct sprite {
 } Sprite;
 
 SDL_Window *render_init();
-void set_render_dimensions(
-    f32 scale_factor, bool rendering_hud, bool update_shaders);
+void set_render_dimensions(f32 scale_factor, bool rendering_hud, bool update_shaders);
 void render_begin(void);
 void render_begin_left(void);
 void render_begin_right(void);
-void render_end(
-    SDL_Window *window, u32 batch_texture_ids[32], bool swap_window);
+void render_end(SDL_Window *window, u32 batch_texture_ids[32], bool swap_window);
 void render_quad(vec2 pos, vec2 state, vec4 color);
 void render_line_segment(vec2 start, vec2 end, vec4 color);
 void render_quad_line(vec2 pos, vec2 size, vec4 color);
 void render_aabb(f32 *aabb, vec4 color);
 f32 render_get_scale();
 
-void render_sprite_sheet_init(
-    Sprite_Sheet *sprite_sheet,
-    const char *path,
-    f32 cell_width,
-    f32 cell_height);
-void render_sprite_sheet_frame(
-    Sprite_Sheet *sprite_sheet,
-    SDL_Window *window,
-    f32 row,
-    f32 column,
-    vec2 position,
-    i32 z_index,
-    bool is_flipped,
-    vec4 color,
-    u32 texture_slots[16]);
+void render_sprite_sheet_init(Sprite_Sheet *sprite_sheet, const char *path, f32 cell_width, f32 cell_height);
+void render_sprite_sheet_frame(Sprite_Sheet *sprite_sheet, SDL_Window *window, f32 row, f32 column, vec2 position, i32 z_index, bool is_flipped, vec4 color, u32 texture_slots[16]);
 
 #endif

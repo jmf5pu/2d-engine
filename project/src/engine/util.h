@@ -3,41 +3,41 @@
 
 #include <stdio.h>
 
-#define ERROR_EXIT(...)                                                        \
-    {                                                                          \
-        fprintf(stderr, __VA_ARGS__);                                          \
-        exit(1);                                                               \
+#define ERROR_EXIT(...)                                                                                                                                                            \
+    {                                                                                                                                                                              \
+        fprintf(stderr, __VA_ARGS__);                                                                                                                                              \
+        exit(1);                                                                                                                                                                   \
     }
-#define ERROR_RETURN(R, ...)                                                   \
-    {                                                                          \
-        fprintf(stderr, __VA_ARGS__);                                          \
-        return R;                                                              \
+#define ERROR_RETURN(R, ...)                                                                                                                                                       \
+    {                                                                                                                                                                              \
+        fprintf(stderr, __VA_ARGS__);                                                                                                                                              \
+        return R;                                                                                                                                                                  \
     }
-#define WHITE                                                                  \
+#define WHITE                                                                                                                                                                      \
     (vec4) { 1, 1, 1, 1 }
-#define BLACK                                                                  \
+#define BLACK                                                                                                                                                                      \
     (vec4) { 0, 0, 0, 1 }
-#define RED                                                                    \
+#define RED                                                                                                                                                                        \
     (vec4) { 1, 0, 0, 1 }
-#define GREEN                                                                  \
+#define GREEN                                                                                                                                                                      \
     (vec4) { 0, 1, 0, 1 }
-#define BLUE                                                                   \
+#define BLUE                                                                                                                                                                       \
     (vec4) { 0, 0, 1, 1 }
-#define YELLOW                                                                 \
+#define YELLOW                                                                                                                                                                     \
     (vec4) { 1, 1, 0, 1 }
-#define CYAN                                                                   \
+#define CYAN                                                                                                                                                                       \
     (vec4) { 0, 1, 1, 1 }
-#define MAGENTA                                                                \
+#define MAGENTA                                                                                                                                                                    \
     (vec4) { 1, 0, 1, 1 }
-#define ORANGE                                                                 \
+#define ORANGE                                                                                                                                                                     \
     (vec4) { 1, 0.5, 0, 1 }
-#define PURPLE                                                                 \
+#define PURPLE                                                                                                                                                                     \
     (vec4) { 0.5, 0, 1, 1 }
-#define TURQUOISE                                                              \
+#define TURQUOISE                                                                                                                                                                  \
     (vec4) { 0, 1, 0.5, 1 }
-#define GREYED_OUT                                                             \
+#define GREYED_OUT                                                                                                                                                                 \
     (vec4) { 0.3, 0.3, 0.3, 1 }
-#define SEMI_TRANSPARENT                                                       \
+#define SEMI_TRANSPARENT                                                                                                                                                           \
     (vec4) { 1, 1, 1, 0.8 }
 
 #endif

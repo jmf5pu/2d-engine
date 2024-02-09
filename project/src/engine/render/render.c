@@ -49,8 +49,7 @@ SDL_Window *render_init(void)
     render_init_quad(&vao_quad, &vbo_quad, &ebo_quad);
     render_init_batch_quads(&vao_batch, &vbo_batch, &ebo_batch);
     render_init_line(&vao_line, &vbo_line);
-    render_init_shaders(
-        &shader_default, &shader_batch, render_width, render_height);
+    render_init_shaders(&shader_default, &shader_batch, render_width, render_height);
     render_init_color_texture(&texture_color);
 
     // create transparency / semi transparent effect
@@ -67,16 +66,12 @@ SDL_Window *render_init(void)
 // util to set rendering dimensions, updates shader projection matrix if desired
 // scale_factor: float representing the fraction of the window dimensions the
 // render dimensions should be
-void set_render_dimensions(
-    f32 scale_factor, bool rendering_hud, bool update_shaders)
+void set_render_dimensions(f32 scale_factor, bool rendering_hud, bool update_shaders)
 {
-    render_width = SPLIT_SCREEN && !rendering_hud
-                       ? window_width * scale_factor * 0.5
-                       : window_width * scale_factor;
+    render_width = SPLIT_SCREEN && !rendering_hud ? window_width * scale_factor * 0.5 : window_width * scale_factor;
     render_height = window_height * scale_factor;
     if (update_shaders) {
-        update_projection_matrix(
-            &shader_default, &shader_batch, render_width, render_height);
+        update_projection_matrix(&shader_default, &shader_batch, render_width, render_height);
     }
 }
 
@@ -121,13 +116,10 @@ static int compare_vertices(const void *a, const void *b)
     const Batch_Vertex *vertex_b = *(const Batch_Vertex **)b;
 
     if (vertex_a->z_index != vertex_b->z_index)
-        return (vertex_a->z_index > vertex_b->z_index) -
-               (vertex_a->z_index < vertex_b->z_index);
+        return (vertex_a->z_index > vertex_b->z_index) - (vertex_a->z_index < vertex_b->z_index);
     if (vertex_a->quad_id != vertex_b->quad_id)
-        return (vertex_a->quad_id > vertex_b->quad_id) -
-               (vertex_a->quad_id < vertex_b->quad_id);
-    return (vertex_a->vertex_idx > vertex_b->vertex_idx) -
-           (vertex_a->vertex_idx < vertex_b->vertex_idx);
+        return (vertex_a->quad_id > vertex_b->quad_id) - (vertex_a->quad_id < vertex_b->quad_id);
+    return (vertex_a->vertex_idx > vertex_b->vertex_idx) - (vertex_a->vertex_idx < vertex_b->vertex_idx);
 }
 
 void render_begin(void)
@@ -158,18 +150,13 @@ void render_begin_hud(void)
     glViewport(0, 0, window_width, window_height);
 }
 
-static void
-render_batch(Batch_Vertex *vertices, usize count, u32 texture_ids[32])
+static void render_batch(Batch_Vertex *vertices, usize count, u32 texture_ids[32])
 {
     glBindBuffer(GL_ARRAY_BUFFER, vbo_batch);
     // Iterate through the list_batch array list and access each
     // Batch_Vertex instance
 
-    qsort(
-        list_batch->items,
-        list_batch->len,
-        sizeof(Batch_Vertex *),
-        compare_vertices);
+    qsort(list_batch->items, list_batch->len, sizeof(Batch_Vertex *), compare_vertices);
 
     // Calculate the total size required for copying all Batch_Vertex
     // instances
@@ -230,11 +217,7 @@ void render_quad(vec2 pos, vec2 size, vec4 color)
     mat4x4_translate(model, pos[0], pos[1], 0);
     mat4x4_scale_aniso(model, model, size[0], size[1], 1);
 
-    glUniformMatrix4fv(
-        glGetUniformLocation(shader_default, "model"),
-        1,
-        GL_FALSE,
-        &model[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(shader_default, "model"), 1, GL_FALSE, &model[0][0]);
     glUniform4fv(glad_glGetUniformLocation(shader_default, "color"), 1, color);
 
     glBindVertexArray(vao_quad);
@@ -245,13 +228,7 @@ void render_quad(vec2 pos, vec2 size, vec4 color)
     glBindVertexArray(0);
 }
 
-static void append_quad(
-    vec2 position,
-    vec2 size,
-    vec4 texture_coordinates,
-    i32 z_index,
-    vec4 color,
-    f32 texture_slot)
+static void append_quad(vec2 position, vec2 size, vec4 texture_coordinates, i32 z_index, vec4 color, f32 texture_slot)
 {
     vec4 uvs = {0, 0, 1, 1};
 
@@ -325,11 +302,7 @@ void render_line_segment(vec2 start, vec2 end, vec4 color)
     mat4x4 model;
     mat4x4_translate(model, start[0], start[1], 0);
 
-    glUniformMatrix4fv(
-        glGetUniformLocation(shader_default, "model"),
-        1,
-        GL_FALSE,
-        &model[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(shader_default, "model"), 1, GL_FALSE, &model[0][0]);
     glUniform4fv(glGetUniformLocation(shader_default, "color"), 1, color);
 
     glBindTexture(GL_TEXTURE_2D, texture_color);
@@ -367,11 +340,7 @@ void render_aabb(f32 *aabb, vec4 color)
 
 f32 render_get_scale() { return scale; }
 
-void render_sprite_sheet_init(
-    Sprite_Sheet *sprite_sheet,
-    const char *path,
-    f32 cell_width,
-    f32 cell_height)
+void render_sprite_sheet_init(Sprite_Sheet *sprite_sheet, const char *path, f32 cell_width, f32 cell_height)
 {
     glGenTextures(1, &sprite_sheet->texture_id);
     glActiveTexture(GL_TEXTURE0);
@@ -390,16 +359,7 @@ void render_sprite_sheet_init(
     }
 
     // sends texture data to gpu
-    glTexImage2D(
-        GL_TEXTURE_2D,
-        0,
-        GL_RGBA8,
-        width,
-        height,
-        0,
-        GL_RGBA,
-        GL_UNSIGNED_BYTE,
-        image_data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
     stbi_image_free(image_data); // on gpu, no longer needed on cpu
 
     sprite_sheet->width = (f32)width;
@@ -408,14 +368,7 @@ void render_sprite_sheet_init(
     sprite_sheet->cell_height = cell_height;
 }
 
-static void calculate_sprite_texture_coordinates(
-    vec4 result,
-    f32 row,
-    f32 column,
-    f32 texture_width,
-    f32 texture_height,
-    f32 cell_width,
-    f32 cell_height)
+static void calculate_sprite_texture_coordinates(vec4 result, f32 row, f32 column, f32 texture_width, f32 texture_height, f32 cell_width, f32 cell_height)
 {
     // texture coordinates are always a range from 0 - 1
     f32 w = 1.0 / (texture_width / cell_width);
@@ -428,26 +381,10 @@ static void calculate_sprite_texture_coordinates(
     result[3] = y + h;
 }
 
-void render_sprite_sheet_frame(
-    Sprite_Sheet *sprite_sheet,
-    SDL_Window *window,
-    f32 row,
-    f32 column,
-    vec2 position,
-    i32 z_index,
-    bool is_flipped,
-    vec4 color,
-    u32 texture_slots[32])
+void render_sprite_sheet_frame(Sprite_Sheet *sprite_sheet, SDL_Window *window, f32 row, f32 column, vec2 position, i32 z_index, bool is_flipped, vec4 color, u32 texture_slots[32])
 {
     vec4 uvs;
-    calculate_sprite_texture_coordinates(
-        uvs,
-        row,
-        column,
-        sprite_sheet->width,
-        sprite_sheet->height,
-        sprite_sheet->cell_width,
-        sprite_sheet->cell_height);
+    calculate_sprite_texture_coordinates(uvs, row, column, sprite_sheet->width, sprite_sheet->height, sprite_sheet->cell_width, sprite_sheet->cell_height);
 
     if (is_flipped) {
         f32 tmp = uvs[0];
@@ -456,11 +393,9 @@ void render_sprite_sheet_frame(
     }
 
     vec2 size = {sprite_sheet->cell_width, sprite_sheet->cell_height};
-    vec2 bottom_left = {
-        position[0] - size[0] * 0.5, position[1] - size[1] * 0.5};
+    vec2 bottom_left = {position[0] - size[0] * 0.5, position[1] - size[1] * 0.5};
 
-    i32 texture_slot =
-        try_insert_texture(texture_slots, sprite_sheet->texture_id);
+    i32 texture_slot = try_insert_texture(texture_slots, sprite_sheet->texture_id);
 
     // check if buffer is full, is so, flush buffer and try again TODO:
     // implement some sort of LRU here
@@ -468,16 +403,15 @@ void render_sprite_sheet_frame(
         render_end(
             window,
             texture_slots,
-            false); // render all the batched frames before resetting
-                    // for another write
+            false);                   // render all the batched frames before resetting
+                                      // for another write
         array_list_clear(list_batch); // free old batch vertices
 
         // flush texture_slots array
         memset(texture_slots, 0, sizeof(u32) * 32);
 
         // try to insert it again
-        texture_slot =
-            try_insert_texture(texture_slots, sprite_sheet->texture_id);
+        texture_slot = try_insert_texture(texture_slots, sprite_sheet->texture_id);
         if (texture_slot == -1) {
             // TODO: add warning here
             printf("couldn't insert texture\n");

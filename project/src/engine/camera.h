@@ -2,7 +2,7 @@
 #define CAMERA_H
 
 #define WINDOW_BUFFER 100 // how close the player can get to the window edge
-#define CENTER_PLAYER_CAMERA_DELTA                                             \
+#define CENTER_PLAYER_CAMERA_DELTA                                                                                                                                                 \
     25 // how many pixels the camera will move per frame (used when
        // centering player)
 

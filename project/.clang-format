@@ -5,3 +5,4 @@ BreakBeforeBraces: Stroustrup
 BinPackArguments: false
 BinPackParameters: false
 AlignAfterOpenBracket: AlwaysBreak
+ColumnLimit: 180

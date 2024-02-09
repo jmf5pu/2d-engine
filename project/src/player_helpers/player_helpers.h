@@ -387,21 +387,17 @@ Animation *anim_bullet_1_vertical;
 void init_bullet_anim_hashmap();
 void init_player_anim_hashmap();
 void init_all_anims();
-void init_player(
-    Player *player,
-    Map *map,
-    Weapon_Type *starting_weapon,
-    f32 despawn_time,
-    f32 spawn_delay,
-    f32 spawn_time,
-    bool is_left_player);
+void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 despawn_time, f32 spawn_delay, f32 spawn_time, bool is_left_player);
 void spawn_player(Player *player, Weapon_Type *starting_weapon);
 void update_player_status(Player *player);
 void update_player_animations(Player *player);
 void handle_player_shooting(Player *player, Key_State shoot);
 void handle_player_input(Player *player);
-void free_player(Player *player);
+void free_players(void);
 void update_crosshair_position_percentage(Player *player);
 void player_per_frame_updates(Player *player);
+
+// controller related methods
+void assign_player_input_devices(void);
 
 #endif

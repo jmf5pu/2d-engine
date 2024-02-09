@@ -8,43 +8,27 @@
 static Array_List *current_enemies;
 
 // calculates distance between two points represented by vec2s
-f32 get_distance(vec2 point_a, vec2 point_b)
-{
-    return abs(sqrt(
-        pow((point_a[0] - point_b[0]), 2) + pow(point_a[1] - point_b[1], 2)));
-}
+f32 get_distance(vec2 point_a, vec2 point_b) { return abs(sqrt(pow((point_a[0] - point_b[0]), 2) + pow(point_a[1] - point_b[1], 2))); }
 
 // determines if players are visible to the enemies (i.e. valid targets)
 bool player_visible(Player *player)
 {
     if (!player) // if not split screen and we are checking player two
         return false;
-    return player->status != PLAYER_INACTIVE &&
-           player->status != PLAYER_SPAWNING &&
-           player->status != PLAYER_DESPAWNING;
+    return player->status != PLAYER_INACTIVE && player->status != PLAYER_SPAWNING && player->status != PLAYER_DESPAWNING;
 }
 
 // used by external methods
 Array_List *get_all_enemies(void) { return current_enemies; }
 
 // initializes enemy array list
-void init_enemies(usize item_size, usize initial_capacity)
-{
-    current_enemies = array_list_create(sizeof(item_size), initial_capacity);
-}
+void init_enemies(usize item_size, usize initial_capacity) { current_enemies = array_list_create(sizeof(item_size), initial_capacity); }
 
 // initializes a single enemy and adds to current_enemies
 void create_enemy(vec2 spawn_point, vec2 size)
 {
     Zombie *enemy = malloc(sizeof(Zombie));
-    enemy->entity = entity_create(
-        spawn_point,
-        size,
-        (vec2){0, 0},
-        COLLISION_LAYER_ENEMY,
-        enemy_mask,
-        enemy_on_hit,
-        enemy_on_hit_static);
+    enemy->entity = entity_create(spawn_point, size, (vec2){0, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
     enemy->entity->body->parent = enemy;
     enemy->despawn_time = 1;
     enemy->direction = LEFT;
@@ -74,24 +58,13 @@ void update_current_enemies(void)
             continue;
         }
 
-        f32 p1_distance = player_visible(player_one)
-                              ? get_distance(
-                                    player_one->relative_position,
-                                    zombie->entity->body->aabb.position)
-                              : FLT_MAX;
-        f32 p2_distance = player_visible(player_two)
-                              ? get_distance(
-                                    player_two->relative_position,
-                                    zombie->entity->body->aabb.position)
-                              : FLT_MAX;
-        Player *closest_player =
-            p1_distance < p2_distance ? player_one : player_two;
+        f32 p1_distance = player_visible(player_one) ? get_distance(player_one->relative_position, zombie->entity->body->aabb.position) : FLT_MAX;
+        f32 p2_distance = player_visible(player_two) ? get_distance(player_two->relative_position, zombie->entity->body->aabb.position) : FLT_MAX;
+        Player *closest_player = p1_distance < p2_distance ? player_one : player_two;
 
         // calculate enemy movement vector
-        f32 x_dist = closest_player->relative_position[0] -
-                     zombie->entity->body->aabb.position[0];
-        f32 y_dist = closest_player->relative_position[1] -
-                     zombie->entity->body->aabb.position[1];
+        f32 x_dist = closest_player->relative_position[0] - zombie->entity->body->aabb.position[0];
+        f32 y_dist = closest_player->relative_position[1] - zombie->entity->body->aabb.position[1];
 
         f32 angle;
         if (x_dist != 0.0) {
