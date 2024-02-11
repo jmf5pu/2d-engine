@@ -6,6 +6,7 @@
 
 #include "engine/animation.h"
 #include "engine/entity.h"
+#include "engine/input/input.h"
 #include "engine/render.h"
 #include "engine/types.h"
 
@@ -118,9 +119,10 @@ typedef struct player {
                             // to the window
     enum Direction direction;
     enum Player_Status status;
-    int controller_id;       // controller id of the controller associated with this
-                             // player. If no controllers are associated with the
-                             // player, this value defaults to -1
+    int controller_id; // controller id of the controller associated with this
+                       // player. If no controllers are associated with the
+                       // player, this value defaults to -1
+    Player_Input_State input_state;
     f32 render_scale_factor; // render scale factor (determines FOV of the
                              // player). Normal is 0.5, render width is 0.5
                              // of window width

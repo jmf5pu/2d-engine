@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        input_update();
+        update_bound_key_states();
         animation_update(global.time.delta);
 
         switch (game_state) {
@@ -135,6 +135,10 @@ int main(int argc, char *argv[])
             if (game_state == GS_RUNNING && global.input.escape) {
                 game_state = GS_PAUSE_MENU;
             }
+
+            // update controller assignments if a change was detected
+            if (detect_game_controller_changes_and_update_state())
+                assign_player_input_devices();
 
             // update map
             update_map(&map);

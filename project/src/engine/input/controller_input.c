@@ -33,7 +33,6 @@ bool detect_game_controller_changes_and_update_state(void)
         if (i < num_joysticks) {
             SDL_JoystickID device_joystick_id = SDL_JoystickGetDeviceInstanceID(i);
             if (!joystick_ids_are_identical(open_controller_ids[i], device_joystick_id)) {
-                printf("Controller %d changed to: %d\n", i, device_joystick_id);
                 SDL_Joystick *old_joystick = SDL_JoystickFromInstanceID(open_controller_ids[i]);
                 SDL_JoystickClose(old_joystick);
                 SDL_JoystickOpen(i);

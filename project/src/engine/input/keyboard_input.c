@@ -17,12 +17,8 @@ static void update_key_state(u8 current_state, Key_State *key_state)
     }
 }
 
-void input_update()
+void update_bound_key_states(void)
 {
-    // start controller testing logic
-    detect_game_controller_changes_and_update_state();
-    // end controller testing logic
-
     const u8 *keyboard_state = SDL_GetKeyboardState(NULL);
     update_key_state(keyboard_state[global.config.keybinds[INPUT_KEY_L_LEFT]], &global.input.l_left);
     update_key_state(keyboard_state[global.config.keybinds[INPUT_KEY_L_RIGHT]], &global.input.l_right);

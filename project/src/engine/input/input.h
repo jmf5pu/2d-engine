@@ -33,6 +33,24 @@ typedef enum input_key {
 
 typedef enum key_state { KS_UNPRESSED, KS_PRESSED, KS_HELD } Key_State;
 
+typedef struct menu_input_state {
+    Key_State select;
+    Key_State up;
+    Key_State down;
+    Key_State escape;
+} Menu_Input_State;
+
+typedef struct player_input_state {
+    Key_State left;
+    Key_State right;
+    Key_State up;
+    Key_State down;
+    Key_State shoot;
+    Key_State crouch;
+    Key_State reload;
+    Key_State pause;
+} Player_Input_State;
+
 typedef struct input_state {
     // left player key states
     Key_State escape;
@@ -59,7 +77,7 @@ typedef struct input_state {
     Key_State enter;
 } Input_State;
 
-void input_update(void);
+void update_bound_key_states(void);
 
 // controller methods
 void init_game_controllers(void);
