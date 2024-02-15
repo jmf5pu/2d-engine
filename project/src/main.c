@@ -73,6 +73,13 @@ int main(int argc, char *argv[])
             case SDL_QUIT:
                 should_quit = true;
                 break;
+            case SDL_JOYBUTTONDOWN:
+            case SDL_JOYBUTTONUP:
+                if(player_one)
+                    update_player_input_state(player_one, &event);
+                if(player_two)
+                    update_player_input_state(player_two, &event);
+                break;
             default:
                 break;
             }
