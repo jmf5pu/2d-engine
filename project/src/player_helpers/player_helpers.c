@@ -833,15 +833,17 @@ void handle_player_input(Player *player)
     player->entity->body->velocity[1] = vely;
 }
 
-void free_players(void)
+void free_players()
 {
     if (player_one) {
         free(player_one->crosshair);
         free(player_one);
+        player_one = NULL;
     }
     if (player_two) {
         free(player_two->crosshair);
         free(player_two);
+        player_two = NULL;
     }
 }
 

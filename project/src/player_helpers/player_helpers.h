@@ -399,7 +399,7 @@ void player_per_frame_updates(Player *player);
 
 // controller related methods
 void assign_player_input_devices(void);
-void update_player_input_state(Player *player, SDL_Event * event);
+void update_player_input_state(Player *player, SDL_Event *event);
 void update_menu_input_state(Menu_Input_State menu_input_state);
 
 #endif

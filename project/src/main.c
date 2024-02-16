@@ -75,9 +75,9 @@ int main(int argc, char *argv[])
                 break;
             case SDL_JOYBUTTONDOWN:
             case SDL_JOYBUTTONUP:
-                if(player_one)
+                if (player_one)
                     update_player_input_state(player_one, &event);
-                if(player_two)
+                if (player_two)
                     update_player_input_state(player_two, &event);
                 break;
             default:
@@ -90,9 +90,9 @@ int main(int argc, char *argv[])
 
         switch (game_state) {
         case GS_MAIN_MENU:
-            free_players(); // reset players when exit back to main menu.
-                            // Important so that we don't malloc twice if we go
-                            // from menu -> running -> menu -> running
+            // free_players(); // reset players when exit back to main menu.
+            //  Important so that we don't malloc twice if we go
+            //  from menu -> running -> menu -> running
             render_begin();
             update_menu(main_menu, global.input);
             render_main_menu(window, texture_slots);
