@@ -251,7 +251,9 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
     }
 
     // set controller_id default value:
-    player->controller_id = -1;
+    player->input_state = malloc(sizeof(Player_Input_State));
+    player->input_state->controller_id = -1;
+    player->input_state->has_been_updated_this_frame = false;
 }
 
 // Spawns the player and resets their attributes to default values
@@ -833,17 +835,21 @@ void handle_player_input(Player *player)
     player->entity->body->velocity[1] = vely;
 }
 
+void free_player(Player *player)
+{
+    free(player->crosshair);
+    free(player->input_state);
+    free(player);
+    player = NULL;
+}
+
 void free_players()
 {
     if (player_one) {
-        free(player_one->crosshair);
-        free(player_one);
-        player_one = NULL;
+        free_player(player_one);
     }
     if (player_two) {
-        free(player_two->crosshair);
-        free(player_two);
-        player_two = NULL;
+        free_player(player_two);
     }
 }
 

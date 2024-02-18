@@ -40,7 +40,7 @@ typedef struct menu_input_state {
     Key_State escape;
 } Menu_Input_State;
 
-typedef struct player_input_state {
+typedef struct player_key_state {
     Key_State left;
     Key_State right;
     Key_State up;
@@ -49,7 +49,7 @@ typedef struct player_input_state {
     Key_State crouch;
     Key_State reload;
     Key_State pause;
-} Player_Input_State;
+} Player_Key_State;
 
 typedef struct input_state {
     // left player key states

@@ -66,6 +66,12 @@ int main(int argc, char *argv[])
     while (!should_quit) {
         time_update();
 
+        // TODO: put these lines somewhere else
+        if(player_one)
+            player_one->input_state->has_been_updated_this_frame = false;
+        if(player_two)
+            player_two->input_state->has_been_updated_this_frame = false;
+
         // grab current inputs
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
@@ -75,10 +81,10 @@ int main(int argc, char *argv[])
                 break;
             case SDL_JOYBUTTONDOWN:
             case SDL_JOYBUTTONUP:
-                if (player_one)
-                    update_player_input_state(player_one, &event);
-                if (player_two)
-                    update_player_input_state(player_two, &event);
+                if (player_one && event.cbutton.which == player_one->input_state->controller_id)
+                    update_player_input_state_via_controller(player_one, &event);
+                if (player_two && event.cbutton.which == player_one->input_state->controller_id)
+                    update_player_input_state_via_controller(player_two, &event);
                 break;
             default:
                 break;

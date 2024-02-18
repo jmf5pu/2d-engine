@@ -108,6 +108,14 @@ typedef struct camera {
     vec4 buffer;
 } Camera;
 
+typedef struct player_input_state {
+    int controller_id; // controller id of the controller associated with this
+                       // player. If no controllers are associated with the
+                       // player, this value defaults to -1
+    bool has_been_updated_this_frame;
+    Player_Key_State key_state;
+} Player_Input_State;
+
 typedef struct player {
     Entity *entity;
     Camera *camera;
@@ -119,10 +127,7 @@ typedef struct player {
                             // to the window
     enum Direction direction;
     enum Player_Status status;
-    int controller_id; // controller id of the controller associated with this
-                       // player. If no controllers are associated with the
-                       // player, this value defaults to -1
-    Player_Input_State input_state;
+    Player_Input_State *input_state;
     f32 render_scale_factor; // render scale factor (determines FOV of the
                              // player). Normal is 0.5, render width is 0.5
                              // of window width
