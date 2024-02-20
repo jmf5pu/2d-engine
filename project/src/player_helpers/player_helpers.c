@@ -250,10 +250,14 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
         player->camera = &right_cam;
     }
 
-    // set controller_id default value:
+    // init input state members
     player->input_state = malloc(sizeof(Player_Input_State));
     player->input_state->controller_id = -1;
-    player->input_state->has_been_updated_this_frame = false;
+    player->input_state->keystate_updated_this_frame = false;
+    player->input_state->left_joystick_state.x_axis = 0.0f;
+    player->input_state->left_joystick_state.y_axis = 0.0f;
+    player->input_state->right_joystick_state.x_axis = 0.0f;
+    player->input_state->right_joystick_state.y_axis = 0.0f;
 }
 
 // Spawns the player and resets their attributes to default values

@@ -14,17 +14,12 @@ void assign_player_input_devices(void)
     printf("player_two->controller_id: %d\n", player_two->input_state->controller_id);
 }
 
-/// @brief Updates the player's input state via controller sdl event. This updates the has_been_updated_this_frame flag in the struct. Can be called multiple times per frame (for
+/// @brief Updates the player's input state via controller sdl event. This updates the keystate_updated_this_frame flag in the struct. Can be called multiple times per frame (for
 /// each controller event). If this is called on a given frame, update update_player_input_state_via_keyboard should not also be called on the same frame
 /// @param player relevant player
 /// @param event SDL_JOYBUTTONDOWN or SDL_JOYBUTTONUP sdl event
 void update_player_input_state_via_controller(Player *player, SDL_Event *event)
 {
-    // SDL_GameController* controller = SDL_GameControllerOpen(0);
-    // char* mappingString = SDL_GameControllerMapping(controller);
-    // printf("Controller Mapping:\n%s\n", mappingString);
-    // SDL_free(mappingString);
-
     printf("event cbutton.button: %d\n", event->cbutton.button);
     switch (event->cbutton.button) {
     case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
@@ -43,11 +38,31 @@ void update_player_input_state_via_controller(Player *player, SDL_Event *event)
         printf("Y\n");
         break;
     }
-    
-    player->input_state->has_been_updated_this_frame = true;
+
+    player->input_state->keystate_updated_this_frame = true;
 }
 
-/// @brief Updates the player's input state via keyboard inputs. This will only be called on a given frame if has_been_updated_this_frame is false
+/// @brief Checks for joystick movements and updates the player's input state accordingly. Called once per frame for each player
+void update_player_input_state_from_joysticks(Player *player)
+{
+    if (player->input_state->controller_id != -1) {
+        SDL_GameController *controller = SDL_GameControllerFromInstanceID(player->input_state->controller_id);
+
+        // Update left joystick axes
+        player->input_state->left_joystick_state.x_axis = get_normalized_joystick_axis(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTX));
+        player->input_state->left_joystick_state.y_axis = get_normalized_joystick_axis(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY));
+
+        // Update right joystick axes
+        player->input_state->right_joystick_state.x_axis = get_normalized_joystick_axis(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTX));
+        player->input_state->right_joystick_state.y_axis = get_normalized_joystick_axis(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTY));
+    }
+    printf("joystick state left x: %f\n", player->input_state->left_joystick_state.x_axis);
+    printf("joystick state left y: %f\n", player->input_state->left_joystick_state.y_axis);
+    printf("joystick state right x: %f\n", player->input_state->right_joystick_state.x_axis);
+    printf("joystick state right y: %f\n", player->input_state->right_joystick_state.y_axis);
+}
+
+/// @brief Updates the player's input state via keyboard inputs. This will only be called on a given frame if keystate_updated_this_frame is false
 /// @param player the relevant player
 void update_player_input_state_via_keyboard(Player *player) {}
 

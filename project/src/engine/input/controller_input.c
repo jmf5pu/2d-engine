@@ -33,9 +33,9 @@ bool detect_game_controller_changes_and_update_state(void)
         if (i < num_joysticks) {
             SDL_JoystickID device_joystick_id = SDL_JoystickGetDeviceInstanceID(i);
             if (!joystick_ids_are_identical(open_controller_ids[i], device_joystick_id)) {
-                SDL_Joystick *old_joystick = SDL_JoystickFromInstanceID(open_controller_ids[i]);
-                SDL_JoystickClose(old_joystick);
-                SDL_JoystickOpen(i);
+                SDL_GameController *old_joystick = SDL_GameControllerFromInstanceID(open_controller_ids[i]);
+                SDL_GameControllerClose(old_joystick);
+                SDL_GameControllerOpen(i);
                 open_controller_ids[i] = device_joystick_id;
                 game_controller_change_detected = true;
             }
@@ -50,3 +50,13 @@ bool detect_game_controller_changes_and_update_state(void)
 }
 
 bool joystick_ids_are_identical(SDL_JoystickID first_guid, SDL_JoystickID second_guid) { return SDL_memcmp(&first_guid, &second_guid, sizeof(SDL_JoystickID)) == 0; }
+
+/// @brief normalizes a joystick axis by converting the 16 bit signed int into a float representation between 0 and 1. Rounds off values close to 0 to 0 for when the controller
+/// joystick is near center
+/// @param axis
+/// @return normalized float representation of the axis input
+float get_normalized_joystick_axis(int16_t axis)
+{
+    float normalized_axis = axis / 32767.0f;
+    return normalized_axis > JOYSTICK_DEADZONE_THRESHOLD ? normalized_axis : 0.0f;
+}

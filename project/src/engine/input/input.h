@@ -5,8 +5,14 @@
 #include <stdbool.h>
 
 #define MAX_CONTROLLERS 2
+#define JOYSTICK_DEADZONE_THRESHOLD 0.1
 
 SDL_JoystickID open_controller_ids[MAX_CONTROLLERS];
+
+typedef struct joystick_state {
+    float x_axis;
+    float y_axis;
+} Joystick_State;
 
 typedef enum input_key {
     INPUT_KEY_L_LEFT,
@@ -83,5 +89,6 @@ void update_bound_key_states(void);
 void init_game_controllers(void);
 bool detect_game_controller_changes_and_update_state(void);
 bool joystick_ids_are_identical(SDL_JoystickID first_guid, SDL_JoystickID second_guid);
+float get_normalized_joystick_axis(int16_t axis);
 
 #endif

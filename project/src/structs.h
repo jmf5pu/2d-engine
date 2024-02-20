@@ -109,10 +109,12 @@ typedef struct camera {
 } Camera;
 
 typedef struct player_input_state {
-    int controller_id; // controller id of the controller associated with this
-                       // player. If no controllers are associated with the
-                       // player, this value defaults to -1
-    bool has_been_updated_this_frame;
+    SDL_JoystickID controller_id; // controller id of the controller associated with this
+                                  // player. If no controllers are associated with the
+                                  // player, this value defaults to -1
+    bool keystate_updated_this_frame;
+    Joystick_State left_joystick_state;
+    Joystick_State right_joystick_state;
     Player_Key_State key_state;
 } Player_Input_State;
 

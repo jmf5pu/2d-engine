@@ -27,8 +27,7 @@ void physics_init(void)
     tick_rate = 1.f / iterations;
 }
 
-static void update_sweep_result(Hit *result, usize other_id, AABB a, AABB b, vec2 velocity, u8 a_collision_mask,
-                                u8 b_collision_layer) // TODO: bug here
+static void update_sweep_result(Hit *result, usize other_id, AABB a, AABB b, vec2 velocity, u8 a_collision_mask, u8 b_collision_layer)
 {
     if ((a_collision_mask & b_collision_layer) == 0) {
         return;
@@ -57,7 +56,7 @@ static void update_sweep_result(Hit *result, usize other_id, AABB a, AABB b, vec
     }
 }
 
-static Hit sweep_static_bodies(Body *body, vec2 velocity) // TODO: bug here
+static Hit sweep_static_bodies(Body *body, vec2 velocity)
 {
     Hit result = {.time = 0xBEEF}; // time set to some large value
 

@@ -67,10 +67,10 @@ int main(int argc, char *argv[])
         time_update();
 
         // TODO: put these lines somewhere else
-        if(player_one)
-            player_one->input_state->has_been_updated_this_frame = false;
-        if(player_two)
-            player_two->input_state->has_been_updated_this_frame = false;
+        if (player_one)
+            player_one->input_state->keystate_updated_this_frame = false;
+        if (player_two)
+            player_two->input_state->keystate_updated_this_frame = false;
 
         // grab current inputs
         SDL_Event event;
@@ -92,6 +92,8 @@ int main(int argc, char *argv[])
         }
 
         update_bound_key_states();
+        if (player_one)
+            update_player_input_state_from_joysticks(player_one);
         animation_update(global.time.delta);
 
         switch (game_state) {
