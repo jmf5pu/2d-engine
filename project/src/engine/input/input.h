@@ -46,7 +46,7 @@ typedef struct joystick_state {
     float y_axis;
 } Joystick_State;
 
-typedef struct controller_button_state{
+typedef struct controller_button_state {
     Key_State left_trigger;
     Key_State left_bumper;
     Key_State right_trigger;
@@ -64,7 +64,7 @@ typedef struct controller_button_state{
     Key_State menu_button;
     Key_State view_button;
     Key_State share_button;
-}   Controller_Button_State;
+} Controller_Button_State;
 
 typedef struct controller_input_state {
     SDL_JoystickID controller_id; // controller id associated last associated with these inputs, defaults to -1

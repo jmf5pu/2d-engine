@@ -110,8 +110,8 @@ typedef struct camera {
 
 typedef struct player_input_state {
     bool input_updated_this_frame;
-    Controller_Input_State * controller_input_state;
-    Player_Key_State * key_state;
+    Controller_Input_State *controller_input_state;
+    Player_Key_State *key_state;
 } Player_Input_State;
 
 typedef struct player {

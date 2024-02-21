@@ -729,13 +729,13 @@ void handle_player_input(Player *player)
 
         // movement inputs now move crosshair instead of player
         if (left)
-            velx -= DEFAULT_PLAYER_MOVEMENT_SPEED;
+            velx -= MAX_PLAYER_MOVEMENT_SPEED;
         if (right)
-            velx += DEFAULT_PLAYER_MOVEMENT_SPEED;
+            velx += MAX_PLAYER_MOVEMENT_SPEED;
         if (up)
-            vely += DEFAULT_PLAYER_MOVEMENT_SPEED;
+            vely += MAX_PLAYER_MOVEMENT_SPEED;
         if (down)
-            vely -= DEFAULT_PLAYER_MOVEMENT_SPEED;
+            vely -= MAX_PLAYER_MOVEMENT_SPEED;
 
         // check if crosshair is out of bounds, if so, put in bounds,
         // set velocity to 0
@@ -791,7 +791,7 @@ void handle_player_input(Player *player)
 
     // 8 directional movement
     f32 angle = 0.78539816; // 45 degrees in radians
-    f32 xy_magnitude = sin(angle) * DEFAULT_PLAYER_MOVEMENT_SPEED;
+    f32 xy_magnitude = sin(angle) * MAX_PLAYER_MOVEMENT_SPEED;
     if (up && right) {
         player->direction = UP_RIGHT;
         velx += xy_magnitude;
@@ -814,30 +814,31 @@ void handle_player_input(Player *player)
     }
     else if (right) {
         player->direction = RIGHT;
-        velx += DEFAULT_PLAYER_MOVEMENT_SPEED;
+        velx += MAX_PLAYER_MOVEMENT_SPEED;
     }
 
     else if (left) {
         player->direction = LEFT;
-        velx -= DEFAULT_PLAYER_MOVEMENT_SPEED;
+        velx -= MAX_PLAYER_MOVEMENT_SPEED;
     }
 
     else if (up) {
         player->direction = UP;
-        vely += DEFAULT_PLAYER_MOVEMENT_SPEED;
+        vely += MAX_PLAYER_MOVEMENT_SPEED;
     }
 
     else if (down) {
         player->direction = DOWN;
-        vely -= DEFAULT_PLAYER_MOVEMENT_SPEED;
+        vely -= MAX_PLAYER_MOVEMENT_SPEED;
     }
 
     // handle weapon attribute updates & bullet generation, contingent on
     // fire mode, input, and weapon shot cooldown
     handle_player_shooting(player, shoot);
 
-    player->entity->body->velocity[0] = velx;
-    player->entity->body->velocity[1] = vely;
+    // TODO: uncomment/refactor. Commenting to test joystick movement
+    // player->entity->body->velocity[0] = velx;
+    // player->entity->body->velocity[1] = vely;
 }
 
 void free_player(Player *player)
@@ -871,7 +872,8 @@ void update_crosshair_position_percentage(Player *player)
 // parent function for all the necessary player updates made each frame
 void player_per_frame_updates(Player *player)
 {
-    handle_player_input(player);
+    handle_player_joystick_movement(player);
+    // handle_player_input(player);
     update_player_status(player);
     update_player_animations(player);
     update_crosshair_position_percentage(player);

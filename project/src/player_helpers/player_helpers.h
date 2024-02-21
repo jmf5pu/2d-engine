@@ -15,7 +15,7 @@
 
 #define BULLET_DISTANCE_FROM_PLAYER 40
 
-#define DEFAULT_PLAYER_MOVEMENT_SPEED 250
+#define MAX_PLAYER_MOVEMENT_SPEED 250
 #define DEFAULT_CROSSHAIR_MOVEMENT_SPEED 350
 #define CROSSHAIR_SIZE 200
 
@@ -397,11 +397,14 @@ void free_players(void);
 void update_crosshair_position_percentage(Player *player);
 void player_per_frame_updates(Player *player);
 
-// controller related methods
+// controller input related methods
 void assign_player_input_devices(void);
 void update_player_input_state_via_controller(Player *player, SDL_Event *event);
 void update_player_input_state_from_joysticks(Player *player);
 void update_player_input_state_via_keyboard(Player *player);
 void update_menu_input_state(Menu_Input_State menu_input_state);
+
+// player & crosshair movement related methods
+void handle_player_joystick_movement(Player *player);
 
 #endif
