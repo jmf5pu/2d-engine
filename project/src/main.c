@@ -68,9 +68,9 @@ int main(int argc, char *argv[])
 
         // TODO: put these lines somewhere else
         if (player_one)
-            player_one->input_state->keystate_updated_this_frame = false;
+            player_one->input_state->input_updated_this_frame = false;
         if (player_two)
-            player_two->input_state->keystate_updated_this_frame = false;
+            player_two->input_state->input_updated_this_frame = false;
 
         // grab current inputs
         SDL_Event event;
@@ -81,9 +81,9 @@ int main(int argc, char *argv[])
                 break;
             case SDL_JOYBUTTONDOWN:
             case SDL_JOYBUTTONUP:
-                if (player_one && event.cbutton.which == player_one->input_state->controller_id)
+                if (player_one && event.cbutton.which == player_one->input_state->controller_input_state->controller_id)
                     update_player_input_state_via_controller(player_one, &event);
-                if (player_two && event.cbutton.which == player_one->input_state->controller_id)
+                if (player_two && event.cbutton.which == player_one->input_state->controller_input_state->controller_id)
                     update_player_input_state_via_controller(player_two, &event);
                 break;
             default:

@@ -9,11 +9,6 @@
 
 SDL_JoystickID open_controller_ids[MAX_CONTROLLERS];
 
-typedef struct joystick_state {
-    float x_axis;
-    float y_axis;
-} Joystick_State;
-
 typedef enum input_key {
     INPUT_KEY_L_LEFT,
     INPUT_KEY_L_RIGHT,
@@ -45,6 +40,38 @@ typedef struct menu_input_state {
     Key_State down;
     Key_State escape;
 } Menu_Input_State;
+
+typedef struct joystick_state {
+    float x_axis;
+    float y_axis;
+} Joystick_State;
+
+typedef struct controller_button_state{
+    Key_State left_trigger;
+    Key_State left_bumper;
+    Key_State right_trigger;
+    Key_State right_bumper;
+    Key_State left_joystick;
+    Key_State right_joystick;
+    Key_State dpad_up;
+    Key_State dpad_down;
+    Key_State dpad_left;
+    Key_State dpad_right;
+    Key_State y_button;
+    Key_State a_button;
+    Key_State x_button;
+    Key_State b_button;
+    Key_State menu_button;
+    Key_State view_button;
+    Key_State share_button;
+}   Controller_Button_State;
+
+typedef struct controller_input_state {
+    SDL_JoystickID controller_id; // controller id associated last associated with these inputs, defaults to -1
+    Joystick_State left_joystick_state;
+    Joystick_State right_joystick_state;
+    Controller_Button_State button_state;
+} Controller_Input_State;
 
 typedef struct player_key_state {
     Key_State left;
