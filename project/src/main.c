@@ -169,16 +169,12 @@ int main(int argc, char *argv[])
             {
                 player_one->relative_position[0] = player_one->entity->body->aabb.position[0] + left_cam.position[0];
                 player_one->relative_position[1] = player_one->entity->body->aabb.position[1] + left_cam.position[1];
-                player_one->crosshair->relative_position[0] = player_one->crosshair->entity->body->aabb.position[0] + left_cam.position[0];
-                player_one->crosshair->relative_position[1] = player_one->crosshair->entity->body->aabb.position[1] + left_cam.position[1];
             }
             else // otherwise use main cam TODO: perhaps make
                  // left_cam and main_cam the same object?
             {
                 player_one->relative_position[0] = player_one->entity->body->aabb.position[0] + main_cam.position[0];
                 player_one->relative_position[1] = player_one->entity->body->aabb.position[1] + main_cam.position[1];
-                player_one->crosshair->relative_position[0] = player_one->crosshair->entity->body->aabb.position[0] + main_cam.position[0];
-                player_one->crosshair->relative_position[1] = player_one->crosshair->entity->body->aabb.position[1] + main_cam.position[1];
             }
 
             // need to pass the RELATIVE position of the players
@@ -191,8 +187,6 @@ int main(int argc, char *argv[])
             if (SPLIT_SCREEN) {
                 player_two->relative_position[0] = player_two->entity->body->aabb.position[0] + right_cam.position[0];
                 player_two->relative_position[1] = player_two->entity->body->aabb.position[1] + right_cam.position[1];
-                player_two->crosshair->relative_position[0] = player_two->crosshair->entity->body->aabb.position[0] + right_cam.position[0];
-                player_two->crosshair->relative_position[1] = player_two->crosshair->entity->body->aabb.position[1] + right_cam.position[1];
 
                 p2_pos_holder[0] = player_two->entity->body->aabb.position[0];
                 p2_pos_holder[1] = player_two->entity->body->aabb.position[1];

@@ -392,7 +392,6 @@ void update_player_animations(Player *player);
 void handle_player_shooting(Player *player, Key_State shoot);
 void handle_player_input(Player *player);
 void free_players(void);
-void update_crosshair_position_percentage(Player *player);
 void player_per_frame_updates(Player *player);
 
 // controller input related methods

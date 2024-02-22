@@ -31,7 +31,6 @@ enum Player_Status {
     PLAYER_RELOADING,
     PLAYER_DESPAWNING,
     PLAYER_INACTIVE,
-    PLAYER_CROUCHED,
 };
 
 enum Enemy_Status {
@@ -89,14 +88,6 @@ typedef struct armor {
     i16 integrity;
 } Armor;
 
-typedef struct crosshair {
-    Entity *entity;
-    vec2 relative_position;
-    vec2 percentage_of_screen; // x/y position in screen in terms of
-                               // percentage of pixels in each direction
-                               // (0.5, 0.5) would be center of screen
-} Crosshair;
-
 typedef struct bullet {
     Entity *entity;
     i32 damage;
@@ -116,8 +107,8 @@ typedef struct player_input_state {
 
 typedef struct player {
     Entity *entity;
+    Entity *crosshair;
     Camera *camera;
-    Crosshair *crosshair;
     Weapon *weapon;
     Armor *armor;
     vec2 spawn_point;

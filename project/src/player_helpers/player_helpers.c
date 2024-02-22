@@ -200,18 +200,16 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
     player->entity =
         entity_create((vec2){render_width * 0.5, render_height * 0.5}, (vec2){40, 75}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
     player->entity->body->parent = player;
-    player->crosshair = malloc(sizeof(Crosshair));
-    player->crosshair->entity = entity_create(
-        (vec2){player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]},
+    player->crosshair = malloc(sizeof(Entity));
+    player->crosshair = entity_create(
+        (vec2){player->entity->body->aabb.position[0] + 150, player->entity->body->aabb.position[1] + 150},
         (vec2){CROSSHAIR_SIZE, CROSSHAIR_SIZE},
         (vec2){0, 0},
         COLLISION_LAYER_CROSSHAIR,
         crosshair_mask,
         crosshair_on_hit,
         crosshair_on_hit_static);
-    player->crosshair->relative_position[0] = player->entity->body->aabb.position[0];
-    player->crosshair->relative_position[1] = player->entity->body->aabb.position[1];
-    player->crosshair->entity->is_active = false;
+    player->crosshair->is_active = true;
     player->direction = RIGHT;
 
     // populate weapon
@@ -475,16 +473,16 @@ void handle_player_shooting(Player *player, Key_State shoot)
     if (player->weapon->capacity > 0 && player->weapon->ready_to_fire && key_state_ready) {
         f32 cx = 0;
         f32 cy = 0;
-        f32 px = player->relative_position[0];
-        f32 py = player->relative_position[1];
-        vec2 bullet_position = {player->relative_position[0], player->relative_position[1]};
+        f32 px = player->entity->body->aabb.position[0];
+        f32 py = player->entity->body->aabb.position[1];
+        vec2 bullet_position = {px, py};
         vec2 bullet_velocity = {0, 0};
 
         // shoot at crosshair if present
-        if (player->crosshair->entity->is_active) {
+        if (player->entity->is_active) {
             // populate crosshair position
-            cx = player->crosshair->relative_position[0];
-            cy = player->crosshair->relative_position[1];
+            cx = player->crosshair->body->aabb.position[0];
+            cy = player->crosshair->body->aabb.position[1];
         }
         else { // player not crouching
             if (player->direction == UP) {
@@ -648,147 +646,12 @@ void handle_player_input(Player *player)
     f32 velx = 0;
     f32 vely = 0;
 
-    /*
-     * check if player is crouched
-     *
-     * if so, update player anim to crouch, create crosshair entity
-     * and track movement input to the crosshair instead of the player
-     */
-
-    if (crouch) {
-        if (player->status != PLAYER_CROUCHED) {
-            player->render_scale_factor = player->weapon->aiming_scale_factor;
-
-            // update rendering dimensions and projection matrix
-            set_render_dimensions(player->render_scale_factor, false, true);
-
-            // set camera location to center the player
-            if (!player->camera->target_position)
-                player->camera->target_position = malloc(sizeof(vec2));
-            player->camera->target_position[0][0] = player->relative_position[0] - (0.5 * render_width);
-            player->camera->target_position[0][1] = player->relative_position[1] - (0.5 * render_height);
-            // update status
-            player->status = PLAYER_CROUCHED;
-        }
-
-        // don't let players move while crouching
-        player->entity->body->velocity[0] = 0;
-        player->entity->body->velocity[1] = 0;
-
-        // if player doesn't already have a crosshair entity associated,
-        // create one
-        if (!player->crosshair->entity->is_active) {
-            // calculate where the crosshair will start using the
-            // player's direction
-            const f32 crosshair_starting_distance_from_player = 50;
-            f32 crosshair_xy_distance_at_45_deg = 0.707106781 * crosshair_starting_distance_from_player; // sin/cos(45)
-                                                                                                         // * hypotenuse
-            vec2 crosshair_starting_distance_vector = {0, 0};
-
-            if (player->direction == UP)
-                crosshair_starting_distance_vector[1] = crosshair_starting_distance_from_player;
-            if (player->direction == RIGHT)
-                crosshair_starting_distance_vector[0] = crosshair_starting_distance_from_player;
-            if (player->direction == DOWN)
-                crosshair_starting_distance_vector[1] = -1 * crosshair_starting_distance_from_player;
-            if (player->direction == LEFT)
-                crosshair_starting_distance_vector[0] = -1 * crosshair_starting_distance_from_player;
-            if (player->direction == UP_RIGHT) {
-                crosshair_starting_distance_vector[0] = crosshair_xy_distance_at_45_deg;
-                crosshair_starting_distance_vector[1] = crosshair_xy_distance_at_45_deg;
-            }
-            if (player->direction == DOWN_RIGHT) {
-                crosshair_starting_distance_vector[0] = crosshair_xy_distance_at_45_deg;
-                crosshair_starting_distance_vector[1] = -1 * crosshair_xy_distance_at_45_deg;
-            }
-
-            if (player->direction == DOWN_LEFT) {
-                crosshair_starting_distance_vector[0] = -1 * crosshair_xy_distance_at_45_deg;
-                crosshair_starting_distance_vector[1] = -1 * crosshair_xy_distance_at_45_deg;
-            }
-
-            if (player->direction == UP_LEFT) {
-                crosshair_starting_distance_vector[0] = -1 * crosshair_xy_distance_at_45_deg;
-                crosshair_starting_distance_vector[1] = crosshair_xy_distance_at_45_deg;
-            }
-
-            // set crosshair aabb position with respect to player
-            // aabb position
-            player->crosshair->entity->body->aabb.position[0] = player->entity->body->aabb.position[0] + crosshair_starting_distance_vector[0];
-            player->crosshair->entity->body->aabb.position[1] = player->entity->body->aabb.position[1] + crosshair_starting_distance_vector[1];
-
-            // set crosshair relative position with respect to
-            // player relative position
-            player->crosshair->relative_position[0] = player->relative_position[0] + crosshair_starting_distance_vector[0];
-            player->crosshair->relative_position[1] = player->relative_position[1] + crosshair_starting_distance_vector[1];
-
-            // activate entity and set anim
-            player->crosshair->entity->is_active = true;
-            player->crosshair->entity->animation = player->is_left_player ? anim_p1_crosshair : anim_p2_crosshair;
-        }
-
-        // movement inputs now move crosshair instead of player
-        if (left)
-            velx -= MAX_PLAYER_MOVEMENT_SPEED;
-        if (right)
-            velx += MAX_PLAYER_MOVEMENT_SPEED;
-        if (up)
-            vely += MAX_PLAYER_MOVEMENT_SPEED;
-        if (down)
-            vely -= MAX_PLAYER_MOVEMENT_SPEED;
-
-        // check if crosshair is out of bounds, if so, put in bounds,
-        // set velocity to 0
-        if (player->crosshair->entity->body->aabb.position[0] < 0 + CROSSHAIR_SIZE * 0.5) {
-            player->crosshair->entity->body->aabb.position[0] = CROSSHAIR_SIZE * 0.5;
-            velx = 0;
-        }
-        if (player->crosshair->entity->body->aabb.position[0] > render_width - CROSSHAIR_SIZE * 0.5) {
-            player->crosshair->entity->body->aabb.position[0] = render_width - CROSSHAIR_SIZE * 0.5;
-            velx = 0;
-        }
-        if (player->crosshair->entity->body->aabb.position[1] < 0 + CROSSHAIR_SIZE * 0.5) {
-            player->crosshair->entity->body->aabb.position[1] = CROSSHAIR_SIZE * 0.5;
-            vely = 0;
-        }
-        if (player->crosshair->entity->body->aabb.position[1] > render_height - CROSSHAIR_SIZE * 0.5) {
-            player->crosshair->entity->body->aabb.position[1] = render_height - CROSSHAIR_SIZE * 0.5;
-            vely = 0;
-        }
-
-        player->crosshair->entity->body->velocity[0] = velx;
-        player->crosshair->entity->body->velocity[1] = vely;
-
-        handle_player_shooting(player, shoot);
-        return;
-    }
-
     // handle reloading (logic implemented in update_player_status)
     if (reload) {
         player->status = PLAYER_RELOADING;
         return;
     }
-
-    // if player isn't crouched updated status, make sure the crosshair
-    // isn't activated, and reset view to normal
-    if (player->status == PLAYER_CROUCHED) {
-        // update player and crosshair status
-        player->status = PLAYER_ACTIVE;
-        player->crosshair->entity->is_active = false;
-
-        // reset render dimensions and projection matrix
-        player->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
-        set_render_dimensions(player->render_scale_factor, false, true);
-
-        // center camera on player
-        player->camera->position[0] = player->relative_position[0] - (0.5 * render_width);
-        player->camera->position[1] = player->relative_position[1] - (0.5 * render_height);
-
-        // center player aabb
-        player->entity->body->aabb.position[0] = (render_width * 0.5);
-        player->entity->body->aabb.position[1] = (render_height * 0.5);
-    }
-
+    
     // 8 directional movement
     f32 angle = 0.78539816; // 45 degrees in radians
     f32 xy_magnitude = sin(angle) * MAX_PLAYER_MOVEMENT_SPEED;
@@ -860,15 +723,6 @@ void free_players()
     }
 }
 
-// helper to update the percentage_of_screen attribute of a player's crosshair
-// used to map the crosshairs position on the screen across different render
-// width when rendering the hud
-void update_crosshair_position_percentage(Player *player)
-{
-    player->crosshair->percentage_of_screen[0] = player->crosshair->entity->body->aabb.position[0] / render_width;
-    player->crosshair->percentage_of_screen[1] = player->crosshair->entity->body->aabb.position[1] / render_height;
-}
-
 // parent function for all the necessary player updates made each frame
 void player_per_frame_updates(Player *player)
 {
@@ -876,5 +730,4 @@ void player_per_frame_updates(Player *player)
     // handle_player_input(player);
     update_player_status(player);
     update_player_animations(player);
-    update_crosshair_position_percentage(player);
 }
