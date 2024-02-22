@@ -58,5 +58,5 @@ bool joystick_ids_are_identical(SDL_JoystickID first_guid, SDL_JoystickID second
 float get_normalized_joystick_axis(int16_t axis)
 {
     float normalized_axis = axis / 32767.0f;
-    return normalized_axis > JOYSTICK_DEADZONE_THRESHOLD ? normalized_axis : 0.0f;
+    return fabs(normalized_axis) > JOYSTICK_DEADZONE_THRESHOLD ? normalized_axis : 0.0f;
 }

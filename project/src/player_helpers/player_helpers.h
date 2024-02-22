@@ -10,11 +10,9 @@
 #define PLAYER_ANIM_COUNT 56
 #define BULLET_ANIM_COUNT 16
 
-// used in reloading calculations
-#define MIN(x, y) (((x) < (y)) ? (x) : (y))
-
+#define MIN(x, y) (((x) < (y)) ? (x) : (y)) // used in reloading calculations
 #define BULLET_DISTANCE_FROM_PLAYER 40
-
+#define INVERT_Y_AXIS true // if true, joystick up motion will correspond to positive y axis value
 #define MAX_PLAYER_MOVEMENT_SPEED 250
 #define DEFAULT_CROSSHAIR_MOVEMENT_SPEED 350
 #define CROSSHAIR_SIZE 200
