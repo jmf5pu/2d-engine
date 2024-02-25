@@ -344,14 +344,16 @@ void init_hud(SDL_Window *window)
 // renders the heads up display (should be called once per frame)
 void render_hud(SDL_Window *window, u32 texture_slots[32], vec4 color)
 {
-    // render player one displays (health + ammo)
+    // render player one displays (health + ammo + crosshair)
     render_health(window, texture_slots, player_one, (vec2){50, (window_height * DEFAULT_RENDER_SCALE_FACTOR) - 50}, color);
     render_ammo(window, texture_slots, player_one, (vec2){0.5 * DIGIT_WIDTH + DIGIT_WIDTH * 7 + ICON_SPACE, 0.5 * DIGIT_HEIGHT}, color);
+    animation_render(player_one->crosshair->animation, window, player_one->crosshair->body->aabb.position, 0, color, texture_slots);
 
     // render player two displays if relevant
     if (SPLIT_SCREEN) {
         render_health(window, texture_slots, player_two, (vec2){window_width - 50, window_height - 50}, color);
         render_ammo(window, texture_slots, player_two, (vec2){window_width - 0.5 * DIGIT_WIDTH, 0.5 * DIGIT_HEIGHT}, color);
+        animation_render(player_two->crosshair->animation, window, player_two->crosshair->body->aabb.position, 0, color, texture_slots);
 
         // render viewport divider
         render_sprite_sheet_frame(

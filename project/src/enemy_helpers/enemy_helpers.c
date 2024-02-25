@@ -27,15 +27,17 @@ void init_enemies(usize item_size, usize initial_capacity) { current_enemies = a
 // initializes a single enemy and adds to current_enemies
 void create_enemy(vec2 spawn_point, vec2 size)
 {
-    Zombie *enemy = malloc(sizeof(Zombie));
-    enemy->entity = entity_create(spawn_point, size, (vec2){0, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
-    enemy->entity->body->parent = enemy;
-    enemy->despawn_time = 1;
-    enemy->direction = LEFT;
-    enemy->frames_on_status = 0;
-    enemy->health = 100;
-    enemy->status = ENEMY_ACTIVE;
-    array_list_append(current_enemies, enemy);
+    if (SPAWN_ENEMIES) {
+        Zombie *enemy = malloc(sizeof(Zombie));
+        enemy->entity = entity_create(spawn_point, size, (vec2){0, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
+        enemy->entity->body->parent = enemy;
+        enemy->despawn_time = 1;
+        enemy->direction = LEFT;
+        enemy->frames_on_status = 0;
+        enemy->health = 100;
+        enemy->status = ENEMY_ACTIVE;
+        array_list_append(current_enemies, enemy);
+    }
 }
 
 // updates the statuses, animations, and locations of all enemies in

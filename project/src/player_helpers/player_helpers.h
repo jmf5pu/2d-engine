@@ -14,7 +14,7 @@
 #define BULLET_DISTANCE_FROM_PLAYER 40
 #define INVERT_Y_AXIS true // if true, joystick up motion will correspond to positive y axis value
 #define MAX_PLAYER_MOVEMENT_SPEED 250
-#define DEFAULT_CROSSHAIR_MOVEMENT_SPEED 350
+#define MAX_CROSSHAIR_MOVEMENT_SPEED 400
 #define CROSSHAIR_SIZE 200
 
 // declare players
@@ -403,5 +403,6 @@ void update_menu_input_state(Menu_Input_State menu_input_state);
 
 // player & crosshair movement related methods
 void handle_player_joystick_movement(Player *player);
+void update_entity_velocity_from_joystick_input(Joystick_State input, Entity *entity, int max_velocity);
 
 #endif

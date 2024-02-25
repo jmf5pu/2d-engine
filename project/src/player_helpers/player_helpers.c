@@ -209,6 +209,7 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
         crosshair_mask,
         crosshair_on_hit,
         crosshair_on_hit_static);
+    player->crosshair->animation = player->is_left_player ? anim_p1_crosshair : anim_p2_crosshair;
     player->crosshair->is_active = true;
     player->direction = RIGHT;
 
@@ -651,7 +652,7 @@ void handle_player_input(Player *player)
         player->status = PLAYER_RELOADING;
         return;
     }
-    
+
     // 8 directional movement
     f32 angle = 0.78539816; // 45 degrees in radians
     f32 xy_magnitude = sin(angle) * MAX_PLAYER_MOVEMENT_SPEED;
@@ -727,7 +728,7 @@ void free_players()
 void player_per_frame_updates(Player *player)
 {
     handle_player_joystick_movement(player);
-    // handle_player_input(player);
+    handle_player_input(player);
     update_player_status(player);
     update_player_animations(player);
 }

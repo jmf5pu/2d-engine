@@ -94,6 +94,8 @@ int main(int argc, char *argv[])
         update_bound_key_states();
         if (player_one)
             update_player_input_state_from_joysticks(player_one);
+        if (player_two)
+            update_player_input_state_from_joysticks(player_two);
         animation_update(global.time.delta);
 
         switch (game_state) {

@@ -3,6 +3,7 @@
 
 #include "../structs.h"
 
+#define SPAWN_ENEMIES false
 #define ZOMBIE_MOVEMENT_SPEED 100
 
 void init_enemies(usize item_size, usize initial_capacity);

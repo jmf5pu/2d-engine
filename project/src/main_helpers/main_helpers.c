@@ -10,7 +10,7 @@
 bool should_destroy_entity(Entity *entity, Map *map)
 {
     bool is_player = SPLIT_SCREEN ? (entity == player_one->entity || entity == player_two->entity) : (entity == player_one->entity);
-    
+
     bool is_pickup = false;
     for (int k = 0; k < map->num_pickups; k++) {
         if (entity == map->pickups[k].entity)
@@ -23,7 +23,4 @@ bool should_destroy_entity(Entity *entity, Map *map)
 /// @brief Checks if an entity is a crosshair
 /// @param entity
 /// @return boolean representing if the entity is a crosshair
-bool entity_is_crosshair(Entity *entity)
-{
-    return SPLIT_SCREEN ? (entity == player_one->crosshair || entity == player_two->crosshair) : (entity == player_one->crosshair);
-}
+bool entity_is_crosshair(Entity *entity) { return SPLIT_SCREEN ? (entity == player_one->crosshair || entity == player_two->crosshair) : (entity == player_one->crosshair); }
