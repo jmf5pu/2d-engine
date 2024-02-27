@@ -142,6 +142,7 @@ void init_hud(SDL_Window *window);
 void render_hud(SDL_Window *window, u32 texture_slots[32], vec4 color);
 void render_health(SDL_Window *window, u32 texture_slots[32], Player *player, vec2 position, vec4 color);
 void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player, vec2 position, vec4 color);
+void fix_crosshair_position(Player *player);
 void free_hud(void);
 
 #endif
