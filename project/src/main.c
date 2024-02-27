@@ -66,12 +66,6 @@ int main(int argc, char *argv[])
     while (!should_quit) {
         time_update();
 
-        // TODO: put these lines somewhere else
-        if (player_one)
-            player_one->input_state->input_updated_this_frame = false;
-        if (player_two)
-            player_two->input_state->input_updated_this_frame = false;
-
         // grab current inputs
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
@@ -92,10 +86,7 @@ int main(int argc, char *argv[])
         }
 
         update_bound_key_states();
-        if (player_one)
-            update_player_input_state_from_joysticks(player_one);
-        if (player_two)
-            update_player_input_state_from_joysticks(player_two);
+
         animation_update(global.time.delta);
 
         switch (game_state) {
@@ -139,17 +130,17 @@ int main(int argc, char *argv[])
                 camera_init();
 
                 player_one = malloc(sizeof(Player));
-                init_player(player_one, &map, base, 2.9, 5, 2, true);
-                spawn_player(player_one, base);
+                init_player(player_one, &map, m16, 2.9, 5, 2, true);
+                spawn_player(player_one, m16);
                 if (SPLIT_SCREEN && !player_two) {
                     player_two = malloc(sizeof(Player));
-                    init_player(player_two, &map, base, 2.9, 5, 2, false);
-                    spawn_player(player_two, base);
+                    init_player(player_two, &map, m16, 2.9, 5, 2, false);
+                    spawn_player(player_two, m16);
                 }
             }
 
             // check if pause was hit, update game state
-            if (game_state == GS_RUNNING && global.input.escape) {
+            if (game_state == GS_RUNNING && global.input.pause) {
                 game_state = GS_PAUSE_MENU;
             }
 

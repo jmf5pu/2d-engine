@@ -251,7 +251,6 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
 
     // init input state members
     player->input_state = malloc(sizeof(Player_Input_State));
-    player->input_state->input_updated_this_frame = false;
     player->input_state->controller_input_state = malloc(sizeof(Controller_Input_State));
     player->input_state->controller_input_state->controller_id = -1;
     player->input_state->controller_input_state->left_joystick_state.x_axis = 0.0f;
@@ -620,89 +619,69 @@ void handle_player_shooting(Player *player, Key_State shoot)
     }
 }
 
-/*
- *   handles key inputs of players, typically updates player status, other
- * attributes
- *
- *   Priority of keys is as follows - crouch, reload, movement, shoot.
- *   Players can only shoot while crouching.
- *   Players cannot reload while doing any other actions (running, crouching,
- * shooting)
- */
-void handle_player_input(Player *player)
+/// @brief Applies the player's input state to other relevant members, such as moving, shooting, and reloading states
+/// @param player
+void apply_player_input_state(Player *player)
 {
-    if (player->status == PLAYER_SPAWNING || player->status == PLAYER_DESPAWNING || player->status == PLAYER_INACTIVE) // don't allow inputs on inactive players
-    {
-        return;
+    if (player->input_state->key_state->reload) {
+        player->status = PLAYER_RELOADING;
     }
+    update_player_velocity_from_key_state(player);
+    if (player->input_state->key_state->shoot)
+        handle_player_shooting(player, player->input_state->key_state->shoot);
+}
 
-    Key_State left = player->is_left_player ? global.input.l_left : global.input.r_left;
-    Key_State right = player->is_left_player ? global.input.l_right : global.input.r_right;
-    Key_State up = player->is_left_player ? global.input.l_up : global.input.r_up;
-    Key_State down = player->is_left_player ? global.input.l_down : global.input.r_down;
-    Key_State shoot = player->is_left_player ? global.input.l_shoot : global.input.r_shoot;
-    Key_State crouch = player->is_left_player ? global.input.l_crouch : global.input.r_crouch;
-    Key_State reload = player->is_left_player ? global.input.l_reload : global.input.r_reload;
-
+/// @brief Update the player's entity's velocity from its current key state. Supports 8 directional movement
+/// @param player the active player
+void update_player_velocity_from_key_state(Player *player)
+{
+    Player_Key_State *key_state = player->input_state->key_state;
     f32 velx = 0;
     f32 vely = 0;
-
-    // handle reloading (logic implemented in update_player_status)
-    if (reload) {
-        player->status = PLAYER_RELOADING;
-        return;
-    }
-
-    // 8 directional movement
     f32 angle = 0.78539816; // 45 degrees in radians
     f32 xy_magnitude = sin(angle) * MAX_PLAYER_MOVEMENT_SPEED;
-    if (up && right) {
+
+    if (key_state->up && key_state->right) {
         player->direction = UP_RIGHT;
         velx += xy_magnitude;
         vely += xy_magnitude;
     }
-    else if (up && left) {
+    else if (key_state->up && key_state->left) {
         player->direction = UP_LEFT;
         velx -= xy_magnitude;
         vely += xy_magnitude;
     }
-    else if (down && right) {
+    else if (key_state->down && key_state->right) {
         player->direction = DOWN_RIGHT;
         velx += xy_magnitude;
         vely -= xy_magnitude;
     }
-    else if (down && left) {
+    else if (key_state->down && key_state->left) {
         player->direction = DOWN_LEFT;
         velx -= xy_magnitude;
         vely -= xy_magnitude;
     }
-    else if (right) {
+    else if (key_state->right) {
         player->direction = RIGHT;
         velx += MAX_PLAYER_MOVEMENT_SPEED;
     }
 
-    else if (left) {
+    else if (key_state->left) {
         player->direction = LEFT;
         velx -= MAX_PLAYER_MOVEMENT_SPEED;
     }
 
-    else if (up) {
+    else if (key_state->up) {
         player->direction = UP;
         vely += MAX_PLAYER_MOVEMENT_SPEED;
     }
 
-    else if (down) {
+    else if (key_state->down) {
         player->direction = DOWN;
         vely -= MAX_PLAYER_MOVEMENT_SPEED;
     }
-
-    // handle weapon attribute updates & bullet generation, contingent on
-    // fire mode, input, and weapon shot cooldown
-    handle_player_shooting(player, shoot);
-
-    // TODO: uncomment/refactor. Commenting to test joystick movement
-    // player->entity->body->velocity[0] = velx;
-    // player->entity->body->velocity[1] = vely;
+    player->entity->body->velocity[0] = velx;
+    player->entity->body->velocity[1] = vely;
 }
 
 void free_player(Player *player)
@@ -727,7 +706,6 @@ void free_players()
 // parent function for all the necessary player updates made each frame
 void player_per_frame_updates(Player *player)
 {
-    handle_player_joystick_movement(player);
     handle_player_input(player);
     update_player_status(player);
     update_player_animations(player);

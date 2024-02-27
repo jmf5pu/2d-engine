@@ -223,7 +223,7 @@ void update_menu(Menu *menu, Input_State input)
         reset_selector_anims();
         menu->selected_item--;
     }
-    else if (input.enter == KS_PRESSED) {
+    else if (input.use == KS_PRESSED) {
         menu->input_handler();
     }
 }
