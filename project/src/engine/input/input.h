@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <stdbool.h>
+#include "../types.h"
 
 #define MAX_CONTROLLERS 2
 #define JOYSTICK_DEADZONE_THRESHOLD 0.1
@@ -79,5 +80,6 @@ void init_game_controllers(void);
 bool detect_game_controller_changes_and_update_state(void);
 bool joystick_ids_are_identical(SDL_JoystickID first_guid, SDL_JoystickID second_guid);
 float get_normalized_joystick_axis(int16_t axis);
+void update_key_state(u8 current_state, Key_State *key_state);
 
 #endif

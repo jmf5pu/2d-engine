@@ -75,6 +75,7 @@ int main(int argc, char *argv[])
                 break;
             case SDL_JOYBUTTONDOWN:
             case SDL_JOYBUTTONUP:
+                printf("[in main] button pressed: %d\n", event.cbutton.button);
                 if (player_one && event.cbutton.which == player_one->input_state->controller_input_state->controller_id)
                     update_player_input_state_via_controller(player_one, &event);
                 if (player_two && event.cbutton.which == player_one->input_state->controller_input_state->controller_id)

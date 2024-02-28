@@ -2,7 +2,7 @@
 #include "../types.h"
 #include "input.h"
 
-static void update_key_state(u8 current_state, Key_State *key_state)
+void update_key_state(u8 current_state, Key_State *key_state)
 {
     if (current_state) {
         if (*key_state > 0) {

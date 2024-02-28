@@ -17,12 +17,11 @@ void assign_player_input_devices(void)
 void handle_player_input(Player *player)
 {
     update_player_input_state_from_joysticks(player);
-    update_player_input_state_from_keyboard(player);
-
-    apply_player_joystick_movement(player);
-    apply_player_input_state(player);
     if (player->input_state->controller_input_state->controller_id == -1)
         update_crosshair_position_from_cursor(player);
+        update_player_input_state_from_keyboard(player);
+    apply_player_joystick_movement(player);
+    apply_player_input_state(player);
 }
 
 /// @brief Updates the player's input state via controller sdl event. Can be called multiple times per frame (for
@@ -31,22 +30,22 @@ void handle_player_input(Player *player)
 /// @param event SDL_JOYBUTTONDOWN or SDL_JOYBUTTONUP sdl event
 void update_player_input_state_via_controller(Player *player, SDL_Event *event)
 {
-    printf("event cbutton.button: %d\n", event->cbutton.button);
+    u8 press_value = 1;
+    printf("button pressed: %d\n", event->cbutton.button);
     switch (event->cbutton.button) {
     case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
-        printf("trigger\n");
-        break;
-    case SDL_CONTROLLER_BUTTON_A:
-        printf("A\n");
-        break;
-    case SDL_CONTROLLER_BUTTON_B:
-        printf("B\n");
+        printf("shoot key_state: %d\n", player->input_state->key_state->shoot);
+        update_key_state(press_value, &player->input_state->key_state->shoot);
+        printf("[after updating] shoot key_state: %d\n", player->input_state->key_state->shoot);
         break;
     case SDL_CONTROLLER_BUTTON_X:
-        printf("X\n");
+        update_key_state(press_value, &player->input_state->key_state->reload);
         break;
-    case SDL_CONTROLLER_BUTTON_Y:
-        printf("Y\n");
+    case SDL_CONTROLLER_BUTTON_A:
+        update_key_state(press_value, &player->input_state->key_state->use);
+        break;
+    case SDL_CONTROLLER_BUTTON_START:
+        update_key_state(press_value, &player->input_state->key_state->pause);
         break;
     }
 }
