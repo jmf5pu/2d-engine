@@ -21,6 +21,8 @@ void handle_player_input(Player *player)
 
     apply_player_joystick_movement(player);
     apply_player_input_state(player);
+    if (player->input_state->controller_input_state->controller_id == -1)
+        update_crosshair_position_from_cursor(player);
 }
 
 /// @brief Updates the player's input state via controller sdl event. Can be called multiple times per frame (for
@@ -84,4 +86,14 @@ void update_player_input_state_from_keyboard(Player *player)
 void update_menu_input_state(Menu_Input_State menu_input_state)
 {
     // TODO: Pull keyboard inputs
+}
+
+/// @brief pins crosshair entity to the location of the mouse;
+/// @param player
+void update_crosshair_position_from_cursor(Player *player)
+{
+    int mouse_x, mouse_y;
+    SDL_GetMouseState(&mouse_x, &mouse_y);
+    player->crosshair->body->aabb.position[0] = mouse_x;
+    player->crosshair->body->aabb.position[1] = render_height - mouse_y;
 }

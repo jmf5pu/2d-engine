@@ -404,7 +404,7 @@ void update_menu_input_state(Menu_Input_State menu_input_state);
 void update_player_velocity_from_key_state(Player *player);
 void apply_player_joystick_movement(Player *player);
 void update_entity_velocity_from_joystick_input(Joystick_State input, Entity *entity, int max_velocity);
-
-// takes input state and applies it to player movement, status, etc
 void apply_player_input_state(Player *player);
+void update_crosshair_position_from_cursor(Player *player);
+
 #endif
