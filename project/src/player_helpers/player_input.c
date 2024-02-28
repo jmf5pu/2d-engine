@@ -6,9 +6,9 @@
 /// @param
 void assign_player_input_devices(void)
 {
-    player_one->input_state->controller_input_state->controller_id = open_controller_ids[0];
+    player_one->input_state->controller_input_state->controller_id = open_controller_ids[1];
     if (SPLIT_SCREEN)
-        player_two->input_state->controller_input_state->controller_id = open_controller_ids[1];
+        player_two->input_state->controller_input_state->controller_id = open_controller_ids[0];
 }
 
 /// @brief Always pull the controller inputs (if they exists) to update the players keystates. If we are looking at player one (left player), always override with keyboard inputs
@@ -17,9 +17,7 @@ void assign_player_input_devices(void)
 void handle_player_input(Player *player)
 {
     update_player_input_state_from_joysticks(player);
-    if (player->is_left_player) {
-        update_player_input_state_from_keyboard(player);
-    }
+    update_player_input_state_from_keyboard(player);
 
     apply_player_joystick_movement(player);
     apply_player_input_state(player);

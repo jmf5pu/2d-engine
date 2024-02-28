@@ -257,6 +257,9 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
     player->input_state->controller_input_state->left_joystick_state.y_axis = 0.0f;
     player->input_state->controller_input_state->right_joystick_state.x_axis = 0.0f;
     player->input_state->controller_input_state->right_joystick_state.y_axis = 0.0f;
+
+    // init key state members
+    player->input_state->key_state = malloc(sizeof(Player_Key_State));
 }
 
 // Spawns the player and resets their attributes to default values
@@ -626,7 +629,11 @@ void apply_player_input_state(Player *player)
     if (player->input_state->key_state->reload) {
         player->status = PLAYER_RELOADING;
     }
-    update_player_velocity_from_key_state(player);
+
+    // only update velocity from keyboard if the joysticks weren't updated this frame (no controller associated)
+    if (player->input_state->controller_input_state->controller_id == -1)
+        update_player_velocity_from_key_state(player);
+
     if (player->input_state->key_state->shoot)
         handle_player_shooting(player, player->input_state->key_state->shoot);
 }
@@ -688,7 +695,9 @@ void free_player(Player *player)
 {
     free(player->crosshair);
     free(player->input_state->controller_input_state);
+    free(player->input_state->key_state);
     free(player->input_state);
+
     free(player);
     player = NULL;
 }

@@ -6,8 +6,8 @@
     25 // how many pixels the camera will move per frame (used when
        // centering player)
 
-#include "../structs.h"
 #include "../player_helpers/player_helpers.h"
+#include "../structs.h"
 #include <linmath.h>
 
 extern vec4 camera_buffer; // Buffers: Left, Right, Bottom, Top (actual screen
