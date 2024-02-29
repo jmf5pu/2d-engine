@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
                 printf("[in main] button pressed: %d\n", event.cbutton.button);
                 if (player_one && event.cbutton.which == player_one->input_state->controller_input_state->controller_id)
                     update_player_input_state_via_controller(player_one, &event);
-                if (player_two && event.cbutton.which == player_one->input_state->controller_input_state->controller_id)
+                if (player_two && event.cbutton.which == player_two->input_state->controller_input_state->controller_id)
                     update_player_input_state_via_controller(player_two, &event);
                 break;
             default:

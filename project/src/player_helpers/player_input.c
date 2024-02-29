@@ -17,9 +17,10 @@ void assign_player_input_devices(void)
 void handle_player_input(Player *player)
 {
     update_player_input_state_from_joysticks(player);
-    if (player->input_state->controller_input_state->controller_id == -1)
+    if (player->input_state->controller_input_state->controller_id == -1) {
         update_crosshair_position_from_cursor(player);
         update_player_input_state_from_keyboard(player);
+    }
     apply_player_joystick_movement(player);
     apply_player_input_state(player);
 }
