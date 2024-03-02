@@ -260,6 +260,14 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
 
     // init key state members
     player->input_state->key_state = malloc(sizeof(Player_Key_State));
+    player->input_state->key_state->up = 0;
+    player->input_state->key_state->down = 0;
+    player->input_state->key_state->left = 0;
+    player->input_state->key_state->right = 0;
+    player->input_state->key_state->shoot = 0;
+    player->input_state->key_state->reload = 0;
+    player->input_state->key_state->use = 0;
+    player->input_state->key_state->pause = 0;
 }
 
 // Spawns the player and resets their attributes to default values
@@ -481,63 +489,30 @@ void handle_player_shooting(Player *player, Key_State shoot)
         vec2 bullet_position = {px, py};
         vec2 bullet_velocity = {0, 0};
 
-        // shoot at crosshair if present
-        if (player->entity->is_active) {
-            // populate crosshair position
-            cx = player->crosshair->body->aabb.position[0];
-            cy = player->crosshair->body->aabb.position[1];
-        }
-        else { // player not crouching
-            if (player->direction == UP) {
-                cx = px;
-                cy = py + 1;
-            }
-            else if (player->direction == RIGHT) {
-                cx = px + 1;
-                cy = py;
-            }
-            else if (player->direction == DOWN) {
-                cx = px;
-                cy = py - 1;
-            }
-            else if (player->direction == LEFT) {
-                cx = px - 1;
-                cy = py;
-            }
-            else if (player->direction == UP_RIGHT) {
-                cx = px + 1;
-                cy = py + 1;
-            }
-            else if (player->direction == UP_LEFT) {
-                cx = px - 1;
-                cy = py + 1;
-            }
-            else if (player->direction == DOWN_RIGHT) {
-                cx = px + 1;
-                cy = py - 1;
-            }
-            else if (player->direction == DOWN_LEFT) {
-                cx = px - 1;
-                cy = py - 1;
-            }
-        }
+        // shoot bullet at crosshair
+        cx = player->crosshair->body->aabb.position[0];
+        cy = player->crosshair->body->aabb.position[1];
 
-        // calculate angle
-        f32 dx = px - cx;
-        f32 dy = py - cy;
-        f32 angle = fabs((cx > px && cy > py) || (cx < px && cy < py) ? atan(dy / dx) : -1 * atan(dy / dx));
+        // since the player's position is relative to the glviewport, while the crosshair's is to the window
+        if(player == player_two)
+            cx -= 0.5 * window_width;
 
-        // calculate bullet starting position using angle
-        f32 bullet_x = cx >= px ? BULLET_DISTANCE_FROM_PLAYER * cos(angle) : BULLET_DISTANCE_FROM_PLAYER * cos(angle) * -1;
-        f32 bullet_y = cy >= py ? BULLET_DISTANCE_FROM_PLAYER * sin(angle) : BULLET_DISTANCE_FROM_PLAYER * sin(angle) * -1;
+        // Calculate angle using atan2
+        f32 dx = cx - px;
+        f32 dy = cy - py;
+        f32 angle = atan2(dy, dx);
 
-        // calculate starting position using angle
+        // Calculate bullet starting position using angle
+        f32 bullet_x = BULLET_DISTANCE_FROM_PLAYER * cos(angle);
+        f32 bullet_y = BULLET_DISTANCE_FROM_PLAYER * sin(angle);
+
+        // Calculate starting position using angle
         bullet_position[0] = player->relative_position[0] + bullet_x;
         bullet_position[1] = player->relative_position[1] + bullet_y;
 
-        // calculate velocity using angle
-        f32 vx = cx >= px ? player->weapon->bullet_velocity * cos(angle) : player->weapon->bullet_velocity * cos(angle) * -1;
-        f32 vy = cy >= py ? player->weapon->bullet_velocity * sin(angle) : player->weapon->bullet_velocity * sin(angle) * -1;
+        // Calculate velocity using angle
+        f32 vx = player->weapon->bullet_velocity * cos(angle);
+        f32 vy = player->weapon->bullet_velocity * sin(angle);
         bullet_velocity[0] = vx;
         bullet_velocity[1] = vy;
 

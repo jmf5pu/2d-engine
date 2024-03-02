@@ -31,13 +31,10 @@ void handle_player_input(Player *player)
 /// @param event SDL_JOYBUTTONDOWN or SDL_JOYBUTTONUP sdl event
 void update_player_input_state_via_controller(Player *player, SDL_Event *event)
 {
-    u8 press_value = 1;
-    printf("button pressed: %d\n", event->cbutton.button);
+    u8 press_value = event->type == SDL_JOYBUTTONDOWN ? 1 : 0;
     switch (event->cbutton.button) {
     case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
-        printf("shoot key_state: %d\n", player->input_state->key_state->shoot);
         update_key_state(press_value, &player->input_state->key_state->shoot);
-        printf("[after updating] shoot key_state: %d\n", player->input_state->key_state->shoot);
         break;
     case SDL_CONTROLLER_BUTTON_X:
         update_key_state(press_value, &player->input_state->key_state->reload);
@@ -96,4 +93,20 @@ void update_crosshair_position_from_cursor(Player *player)
     SDL_GetMouseState(&mouse_x, &mouse_y);
     player->crosshair->body->aabb.position[0] = mouse_x;
     player->crosshair->body->aabb.position[1] = render_height - mouse_y;
+}
+
+/// @brief maintain all the keypresses on the controller with a "held" state until the key is lifted.
+/// @param player 
+void maintain_controller_keypresses(Player *player){
+    maintain_controller_keypress(&player->input_state->key_state->shoot);
+    maintain_controller_keypress(&player->input_state->key_state->reload);
+    maintain_controller_keypress(&player->input_state->key_state->use);
+    maintain_controller_keypress(&player->input_state->key_state->pause);
+}
+
+/// @brief If a controller input key is pressed at the beginning of a given frame, update it to 2 to indicate it is being held. This will be overriden by the event loop if the user lifts the button that frame. This is necessary because otherwise "held" will not be tracked
+/// @param key_state 
+void maintain_controller_keypress(Key_State * key_state){
+    if(*key_state == 1)
+        *key_state = 2;
 }
