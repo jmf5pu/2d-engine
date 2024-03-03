@@ -6,6 +6,7 @@
 
 #include "engine/animation.h"
 #include "engine/entity.h"
+#include "engine/input/input.h"
 #include "engine/render.h"
 #include "engine/types.h"
 
@@ -30,7 +31,6 @@ enum Player_Status {
     PLAYER_RELOADING,
     PLAYER_DESPAWNING,
     PLAYER_INACTIVE,
-    PLAYER_CROUCHED,
 };
 
 enum Enemy_Status {
@@ -88,14 +88,6 @@ typedef struct armor {
     i16 integrity;
 } Armor;
 
-typedef struct crosshair {
-    Entity *entity;
-    vec2 relative_position;
-    vec2 percentage_of_screen; // x/y position in screen in terms of
-                               // percentage of pixels in each direction
-                               // (0.5, 0.5) would be center of screen
-} Crosshair;
-
 typedef struct bullet {
     Entity *entity;
     i32 damage;
@@ -106,30 +98,6 @@ typedef struct camera {
     vec2 *target_position;
     vec4 buffer;
 } Camera;
-
-typedef struct player {
-    Entity *entity;
-    Camera *camera;
-    Crosshair *crosshair;
-    Weapon *weapon;
-    Armor *armor;
-    vec2 spawn_point;
-    vec2 relative_position; // position relative to the rest of the map NOT
-                            // to the window
-    enum Direction direction;
-    enum Player_Status status;
-    f32 render_scale_factor; // render scale factor (determines FOV of the
-                             // player). Normal is 0.5, render width is 0.5
-                             // of window width
-    f32 despawn_time;        // time it takes for animation to complete after
-                             // health <=
-                             // 0
-    f32 spawn_delay;         // time in s from INACTIVE status to SPAWNING status
-    f32 spawn_time;          // time in s from SPAWNING status to ACTIVE status
-    u32 frames_on_status;    // # of frames since last status change
-    i16 health;
-    bool is_left_player;
-} Player;
 
 typedef struct zombie {
     Entity *entity;

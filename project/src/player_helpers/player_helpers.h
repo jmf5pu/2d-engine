@@ -5,19 +5,19 @@
 #include "../engine/global.h"
 #include "../engine/hash_map.h"
 #include "../structs.h"
+#include "player_structs.h"
 
 // number of animations to be stored in player_anim_map
 #define PLAYER_ANIM_COUNT 56
 #define BULLET_ANIM_COUNT 16
 
-// used in reloading calculations
-#define MIN(x, y) (((x) < (y)) ? (x) : (y))
-
+#define MIN(x, y) (((x) < (y)) ? (x) : (y)) // used in reloading calculations
 #define BULLET_DISTANCE_FROM_PLAYER 40
-
-#define DEFAULT_PLAYER_MOVEMENT_SPEED 250
-#define DEFAULT_CROSSHAIR_MOVEMENT_SPEED 350
+#define INVERT_Y_AXIS true // if true, joystick up motion will correspond to positive y axis value
 #define CROSSHAIR_SIZE 200
+
+#define MAX_PLAYER_MOVEMENT_SPEED 250
+#define MAX_CROSSHAIR_MOVEMENT_SPEED 600
 
 // declare players
 extern Player *player_one;
@@ -384,17 +384,29 @@ Animation_Definition *adef_bullet_1_vertical;
 Animation *anim_bullet_1_horizontal;
 Animation *anim_bullet_1_vertical;
 
-void init_bullet_anim_hashmap();
-void init_player_anim_hashmap();
-void init_all_anims();
+void init_bullet_anim_hashmap(void);
+void init_player_anim_hashmap(void);
+void init_all_anims(void);
 void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 despawn_time, f32 spawn_delay, f32 spawn_time, bool is_left_player);
 void spawn_player(Player *player, Weapon_Type *starting_weapon);
 void update_player_status(Player *player);
 void update_player_animations(Player *player);
 void handle_player_shooting(Player *player, Key_State shoot);
 void handle_player_input(Player *player);
-void free_player(Player *player);
-void update_crosshair_position_percentage(Player *player);
+void free_players(void);
 void player_per_frame_updates(Player *player);
+
+void assign_player_input_devices(void);
+void update_player_input_state_via_controller(Player *player, SDL_Event *event);
+void update_player_input_state_from_joysticks(Player *player);
+void update_player_input_state_from_keyboard(Player *player);
+void update_menu_input_state(Menu_Input_State menu_input_state);
+void update_player_velocity_from_key_state(Player *player);
+void apply_player_joystick_movement(Player *player);
+void update_entity_velocity_from_joystick_input(Joystick_State input, Entity *entity, int max_velocity);
+void apply_player_input_state(Player *player);
+void update_crosshair_position_from_cursor(Player *player);
+void maintain_controller_keypresses(Player *player);
+void maintain_controller_keypress(Key_State * key_state);
 
 #endif

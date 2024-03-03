@@ -39,13 +39,14 @@ void camera_init(void)
     };
 }
 
+/// @brief  updates camera based on the shift vector parameter
+/// @param player target player
+/// @param shift vec2 which represents the SHIFT, not destination position
 void shift_camera(Player *player, vec2 shift)
 {
-    // updates camera based on the passed in vector which represents the
-    // SHIFT, not destination position
     vec2_sub(player->camera->position, player->camera->position, shift);
     vec2_add(player->entity->body->aabb.position, player->entity->body->aabb.position, shift);
-    vec2_add(player->crosshair->entity->body->aabb.position, player->crosshair->entity->body->aabb.position, shift);
+    vec2_add(player->crosshair->body->aabb.position, player->crosshair->body->aabb.position, shift);
 }
 
 /// @brief Shifts the camera gradually, frame by frame. Typically used when
@@ -74,7 +75,7 @@ void shift_camera_smooth(Player *player, u32 delta)
 
     vec2_add(player->camera->position, player->camera->position, xy_magnitudes);
     vec2_sub(player->entity->body->aabb.position, player->entity->body->aabb.position, xy_magnitudes);
-    vec2_sub(player->crosshair->entity->body->aabb.position, player->crosshair->entity->body->aabb.position, xy_magnitudes);
+    vec2_sub(player->crosshair->body->aabb.position, player->crosshair->body->aabb.position, xy_magnitudes);
 }
 
 void camera_update(Player *player, Map *map)

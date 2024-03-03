@@ -37,159 +37,6 @@ void init_player_anim_hashmap()
 {
     player_anim_map = create_hash_map(PLAYER_ANIM_COUNT);
 
-    // player one stuff
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_idle_side",
-    // p1_anim_soldier_1_m16_idle_side); insert(player_anim_map,
-    // "p1_anim_soldier_1_m16_running_side",
-    // p1_anim_soldier_1_m16_running_side); insert(player_anim_map,
-    // "p1_anim_soldier_1_m16_idle_back", p1_anim_soldier_1_m16_idle_back);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_running_back",
-    // p1_anim_soldier_1_m16_running_back); insert(player_anim_map,
-    // "p1_anim_soldier_1_m16_idle_front",
-    // p1_anim_soldier_1_m16_idle_front); insert(player_anim_map,
-    // "p1_anim_soldier_1_m16_running_front",
-    // p1_anim_soldier_1_m16_running_front); insert(player_anim_map,
-    // "p1_anim_soldier_1_m16_idle_up_right",
-    // p1_anim_soldier_1_m16_idle_up_right); insert(player_anim_map,
-    // "p1_anim_soldier_1_m16_running_up_right",
-    // p1_anim_soldier_1_m16_running_up_right); insert(player_anim_map,
-    // "p1_anim_soldier_1_m16_idle_down_right",
-    // p1_anim_soldier_1_m16_idle_down_right); insert(player_anim_map,
-    // "p1_anim_soldier_1_m16_running_down_right",
-    // p1_anim_soldier_1_m16_running_down_right); insert(player_anim_map,
-    // "p1_anim_soldier_1_m16_spawning_side",
-    // p1_anim_soldier_1_m16_spawning_side); insert(player_anim_map,
-    // "p1_anim_soldier_1_m16_dying_side",
-    // p1_anim_soldier_1_m16_dying_side);
-
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_idle_side",
-    // p1_anim_soldier_1_m16_brewster_idle_side); insert(player_anim_map,
-    // "p1_anim_soldier_1_m16_brewster_running_side",
-    // p1_anim_soldier_1_m16_brewster_running_side); insert(player_anim_map,
-    // "p1_anim_soldier_1_m16_brewster_idle_back",
-    // p1_anim_soldier_1_m16_brewster_idle_back); insert(player_anim_map,
-    // "p1_anim_soldier_1_m16_brewster_running_back",
-    // p1_anim_soldier_1_m16_brewster_running_back); insert(player_anim_map,
-    // "p1_anim_soldier_1_m16_brewster_idle_front",
-    // p1_anim_soldier_1_m16_brewster_idle_front); insert(player_anim_map,
-    // "p1_anim_soldier_1_m16_brewster_running_front",
-    // p1_anim_soldier_1_m16_brewster_running_front);
-    // insert(player_anim_map,
-    // "p1_anim_soldier_1_m16_brewster_spawning_side",
-    // p1_anim_soldier_1_m16_brewster_spawning_side);
-    // insert(player_anim_map, "p1_anim_soldier_1_m16_brewster_dying_side",
-    // p1_anim_soldier_1_m16_brewster_dying_side);
-
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_idle_side",
-    // p1_anim_soldier_1_m44_idle_side); insert(player_anim_map,
-    // "p1_anim_soldier_1_m44_running_side",
-    // p1_anim_soldier_1_m44_running_side); insert(player_anim_map,
-    // "p1_anim_soldier_1_m44_idle_back", p1_anim_soldier_1_m44_idle_back);
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_running_back",
-    // p1_anim_soldier_1_m44_running_back); insert(player_anim_map,
-    // "p1_anim_soldier_1_m44_idle_front",
-    // p1_anim_soldier_1_m44_idle_front); insert(player_anim_map,
-    // "p1_anim_soldier_1_m44_running_front",
-    // p1_anim_soldier_1_m44_running_front); insert(player_anim_map,
-    // "p1_anim_soldier_1_m44_spawning_side",
-    // p1_anim_soldier_1_m44_spawning_side); insert(player_anim_map,
-    // "p1_anim_soldier_1_m44_dying_side",
-    // p1_anim_soldier_1_m44_dying_side);
-
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_idle_side",
-    // p1_anim_soldier_1_m44_brewster_idle_side); insert(player_anim_map,
-    // "p1_anim_soldier_1_m44_brewster_running_side",
-    // p1_anim_soldier_1_m44_brewster_running_side); insert(player_anim_map,
-    // "p1_anim_soldier_1_m44_brewster_idle_back",
-    // p1_anim_soldier_1_m44_brewster_idle_back); insert(player_anim_map,
-    // "p1_anim_soldier_1_m44_brewster_running_back",
-    // p1_anim_soldier_1_m44_brewster_running_back); insert(player_anim_map,
-    // "p1_anim_soldier_1_m44_brewster_idle_front",
-    // p1_anim_soldier_1_m44_brewster_idle_front); insert(player_anim_map,
-    // "p1_anim_soldier_1_m44_brewster_running_front",
-    // p1_anim_soldier_1_m44_brewster_running_front);
-    // insert(player_anim_map,
-    // "p1_anim_soldier_1_m44_brewster_spawning_side",
-    // p1_anim_soldier_1_m44_brewster_spawning_side);
-    // insert(player_anim_map, "p1_anim_soldier_1_m44_brewster_dying_side",
-    // p1_anim_soldier_1_m44_brewster_dying_side);
-
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_idle_side",
-    // p2_anim_soldier_1_m16_idle_side); insert(player_anim_map,
-    // "p2_anim_soldier_1_m16_running_side",
-    // p2_anim_soldier_1_m16_running_side); insert(player_anim_map,
-    // "p2_anim_soldier_1_m16_idle_back", p2_anim_soldier_1_m16_idle_back);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_running_back",
-    // p2_anim_soldier_1_m16_running_back); insert(player_anim_map,
-    // "p2_anim_soldier_1_m16_idle_front",
-    // p2_anim_soldier_1_m16_idle_front); insert(player_anim_map,
-    // "p2_anim_soldier_1_m16_running_front",
-    // p2_anim_soldier_1_m16_running_front); insert(player_anim_map,
-    // "p2_anim_soldier_1_m16_idle_up_right",
-    // p2_anim_soldier_1_m16_idle_up_right); insert(player_anim_map,
-    // "p2_anim_soldier_1_m16_running_up_right",
-    // p2_anim_soldier_1_m16_running_up_right); insert(player_anim_map,
-    // "p2_anim_soldier_1_m16_idle_down_right",
-    // p2_anim_soldier_1_m16_idle_down_right); insert(player_anim_map,
-    // "p2_anim_soldier_1_m16_running_down_right",
-    // p2_anim_soldier_1_m16_running_down_right); insert(player_anim_map,
-    // "p2_anim_soldier_1_m16_spawning_side",
-    // p2_anim_soldier_1_m16_spawning_side); insert(player_anim_map,
-    // "p2_anim_soldier_1_m16_dying_side",
-    // p2_anim_soldier_1_m16_dying_side);
-
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_idle_side",
-    // p2_anim_soldier_1_m16_brewster_idle_side); insert(player_anim_map,
-    // "p2_anim_soldier_1_m16_brewster_running_side",
-    // p2_anim_soldier_1_m16_brewster_running_side); insert(player_anim_map,
-    // "p2_anim_soldier_1_m16_brewster_idle_back",
-    // p2_anim_soldier_1_m16_brewster_idle_back); insert(player_anim_map,
-    // "p2_anim_soldier_1_m16_brewster_running_back",
-    // p2_anim_soldier_1_m16_brewster_running_back); insert(player_anim_map,
-    // "p2_anim_soldier_1_m16_brewster_idle_front",
-    // p2_anim_soldier_1_m16_brewster_idle_front); insert(player_anim_map,
-    // "p2_anim_soldier_1_m16_brewster_running_front",
-    // p2_anim_soldier_1_m16_brewster_running_front);
-    // insert(player_anim_map,
-    // "p2_anim_soldier_1_m16_brewster_spawning_side",
-    // p2_anim_soldier_1_m16_brewster_spawning_side);
-    // insert(player_anim_map, "p2_anim_soldier_1_m16_brewster_dying_side",
-    // p2_anim_soldier_1_m16_brewster_dying_side);
-
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_idle_side",
-    // p2_anim_soldier_1_m44_idle_side); insert(player_anim_map,
-    // "p2_anim_soldier_1_m44_running_side",
-    // p2_anim_soldier_1_m44_running_side); insert(player_anim_map,
-    // "p2_anim_soldier_1_m44_idle_back", p2_anim_soldier_1_m44_idle_back);
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_running_back",
-    // p2_anim_soldier_1_m44_running_back); insert(player_anim_map,
-    // "p2_anim_soldier_1_m44_idle_front",
-    // p2_anim_soldier_1_m44_idle_front); insert(player_anim_map,
-    // "p2_anim_soldier_1_m44_running_front",
-    // p2_anim_soldier_1_m44_running_front); insert(player_anim_map,
-    // "p2_anim_soldier_1_m44_spawning_side",
-    // p2_anim_soldier_1_m44_spawning_side); insert(player_anim_map,
-    // "p2_anim_soldier_1_m44_dying_side",
-    // p2_anim_soldier_1_m44_dying_side);
-
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_brewster_idle_side",
-    // p2_anim_soldier_1_m44_brewster_idle_side); insert(player_anim_map,
-    // "p2_anim_soldier_1_m44_brewster_running_side",
-    // p2_anim_soldier_1_m44_brewster_running_side); insert(player_anim_map,
-    // "p2_anim_soldier_1_m44_brewster_idle_back",
-    // p2_anim_soldier_1_m44_brewster_idle_back); insert(player_anim_map,
-    // "p2_anim_soldier_1_m44_brewster_running_back",
-    // p2_anim_soldier_1_m44_brewster_running_back); insert(player_anim_map,
-    // "p2_anim_soldier_1_m44_brewster_idle_front",
-    // p2_anim_soldier_1_m44_brewster_idle_front); insert(player_anim_map,
-    // "p2_anim_soldier_1_m44_brewster_running_front",
-    // p2_anim_soldier_1_m44_brewster_running_front);
-    // insert(player_anim_map,
-    // "p2_anim_soldier_1_m44_brewster_spawning_side",
-    // p2_anim_soldier_1_m44_brewster_spawning_side);
-    // insert(player_anim_map, "p2_anim_soldier_1_m44_brewster_dying_side",
-    // p2_anim_soldier_1_m44_brewster_dying_side);
-
     // new player stuff 11/12
     insert(player_anim_map, "p1_anim_soldier_purple_base_idle_right", p1_anim_soldier_purple_base_idle_right);
     insert(player_anim_map, "p1_anim_soldier_purple_base_idle_left", p1_anim_soldier_purple_base_idle_left);
@@ -353,18 +200,17 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
     player->entity =
         entity_create((vec2){render_width * 0.5, render_height * 0.5}, (vec2){40, 75}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
     player->entity->body->parent = player;
-    player->crosshair = malloc(sizeof(Crosshair));
-    player->crosshair->entity = entity_create(
-        (vec2){player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]},
+    player->crosshair = malloc(sizeof(Entity));
+    player->crosshair = entity_create(
+        (vec2){player->entity->body->aabb.position[0] + 150, player->entity->body->aabb.position[1] + 150},
         (vec2){CROSSHAIR_SIZE, CROSSHAIR_SIZE},
         (vec2){0, 0},
         COLLISION_LAYER_CROSSHAIR,
         crosshair_mask,
         crosshair_on_hit,
         crosshair_on_hit_static);
-    player->crosshair->relative_position[0] = player->entity->body->aabb.position[0];
-    player->crosshair->relative_position[1] = player->entity->body->aabb.position[1];
-    player->crosshair->entity->is_active = false;
+    player->crosshair->animation = player->is_left_player ? anim_p1_crosshair : anim_p2_crosshair;
+    player->crosshair->is_active = true;
     player->direction = RIGHT;
 
     // populate weapon
@@ -402,6 +248,26 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
     else {
         player->camera = &right_cam;
     }
+
+    // init input state members
+    player->input_state = malloc(sizeof(Player_Input_State));
+    player->input_state->controller_input_state = malloc(sizeof(Controller_Input_State));
+    player->input_state->controller_input_state->controller_id = -1;
+    player->input_state->controller_input_state->left_joystick_state.x_axis = 0.0f;
+    player->input_state->controller_input_state->left_joystick_state.y_axis = 0.0f;
+    player->input_state->controller_input_state->right_joystick_state.x_axis = 0.0f;
+    player->input_state->controller_input_state->right_joystick_state.y_axis = 0.0f;
+
+    // init key state members
+    player->input_state->key_state = malloc(sizeof(Player_Key_State));
+    player->input_state->key_state->up = 0;
+    player->input_state->key_state->down = 0;
+    player->input_state->key_state->left = 0;
+    player->input_state->key_state->right = 0;
+    player->input_state->key_state->shoot = 0;
+    player->input_state->key_state->reload = 0;
+    player->input_state->key_state->use = 0;
+    player->input_state->key_state->pause = 0;
 }
 
 // Spawns the player and resets their attributes to default values
@@ -618,68 +484,35 @@ void handle_player_shooting(Player *player, Key_State shoot)
     if (player->weapon->capacity > 0 && player->weapon->ready_to_fire && key_state_ready) {
         f32 cx = 0;
         f32 cy = 0;
-        f32 px = player->relative_position[0];
-        f32 py = player->relative_position[1];
-        vec2 bullet_position = {player->relative_position[0], player->relative_position[1]};
+        f32 px = player->entity->body->aabb.position[0];
+        f32 py = player->entity->body->aabb.position[1];
+        vec2 bullet_position = {px, py};
         vec2 bullet_velocity = {0, 0};
 
-        // shoot at crosshair if present
-        if (player->crosshair->entity->is_active) {
-            // populate crosshair position
-            cx = player->crosshair->relative_position[0];
-            cy = player->crosshair->relative_position[1];
-        }
-        else { // player not crouching
-            if (player->direction == UP) {
-                cx = px;
-                cy = py + 1;
-            }
-            else if (player->direction == RIGHT) {
-                cx = px + 1;
-                cy = py;
-            }
-            else if (player->direction == DOWN) {
-                cx = px;
-                cy = py - 1;
-            }
-            else if (player->direction == LEFT) {
-                cx = px - 1;
-                cy = py;
-            }
-            else if (player->direction == UP_RIGHT) {
-                cx = px + 1;
-                cy = py + 1;
-            }
-            else if (player->direction == UP_LEFT) {
-                cx = px - 1;
-                cy = py + 1;
-            }
-            else if (player->direction == DOWN_RIGHT) {
-                cx = px + 1;
-                cy = py - 1;
-            }
-            else if (player->direction == DOWN_LEFT) {
-                cx = px - 1;
-                cy = py - 1;
-            }
-        }
+        // shoot bullet at crosshair
+        cx = player->crosshair->body->aabb.position[0];
+        cy = player->crosshair->body->aabb.position[1];
 
-        // calculate angle
-        f32 dx = px - cx;
-        f32 dy = py - cy;
-        f32 angle = fabs((cx > px && cy > py) || (cx < px && cy < py) ? atan(dy / dx) : -1 * atan(dy / dx));
+        // since the player's position is relative to the glviewport, while the crosshair's is to the window
+        if(player == player_two)
+            cx -= 0.5 * window_width;
 
-        // calculate bullet starting position using angle
-        f32 bullet_x = cx >= px ? BULLET_DISTANCE_FROM_PLAYER * cos(angle) : BULLET_DISTANCE_FROM_PLAYER * cos(angle) * -1;
-        f32 bullet_y = cy >= py ? BULLET_DISTANCE_FROM_PLAYER * sin(angle) : BULLET_DISTANCE_FROM_PLAYER * sin(angle) * -1;
+        // Calculate angle using atan2
+        f32 dx = cx - px;
+        f32 dy = cy - py;
+        f32 angle = atan2(dy, dx);
 
-        // calculate starting position using angle
+        // Calculate bullet starting position using angle
+        f32 bullet_x = BULLET_DISTANCE_FROM_PLAYER * cos(angle);
+        f32 bullet_y = BULLET_DISTANCE_FROM_PLAYER * sin(angle);
+
+        // Calculate starting position using angle
         bullet_position[0] = player->relative_position[0] + bullet_x;
         bullet_position[1] = player->relative_position[1] + bullet_y;
 
-        // calculate velocity using angle
-        f32 vx = cx >= px ? player->weapon->bullet_velocity * cos(angle) : player->weapon->bullet_velocity * cos(angle) * -1;
-        f32 vy = cy >= py ? player->weapon->bullet_velocity * sin(angle) : player->weapon->bullet_velocity * sin(angle) * -1;
+        // Calculate velocity using angle
+        f32 vx = player->weapon->bullet_velocity * cos(angle);
+        f32 vy = player->weapon->bullet_velocity * sin(angle);
         bullet_velocity[0] = vx;
         bullet_velocity[1] = vy;
 
@@ -764,239 +597,94 @@ void handle_player_shooting(Player *player, Key_State shoot)
     }
 }
 
-/*
- *   handles key inputs of players, typically updates player status, other
- * attributes
- *
- *   Priority of keys is as follows - crouch, reload, movement, shoot.
- *   Players can only shoot while crouching.
- *   Players cannot reload while doing any other actions (running, crouching,
- * shooting)
- */
-void handle_player_input(Player *player)
+/// @brief Applies the player's input state to other relevant members, such as moving, shooting, and reloading states
+/// @param player
+void apply_player_input_state(Player *player)
 {
-    if (player->status == PLAYER_SPAWNING || player->status == PLAYER_DESPAWNING || player->status == PLAYER_INACTIVE) // don't allow inputs on inactive players
-    {
-        return;
+    if (player->input_state->key_state->reload) {
+        player->status = PLAYER_RELOADING;
     }
 
-    Key_State left = player->is_left_player ? global.input.l_left : global.input.r_left;
-    Key_State right = player->is_left_player ? global.input.l_right : global.input.r_right;
-    Key_State up = player->is_left_player ? global.input.l_up : global.input.r_up;
-    Key_State down = player->is_left_player ? global.input.l_down : global.input.r_down;
-    Key_State shoot = player->is_left_player ? global.input.l_shoot : global.input.r_shoot;
-    Key_State crouch = player->is_left_player ? global.input.l_crouch : global.input.r_crouch;
-    Key_State reload = player->is_left_player ? global.input.l_reload : global.input.r_reload;
+    // only update velocity from keyboard if the joysticks weren't updated this frame (no controller associated)
+    if (player->input_state->controller_input_state->controller_id == -1)
+        update_player_velocity_from_key_state(player);
 
+    if (player->input_state->key_state->shoot)
+        handle_player_shooting(player, player->input_state->key_state->shoot);
+}
+
+/// @brief Update the player's entity's velocity from its current key state. Supports 8 directional movement
+/// @param player the active player
+void update_player_velocity_from_key_state(Player *player)
+{
+    Player_Key_State *key_state = player->input_state->key_state;
     f32 velx = 0;
     f32 vely = 0;
-
-    /*
-     * check if player is crouched
-     *
-     * if so, update player anim to crouch, create crosshair entity
-     * and track movement input to the crosshair instead of the player
-     */
-
-    if (crouch) {
-        if (player->status != PLAYER_CROUCHED) {
-            player->render_scale_factor = player->weapon->aiming_scale_factor;
-
-            // update rendering dimensions and projection matrix
-            set_render_dimensions(player->render_scale_factor, false, true);
-
-            // set camera location to center the player
-            if (!player->camera->target_position)
-                player->camera->target_position = malloc(sizeof(vec2));
-            player->camera->target_position[0][0] = player->relative_position[0] - (0.5 * render_width);
-            player->camera->target_position[0][1] = player->relative_position[1] - (0.5 * render_height);
-            // update status
-            player->status = PLAYER_CROUCHED;
-        }
-
-        // don't let players move while crouching
-        player->entity->body->velocity[0] = 0;
-        player->entity->body->velocity[1] = 0;
-
-        // if player doesn't already have a crosshair entity associated,
-        // create one
-        if (!player->crosshair->entity->is_active) {
-            // calculate where the crosshair will start using the
-            // player's direction
-            const f32 crosshair_starting_distance_from_player = 50;
-            f32 crosshair_xy_distance_at_45_deg = 0.707106781 * crosshair_starting_distance_from_player; // sin/cos(45)
-                                                                                                         // * hypotenuse
-            vec2 crosshair_starting_distance_vector = {0, 0};
-
-            if (player->direction == UP)
-                crosshair_starting_distance_vector[1] = crosshair_starting_distance_from_player;
-            if (player->direction == RIGHT)
-                crosshair_starting_distance_vector[0] = crosshair_starting_distance_from_player;
-            if (player->direction == DOWN)
-                crosshair_starting_distance_vector[1] = -1 * crosshair_starting_distance_from_player;
-            if (player->direction == LEFT)
-                crosshair_starting_distance_vector[0] = -1 * crosshair_starting_distance_from_player;
-            if (player->direction == UP_RIGHT) {
-                crosshair_starting_distance_vector[0] = crosshair_xy_distance_at_45_deg;
-                crosshair_starting_distance_vector[1] = crosshair_xy_distance_at_45_deg;
-            }
-            if (player->direction == DOWN_RIGHT) {
-                crosshair_starting_distance_vector[0] = crosshair_xy_distance_at_45_deg;
-                crosshair_starting_distance_vector[1] = -1 * crosshair_xy_distance_at_45_deg;
-            }
-
-            if (player->direction == DOWN_LEFT) {
-                crosshair_starting_distance_vector[0] = -1 * crosshair_xy_distance_at_45_deg;
-                crosshair_starting_distance_vector[1] = -1 * crosshair_xy_distance_at_45_deg;
-            }
-
-            if (player->direction == UP_LEFT) {
-                crosshair_starting_distance_vector[0] = -1 * crosshair_xy_distance_at_45_deg;
-                crosshair_starting_distance_vector[1] = crosshair_xy_distance_at_45_deg;
-            }
-
-            // set crosshair aabb position with respect to player
-            // aabb position
-            player->crosshair->entity->body->aabb.position[0] = player->entity->body->aabb.position[0] + crosshair_starting_distance_vector[0];
-            player->crosshair->entity->body->aabb.position[1] = player->entity->body->aabb.position[1] + crosshair_starting_distance_vector[1];
-
-            // set crosshair relative position with respect to
-            // player relative position
-            player->crosshair->relative_position[0] = player->relative_position[0] + crosshair_starting_distance_vector[0];
-            player->crosshair->relative_position[1] = player->relative_position[1] + crosshair_starting_distance_vector[1];
-
-            // activate entity and set anim
-            player->crosshair->entity->is_active = true;
-            player->crosshair->entity->animation = player->is_left_player ? anim_p1_crosshair : anim_p2_crosshair;
-        }
-
-        // movement inputs now move crosshair instead of player
-        if (left)
-            velx -= DEFAULT_PLAYER_MOVEMENT_SPEED;
-        if (right)
-            velx += DEFAULT_PLAYER_MOVEMENT_SPEED;
-        if (up)
-            vely += DEFAULT_PLAYER_MOVEMENT_SPEED;
-        if (down)
-            vely -= DEFAULT_PLAYER_MOVEMENT_SPEED;
-
-        // check if crosshair is out of bounds, if so, put in bounds,
-        // set velocity to 0
-        if (player->crosshair->entity->body->aabb.position[0] < 0 + CROSSHAIR_SIZE * 0.5) {
-            player->crosshair->entity->body->aabb.position[0] = CROSSHAIR_SIZE * 0.5;
-            velx = 0;
-        }
-        if (player->crosshair->entity->body->aabb.position[0] > render_width - CROSSHAIR_SIZE * 0.5) {
-            player->crosshair->entity->body->aabb.position[0] = render_width - CROSSHAIR_SIZE * 0.5;
-            velx = 0;
-        }
-        if (player->crosshair->entity->body->aabb.position[1] < 0 + CROSSHAIR_SIZE * 0.5) {
-            player->crosshair->entity->body->aabb.position[1] = CROSSHAIR_SIZE * 0.5;
-            vely = 0;
-        }
-        if (player->crosshair->entity->body->aabb.position[1] > render_height - CROSSHAIR_SIZE * 0.5) {
-            player->crosshair->entity->body->aabb.position[1] = render_height - CROSSHAIR_SIZE * 0.5;
-            vely = 0;
-        }
-
-        player->crosshair->entity->body->velocity[0] = velx;
-        player->crosshair->entity->body->velocity[1] = vely;
-
-        handle_player_shooting(player, shoot);
-        return;
-    }
-
-    // handle reloading (logic implemented in update_player_status)
-    if (reload) {
-        player->status = PLAYER_RELOADING;
-        return;
-    }
-
-    // if player isn't crouched updated status, make sure the crosshair
-    // isn't activated, and reset view to normal
-    if (player->status == PLAYER_CROUCHED) {
-        // update player and crosshair status
-        player->status = PLAYER_ACTIVE;
-        player->crosshair->entity->is_active = false;
-
-        // reset render dimensions and projection matrix
-        player->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
-        set_render_dimensions(player->render_scale_factor, false, true);
-
-        // center camera on player
-        player->camera->position[0] = player->relative_position[0] - (0.5 * render_width);
-        player->camera->position[1] = player->relative_position[1] - (0.5 * render_height);
-
-        // center player aabb
-        player->entity->body->aabb.position[0] = (render_width * 0.5);
-        player->entity->body->aabb.position[1] = (render_height * 0.5);
-    }
-
-    // 8 directional movement
     f32 angle = 0.78539816; // 45 degrees in radians
-    f32 xy_magnitude = sin(angle) * DEFAULT_PLAYER_MOVEMENT_SPEED;
-    if (up && right) {
+    f32 xy_magnitude = sin(angle) * MAX_PLAYER_MOVEMENT_SPEED;
+
+    if (key_state->up && key_state->right) {
         player->direction = UP_RIGHT;
         velx += xy_magnitude;
         vely += xy_magnitude;
     }
-    else if (up && left) {
+    else if (key_state->up && key_state->left) {
         player->direction = UP_LEFT;
         velx -= xy_magnitude;
         vely += xy_magnitude;
     }
-    else if (down && right) {
+    else if (key_state->down && key_state->right) {
         player->direction = DOWN_RIGHT;
         velx += xy_magnitude;
         vely -= xy_magnitude;
     }
-    else if (down && left) {
+    else if (key_state->down && key_state->left) {
         player->direction = DOWN_LEFT;
         velx -= xy_magnitude;
         vely -= xy_magnitude;
     }
-    else if (right) {
+    else if (key_state->right) {
         player->direction = RIGHT;
-        velx += DEFAULT_PLAYER_MOVEMENT_SPEED;
+        velx += MAX_PLAYER_MOVEMENT_SPEED;
     }
 
-    else if (left) {
+    else if (key_state->left) {
         player->direction = LEFT;
-        velx -= DEFAULT_PLAYER_MOVEMENT_SPEED;
+        velx -= MAX_PLAYER_MOVEMENT_SPEED;
     }
 
-    else if (up) {
+    else if (key_state->up) {
         player->direction = UP;
-        vely += DEFAULT_PLAYER_MOVEMENT_SPEED;
+        vely += MAX_PLAYER_MOVEMENT_SPEED;
     }
 
-    else if (down) {
+    else if (key_state->down) {
         player->direction = DOWN;
-        vely -= DEFAULT_PLAYER_MOVEMENT_SPEED;
+        vely -= MAX_PLAYER_MOVEMENT_SPEED;
     }
-
-    // handle weapon attribute updates & bullet generation, contingent on
-    // fire mode, input, and weapon shot cooldown
-    handle_player_shooting(player, shoot);
-
     player->entity->body->velocity[0] = velx;
     player->entity->body->velocity[1] = vely;
 }
 
-// cleans up the player struct
 void free_player(Player *player)
 {
     free(player->crosshair);
+    free(player->input_state->controller_input_state);
+    free(player->input_state->key_state);
+    free(player->input_state);
+
     free(player);
+    player = NULL;
 }
 
-// helper to update the percentage_of_screen attribute of a player's crosshair
-// used to map the crosshairs position on the screen across different render
-// width when rendering the hud
-void update_crosshair_position_percentage(Player *player)
+void free_players()
 {
-    player->crosshair->percentage_of_screen[0] = player->crosshair->entity->body->aabb.position[0] / render_width;
-    player->crosshair->percentage_of_screen[1] = player->crosshair->entity->body->aabb.position[1] / render_height;
+    if (player_one) {
+        free_player(player_one);
+    }
+    if (player_two) {
+        free_player(player_two);
+    }
 }
 
 // parent function for all the necessary player updates made each frame
@@ -1005,5 +693,4 @@ void player_per_frame_updates(Player *player)
     handle_player_input(player);
     update_player_status(player);
     update_player_animations(player);
-    update_crosshair_position_percentage(player);
 }

@@ -205,8 +205,7 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
 
         // shift all bodies EXCEPT the active player and crosshairs
         bool is_active_player_body = (body == player_one->entity->body && left_player_is_active) || (SPLIT_SCREEN && body == player_two->entity->body && !left_player_is_active);
-        bool is_crosshair =
-            SPLIT_SCREEN ? (body == player_one->crosshair->entity->body || body == player_two->crosshair->entity->body) : body == player_one->crosshair->entity->body;
+        bool is_crosshair = SPLIT_SCREEN ? (body == player_one->crosshair->body || body == player_two->crosshair->body) : body == player_one->crosshair->body;
         if (!is_active_player_body && !is_crosshair) {
             body->aabb.position[0] += shift[0];
             body->aabb.position[1] += shift[1];

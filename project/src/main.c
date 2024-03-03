@@ -14,7 +14,7 @@
 #include "engine/entity.h"
 #include "engine/global.h"
 #include "engine/hash_map.h"
-#include "engine/input.h"
+#include "engine/input/input.h"
 #include "engine/physics.h"
 #include "engine/render.h"
 #include "engine/render/render_internal.h"
@@ -24,6 +24,7 @@
 // game specific headers
 #include "collision_behavior/collision_behavior.h"
 #include "hud/hud.h"
+#include "main_helpers/main_helpers.h"
 #include "map_helpers/map_helpers.h"
 #include "menu_helpers/menu_helpers.h"
 #include "player_helpers/player_helpers.h"
@@ -51,11 +52,12 @@ int main(int argc, char *argv[])
     entity_init();
     animation_init(); // creates animation storage
     init_all_anims(); // initializes all our animations
-    init_game_state();
+    game_state = GS_MAIN_MENU;
     init_weapon_types();
     init_map(&map);
     init_hud(window);
     init_menus();
+    init_game_controllers();
 
     // init game color
     vec4_dup(game_color, WHITE);
@@ -64,6 +66,13 @@ int main(int argc, char *argv[])
     while (!should_quit) {
         time_update();
 
+
+        // needed for controller support:
+        if(player_one)
+            maintain_controller_keypresses(player_one);
+        if(player_two)
+            maintain_controller_keypresses(player_two);
+
         // grab current inputs
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
@@ -71,16 +80,27 @@ int main(int argc, char *argv[])
             case SDL_QUIT:
                 should_quit = true;
                 break;
+            case SDL_JOYBUTTONDOWN:
+            case SDL_JOYBUTTONUP:
+                if (player_one && event.cbutton.which == player_one->input_state->controller_input_state->controller_id)
+                    update_player_input_state_via_controller(player_one, &event);
+                if (player_two && event.cbutton.which == player_two->input_state->controller_input_state->controller_id)
+                    update_player_input_state_via_controller(player_two, &event);
+                break;
             default:
                 break;
             }
         }
 
-        input_update();
+        update_bound_key_states();
+
         animation_update(global.time.delta);
 
         switch (game_state) {
         case GS_MAIN_MENU:
+            // free_players(); // reset players when exit back to main menu.
+            //  Important so that we don't malloc twice if we go
+            //  from menu -> running -> menu -> running
             render_begin();
             update_menu(main_menu, global.input);
             render_main_menu(window, texture_slots);
@@ -117,19 +137,23 @@ int main(int argc, char *argv[])
                 camera_init();
 
                 player_one = malloc(sizeof(Player));
-                init_player(player_one, &map, base, 2.9, 5, 2, true);
-                spawn_player(player_one, base);
+                init_player(player_one, &map, m16, 2.9, 5, 2, true);
+                spawn_player(player_one, m16);
                 if (SPLIT_SCREEN && !player_two) {
                     player_two = malloc(sizeof(Player));
-                    init_player(player_two, &map, base, 2.9, 5, 2, false);
-                    spawn_player(player_two, base);
+                    init_player(player_two, &map, m16, 2.9, 5, 2, false);
+                    spawn_player(player_two, m16);
                 }
             }
 
             // check if pause was hit, update game state
-            if (game_state == GS_RUNNING && global.input.escape) {
+            if (game_state == GS_RUNNING && global.input.pause) {
                 game_state = GS_PAUSE_MENU;
             }
+
+            // update controller assignments if a change was detected
+            if (detect_game_controller_changes_and_update_state())
+                assign_player_input_devices();
 
             // update map
             update_map(&map);
@@ -145,16 +169,12 @@ int main(int argc, char *argv[])
             {
                 player_one->relative_position[0] = player_one->entity->body->aabb.position[0] + left_cam.position[0];
                 player_one->relative_position[1] = player_one->entity->body->aabb.position[1] + left_cam.position[1];
-                player_one->crosshair->relative_position[0] = player_one->crosshair->entity->body->aabb.position[0] + left_cam.position[0];
-                player_one->crosshair->relative_position[1] = player_one->crosshair->entity->body->aabb.position[1] + left_cam.position[1];
             }
             else // otherwise use main cam TODO: perhaps make
                  // left_cam and main_cam the same object?
             {
                 player_one->relative_position[0] = player_one->entity->body->aabb.position[0] + main_cam.position[0];
                 player_one->relative_position[1] = player_one->entity->body->aabb.position[1] + main_cam.position[1];
-                player_one->crosshair->relative_position[0] = player_one->crosshair->entity->body->aabb.position[0] + main_cam.position[0];
-                player_one->crosshair->relative_position[1] = player_one->crosshair->entity->body->aabb.position[1] + main_cam.position[1];
             }
 
             // need to pass the RELATIVE position of the players
@@ -167,8 +187,6 @@ int main(int argc, char *argv[])
             if (SPLIT_SCREEN) {
                 player_two->relative_position[0] = player_two->entity->body->aabb.position[0] + right_cam.position[0];
                 player_two->relative_position[1] = player_two->entity->body->aabb.position[1] + right_cam.position[1];
-                player_two->crosshair->relative_position[0] = player_two->crosshair->entity->body->aabb.position[0] + right_cam.position[0];
-                player_two->crosshair->relative_position[1] = player_two->crosshair->entity->body->aabb.position[1] + right_cam.position[1];
 
                 p2_pos_holder[0] = player_two->entity->body->aabb.position[0];
                 p2_pos_holder[1] = player_two->entity->body->aabb.position[1];
@@ -262,20 +280,7 @@ int main(int argc, char *argv[])
                     if (RENDER_PHYSICS_BODIES && entity->is_active)
                         render_aabb((f32 *)&entity->body->aabb, WHITE);
 
-                    // destroy any entities that are
-                    // inactive or have physics bodies that
-                    // are inactive and aren't associated
-                    // with players, crosshairs, or pickups
-                    bool is_crosshair =
-                        SPLIT_SCREEN ? (entity == player_one->crosshair->entity || entity == player_two->crosshair->entity) : (entity == player_one->crosshair->entity);
-                    bool is_player = SPLIT_SCREEN ? (entity == player_one->entity || entity == player_two->entity) : (entity == player_one->entity);
-
-                    bool is_pickup = false;
-                    for (int k = 0; k < map.num_pickups; k++) {
-                        if (entity == map.pickups[k].entity)
-                            is_pickup = true;
-                    }
-                    if ((!entity->is_active || !entity->body->is_active) && !is_player && !is_pickup && !is_crosshair) {
+                    if (should_destroy_entity(entity, &map)) {
                         entity_destroy(entity);
                         continue;
                     }
@@ -283,7 +288,7 @@ int main(int argc, char *argv[])
                     // skip entities with no associated
                     // animations, check if players and
                     // pickups are inactive
-                    if (!entity->animation || !entity->is_active || !entity->body->is_active || is_crosshair) {
+                    if (!entity->animation || !entity->is_active || !entity->body->is_active || entity_is_crosshair(entity)) {
                         continue;
                     }
 
@@ -384,14 +389,10 @@ int main(int argc, char *argv[])
 
     if (&map)
         free_map_attributes(&map);
-    if (player_one)
-        free_player(player_one);
-    if (SPLIT_SCREEN && player_two)
-        free_player(player_two);
-
+    free_players();
     free_weapon_types();
     free_hud();
     free_menus();
-
+    SDL_Quit();
     return 0;
 }

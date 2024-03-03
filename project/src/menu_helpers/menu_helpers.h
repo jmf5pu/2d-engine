@@ -3,7 +3,7 @@
 
 #include "../engine/animation.h"
 #include "../engine/hash_map.h"
-#include "../engine/input.h"
+#include "../engine/input/input.h"
 #include "../engine/render.h"
 #include "../structs.h"
 

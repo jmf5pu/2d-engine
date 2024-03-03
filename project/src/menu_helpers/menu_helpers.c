@@ -163,8 +163,6 @@ void init_menu_anims(void)
     anim_selected_bracket_right->is_active = false;
 }
 
-void init_game_state(void) { game_state = GS_MAIN_MENU; }
-
 void free_menus(void) { free(pause_menu); }
 
 // renders a line of text letter by letter starting at the specified positon on
@@ -225,7 +223,7 @@ void update_menu(Menu *menu, Input_State input)
         reset_selector_anims();
         menu->selected_item--;
     }
-    else if (input.enter == KS_PRESSED) {
+    else if (input.use == KS_PRESSED) {
         menu->input_handler();
     }
 }
