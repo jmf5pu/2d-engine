@@ -211,7 +211,6 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
         crosshair_on_hit_static);
     player->crosshair->animation = player->is_left_player ? anim_p1_crosshair : anim_p2_crosshair;
     player->crosshair->is_active = true;
-    player->direction = RIGHT;
 
     // populate weapon
     player->weapon = malloc(sizeof(Weapon));
@@ -298,7 +297,6 @@ void spawn_player(Player *player, Weapon_Type *starting_weapon)
     player->health = 100;
 
     // reset player anims to default (may have changed from pickups)
-    player->direction = RIGHT;
 
     // reset weapon
     player->weapon->name = starting_weapon->name;
@@ -424,22 +422,23 @@ void update_player_animations(Player *player)
     else // player NOT moving
         status = "idle";
     char *direction;
-    if (player->direction == RIGHT)
-        direction = "right";
-    else if (player->direction == LEFT)
-        direction = "left";
-    else if (player->direction == UP)
-        direction = "up";
-    else if (player->direction == UP_RIGHT)
-        direction = "up_right";
-    else if (player->direction == UP_LEFT)
-        direction = "up_left";
-    else if (player->direction == DOWN_RIGHT)
-        direction = "down_right";
-    else if (player->direction == DOWN_LEFT)
-        direction = "down_left";
-    else // player->direction == DOWN
-        direction = "down";
+
+    // choose correct animation for player's direction
+    f32 crosshair_angle = atan2(
+        player->crosshair->body->aabb.position[1] - player->entity->body->aabb.position[1], player->crosshair->body->aabb.position[0] - player->entity->body->aabb.position[0]);
+    if (crosshair_angle >= 7 * M_PI / 4 || crosshair_angle < M_PI / 4){
+        direction = "0";
+    }
+    else if (crosshair_angle >= M_PI / 4 && crosshair_angle < 3 * M_PI / 4){
+        direction = "1";
+    }
+    else if (crosshair_angle >= 3 * M_PI / 4 && crosshair_angle < 5 * M_PI / 4){
+        direction = "2";
+    }
+    else if (crosshair_angle >= 5 * M_PI / 4 && crosshair_angle < 7 * M_PI / 4){
+        direction = "3";
+    }
+
     strcat(anim_name, player_side);
     strcat(anim_name, "_");
     strcat(anim_name, character);
@@ -494,7 +493,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
         cy = player->crosshair->body->aabb.position[1];
 
         // since the player's position is relative to the glviewport, while the crosshair's is to the window
-        if(player == player_two)
+        if (player == player_two)
             cx -= 0.5 * window_width;
 
         // Calculate angle using atan2
@@ -624,42 +623,34 @@ void update_player_velocity_from_key_state(Player *player)
     f32 xy_magnitude = sin(angle) * MAX_PLAYER_MOVEMENT_SPEED;
 
     if (key_state->up && key_state->right) {
-        player->direction = UP_RIGHT;
         velx += xy_magnitude;
         vely += xy_magnitude;
     }
     else if (key_state->up && key_state->left) {
-        player->direction = UP_LEFT;
         velx -= xy_magnitude;
         vely += xy_magnitude;
     }
     else if (key_state->down && key_state->right) {
-        player->direction = DOWN_RIGHT;
         velx += xy_magnitude;
         vely -= xy_magnitude;
     }
     else if (key_state->down && key_state->left) {
-        player->direction = DOWN_LEFT;
         velx -= xy_magnitude;
         vely -= xy_magnitude;
     }
     else if (key_state->right) {
-        player->direction = RIGHT;
         velx += MAX_PLAYER_MOVEMENT_SPEED;
     }
 
     else if (key_state->left) {
-        player->direction = LEFT;
         velx -= MAX_PLAYER_MOVEMENT_SPEED;
     }
 
     else if (key_state->up) {
-        player->direction = UP;
         vely += MAX_PLAYER_MOVEMENT_SPEED;
     }
 
     else if (key_state->down) {
-        player->direction = DOWN;
         vely -= MAX_PLAYER_MOVEMENT_SPEED;
     }
     player->entity->body->velocity[0] = velx;

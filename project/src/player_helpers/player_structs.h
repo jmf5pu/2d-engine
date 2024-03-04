@@ -30,7 +30,6 @@ typedef struct player {
     vec2 spawn_point;
     vec2 relative_position; // position relative to the rest of the map NOT
                             // to the window
-    enum Direction direction;
     enum Player_Status status;
     Player_Input_State *input_state;
     f32 render_scale_factor; // render scale factor (determines FOV of the

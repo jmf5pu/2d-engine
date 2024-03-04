@@ -407,6 +407,6 @@ void update_entity_velocity_from_joystick_input(Joystick_State input, Entity *en
 void apply_player_input_state(Player *player);
 void update_crosshair_position_from_cursor(Player *player);
 void maintain_controller_keypresses(Player *player);
-void maintain_controller_keypress(Key_State * key_state);
+void maintain_controller_keypress(Key_State *key_state);
 
 #endif

@@ -66,11 +66,10 @@ int main(int argc, char *argv[])
     while (!should_quit) {
         time_update();
 
-
         // needed for controller support:
-        if(player_one)
+        if (player_one)
             maintain_controller_keypresses(player_one);
-        if(player_two)
+        if (player_two)
             maintain_controller_keypresses(player_two);
 
         // grab current inputs

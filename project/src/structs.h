@@ -10,17 +10,6 @@
 #include "engine/render.h"
 #include "engine/types.h"
 
-enum Direction {
-    UP,
-    RIGHT,
-    DOWN,
-    LEFT,
-    UP_RIGHT,
-    UP_LEFT,
-    DOWN_RIGHT,
-    DOWN_LEFT,
-};
-
 enum Pickup_Name { M44_PICKUP, BREWSTER_PICKUP };
 
 enum Fire_Mode { AUTO, SEMI, BURST };
@@ -101,7 +90,6 @@ typedef struct camera {
 
 typedef struct zombie {
     Entity *entity;
-    enum Direction direction;
     enum Enemy_Status status;
     f32 despawn_time;
     u32 frames_on_status;

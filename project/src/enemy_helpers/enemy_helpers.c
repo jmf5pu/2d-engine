@@ -32,7 +32,6 @@ void create_enemy(vec2 spawn_point, vec2 size)
         enemy->entity = entity_create(spawn_point, size, (vec2){0, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
         enemy->entity->body->parent = enemy;
         enemy->despawn_time = 1;
-        enemy->direction = LEFT;
         enemy->frames_on_status = 0;
         enemy->health = 100;
         enemy->status = ENEMY_ACTIVE;

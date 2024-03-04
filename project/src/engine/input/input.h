@@ -1,9 +1,9 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#include "../types.h"
 #include <SDL2/SDL.h>
 #include <stdbool.h>
-#include "../types.h"
 
 #define MAX_CONTROLLERS 2
 #define JOYSTICK_DEADZONE_THRESHOLD 0.1
