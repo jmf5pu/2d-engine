@@ -335,44 +335,23 @@ Animation *p2_anim_soldier_1_m44_brewster_spawning_side;
 Animation *p2_anim_soldier_1_m44_brewster_dying_side;
 
 /*
-NEW PLAYER OBJECTS 11/12
+NEW PLAYER STRUCTS 3/4/24
 */
-Sprite_Sheet sprite_sheet_soldier_purple_base_idle_right;
-Sprite_Sheet sprite_sheet_soldier_purple_base_idle_left;
-Sprite_Sheet sprite_sheet_soldier_purple_base_idle_down;
-Sprite_Sheet sprite_sheet_soldier_purple_base_idle_down_right;
-Sprite_Sheet sprite_sheet_soldier_purple_base_idle_down_left;
-Sprite_Sheet sprite_sheet_soldier_purple_base_idle_up;
-Sprite_Sheet sprite_sheet_soldier_purple_base_idle_up_right;
-Sprite_Sheet sprite_sheet_soldier_purple_base_idle_up_left;
 
-Animation_Definition *adef_soldier_purple_base_idle_right;
-Animation_Definition *adef_soldier_purple_base_idle_left;
-Animation_Definition *adef_soldier_purple_base_idle_down;
-Animation_Definition *adef_soldier_purple_base_idle_down_left;
-Animation_Definition *adef_soldier_purple_base_idle_down_right;
-Animation_Definition *adef_soldier_purple_base_idle_up;
-Animation_Definition *adef_soldier_purple_base_idle_up_left;
-Animation_Definition *adef_soldier_purple_base_idle_up_right;
+Sprite_Sheet sprite_sheet_player_mock_1;
+Sprite_Sheet sprite_sheet_player_mock_2;
+Sprite_Sheet sprite_sheet_player_mock_3;
+Sprite_Sheet sprite_sheet_player_mock_4;
 
-Animation *p1_anim_soldier_purple_base_idle_right;
-Animation *p1_anim_soldier_purple_base_idle_left;
-Animation *p1_anim_soldier_purple_base_idle_down;
-Animation *p1_anim_soldier_purple_base_idle_down_left;
-Animation *p1_anim_soldier_purple_base_idle_down_right;
-Animation *p1_anim_soldier_purple_base_idle_up;
-Animation *p1_anim_soldier_purple_base_idle_up_left;
-Animation *p1_anim_soldier_purple_base_idle_up_right;
+Animation_Definition *adef_player_mock_1;
+Animation_Definition *adef_player_mock_2;
+Animation_Definition *adef_player_mock_3;
+Animation_Definition *adef_player_mock_4;
 
-Animation *p2_anim_soldier_purple_base_idle_right;
-Animation *p2_anim_soldier_purple_base_idle_left;
-Animation *p2_anim_soldier_purple_base_idle_down;
-Animation *p2_anim_soldier_purple_base_idle_up;
-Animation *p2_anim_soldier_purple_base_idle_down_left;
-Animation *p2_anim_soldier_purple_base_idle_down_right;
-Animation *p2_anim_soldier_purple_base_idle_up;
-Animation *p2_anim_soldier_purple_base_idle_up_left;
-Animation *p2_anim_soldier_purple_base_idle_up_right;
+Animation * anim_player_mock_1;
+Animation * anim_player_mock_2;
+Animation * anim_player_mock_3;
+Animation * anim_player_mock_4;
 
 // bullet sprites & anims
 Sprite_Sheet sprite_sheet_bullet_1_horizontal;

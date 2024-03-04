@@ -36,25 +36,11 @@ void init_bullet_anim_hashmap()
 void init_player_anim_hashmap()
 {
     player_anim_map = create_hash_map(PLAYER_ANIM_COUNT);
-
-    // new player stuff 11/12
-    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_right", p1_anim_soldier_purple_base_idle_right);
-    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_left", p1_anim_soldier_purple_base_idle_left);
-    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_down", p1_anim_soldier_purple_base_idle_down);
-    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_down_left", p1_anim_soldier_purple_base_idle_down_left);
-    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_down_right", p1_anim_soldier_purple_base_idle_down_right);
-    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_up", p1_anim_soldier_purple_base_idle_up);
-    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_up_left", p1_anim_soldier_purple_base_idle_up_left);
-    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_up_right", p1_anim_soldier_purple_base_idle_up_right);
-
-    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_right", p2_anim_soldier_purple_base_idle_right);
-    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_left", p2_anim_soldier_purple_base_idle_left);
-    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_down", p2_anim_soldier_purple_base_idle_down);
-    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_down_left", p2_anim_soldier_purple_base_idle_down_left);
-    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_down_right", p2_anim_soldier_purple_base_idle_down_right);
-    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_up", p2_anim_soldier_purple_base_idle_up);
-    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_up_left", p2_anim_soldier_purple_base_idle_up_left);
-    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_up_right", p2_anim_soldier_purple_base_idle_up_right);
+    
+    insert(player_anim_map, "player_mock_1", anim_player_mock_1);
+    insert(player_anim_map, "player_mock_2", anim_player_mock_2);
+    insert(player_anim_map, "player_mock_3", anim_player_mock_3);
+    insert(player_anim_map, "player_mock_4", anim_player_mock_4);
 }
 
 // sets up animations for players and bullets
@@ -147,48 +133,21 @@ void init_all_anims()
     adef_bullet_15 = animation_definition_create(&sprite_sheet_bullet_15, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_15 = animation_create(adef_bullet_15, false);
 
-    /*
-    NEW PLAYER ANIMS 11/12
-    */
-    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_right, "assets/soldier_purple_base_idle_right.png", 175, 175);
-    adef_soldier_purple_base_idle_right = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_right, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    p1_anim_soldier_purple_base_idle_right = animation_create(adef_soldier_purple_base_idle_right, false);
-    p2_anim_soldier_purple_base_idle_right = animation_create(adef_soldier_purple_base_idle_right, false);
 
-    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_left, "assets/soldier_purple_base_idle_left.png", 175, 175);
-    adef_soldier_purple_base_idle_left = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_left, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    p1_anim_soldier_purple_base_idle_left = animation_create(adef_soldier_purple_base_idle_left, false);
-    p2_anim_soldier_purple_base_idle_left = animation_create(adef_soldier_purple_base_idle_left, false);
-
-    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_down, "assets/soldier_purple_base_idle_down.png", 175, 175);
-    adef_soldier_purple_base_idle_down = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_down, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    p1_anim_soldier_purple_base_idle_down = animation_create(adef_soldier_purple_base_idle_down, false);
-    p2_anim_soldier_purple_base_idle_down = animation_create(adef_soldier_purple_base_idle_down, false);
-
-    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_down_right, "assets/soldier_purple_base_idle_down_right.png", 175, 175);
-    adef_soldier_purple_base_idle_down_right = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_down_right, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    p1_anim_soldier_purple_base_idle_down_right = animation_create(adef_soldier_purple_base_idle_down_right, false);
-    p2_anim_soldier_purple_base_idle_down_right = animation_create(adef_soldier_purple_base_idle_down_right, false);
-
-    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_down_left, "assets/soldier_purple_base_idle_down_left.png", 175, 175);
-    adef_soldier_purple_base_idle_down_left = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_down_left, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    p1_anim_soldier_purple_base_idle_down_left = animation_create(adef_soldier_purple_base_idle_down_left, false);
-    p2_anim_soldier_purple_base_idle_down_left = animation_create(adef_soldier_purple_base_idle_down_left, false);
-
-    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_up, "assets/soldier_purple_base_idle_up.png", 175, 175);
-    adef_soldier_purple_base_idle_up = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_up, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    p1_anim_soldier_purple_base_idle_up = animation_create(adef_soldier_purple_base_idle_up, false);
-    p2_anim_soldier_purple_base_idle_up = animation_create(adef_soldier_purple_base_idle_up, false);
-
-    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_up_right, "assets/soldier_purple_base_idle_up_right.png", 175, 175);
-    adef_soldier_purple_base_idle_up_right = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_up_right, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    p1_anim_soldier_purple_base_idle_up_right = animation_create(adef_soldier_purple_base_idle_up_right, false);
-    p2_anim_soldier_purple_base_idle_up_right = animation_create(adef_soldier_purple_base_idle_up_right, false);
-
-    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_up_left, "assets/soldier_purple_base_idle_up_left.png", 175, 175);
-    adef_soldier_purple_base_idle_up_left = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_up_left, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    p1_anim_soldier_purple_base_idle_up_left = animation_create(adef_soldier_purple_base_idle_up_left, false);
-    p2_anim_soldier_purple_base_idle_up_left = animation_create(adef_soldier_purple_base_idle_up_left, false);
+    // NEW PLAYER ANIMS 3/4/24:
+    render_sprite_sheet_init(&sprite_sheet_player_mock_1, "assets/wip/player_mock_1.png", 20, 22);
+    adef_player_mock_1 = animation_definition_create(&sprite_sheet_player_mock_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_player_mock_1 = animation_create(adef_player_mock_1, false);
+    render_sprite_sheet_init(&sprite_sheet_player_mock_2, "assets/wip/player_mock_2.png", 20, 22);
+    adef_player_mock_2 = animation_definition_create(&sprite_sheet_player_mock_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_player_mock_2 = animation_create(adef_player_mock_2, false);
+    render_sprite_sheet_init(&sprite_sheet_player_mock_3, "assets/wip/player_mock_3.png", 20, 22);
+    adef_player_mock_3 = animation_definition_create(&sprite_sheet_player_mock_3, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_player_mock_3 = animation_create(adef_player_mock_3, false);
+    render_sprite_sheet_init(&sprite_sheet_player_mock_4, "assets/wip/player_mock_4.png", 20, 22);
+    adef_player_mock_4 = animation_definition_create(&sprite_sheet_player_mock_4, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_player_mock_4 = animation_create(adef_player_mock_4, false);
+    // END NEW PLAYER ANIMS
 
     init_bullet_anim_hashmap();
     init_player_anim_hashmap();
@@ -400,59 +359,35 @@ void update_player_status(Player *player)
  */
 void update_player_animations(Player *player)
 {
-    if (player->status == PLAYER_INACTIVE) {
-        return;
-    }
-
     // cache old anim to check if we are SWITCHING anims
     Animation *prev_anim = player->entity->animation;
 
     char *anim_name = calloc(50, sizeof(char));
-    char *player_side = player->is_left_player ? "p1_anim" : "p2_anim";
-    char *character = "soldier_purple"; // player->character
-    char *weapon = player->weapon->name;
-    char *armor = player->armor->name;
-    char *status;
-    if (player->status == PLAYER_SPAWNING)
-        status = "spawning";
-    else if (player->status == PLAYER_DESPAWNING)
-        status = "dying";
-    else if (player->entity->body->velocity[0] || player->entity->body->velocity[1])
-        status = "running";
-    else // player NOT moving
-        status = "idle";
+    strcat(anim_name, "player_mock_");
+
     char *direction;
 
     // choose correct animation for player's direction
     f32 crosshair_angle = atan2(
         player->crosshair->body->aabb.position[1] - player->entity->body->aabb.position[1], player->crosshair->body->aabb.position[0] - player->entity->body->aabb.position[0]);
-    if (crosshair_angle >= 7 * M_PI / 4 || crosshair_angle < M_PI / 4){
+    if(crosshair_angle > -1 * M_PI/4 && crosshair_angle <= M_PI/4){
         direction = "0";
     }
-    else if (crosshair_angle >= M_PI / 4 && crosshair_angle < 3 * M_PI / 4){
+    else if(crosshair_angle > M_PI/4 && crosshair_angle <= 3 * M_PI/4){
         direction = "1";
     }
-    else if (crosshair_angle >= 3 * M_PI / 4 && crosshair_angle < 5 * M_PI / 4){
+    else if(crosshair_angle > 3 * M_PI/4 || crosshair_angle <= -3 * M_PI/4){
         direction = "2";
     }
-    else if (crosshair_angle >= 5 * M_PI / 4 && crosshair_angle < 7 * M_PI / 4){
+    else if(crosshair_angle > -3 * M_PI/4 && crosshair_angle < -1 * M_PI/4){
         direction = "3";
     }
-
-    strcat(anim_name, player_side);
-    strcat(anim_name, "_");
-    strcat(anim_name, character);
-    strcat(anim_name, "_");
-    strcat(anim_name, weapon);
-    strcat(anim_name, "_");
-    if (strcmp(armor, "") != 0) {
-        strcat(anim_name, armor);
-        strcat(anim_name, "_");
+    else{
+        printf("got unexpected crosshair angle: %f\n", crosshair_angle);
     }
-    strcat(anim_name, status);
-    strcat(anim_name, "_");
     strcat(anim_name, direction);
-
+    strcat(anim_name, "\0");
+    
     Animation *player_anim = get(player_anim_map, anim_name);
     if (player_anim)
         player->entity->animation = player_anim;
@@ -683,5 +618,6 @@ void player_per_frame_updates(Player *player)
 {
     handle_player_input(player);
     update_player_status(player);
-    update_player_animations(player);
+    if(player->status != PLAYER_INACTIVE)
+        update_player_animations(player);
 }
