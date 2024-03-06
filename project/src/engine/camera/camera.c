@@ -12,13 +12,21 @@ Camera right_cam;
 
 bool vec2_is_equal(vec2 first, vec2 second) { return first[0] == second[0] && first[1] == second[1]; }
 
+static f32 window_buffer;
+
 void camera_init(void)
 {
+    if(render_width < 1 || render_width > 10000){
+        printf("render width must be properly instantiated to initialize cameras\n");
+    }
+    
+    window_buffer = 0.3 * render_width;
+    
     // create camera structs
     main_cam = (Camera){
         .position = {0, 0},
         .target_position = NULL,
-        .buffer = {WINDOW_BUFFER, render_width - WINDOW_BUFFER, WINDOW_BUFFER, render_height - WINDOW_BUFFER},
+        .buffer = {window_buffer, render_width - window_buffer, window_buffer, render_height - window_buffer},
     };
 
     // half way to the left of the screen, buffers the center instead of the
@@ -26,7 +34,7 @@ void camera_init(void)
     left_cam = (Camera){
         .position = {0, 0},
         .target_position = NULL,
-        .buffer = {WINDOW_BUFFER, render_width - WINDOW_BUFFER, WINDOW_BUFFER, render_height - WINDOW_BUFFER},
+        .buffer = {window_buffer, render_width - window_buffer, window_buffer, render_height - window_buffer},
     };
 
     // half way to the right of the screen, buffers the center instead of
@@ -35,7 +43,7 @@ void camera_init(void)
         .position = {0, 0}, // essentially bump everything to the right by
                             // half the screen width right off the bat
         .target_position = NULL,
-        .buffer = {WINDOW_BUFFER, render_width - WINDOW_BUFFER, WINDOW_BUFFER, render_height - WINDOW_BUFFER},
+        .buffer = {window_buffer, render_width - window_buffer, window_buffer, render_height - window_buffer},
     };
 }
 
@@ -81,10 +89,10 @@ void shift_camera_smooth(Player *player, u32 delta)
 void camera_update(Player *player, Map *map)
 {
     // update camera buffer
-    player->camera->buffer[0] = WINDOW_BUFFER;
-    player->camera->buffer[1] = render_width - WINDOW_BUFFER;
-    player->camera->buffer[2] = WINDOW_BUFFER;
-    player->camera->buffer[3] = render_height - WINDOW_BUFFER;
+    player->camera->buffer[0] = window_buffer;
+    player->camera->buffer[1] = render_width - window_buffer;
+    player->camera->buffer[2] = window_buffer;
+    player->camera->buffer[3] = render_height - window_buffer;
 
     // updates the camera based on the player's position
     float position_x = player->entity->body->aabb.position[0];

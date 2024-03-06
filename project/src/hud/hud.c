@@ -355,8 +355,8 @@ void render_hud(SDL_Window *window, u32 texture_slots[32], vec4 color)
     // render player two displays if relevant
     if (SPLIT_SCREEN) {
         fix_crosshair_position(player_two);
-        render_health(window, texture_slots, player_two, (vec2){window_width - 50, window_height - 50}, color);
-        render_ammo(window, texture_slots, player_two, (vec2){window_width - 0.5 * DIGIT_WIDTH, 0.5 * DIGIT_HEIGHT}, color);
+        render_health(window, texture_slots, player_two, (vec2){render_width - 50, render_height - 50}, color);
+        render_ammo(window, texture_slots, player_two, (vec2){render_width - 0.5 * DIGIT_WIDTH, 0.5 * DIGIT_HEIGHT}, color);
         animation_render(player_two->crosshair->animation, window, player_two->crosshair->body->aabb.position, 0, color, texture_slots);
 
         // render viewport divider

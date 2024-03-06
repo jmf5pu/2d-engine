@@ -235,7 +235,7 @@ void render_main_menu(SDL_Window *window, u32 texture_slots[32])
             window,
             texture_slots,
             main_menu->items[i],
-            (vec2){SELECTED_ANIM_WIDTH * 0.5, window_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
+            (vec2){SELECTED_ANIM_WIDTH * 0.5, render_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
             main_menu->selected_item == i);
     }
 }
@@ -261,7 +261,7 @@ void render_mode_menu(SDL_Window *window, u32 texture_slots[32])
             window,
             texture_slots,
             mode_menu->items[i],
-            (vec2){SELECTED_ANIM_WIDTH * 0.5, window_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
+            (vec2){SELECTED_ANIM_WIDTH * 0.5, render_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
             mode_menu->selected_item == i);
     }
 }
@@ -287,7 +287,7 @@ void render_survival_menu(SDL_Window *window, u32 texture_slots[32])
             window,
             texture_slots,
             survival_menu->items[i],
-            (vec2){SELECTED_ANIM_WIDTH * 0.5, window_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
+            (vec2){SELECTED_ANIM_WIDTH * 0.5, render_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
             survival_menu->selected_item == i);
     }
 }
@@ -310,7 +310,7 @@ void render_pause_menu(SDL_Window *window, u32 texture_slots[32])
             window,
             texture_slots,
             pause_menu->items[i],
-            (vec2){SELECTED_ANIM_WIDTH * 0.5, window_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
+            (vec2){SELECTED_ANIM_WIDTH * 0.5, render_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
             pause_menu->selected_item == i);
     }
 }

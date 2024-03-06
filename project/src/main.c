@@ -206,6 +206,8 @@ int main(int argc, char *argv[])
                 player_two->entity->body->aabb.position[1] = p2_pos_holder[1] + (player_two->entity->body->aabb.position[1] - player_two->relative_position[1]);
             }
 
+            set_render_dimensions(DEFAULT_RENDER_SCALE_FACTOR, false, true);
+
             // need to run render loop twice if we are actively
             // splitting the screen
             int player_count = SPLIT_SCREEN ? 2 : 1;
@@ -221,14 +223,12 @@ int main(int argc, char *argv[])
                 // BEFORE rendering because entities can be
                 // created in `handle_player_shooting`
                 if (SPLIT_SCREEN && i == 0) {
-                    set_render_dimensions(player_one->render_scale_factor, false, true);
                     camera_update(player_one, &map);
                     render_begin_left();
                     if (game_state == GS_RUNNING)
                         player_per_frame_updates(player_one);
                 }
                 else if (SPLIT_SCREEN && i == 1) {
-                    set_render_dimensions(player_two->render_scale_factor, false, true);
                     camera_update(player_two, &map);
                     render_begin_right();
                     if (game_state == GS_RUNNING)
@@ -236,7 +236,6 @@ int main(int argc, char *argv[])
                 }
                 else // hit when screen is not being split
                 {
-                    set_render_dimensions(player_one->render_scale_factor, false, true);
                     camera_update(player_one, &map);
                     render_begin();
                     if (game_state == GS_RUNNING)
