@@ -20,7 +20,7 @@ void camera_init(void)
         printf("render width must be properly instantiated to initialize cameras\n");
     }
     
-    window_buffer = 0.3 * render_width;
+    window_buffer = 0.3 * render_height; // using render height here because render width is typically wider
     
     // create camera structs
     main_cam = (Camera){

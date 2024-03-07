@@ -14,7 +14,7 @@
 #define MIN(x, y) (((x) < (y)) ? (x) : (y)) // used in reloading calculations
 #define BULLET_DISTANCE_FROM_PLAYER 40
 #define INVERT_Y_AXIS true // if true, joystick up motion will correspond to positive y axis value
-#define CROSSHAIR_SIZE 200
+#define CROSSHAIR_SIZE 11
 
 #define MAX_PLAYER_MOVEMENT_SPEED 250
 #define MAX_CROSSHAIR_MOVEMENT_SPEED 600

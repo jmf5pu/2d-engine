@@ -53,22 +53,16 @@ void init_all_anims()
     anim_player_placeholder = animation_create(adef_player_placeholder, false);
 
     // init crosshair anims
-    render_sprite_sheet_init(&sprite_sheet_player_1_crosshair, "assets/hud/red_crosshair.png", 200, 200);
+    render_sprite_sheet_init(&sprite_sheet_player_1_crosshair, "assets/wip/crosshair_mock.png", 11, 11);
     adef_player_1_crosshair = animation_definition_create(
         &sprite_sheet_player_1_crosshair,
-        (f32[]){0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08},
-        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
-        12);
-    render_sprite_sheet_init(&sprite_sheet_player_2_crosshair, "assets/hud/blue_crosshair.png", 200, 200);
+        (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_player_2_crosshair, "assets/wip/crosshair_mock.png", 11, 11);
     adef_player_2_crosshair = animation_definition_create(
         &sprite_sheet_player_2_crosshair,
-        (f32[]){0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08},
-        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
-        12);
-    anim_p1_crosshair = animation_create(adef_player_1_crosshair, true);
-    anim_p2_crosshair = animation_create(adef_player_2_crosshair, true);
+        (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_p1_crosshair = animation_create(adef_player_1_crosshair, false);
+    anim_p2_crosshair = animation_create(adef_player_2_crosshair, false);
 
     // init bullet anims
     render_sprite_sheet_init(&sprite_sheet_bullet_0, "assets/bullet_0.png", 3, 1);

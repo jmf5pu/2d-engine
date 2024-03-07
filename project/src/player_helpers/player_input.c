@@ -1,5 +1,6 @@
 #include "../engine/input/input.h"
 #include "../engine/render.h"
+#include "../hud/hud.h"
 #include "player_helpers.h"
 
 /// @brief Assigns a controller to each player. -1 indicates no associated controller
@@ -22,6 +23,7 @@ void handle_player_input(Player *player)
         update_player_input_state_from_keyboard(player);
     }
     apply_player_joystick_movement(player);
+    fix_crosshair_position(player);
     apply_player_input_state(player);
 }
 
@@ -92,7 +94,7 @@ void update_crosshair_position_from_cursor(Player *player)
     int mouse_x, mouse_y;
     SDL_GetMouseState(&mouse_x, &mouse_y);
     player->crosshair->body->aabb.position[0] = mouse_x;
-    player->crosshair->body->aabb.position[1] = render_height - mouse_y;
+    player->crosshair->body->aabb.position[1] = (render_height - mouse_y);
 }
 
 /// @brief maintain all the keypresses on the controller with a "held" state until the key is lifted.
