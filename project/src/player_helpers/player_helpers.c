@@ -565,7 +565,8 @@ static void update_player_weapon_anim(Player *player)
     free(anim_name);
 }
 
-static void update_player_crosshair_angle(Player * player){
+static void update_player_crosshair_angle(Player *player)
+{
     f32 crosshair_angle = atan2(
         player->crosshair->body->aabb.position[1] - player->entity->body->aabb.position[1], player->crosshair->body->aabb.position[0] - player->entity->body->aabb.position[0]);
 }

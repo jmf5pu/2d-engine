@@ -138,11 +138,14 @@ int main(int argc, char *argv[])
                 player_one = malloc(sizeof(Player));
                 init_player(player_one, &map, m16, 2.9, 5, 2, true);
                 spawn_player(player_one, m16);
-                if (SPLIT_SCREEN && !player_two) {
-                    player_two = malloc(sizeof(Player));
-                    init_player(player_two, &map, m16, 2.9, 5, 2, false);
-                    spawn_player(player_two, m16);
-                }
+                update_player_anims(player_one);
+            }
+
+            if (SPLIT_SCREEN && !player_two) {
+                player_two = malloc(sizeof(Player));
+                init_player(player_two, &map, m16, 2.9, 5, 2, false);
+                spawn_player(player_two, m16);
+                update_player_anims(player_two);
             }
 
             // check if pause was hit, update game state
@@ -294,9 +297,8 @@ int main(int argc, char *argv[])
 
                 // render player's anims (characters + weapons)
                 render_player_anims(player_one, window, texture_slots, game_color);
-                if(SPLIT_SCREEN)
+                if (SPLIT_SCREEN)
                     render_player_anims(player_two, window, texture_slots, game_color);
-
 
                 // render map sprites
                 for (int l = 0; l < map.num_props; l++) {

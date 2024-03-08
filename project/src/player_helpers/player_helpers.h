@@ -438,6 +438,6 @@ void maintain_controller_keypress(Key_State *key_state);
 void update_player_anims(Player *player);
 static void update_player_character_anim(Player *player);
 static void update_player_weapon_anim(Player *player);
-static void update_player_crosshair_angle(Player * player);
+static void update_player_crosshair_angle(Player *player);
 
 #endif
