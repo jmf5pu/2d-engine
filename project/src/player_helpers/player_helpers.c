@@ -360,16 +360,16 @@ void update_player_animations(Player *player)
     f32 crosshair_angle = atan2(
         player->crosshair->body->aabb.position[1] - player->entity->body->aabb.position[1], player->crosshair->body->aabb.position[0] - player->entity->body->aabb.position[0]);
     if (crosshair_angle > -1 * M_PI / 4 && crosshair_angle <= M_PI / 4) {
-        direction = "0";
-    }
-    else if (crosshair_angle > M_PI / 4 && crosshair_angle <= 3 * M_PI / 4) {
         direction = "1";
     }
-    else if (crosshair_angle > 3 * M_PI / 4 || crosshair_angle <= -3 * M_PI / 4) {
+    else if (crosshair_angle > M_PI / 4 && crosshair_angle <= 3 * M_PI / 4) {
         direction = "2";
     }
-    else if (crosshair_angle > -3 * M_PI / 4 && crosshair_angle < -1 * M_PI / 4) {
+    else if (crosshair_angle > 3 * M_PI / 4 || crosshair_angle <= -3 * M_PI / 4) {
         direction = "3";
+    }
+    else if (crosshair_angle > -3 * M_PI / 4 && crosshair_angle < -1 * M_PI / 4) {
+        direction = "4";
     }
     else {
         printf("got unexpected crosshair angle: %f\n", crosshair_angle);
