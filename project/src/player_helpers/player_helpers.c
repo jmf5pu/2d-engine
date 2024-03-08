@@ -36,7 +36,7 @@ void init_bullet_anim_hashmap()
 void init_player_anim_hashmap()
 {
     player_anim_map = create_hash_map(PLAYER_ANIM_COUNT);
-    
+
     insert(player_anim_map, "player_mock_1", anim_player_mock_1);
     insert(player_anim_map, "player_mock_2", anim_player_mock_2);
     insert(player_anim_map, "player_mock_3", anim_player_mock_3);
@@ -54,13 +54,9 @@ void init_all_anims()
 
     // init crosshair anims
     render_sprite_sheet_init(&sprite_sheet_player_1_crosshair, "assets/wip/crosshair_mock.png", 11, 11);
-    adef_player_1_crosshair = animation_definition_create(
-        &sprite_sheet_player_1_crosshair,
-        (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    adef_player_1_crosshair = animation_definition_create(&sprite_sheet_player_1_crosshair, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     render_sprite_sheet_init(&sprite_sheet_player_2_crosshair, "assets/wip/crosshair_mock.png", 11, 11);
-    adef_player_2_crosshair = animation_definition_create(
-        &sprite_sheet_player_2_crosshair,
-        (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    adef_player_2_crosshair = animation_definition_create(&sprite_sheet_player_2_crosshair, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_p1_crosshair = animation_create(adef_player_1_crosshair, false);
     anim_p2_crosshair = animation_create(adef_player_2_crosshair, false);
 
@@ -126,7 +122,6 @@ void init_all_anims()
     render_sprite_sheet_init(&sprite_sheet_bullet_15, "assets/bullet_15.png", 3, 2);
     adef_bullet_15 = animation_definition_create(&sprite_sheet_bullet_15, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_15 = animation_create(adef_bullet_15, false);
-
 
     // NEW PLAYER ANIMS 3/4/24:
     render_sprite_sheet_init(&sprite_sheet_player_mock_1, "assets/wip/player_mock_1.png", 20, 22);
@@ -364,24 +359,24 @@ void update_player_animations(Player *player)
     // choose correct animation for player's direction
     f32 crosshair_angle = atan2(
         player->crosshair->body->aabb.position[1] - player->entity->body->aabb.position[1], player->crosshair->body->aabb.position[0] - player->entity->body->aabb.position[0]);
-    if(crosshair_angle > -1 * M_PI/4 && crosshair_angle <= M_PI/4){
+    if (crosshair_angle > -1 * M_PI / 4 && crosshair_angle <= M_PI / 4) {
         direction = "0";
     }
-    else if(crosshair_angle > M_PI/4 && crosshair_angle <= 3 * M_PI/4){
+    else if (crosshair_angle > M_PI / 4 && crosshair_angle <= 3 * M_PI / 4) {
         direction = "1";
     }
-    else if(crosshair_angle > 3 * M_PI/4 || crosshair_angle <= -3 * M_PI/4){
+    else if (crosshair_angle > 3 * M_PI / 4 || crosshair_angle <= -3 * M_PI / 4) {
         direction = "2";
     }
-    else if(crosshair_angle > -3 * M_PI/4 && crosshair_angle < -1 * M_PI/4){
+    else if (crosshair_angle > -3 * M_PI / 4 && crosshair_angle < -1 * M_PI / 4) {
         direction = "3";
     }
-    else{
+    else {
         printf("got unexpected crosshair angle: %f\n", crosshair_angle);
     }
     strcat(anim_name, direction);
     strcat(anim_name, "\0");
-    
+
     Animation *player_anim = get(player_anim_map, anim_name);
     if (player_anim)
         player->entity->animation = player_anim;
@@ -612,6 +607,6 @@ void player_per_frame_updates(Player *player)
 {
     handle_player_input(player);
     update_player_status(player);
-    if(player->status != PLAYER_INACTIVE)
+    if (player->status != PLAYER_INACTIVE)
         update_player_animations(player);
 }

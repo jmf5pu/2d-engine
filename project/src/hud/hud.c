@@ -367,14 +367,15 @@ void fix_crosshair_position(Player *player)
 {
     f32 crosshair_buffer = CROSSHAIR_SIZE * 0.5;
     f32 x_lower_bound = player->is_left_player ? crosshair_buffer : window_width * DEFAULT_RENDER_SCALE_FACTOR * 0.5 + crosshair_buffer;
-    f32 x_upper_bound = player->is_left_player && SPLIT_SCREEN ? window_width * DEFAULT_RENDER_SCALE_FACTOR * 0.5 - crosshair_buffer : window_width - crosshair_buffer;
+    f32 x_upper_bound = player->is_left_player && SPLIT_SCREEN ? window_width * DEFAULT_RENDER_SCALE_FACTOR * 0.5 - crosshair_buffer
+                                                               : (window_width * DEFAULT_RENDER_SCALE_FACTOR) - crosshair_buffer;
 
     if (player->crosshair->body->aabb.position[0] > x_upper_bound)
         player->crosshair->body->aabb.position[0] = x_upper_bound;
     if (player->crosshair->body->aabb.position[0] < x_lower_bound)
         player->crosshair->body->aabb.position[0] = x_lower_bound;
-    if (player->crosshair->body->aabb.position[1] > window_height - crosshair_buffer)
-        player->crosshair->body->aabb.position[1] = window_height - crosshair_buffer;
+    if (player->crosshair->body->aabb.position[1] > (window_height * DEFAULT_RENDER_SCALE_FACTOR) - crosshair_buffer)
+        player->crosshair->body->aabb.position[1] = (window_height * DEFAULT_RENDER_SCALE_FACTOR) - crosshair_buffer;
     if (player->crosshair->body->aabb.position[1] < crosshair_buffer)
         player->crosshair->body->aabb.position[1] = crosshair_buffer;
 }

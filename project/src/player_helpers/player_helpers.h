@@ -348,10 +348,10 @@ Animation_Definition *adef_player_mock_2;
 Animation_Definition *adef_player_mock_3;
 Animation_Definition *adef_player_mock_4;
 
-Animation * anim_player_mock_1;
-Animation * anim_player_mock_2;
-Animation * anim_player_mock_3;
-Animation * anim_player_mock_4;
+Animation *anim_player_mock_1;
+Animation *anim_player_mock_2;
+Animation *anim_player_mock_3;
+Animation *anim_player_mock_4;
 
 // bullet sprites & anims
 Sprite_Sheet sprite_sheet_bullet_1_horizontal;
