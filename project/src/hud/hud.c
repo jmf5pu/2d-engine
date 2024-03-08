@@ -330,7 +330,7 @@ void init_hud(SDL_Window *window)
     init_health_anims();
     init_ammo_anims();
     init_ammo_anim_hashmap();
-    render_sprite_sheet_init(&sprite_sheet_divider, "assets/hud/divider.png", 10, 1500);
+    render_sprite_sheet_init(&sprite_sheet_divider, "assets/wip/divider.png", 2, 1500);
 
     // initialize struct
     hud = malloc(sizeof(HUD));
@@ -345,14 +345,14 @@ void init_hud(SDL_Window *window)
 void render_hud(SDL_Window *window, u32 texture_slots[32], vec4 color)
 {
     // render player one displays (health + ammo + crosshair)
-    render_health(window, texture_slots, player_one, (vec2){50, (window_height * DEFAULT_RENDER_SCALE_FACTOR) - 50}, color);
-    render_ammo(window, texture_slots, player_one, (vec2){0.5 * DIGIT_WIDTH + DIGIT_WIDTH * 7 + ICON_SPACE, 0.5 * DIGIT_HEIGHT}, color);
+    // render_health(window, texture_slots, player_one, (vec2){50, (window_height * DEFAULT_RENDER_SCALE_FACTOR) - 50}, color);
+    // render_ammo(window, texture_slots, player_one, (vec2){0.5 * DIGIT_WIDTH + DIGIT_WIDTH * 7 + ICON_SPACE, 0.5 * DIGIT_HEIGHT}, color);
     animation_render(player_one->crosshair->animation, window, player_one->crosshair->body->aabb.position, 0, color, texture_slots);
 
     // render player two displays if relevant
     if (SPLIT_SCREEN) {
-        render_health(window, texture_slots, player_two, (vec2){render_width - 50, render_height - 50}, color);
-        render_ammo(window, texture_slots, player_two, (vec2){render_width - 0.5 * DIGIT_WIDTH, 0.5 * DIGIT_HEIGHT}, color);
+        // render_health(window, texture_slots, player_two, (vec2){render_width - 50, render_height - 50}, color);
+        // render_ammo(window, texture_slots, player_two, (vec2){render_width - 0.5 * DIGIT_WIDTH, 0.5 * DIGIT_HEIGHT}, color);
         animation_render(player_two->crosshair->animation, window, player_two->crosshair->body->aabb.position, 0, color, texture_slots);
 
         // render viewport divider
@@ -366,13 +366,9 @@ void render_hud(SDL_Window *window, u32 texture_slots[32], vec4 color)
 void fix_crosshair_position(Player *player)
 {
     f32 crosshair_buffer = CROSSHAIR_SIZE * 0.5;
-    printf("player: %d, render_width: %f, render_height: %f, crosshair_buffer: %f\n", player->is_left_player, render_width, render_height, crosshair_buffer);
-    
     f32 x_lower_bound = player->is_left_player ? crosshair_buffer : window_width * DEFAULT_RENDER_SCALE_FACTOR * 0.5 + crosshair_buffer;
     f32 x_upper_bound = player->is_left_player && SPLIT_SCREEN ? window_width * DEFAULT_RENDER_SCALE_FACTOR * 0.5 - crosshair_buffer : window_width - crosshair_buffer;
 
-    if(!player->is_left_player)
-        printf("before crosshair pos: %f, %f\n",player->crosshair->body->aabb.position[0], player->crosshair->body->aabb.position[1]);
     if (player->crosshair->body->aabb.position[0] > x_upper_bound)
         player->crosshair->body->aabb.position[0] = x_upper_bound;
     if (player->crosshair->body->aabb.position[0] < x_lower_bound)
@@ -381,6 +377,4 @@ void fix_crosshair_position(Player *player)
         player->crosshair->body->aabb.position[1] = window_height - crosshair_buffer;
     if (player->crosshair->body->aabb.position[1] < crosshair_buffer)
         player->crosshair->body->aabb.position[1] = crosshair_buffer;
-    if(!player->is_left_player)
-        printf("after crosshair pos: %f, %f\n",player->crosshair->body->aabb.position[0], player->crosshair->body->aabb.position[1]);
 }

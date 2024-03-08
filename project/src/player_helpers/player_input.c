@@ -93,8 +93,8 @@ void update_crosshair_position_from_cursor(Player *player)
 {
     int mouse_x, mouse_y;
     SDL_GetMouseState(&mouse_x, &mouse_y);
-    player->crosshair->body->aabb.position[0] = mouse_x;
-    player->crosshair->body->aabb.position[1] = (render_height - mouse_y);
+    player->crosshair->body->aabb.position[0] = mouse_x * DEFAULT_RENDER_SCALE_FACTOR;
+    player->crosshair->body->aabb.position[1] = render_height - (mouse_y * DEFAULT_RENDER_SCALE_FACTOR);
 }
 
 /// @brief maintain all the keypresses on the controller with a "held" state until the key is lifted.
