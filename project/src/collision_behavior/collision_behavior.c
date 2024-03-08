@@ -62,7 +62,6 @@ void player_on_hit(Body *self, Body *other, Hit hit)
             player->weapon->max_fire_rate = m44->max_fire_rate;
             player->weapon->damage = m44->damage;
             player->weapon->bullet_velocity = m44->bullet_velocity;
-            player->weapon->aiming_scale_factor = m44->aiming_scale_factor;
             player->weapon->frames_since_last_shot = 0;
             player->weapon->ready_to_fire = true;
         }

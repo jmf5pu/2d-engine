@@ -283,16 +283,20 @@ int main(int argc, char *argv[])
                         continue;
                     }
 
-                    // skip entities with no associated
-                    // animations, check if players and
-                    // pickups are inactive
-                    if (!entity->animation || !entity->is_active || !entity->body->is_active || entity_is_crosshair(entity)) {
+                    // skip inactive entities, entities that are players or crosshairs or entities with no animation
+                    if (!entity->animation || !entity->is_active || !entity->body->is_active || entity_is_player_or_crosshair(entity)) {
                         continue;
                     }
 
                     // render the entity's animation
                     animation_render(entity->animation, window, entity->body->aabb.position, 0, game_color, texture_slots);
                 }
+
+                // render player's anims (characters + weapons)
+                render_player_anims(player_one, window, texture_slots, game_color);
+                if(SPLIT_SCREEN)
+                    render_player_anims(player_two, window, texture_slots, game_color);
+
 
                 // render map sprites
                 for (int l = 0; l < map.num_props; l++) {

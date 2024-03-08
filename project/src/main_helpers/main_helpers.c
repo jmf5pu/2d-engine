@@ -17,10 +17,26 @@ bool should_destroy_entity(Entity *entity, Map *map)
             is_pickup = true;
     }
 
-    return (!entity->is_active || !entity->body->is_active) && !is_player && !is_pickup && !entity_is_crosshair(entity);
+    return (!entity->is_active || !entity->body->is_active) && !is_player && !is_pickup && !entity_is_player_or_crosshair(entity);
 }
 
 /// @brief Checks if an entity is a crosshair
 /// @param entity
 /// @return boolean representing if the entity is a crosshair
-bool entity_is_crosshair(Entity *entity) { return SPLIT_SCREEN ? (entity == player_one->crosshair || entity == player_two->crosshair) : (entity == player_one->crosshair); }
+bool entity_is_player_or_crosshair(Entity *entity) { 
+    bool is_player = SPLIT_SCREEN ? entity == player_one->entity || entity == player_two->entity : entity == player_one->entity;
+    bool is_crosshair = SPLIT_SCREEN ? entity == player_one->crosshair || entity == player_two->crosshair : entity == player_one->crosshair; 
+    return is_player || is_crosshair;
+}
+
+void render_player_anims(Player * player, SDL_Window *window, u32 texture_slots[32], vec4 color){
+    // player is facing up, render weapon "under" player
+    if(player->crosshair_angle > M_PI / 4 && player->crosshair_angle < 3 * M_PI / 4){
+        animation_render(player->weapon->character_anim, window, player->entity->body->aabb.position, 0, color, texture_slots);
+        animation_render(player->entity->animation, window, player->entity->body->aabb.position, 0, color, texture_slots);
+    }
+    else{
+        animation_render(player->entity->animation, window, player->entity->body->aabb.position, 0, color, texture_slots);
+        animation_render(player->weapon->character_anim, window, player->entity->body->aabb.position, 0, color, texture_slots);
+    }
+}

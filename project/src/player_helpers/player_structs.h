@@ -40,6 +40,7 @@ typedef struct player {
                              // 0
     f32 spawn_delay;         // time in s from INACTIVE status to SPAWNING status
     f32 spawn_time;          // time in s from SPAWNING status to ACTIVE status
+    f32 crosshair_angle;
     u32 frames_on_status;    // # of frames since last status change
     i16 health;
     bool is_left_player;

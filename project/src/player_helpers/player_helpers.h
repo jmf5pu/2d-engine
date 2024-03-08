@@ -10,6 +10,8 @@
 // number of animations to be stored in player_anim_map
 #define PLAYER_ANIM_COUNT 56
 #define BULLET_ANIM_COUNT 16
+#define WEAPON_COUNT 1
+#define ANIMS_PER_WEAPON 16
 
 #define MIN(x, y) (((x) < (y)) ? (x) : (y)) // used in reloading calculations
 #define BULLET_DISTANCE_FROM_PLAYER 40
@@ -23,10 +25,6 @@
 extern Player *player_one;
 extern Player *player_two;
 
-// animation hash maps
-Hash_Map *bullet_anim_map;
-Hash_Map *player_anim_map;
-
 // crosshair sprites & anims
 Sprite_Sheet sprite_sheet_player_1_crosshair;
 Sprite_Sheet sprite_sheet_player_2_crosshair;
@@ -36,9 +34,9 @@ Animation *anim_p1_crosshair;
 Animation *anim_p2_crosshair;
 
 // placeholder animation if one is missing
-Sprite_Sheet sprite_sheet_player_placeholder;
-Animation_Definition *adef_player_placeholder;
-Animation *anim_player_placeholder;
+Sprite_Sheet sprite_sheet_missing_anim_placeholder;
+Animation_Definition *adef_missing_anim_placeholder;
+Animation *missing_anim_placeholder;
 
 // bullet sprites & anims
 Sprite_Sheet sprite_sheet_bullet_0;
@@ -334,10 +332,7 @@ Animation *p2_anim_soldier_1_m44_brewster_running_front;
 Animation *p2_anim_soldier_1_m44_brewster_spawning_side;
 Animation *p2_anim_soldier_1_m44_brewster_dying_side;
 
-/*
-NEW PLAYER STRUCTS 3/4/24
-*/
-
+// NEW PLAYER STRUCTS 3/4/24:
 Sprite_Sheet sprite_sheet_player_mock_1;
 Sprite_Sheet sprite_sheet_player_mock_2;
 Sprite_Sheet sprite_sheet_player_mock_3;
@@ -352,6 +347,58 @@ Animation *anim_player_mock_1;
 Animation *anim_player_mock_2;
 Animation *anim_player_mock_3;
 Animation *anim_player_mock_4;
+
+Sprite_Sheet sprite_sheet_m16_with_hands1;
+Sprite_Sheet sprite_sheet_m16_with_hands2;
+Sprite_Sheet sprite_sheet_m16_with_hands3;
+Sprite_Sheet sprite_sheet_m16_with_hands4;
+Sprite_Sheet sprite_sheet_m16_with_hands5;
+Sprite_Sheet sprite_sheet_m16_with_hands6;
+Sprite_Sheet sprite_sheet_m16_with_hands7;
+Sprite_Sheet sprite_sheet_m16_with_hands8;
+Sprite_Sheet sprite_sheet_m16_with_hands9;
+Sprite_Sheet sprite_sheet_m16_with_hands10;
+Sprite_Sheet sprite_sheet_m16_with_hands11;
+Sprite_Sheet sprite_sheet_m16_with_hands12;
+Sprite_Sheet sprite_sheet_m16_with_hands13;
+Sprite_Sheet sprite_sheet_m16_with_hands14;
+Sprite_Sheet sprite_sheet_m16_with_hands15;
+Sprite_Sheet sprite_sheet_m16_with_hands16;
+
+Animation_Definition *adef_m16_with_hands1;
+Animation_Definition *adef_m16_with_hands2;
+Animation_Definition *adef_m16_with_hands3;
+Animation_Definition *adef_m16_with_hands4;
+Animation_Definition *adef_m16_with_hands5;
+Animation_Definition *adef_m16_with_hands6;
+Animation_Definition *adef_m16_with_hands7;
+Animation_Definition *adef_m16_with_hands8;
+Animation_Definition *adef_m16_with_hands9;
+Animation_Definition *adef_m16_with_hands10;
+Animation_Definition *adef_m16_with_hands11;
+Animation_Definition *adef_m16_with_hands12;
+Animation_Definition *adef_m16_with_hands13;
+Animation_Definition *adef_m16_with_hands14;
+Animation_Definition *adef_m16_with_hands15;
+Animation_Definition *adef_m16_with_hands16;
+
+Animation *anim_m16_with_hands1;
+Animation *anim_m16_with_hands2;
+Animation *anim_m16_with_hands3;
+Animation *anim_m16_with_hands4;
+Animation *anim_m16_with_hands5;
+Animation *anim_m16_with_hands6;
+Animation *anim_m16_with_hands7;
+Animation *anim_m16_with_hands8;
+Animation *anim_m16_with_hands9;
+Animation *anim_m16_with_hands10;
+Animation *anim_m16_with_hands11;
+Animation *anim_m16_with_hands12;
+Animation *anim_m16_with_hands13;
+Animation *anim_m16_with_hands14;
+Animation *anim_m16_with_hands15;
+Animation *anim_m16_with_hands16;
+// END NEW PLAYER STRUCTS 3/4/24
 
 // bullet sprites & anims
 Sprite_Sheet sprite_sheet_bullet_1_horizontal;
@@ -369,7 +416,6 @@ void init_all_anims(void);
 void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 despawn_time, f32 spawn_delay, f32 spawn_time, bool is_left_player);
 void spawn_player(Player *player, Weapon_Type *starting_weapon);
 void update_player_status(Player *player);
-void update_player_animations(Player *player);
 void handle_player_shooting(Player *player, Key_State shoot);
 void handle_player_input(Player *player);
 void free_players(void);
@@ -387,5 +433,11 @@ void apply_player_input_state(Player *player);
 void update_crosshair_position_from_cursor(Player *player);
 void maintain_controller_keypresses(Player *player);
 void maintain_controller_keypress(Key_State *key_state);
+
+// anim update methods:
+void update_player_anims(Player *player);
+static void update_player_character_anim(Player *player);
+static void update_player_weapon_anim(Player *player);
+static void update_player_crosshair_angle(Player * player);
 
 #endif

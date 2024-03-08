@@ -16,12 +16,12 @@ static f32 window_buffer;
 
 void camera_init(void)
 {
-    if(render_width < 1 || render_width > 10000){
+    if (render_width < 1 || render_width > 10000) {
         printf("render width must be properly instantiated to initialize cameras\n");
     }
-    
+
     window_buffer = 0.3 * render_height; // using render height here because render width is typically wider
-    
+
     // create camera structs
     main_cam = (Camera){
         .position = {0, 0},

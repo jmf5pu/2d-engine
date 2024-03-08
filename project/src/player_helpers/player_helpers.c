@@ -10,6 +10,11 @@
 Player *player_one;
 Player *player_two;
 
+// animation hash maps
+static Hash_Map *bullet_anim_map;
+static Hash_Map *player_anim_map;
+static Hash_Map *weapon_anim_map;
+
 // init bullet animation hash_map
 void init_bullet_anim_hashmap()
 {
@@ -43,14 +48,36 @@ void init_player_anim_hashmap()
     insert(player_anim_map, "player_mock_4", anim_player_mock_4);
 }
 
+void init_weapon_anim_hashmap()
+{
+    weapon_anim_map = create_hash_map(WEAPON_COUNT * ANIMS_PER_WEAPON);
+
+    insert(weapon_anim_map, "m16_with_hands_1", anim_m16_with_hands1);
+    insert(weapon_anim_map, "m16_with_hands_2", anim_m16_with_hands2);
+    insert(weapon_anim_map, "m16_with_hands_3", anim_m16_with_hands3);
+    insert(weapon_anim_map, "m16_with_hands_4", anim_m16_with_hands4);
+    insert(weapon_anim_map, "m16_with_hands_5", anim_m16_with_hands5);
+    insert(weapon_anim_map, "m16_with_hands_6", anim_m16_with_hands6);
+    insert(weapon_anim_map, "m16_with_hands_7", anim_m16_with_hands7);
+    insert(weapon_anim_map, "m16_with_hands_8", anim_m16_with_hands8);
+    insert(weapon_anim_map, "m16_with_hands_9", anim_m16_with_hands9);
+    insert(weapon_anim_map, "m16_with_hands_10", anim_m16_with_hands10);
+    insert(weapon_anim_map, "m16_with_hands_11", anim_m16_with_hands11);
+    insert(weapon_anim_map, "m16_with_hands_12", anim_m16_with_hands12);
+    insert(weapon_anim_map, "m16_with_hands_13", anim_m16_with_hands13);
+    insert(weapon_anim_map, "m16_with_hands_14", anim_m16_with_hands14);
+    insert(weapon_anim_map, "m16_with_hands_15", anim_m16_with_hands15);
+    insert(weapon_anim_map, "m16_with_hands_16", anim_m16_with_hands16);
+}
+
 // sets up animations for players and bullets
 void init_all_anims()
 {
     // TODO: separate player and non-player anims to separate methods
     // init placeholder anims
-    render_sprite_sheet_init(&sprite_sheet_player_placeholder, "assets/question_mark.png", 36, 36);
-    adef_player_placeholder = animation_definition_create(&sprite_sheet_player_placeholder, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_player_placeholder = animation_create(adef_player_placeholder, false);
+    render_sprite_sheet_init(&sprite_sheet_missing_anim_placeholder, "assets/question_mark.png", 36, 36);
+    adef_missing_anim_placeholder = animation_definition_create(&sprite_sheet_missing_anim_placeholder, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    missing_anim_placeholder = animation_create(adef_missing_anim_placeholder, false);
 
     // init crosshair anims
     render_sprite_sheet_init(&sprite_sheet_player_1_crosshair, "assets/wip/crosshair_mock.png", 11, 11);
@@ -138,8 +165,75 @@ void init_all_anims()
     anim_player_mock_4 = animation_create(adef_player_mock_4, false);
     // END NEW PLAYER ANIMS
 
+    // NEW WEAPON ANIMS 3/8/24:
+    render_sprite_sheet_init(&sprite_sheet_m16_with_hands1, "assets/wip/m16_360_with_hands1.png", 25, 25);
+    adef_m16_with_hands1 = animation_definition_create(&sprite_sheet_m16_with_hands1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_with_hands1 = animation_create(adef_m16_with_hands1, false);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_with_hands2, "assets/wip/m16_360_with_hands2.png", 25, 25);
+    adef_m16_with_hands2 = animation_definition_create(&sprite_sheet_m16_with_hands2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_with_hands2 = animation_create(adef_m16_with_hands2, false);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_with_hands3, "assets/wip/m16_360_with_hands3.png", 25, 25);
+    adef_m16_with_hands3 = animation_definition_create(&sprite_sheet_m16_with_hands3, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_with_hands3 = animation_create(adef_m16_with_hands3, false);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_with_hands4, "assets/wip/m16_360_with_hands4.png", 25, 25);
+    adef_m16_with_hands4 = animation_definition_create(&sprite_sheet_m16_with_hands4, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_with_hands4 = animation_create(adef_m16_with_hands4, false);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_with_hands5, "assets/wip/m16_360_with_hands5.png", 25, 25);
+    adef_m16_with_hands5 = animation_definition_create(&sprite_sheet_m16_with_hands5, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_with_hands5 = animation_create(adef_m16_with_hands5, false);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_with_hands6, "assets/wip/m16_360_with_hands6.png", 25, 25);
+    adef_m16_with_hands6 = animation_definition_create(&sprite_sheet_m16_with_hands6, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_with_hands6 = animation_create(adef_m16_with_hands6, false);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_with_hands7, "assets/wip/m16_360_with_hands7.png", 25, 25);
+    adef_m16_with_hands7 = animation_definition_create(&sprite_sheet_m16_with_hands7, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_with_hands7 = animation_create(adef_m16_with_hands7, false);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_with_hands8, "assets/wip/m16_360_with_hands8.png", 25, 25);
+    adef_m16_with_hands8 = animation_definition_create(&sprite_sheet_m16_with_hands8, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_with_hands8 = animation_create(adef_m16_with_hands8, false);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_with_hands9, "assets/wip/m16_360_with_hands9.png", 25, 25);
+    adef_m16_with_hands9 = animation_definition_create(&sprite_sheet_m16_with_hands9, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_with_hands9 = animation_create(adef_m16_with_hands9, false);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_with_hands10, "assets/wip/m16_360_with_hands10.png", 25, 25);
+    adef_m16_with_hands10 = animation_definition_create(&sprite_sheet_m16_with_hands10, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_with_hands10 = animation_create(adef_m16_with_hands10, false);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_with_hands11, "assets/wip/m16_360_with_hands11.png", 25, 25);
+    adef_m16_with_hands11 = animation_definition_create(&sprite_sheet_m16_with_hands11, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_with_hands11 = animation_create(adef_m16_with_hands11, false);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_with_hands12, "assets/wip/m16_360_with_hands12.png", 25, 25);
+    adef_m16_with_hands12 = animation_definition_create(&sprite_sheet_m16_with_hands12, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_with_hands12 = animation_create(adef_m16_with_hands12, false);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_with_hands13, "assets/wip/m16_360_with_hands13.png", 25, 25);
+    adef_m16_with_hands13 = animation_definition_create(&sprite_sheet_m16_with_hands13, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_with_hands13 = animation_create(adef_m16_with_hands13, false);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_with_hands14, "assets/wip/m16_360_with_hands14.png", 25, 25);
+    adef_m16_with_hands14 = animation_definition_create(&sprite_sheet_m16_with_hands14, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_with_hands14 = animation_create(adef_m16_with_hands14, false);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_with_hands15, "assets/wip/m16_360_with_hands15.png", 25, 25);
+    adef_m16_with_hands15 = animation_definition_create(&sprite_sheet_m16_with_hands15, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_with_hands15 = animation_create(adef_m16_with_hands15, false);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_with_hands16, "assets/wip/m16_360_with_hands16.png", 25, 25);
+    adef_m16_with_hands16 = animation_definition_create(&sprite_sheet_m16_with_hands16, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_with_hands16 = animation_create(adef_m16_with_hands16, false);
+    // END NEW WEAPON ANIMS
+
     init_bullet_anim_hashmap();
     init_player_anim_hashmap();
+    init_weapon_anim_hashmap();
 }
 
 // initializes the player struct
@@ -173,10 +267,10 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
     player->weapon->bullet_velocity = starting_weapon->bullet_velocity;
     player->weapon->burst_count = starting_weapon->burst_count;
     player->weapon->burst_delay = starting_weapon->burst_delay;
-    player->weapon->aiming_scale_factor = starting_weapon->aiming_scale_factor;
     player->weapon->frames_since_last_shot = 0;
     player->weapon->ready_to_fire = true;
     player->weapon->hud_ammo_icon = starting_weapon->hud_ammo_icon;
+    // TODO: initialize weapon's character_anim
 
     // populate armor
     player->armor = malloc(sizeof(Armor));
@@ -258,7 +352,6 @@ void spawn_player(Player *player, Weapon_Type *starting_weapon)
     player->weapon->bullet_velocity = starting_weapon->bullet_velocity;
     player->weapon->burst_count = starting_weapon->burst_count;
     player->weapon->burst_delay = starting_weapon->burst_delay;
-    player->weapon->aiming_scale_factor = starting_weapon->aiming_scale_factor;
     player->weapon->frames_since_last_shot = 0;
     player->weapon->ready_to_fire = true;
     player->weapon->hud_ammo_icon = starting_weapon->hud_ammo_icon;
@@ -346,7 +439,13 @@ void update_player_status(Player *player)
  * Animations are named in the following manner:
  * character_weapon_armor_movement-status_direction
  */
-void update_player_animations(Player *player)
+void update_player_anims(Player *player)
+{
+    update_player_character_anim(player);
+    update_player_weapon_anim(player);
+}
+
+static void update_player_character_anim(Player *player)
 {
     // cache old anim to check if we are SWITCHING anims
     Animation *prev_anim = player->entity->animation;
@@ -357,22 +456,20 @@ void update_player_animations(Player *player)
     char *direction;
 
     // choose correct animation for player's direction
-    f32 crosshair_angle = atan2(
-        player->crosshair->body->aabb.position[1] - player->entity->body->aabb.position[1], player->crosshair->body->aabb.position[0] - player->entity->body->aabb.position[0]);
-    if (crosshair_angle > -1 * M_PI / 4 && crosshair_angle <= M_PI / 4) {
+    if (player->crosshair_angle > -1 * M_PI / 4 && player->crosshair_angle <= M_PI / 4) {
         direction = "1";
     }
-    else if (crosshair_angle > M_PI / 4 && crosshair_angle <= 3 * M_PI / 4) {
+    else if (player->crosshair_angle > M_PI / 4 && player->crosshair_angle <= 3 * M_PI / 4) {
         direction = "2";
     }
-    else if (crosshair_angle > 3 * M_PI / 4 || crosshair_angle <= -3 * M_PI / 4) {
+    else if (player->crosshair_angle > 3 * M_PI / 4 || player->crosshair_angle <= -3 * M_PI / 4) {
         direction = "3";
     }
-    else if (crosshair_angle > -3 * M_PI / 4 && crosshair_angle < -1 * M_PI / 4) {
+    else if (player->crosshair_angle > -3 * M_PI / 4 && player->crosshair_angle < -1 * M_PI / 4) {
         direction = "4";
     }
     else {
-        printf("got unexpected crosshair angle: %f\n", crosshair_angle);
+        printf("got unexpected crosshair angle: %f\n", player->crosshair_angle);
     }
     strcat(anim_name, direction);
     strcat(anim_name, "\0");
@@ -381,13 +478,96 @@ void update_player_animations(Player *player)
     if (player_anim)
         player->entity->animation = player_anim;
     else
-        player->entity->animation = anim_player_placeholder;
+        player->entity->animation = missing_anim_placeholder;
 
     // ensure we are starting new anims at the first frame
     if (player->entity->animation != prev_anim)
         player->entity->animation->current_frame_index = 0;
 
     free(anim_name);
+}
+
+static void update_player_weapon_anim(Player *player)
+{
+    // cache old anim to check if we are SWITCHING anims
+    Animation *prev_anim = player->weapon->character_anim;
+
+    char *anim_name = calloc(50, sizeof(char));
+    strcat(anim_name, "m16_with_hands_");
+
+    char *direction;
+
+    // choose correct animation for player's direction
+    if (player->crosshair_angle > -1 * M_PI / 8 && player->crosshair_angle <= M_PI / 8) {
+        direction = "1";
+    }
+    else if (player->crosshair_angle > M_PI / 8 && player->crosshair_angle <= 3 * M_PI / 8) {
+        direction = "2";
+    }
+    else if (player->crosshair_angle > 3 * M_PI / 8 && player->crosshair_angle <= 5 * M_PI / 8) {
+        direction = "3";
+    }
+    else if (player->crosshair_angle > 5 * M_PI / 8 && player->crosshair_angle <= 7 * M_PI / 8) {
+        direction = "4";
+    }
+    else if (player->crosshair_angle > 7 * M_PI / 8 && player->crosshair_angle <= 9 * M_PI / 8) {
+        direction = "5";
+    }
+    else if (player->crosshair_angle > 9 * M_PI / 8 && player->crosshair_angle <= 11 * M_PI / 8) {
+        direction = "6";
+    }
+    else if (player->crosshair_angle > 11 * M_PI / 8 && player->crosshair_angle <= 13 * M_PI / 8) {
+        direction = "7";
+    }
+    else if (player->crosshair_angle > 13 * M_PI / 8 && player->crosshair_angle <= 15 * M_PI / 8) {
+        direction = "8";
+    }
+    else if (player->crosshair_angle > 15 * M_PI / 8 || player->crosshair_angle <= -15 * M_PI / 8) {
+        direction = "9";
+    }
+    else if (player->crosshair_angle > -15 * M_PI / 8 && player->crosshair_angle < -13 * M_PI / 8) {
+        direction = "10";
+    }
+    else if (player->crosshair_angle > -13 * M_PI / 8 && player->crosshair_angle < -11 * M_PI / 8) {
+        direction = "11";
+    }
+    else if (player->crosshair_angle > -11 * M_PI / 8 && player->crosshair_angle < -9 * M_PI / 8) {
+        direction = "12";
+    }
+    else if (player->crosshair_angle > -9 * M_PI / 8 && player->crosshair_angle < -7 * M_PI / 8) {
+        direction = "13";
+    }
+    else if (player->crosshair_angle > -7 * M_PI / 8 && player->crosshair_angle < -5 * M_PI / 8) {
+        direction = "14";
+    }
+    else if (player->crosshair_angle > -5 * M_PI / 8 && player->crosshair_angle < -3 * M_PI / 8) {
+        direction = "15";
+    }
+    else if (player->crosshair_angle > -3 * M_PI / 8 && player->crosshair_angle < -1 * M_PI / 8) {
+        direction = "16";
+    }
+    else {
+        printf("got unexpected crosshair angle: %f\n", player->crosshair_angle);
+    }
+    strcat(anim_name, direction);
+    strcat(anim_name, "\0");
+
+    Animation *weapon_character_anim = get(weapon_anim_map, anim_name);
+    if (weapon_character_anim)
+        player->weapon->character_anim = weapon_character_anim;
+    else
+        player->weapon->character_anim = missing_anim_placeholder;
+
+    // ensure we are starting new anims at the first frame
+    if (player->weapon->character_anim != prev_anim)
+        player->weapon->character_anim->current_frame_index = 0;
+
+    free(anim_name);
+}
+
+static void update_player_crosshair_angle(Player * player){
+    f32 crosshair_angle = atan2(
+        player->crosshair->body->aabb.position[1] - player->entity->body->aabb.position[1], player->crosshair->body->aabb.position[0] - player->entity->body->aabb.position[0]);
 }
 
 void handle_player_shooting(Player *player, Key_State shoot)
@@ -606,7 +786,8 @@ void free_players()
 void player_per_frame_updates(Player *player)
 {
     handle_player_input(player);
+    update_player_crosshair_angle(player);
     update_player_status(player);
     if (player->status != PLAYER_INACTIVE)
-        update_player_animations(player);
+        update_player_anims(player);
 }
