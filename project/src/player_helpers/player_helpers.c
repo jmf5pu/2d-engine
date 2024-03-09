@@ -498,52 +498,52 @@ static void update_player_weapon_anim(Player *player)
     char *direction;
 
     // choose correct animation for player's direction
-    if (player->crosshair_angle > -1 * M_PI / 8 && player->crosshair_angle <= M_PI / 8) {
+    if (player->crosshair_angle > -1 * M_PI / 16 && player->crosshair_angle <= M_PI / 16) {
         direction = "1";
     }
-    else if (player->crosshair_angle > M_PI / 8 && player->crosshair_angle <= 3 * M_PI / 8) {
+    else if (player->crosshair_angle > M_PI / 16 && player->crosshair_angle <= 3 * M_PI / 16) {
         direction = "2";
     }
-    else if (player->crosshair_angle > 3 * M_PI / 8 && player->crosshair_angle <= 5 * M_PI / 8) {
+    else if (player->crosshair_angle > 3 * M_PI / 16 && player->crosshair_angle <= 5 * M_PI / 16) {
         direction = "3";
     }
-    else if (player->crosshair_angle > 5 * M_PI / 8 && player->crosshair_angle <= 7 * M_PI / 8) {
+    else if (player->crosshair_angle > 5 * M_PI / 16 && player->crosshair_angle <= 7 * M_PI / 16) {
         direction = "4";
     }
-    else if (player->crosshair_angle > 7 * M_PI / 8 && player->crosshair_angle <= 9 * M_PI / 8) {
+    else if (player->crosshair_angle > 7 * M_PI / 16 && player->crosshair_angle <= 9 * M_PI / 16) {
         direction = "5";
     }
-    else if (player->crosshair_angle > 9 * M_PI / 8 && player->crosshair_angle <= 11 * M_PI / 8) {
+    else if (player->crosshair_angle > 9 * M_PI / 16 && player->crosshair_angle <= 11 * M_PI / 16) {
         direction = "6";
     }
-    else if (player->crosshair_angle > 11 * M_PI / 8 && player->crosshair_angle <= 13 * M_PI / 8) {
+    else if (player->crosshair_angle > 11 * M_PI / 16 && player->crosshair_angle <= 13 * M_PI / 16) {
         direction = "7";
     }
-    else if (player->crosshair_angle > 13 * M_PI / 8 && player->crosshair_angle <= 15 * M_PI / 8) {
+    else if (player->crosshair_angle > 13 * M_PI / 16 && player->crosshair_angle <= 15 * M_PI / 16) {
         direction = "8";
     }
-    else if (player->crosshair_angle > 15 * M_PI / 8 || player->crosshair_angle <= -15 * M_PI / 8) {
+    else if (player->crosshair_angle > 15 * M_PI / 16 || player->crosshair_angle <= -15 * M_PI / 16) {
         direction = "9";
     }
-    else if (player->crosshair_angle > -15 * M_PI / 8 && player->crosshair_angle < -13 * M_PI / 8) {
+    else if (player->crosshair_angle > -15 * M_PI / 16 && player->crosshair_angle <= -13 * M_PI / 16) {
         direction = "10";
     }
-    else if (player->crosshair_angle > -13 * M_PI / 8 && player->crosshair_angle < -11 * M_PI / 8) {
+    else if (player->crosshair_angle > -13 * M_PI / 16 && player->crosshair_angle <= -11 * M_PI / 16) {
         direction = "11";
     }
-    else if (player->crosshair_angle > -11 * M_PI / 8 && player->crosshair_angle < -9 * M_PI / 8) {
+    else if (player->crosshair_angle > -11 * M_PI / 16 && player->crosshair_angle <= -9 * M_PI / 16) {
         direction = "12";
     }
-    else if (player->crosshair_angle > -9 * M_PI / 8 && player->crosshair_angle < -7 * M_PI / 8) {
+    else if (player->crosshair_angle > -9 * M_PI / 16 && player->crosshair_angle <= -7 * M_PI / 16) {
         direction = "13";
     }
-    else if (player->crosshair_angle > -7 * M_PI / 8 && player->crosshair_angle < -5 * M_PI / 8) {
+    else if (player->crosshair_angle > -7 * M_PI / 16 && player->crosshair_angle <= -5 * M_PI / 16) {
         direction = "14";
     }
-    else if (player->crosshair_angle > -5 * M_PI / 8 && player->crosshair_angle < -3 * M_PI / 8) {
+    else if (player->crosshair_angle > -5 * M_PI / 16 && player->crosshair_angle <= -3 * M_PI / 16) {
         direction = "15";
     }
-    else if (player->crosshair_angle > -3 * M_PI / 8 && player->crosshair_angle < -1 * M_PI / 8) {
+    else if (player->crosshair_angle > -3 * M_PI / 16 && player->crosshair_angle <= -1 * M_PI / 16) {
         direction = "16";
     }
     else {
@@ -567,7 +567,7 @@ static void update_player_weapon_anim(Player *player)
 
 static void update_player_crosshair_angle(Player *player)
 {
-    f32 crosshair_angle = atan2(
+    player->crosshair_angle = atan2(
         player->crosshair->body->aabb.position[1] - player->entity->body->aabb.position[1], player->crosshair->body->aabb.position[0] - player->entity->body->aabb.position[0]);
 }
 
