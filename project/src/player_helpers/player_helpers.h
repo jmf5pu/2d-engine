@@ -400,6 +400,16 @@ Animation *anim_m16_with_hands15;
 Animation *anim_m16_with_hands16;
 // END NEW PLAYER STRUCTS 3/4/24
 
+// MUZZLE FLASH STRUCTS 3/10/24
+Sprite_Sheet sprite_sheet_muzzle_flash_0;
+Animation_Definition *adef_muzzle_flash_0;
+Animation *anim_muzzle_flash_0;
+
+Sprite_Sheet sprite_sheet_muzzle_flash_1;
+Animation_Definition *adef_muzzle_flash_1;
+Animation *anim_muzzle_flash_1;
+// END MUZZLE FLASH STRUCTS 3/10/24
+
 // bullet sprites & anims
 Sprite_Sheet sprite_sheet_bullet_1_horizontal;
 Sprite_Sheet sprite_sheet_bullet_1_vertical;

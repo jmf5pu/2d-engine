@@ -88,7 +88,7 @@ void init_all_anims()
     anim_p2_crosshair = animation_create(adef_player_2_crosshair, false);
 
     // init bullet anims
-    render_sprite_sheet_init(&sprite_sheet_bullet_0, "assets/bullet_0.png", 3, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_0, "assets/wip/bullet_mock.png", 5, 4);
     adef_bullet_0 = animation_definition_create(&sprite_sheet_bullet_0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bullet_0 = animation_create(adef_bullet_0, false);
     render_sprite_sheet_init(&sprite_sheet_bullet_1, "assets/bullet_1.png", 3, 2);
@@ -230,6 +230,15 @@ void init_all_anims()
     adef_m16_with_hands16 = animation_definition_create(&sprite_sheet_m16_with_hands16, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_m16_with_hands16 = animation_create(adef_m16_with_hands16, false);
     // END NEW WEAPON ANIMS
+
+    // MUZZLE FLASH_ANIMS 3/10/24
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_0, "assets/wip/muzzle_flash_0.png", 15, 15);
+    adef_muzzle_flash_0 = animation_definition_create(&sprite_sheet_muzzle_flash_0, (f32[]){0.1, 0.1, 0.1, 0.1}, (u8[]){0, 0, 0, 0}, (u8[]){0, 1, 2, 3}, 4);
+    anim_muzzle_flash_0 = animation_create(adef_muzzle_flash_0, false);
+
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_1, "assets/wip/muzzle_flash_1.png", 15, 15);
+    adef_muzzle_flash_1 = animation_definition_create(&sprite_sheet_muzzle_flash_1, (f32[]){0.1, 0.1, 0.1, 0.1}, (u8[]){0, 0, 0, 0}, (u8[]){0, 1, 2, 3}, 4);
+    anim_muzzle_flash_1 = animation_create(adef_muzzle_flash_1, false);
 
     init_bullet_anim_hashmap();
     init_player_anim_hashmap();

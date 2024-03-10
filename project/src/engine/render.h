@@ -1,7 +1,7 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#define SPLIT_SCREEN true
+#define SPLIT_SCREEN false
 #define RENDER_PHYSICS_BODIES false
 
 #define MAX_BATCH_QUADS 10000
