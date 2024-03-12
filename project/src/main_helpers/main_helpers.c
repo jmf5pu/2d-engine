@@ -69,7 +69,7 @@ void get_character_weapon_position(Player *player, vec2 *weapon_position)
 
 void create_muzzle_flash_entity(vec2 position, vec2 size, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static)
 {
-    position[0] += 23;
+    position[0] += 25;
     Entity *entity = entity_create(position, size, (vec2){0, 0}, collision_layer, collision_mask, on_hit, on_hit_static);
 
     entity->animation = animation_create(adef_muzzle_flash_0, false);

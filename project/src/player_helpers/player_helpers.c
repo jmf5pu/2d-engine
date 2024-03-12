@@ -18,8 +18,8 @@ static Hash_Map *weapon_anim_map;
 
 void init_explosion_animation_definitions(void)
 {
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_0, "assets/wip/muzzle_flash.png", 15, 15);
-    adef_muzzle_flash_0 = animation_definition_create(&sprite_sheet_muzzle_flash_0, (f32[]){0.01, 0.01, 0.01, 0.02, 0.02}, (u8[]){0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4}, 5);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_0, "assets/wip/muzzle_flash_v3.png", 21, 21);
+    adef_muzzle_flash_0 = animation_definition_create(&sprite_sheet_muzzle_flash_0, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
     render_sprite_sheet_init(&sprite_sheet_muzzle_flash_1, "assets/wip/muzzle_flash_1.png", 15, 15);
     adef_muzzle_flash_1 = animation_definition_create(&sprite_sheet_muzzle_flash_1, (f32[]){0.02, 0.02, 0.02, 0.02}, (u8[]){0, 0, 0, 0}, (u8[]){0, 1, 2, 3}, 4);
 }
