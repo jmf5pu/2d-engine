@@ -9,7 +9,7 @@
 
 // number of animations to be stored in player_anim_map
 #define PLAYER_ANIM_COUNT 56
-#define BULLET_ANIM_COUNT 16
+#define BULLET_ADEF_COUNT 16
 #define WEAPON_COUNT 1
 #define ANIMS_PER_WEAPON 16
 
@@ -72,23 +72,6 @@ Animation_Definition *adef_bullet_12;
 Animation_Definition *adef_bullet_13;
 Animation_Definition *adef_bullet_14;
 Animation_Definition *adef_bullet_15;
-
-Animation *anim_bullet_0;
-Animation *anim_bullet_1;
-Animation *anim_bullet_2;
-Animation *anim_bullet_3;
-Animation *anim_bullet_4;
-Animation *anim_bullet_5;
-Animation *anim_bullet_6;
-Animation *anim_bullet_7;
-Animation *anim_bullet_8;
-Animation *anim_bullet_9;
-Animation *anim_bullet_10;
-Animation *anim_bullet_11;
-Animation *anim_bullet_12;
-Animation *anim_bullet_13;
-Animation *anim_bullet_14;
-Animation *anim_bullet_15;
 
 // player 1 sprites & anims
 Sprite_Sheet p1_sprite_sheet_soldier_1_m16_idle_side;
@@ -403,11 +386,9 @@ Animation *anim_m16_with_hands16;
 // MUZZLE FLASH STRUCTS 3/10/24
 Sprite_Sheet sprite_sheet_muzzle_flash_0;
 Animation_Definition *adef_muzzle_flash_0;
-Animation *anim_muzzle_flash_0;
 
 Sprite_Sheet sprite_sheet_muzzle_flash_1;
 Animation_Definition *adef_muzzle_flash_1;
-Animation *anim_muzzle_flash_1;
 // END MUZZLE FLASH STRUCTS 3/10/24
 
 // bullet sprites & anims

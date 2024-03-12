@@ -281,11 +281,6 @@ int main(int argc, char *argv[])
                     if (RENDER_PHYSICS_BODIES && entity->is_active)
                         render_aabb((f32 *)&entity->body->aabb, WHITE);
 
-                    if (should_destroy_entity(entity, &map)) {
-                        entity_destroy(entity);
-                        continue;
-                    }
-
                     // skip inactive entities, entities that are players or crosshairs or entities with no animation
                     if (!entity->animation || !entity->is_active || !entity->body->is_active || entity_is_player_or_crosshair(entity)) {
                         continue;
@@ -380,6 +375,9 @@ int main(int argc, char *argv[])
                 render_pause_menu(window, texture_slots);
             }
             render_end(window, texture_slots, true);
+
+            // destroy any entities that need to be destroyed:
+            destroy_all_marked_entities(&map);
             break;
         case GS_EXITING:
             should_quit = true;
@@ -397,6 +395,9 @@ int main(int argc, char *argv[])
     free_weapon_types();
     free_hud();
     free_menus();
+    clear_entity_list();
+    clear_animation_definition_list();
+    clear_animation_list();
     SDL_Quit();
     return 0;
 }

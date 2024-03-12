@@ -83,11 +83,21 @@ Animation *animation_create(Animation_Definition *adef, bool does_loop)
     return animation;
 }
 
-void animation_destroy(usize id)
+usize animation_get_id(Animation *target_animation)
 {
-    Animation *animation = array_list_get(animation_storage, id);
-    animation->is_active = false;
+    for (usize i = 0; i < animation_storage->len; ++i) {
+        if (animation_get(i) == target_animation) {
+            return i;
+        }
+    }
+    ERROR_EXIT("ERROR: Could not find the specified entity in the Array_List\n");
+}
+
+void animation_destroy(Animation *animation)
+{
+    usize id = animation_get_id(animation);
     array_list_remove(animation_storage, id);
+    free(animation);
 }
 
 Animation *animation_get(usize id) { return array_list_get(animation_storage, id); }
@@ -128,3 +138,7 @@ void animation_render(Animation *animation, SDL_Window *window, vec2 position, i
     Animation_Frame *aframe = &adef->frames[animation->current_frame_index];
     render_sprite_sheet_frame(adef->sprite_sheet, window, aframe->row, aframe->column, position, z_index, animation->is_flipped, color, texture_slots);
 }
+
+void clear_animation_list(void) { array_list_clear(animation_storage); }
+
+void clear_animation_definition_list(void) { array_list_clear(animation_definition_storage); }

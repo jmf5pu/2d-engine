@@ -3,6 +3,7 @@
 #include "../engine/camera.h"
 #include "../engine/global.h"
 #include "../engine/util.h"
+#include "../main_helpers/main_helpers.h"
 #include "../weapon_types/weapon_types.h"
 #include <math.h>
 
@@ -11,30 +12,23 @@ Player *player_one;
 Player *player_two;
 
 // animation hash maps
-static Hash_Map *bullet_anim_map;
+static Hash_Map *bullet_adef_map;
 static Hash_Map *player_anim_map;
 static Hash_Map *weapon_anim_map;
 
-// init bullet animation hash_map
-void init_bullet_anim_hashmap()
+void init_explosion_animation_definitions(void)
 {
-    bullet_anim_map = create_hash_map(BULLET_ANIM_COUNT);
-    insert(bullet_anim_map, "bullet_0", anim_bullet_0);
-    insert(bullet_anim_map, "bullet_1", anim_bullet_1);
-    insert(bullet_anim_map, "bullet_2", anim_bullet_2);
-    insert(bullet_anim_map, "bullet_3", anim_bullet_3);
-    insert(bullet_anim_map, "bullet_4", anim_bullet_4);
-    insert(bullet_anim_map, "bullet_5", anim_bullet_5);
-    insert(bullet_anim_map, "bullet_6", anim_bullet_6);
-    insert(bullet_anim_map, "bullet_7", anim_bullet_7);
-    insert(bullet_anim_map, "bullet_8", anim_bullet_8);
-    insert(bullet_anim_map, "bullet_9", anim_bullet_9);
-    insert(bullet_anim_map, "bullet_10", anim_bullet_10);
-    insert(bullet_anim_map, "bullet_11", anim_bullet_11);
-    insert(bullet_anim_map, "bullet_12", anim_bullet_12);
-    insert(bullet_anim_map, "bullet_13", anim_bullet_13);
-    insert(bullet_anim_map, "bullet_14", anim_bullet_14);
-    insert(bullet_anim_map, "bullet_15", anim_bullet_15);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_0, "assets/wip/muzzle_flash.png", 15, 15);
+    adef_muzzle_flash_0 = animation_definition_create(&sprite_sheet_muzzle_flash_0, (f32[]){0.01, 0.01, 0.01, 0.02, 0.02}, (u8[]){0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4}, 5);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_1, "assets/wip/muzzle_flash_1.png", 15, 15);
+    adef_muzzle_flash_1 = animation_definition_create(&sprite_sheet_muzzle_flash_1, (f32[]){0.02, 0.02, 0.02, 0.02}, (u8[]){0, 0, 0, 0}, (u8[]){0, 1, 2, 3}, 4);
+}
+
+// init bullet animation hash_map
+void init_bullet_adef_hashmap()
+{
+    bullet_adef_map = create_hash_map(BULLET_ADEF_COUNT);
+    insert(bullet_adef_map, "bullet_0", adef_bullet_0);
 }
 
 // init player animation hash_map
@@ -90,65 +84,6 @@ void init_all_anims()
     // init bullet anims
     render_sprite_sheet_init(&sprite_sheet_bullet_0, "assets/wip/bullet_mock.png", 5, 4);
     adef_bullet_0 = animation_definition_create(&sprite_sheet_bullet_0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_0 = animation_create(adef_bullet_0, false);
-    render_sprite_sheet_init(&sprite_sheet_bullet_1, "assets/bullet_1.png", 3, 2);
-    adef_bullet_1 = animation_definition_create(&sprite_sheet_bullet_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_1 = animation_create(adef_bullet_1, false);
-    render_sprite_sheet_init(&sprite_sheet_bullet_2, "assets/bullet_2.png", 3, 3);
-    adef_bullet_2 = animation_definition_create(&sprite_sheet_bullet_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_2 = animation_create(adef_bullet_2, false);
-
-    render_sprite_sheet_init(&sprite_sheet_bullet_3, "assets/bullet_3.png", 2, 3);
-    adef_bullet_3 = animation_definition_create(&sprite_sheet_bullet_3, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_3 = animation_create(adef_bullet_3, false);
-
-    render_sprite_sheet_init(&sprite_sheet_bullet_4, "assets/bullet_4.png", 1, 3);
-    adef_bullet_4 = animation_definition_create(&sprite_sheet_bullet_4, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_4 = animation_create(adef_bullet_4, false);
-
-    render_sprite_sheet_init(&sprite_sheet_bullet_5, "assets/bullet_5.png", 2, 3);
-    adef_bullet_5 = animation_definition_create(&sprite_sheet_bullet_5, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_5 = animation_create(adef_bullet_5, false);
-
-    render_sprite_sheet_init(&sprite_sheet_bullet_6, "assets/bullet_6.png", 3, 3);
-    adef_bullet_6 = animation_definition_create(&sprite_sheet_bullet_6, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_6 = animation_create(adef_bullet_6, false);
-
-    render_sprite_sheet_init(&sprite_sheet_bullet_7, "assets/bullet_7.png", 3, 2);
-    adef_bullet_7 = animation_definition_create(&sprite_sheet_bullet_7, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_7 = animation_create(adef_bullet_7, false);
-
-    render_sprite_sheet_init(&sprite_sheet_bullet_8, "assets/bullet_8.png", 3, 1);
-    adef_bullet_8 = animation_definition_create(&sprite_sheet_bullet_8, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_8 = animation_create(adef_bullet_8, false);
-
-    render_sprite_sheet_init(&sprite_sheet_bullet_9, "assets/bullet_9.png", 3, 2);
-    adef_bullet_9 = animation_definition_create(&sprite_sheet_bullet_9, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_9 = animation_create(adef_bullet_9, false);
-
-    render_sprite_sheet_init(&sprite_sheet_bullet_10, "assets/bullet_10.png", 3, 3);
-    adef_bullet_10 = animation_definition_create(&sprite_sheet_bullet_10, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_10 = animation_create(adef_bullet_10, false);
-
-    render_sprite_sheet_init(&sprite_sheet_bullet_11, "assets/bullet_11.png", 2, 3);
-    adef_bullet_11 = animation_definition_create(&sprite_sheet_bullet_11, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_11 = animation_create(adef_bullet_11, false);
-
-    render_sprite_sheet_init(&sprite_sheet_bullet_12, "assets/bullet_12.png", 1, 3);
-    adef_bullet_12 = animation_definition_create(&sprite_sheet_bullet_12, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_12 = animation_create(adef_bullet_12, false);
-
-    render_sprite_sheet_init(&sprite_sheet_bullet_13, "assets/bullet_13.png", 2, 3);
-    adef_bullet_13 = animation_definition_create(&sprite_sheet_bullet_13, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_13 = animation_create(adef_bullet_13, false);
-
-    render_sprite_sheet_init(&sprite_sheet_bullet_14, "assets/bullet_14.png", 3, 3);
-    adef_bullet_14 = animation_definition_create(&sprite_sheet_bullet_14, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_14 = animation_create(adef_bullet_14, false);
-
-    render_sprite_sheet_init(&sprite_sheet_bullet_15, "assets/bullet_15.png", 3, 2);
-    adef_bullet_15 = animation_definition_create(&sprite_sheet_bullet_15, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_15 = animation_create(adef_bullet_15, false);
 
     // NEW PLAYER ANIMS 3/4/24:
     render_sprite_sheet_init(&sprite_sheet_player_mock_1, "assets/wip/player_mock_1.png", 20, 22);
@@ -231,18 +166,22 @@ void init_all_anims()
     anim_m16_with_hands16 = animation_create(adef_m16_with_hands16, false);
     // END NEW WEAPON ANIMS
 
-    // MUZZLE FLASH_ANIMS 3/10/24
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_0, "assets/wip/muzzle_flash_0.png", 15, 15);
-    adef_muzzle_flash_0 = animation_definition_create(&sprite_sheet_muzzle_flash_0, (f32[]){0.1, 0.1, 0.1, 0.1}, (u8[]){0, 0, 0, 0}, (u8[]){0, 1, 2, 3}, 4);
-    anim_muzzle_flash_0 = animation_create(adef_muzzle_flash_0, false);
+    init_explosion_animation_definitions();
 
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_1, "assets/wip/muzzle_flash_1.png", 15, 15);
-    adef_muzzle_flash_1 = animation_definition_create(&sprite_sheet_muzzle_flash_1, (f32[]){0.1, 0.1, 0.1, 0.1}, (u8[]){0, 0, 0, 0}, (u8[]){0, 1, 2, 3}, 4);
-    anim_muzzle_flash_1 = animation_create(adef_muzzle_flash_1, false);
-
-    init_bullet_anim_hashmap();
+    init_bullet_adef_hashmap();
     init_player_anim_hashmap();
     init_weapon_anim_hashmap();
+}
+// TODO: move everyone above this (hashmap related) to a separate file
+
+// parent function for all the necessary player updates made each frame
+void player_per_frame_updates(Player *player)
+{
+    handle_player_input(player);
+    update_player_crosshair_angle(player);
+    update_player_status(player);
+    if (player->status != PLAYER_INACTIVE)
+        update_player_anims(player);
 }
 
 // initializes the player struct
@@ -595,6 +534,9 @@ void handle_player_shooting(Player *player, Key_State shoot)
 
     // generate bullet if weapon is loaded and key state is correct
     if (player->weapon->capacity > 0 && player->weapon->ready_to_fire && key_state_ready) {
+        // Note the lack of collision masks and on hit methods - collisions aren't relevant for muzzle flash entities
+        create_muzzle_flash_entity(player->relative_position, (vec2){15, 15}, 0, 0, NULL, NULL);
+
         f32 cx = 0;
         f32 cy = 0;
         f32 px = player->entity->body->aabb.position[0];
@@ -638,61 +580,15 @@ void handle_player_shooting(Player *player, Key_State shoot)
             angle = 2 * M_PI - angle;
 
         // check which of 16 buckets it falls into, assign animation
-        char *bullet_anim_name;
-        if (angle >= 6.1 || angle < 0.2) {
-            bullet_anim_name = "bullet_0";
-        }
-        else if (angle >= 0.2 && angle < 0.59) {
-            bullet_anim_name = "bullet_1";
-        }
-        else if (angle >= 0.59 && angle < 0.983) {
-            bullet_anim_name = "bullet_2";
-        }
-        else if (angle >= 0.983 && angle < 1.375) {
-            bullet_anim_name = "bullet_3";
-        }
-        else if (angle >= 1.375 && angle < 1.769) {
-            bullet_anim_name = "bullet_4";
-        }
-        else if (angle >= 1.769 && angle < 2.163) {
-            bullet_anim_name = "bullet_5";
-        }
-        else if (angle >= 2.163 && angle < 2.557) {
-            bullet_anim_name = "bullet_6";
-        }
-        else if (angle >= 2.557 && angle < 2.95) {
-            bullet_anim_name = "bullet_7";
-        }
-        else if (angle >= 2.95 && angle < 3.344) {
-            bullet_anim_name = "bullet_8";
-        }
-        else if (angle >= 3.344 && angle < 3.738) {
-            bullet_anim_name = "bullet_9";
-        }
-        else if (angle >= 3.738 && angle < 4.131) {
-            bullet_anim_name = "bullet_10";
-        }
-        else if (angle >= 4.131 && angle < 4.525) {
-            bullet_anim_name = "bullet_11";
-        }
-        else if (angle >= 4.525 && angle < 4.919) {
-            bullet_anim_name = "bullet_12";
-        }
-        else if (angle >= 4.919 && angle < 5.313) {
-            bullet_anim_name = "bullet_13";
-        }
-        else if (angle >= 5.313 && angle < 5.706) {
-            bullet_anim_name = "bullet_14";
-        }
-        else if (angle >= 5.706 && angle < 6.1) {
-            bullet_anim_name = "bullet_15";
-        }
+        char *bullet_adef_name;
+        bullet_adef_name = "bullet_0";
 
         // create bullet struct and calculated anim and velocity
         Bullet *bullet = malloc(sizeof(Bullet));
         bullet->entity = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
         bullet->damage = player->weapon->damage;
-        bullet->entity->animation = get(bullet_anim_map, bullet_anim_name);
+        bullet->entity->animation = animation_create(get(bullet_adef_map, bullet_adef_name), false);
+
         bullet->entity->body->velocity[0] = bullet_velocity[0];
         bullet->entity->body->velocity[1] = bullet_velocity[1];
         bullet->entity->body->parent = bullet;
@@ -773,7 +669,7 @@ void update_player_velocity_from_key_state(Player *player)
 
 void free_player(Player *player)
 {
-    free(player->crosshair);
+    // crosshair mem is deallocated when we clear the entity array_list
     free(player->input_state->controller_input_state);
     free(player->input_state->key_state);
     free(player->input_state);
@@ -790,14 +686,4 @@ void free_players()
     if (player_two) {
         free_player(player_two);
     }
-}
-
-// parent function for all the necessary player updates made each frame
-void player_per_frame_updates(Player *player)
-{
-    handle_player_input(player);
-    update_player_crosshair_angle(player);
-    update_player_status(player);
-    if (player->status != PLAYER_INACTIVE)
-        update_player_anims(player);
 }
