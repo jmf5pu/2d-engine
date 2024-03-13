@@ -11,10 +11,12 @@
 #define PLAYER_ANIM_COUNT 56
 #define BULLET_ADEF_COUNT 16
 #define WEAPON_COUNT 1
-#define ANIMS_PER_WEAPON 16
+#define EXPLOSION_COUNT 1
+#define ANGLES 16
 
 #define MIN(x, y) (((x) < (y)) ? (x) : (y)) // used in reloading calculations
 #define BULLET_DISTANCE_FROM_PLAYER 40
+#define MUZZLE_FLASH_DISTANCE_FROM_PLAYER 25
 #define INVERT_Y_AXIS true // if true, joystick up motion will correspond to positive y axis value
 #define CROSSHAIR_SIZE 11
 
@@ -331,6 +333,7 @@ Animation *anim_player_mock_2;
 Animation *anim_player_mock_3;
 Animation *anim_player_mock_4;
 
+Sprite_Sheet sprite_sheet_m16_with_hands0;
 Sprite_Sheet sprite_sheet_m16_with_hands1;
 Sprite_Sheet sprite_sheet_m16_with_hands2;
 Sprite_Sheet sprite_sheet_m16_with_hands3;
@@ -346,8 +349,8 @@ Sprite_Sheet sprite_sheet_m16_with_hands12;
 Sprite_Sheet sprite_sheet_m16_with_hands13;
 Sprite_Sheet sprite_sheet_m16_with_hands14;
 Sprite_Sheet sprite_sheet_m16_with_hands15;
-Sprite_Sheet sprite_sheet_m16_with_hands16;
 
+Animation_Definition *adef_m16_with_hands0;
 Animation_Definition *adef_m16_with_hands1;
 Animation_Definition *adef_m16_with_hands2;
 Animation_Definition *adef_m16_with_hands3;
@@ -363,8 +366,8 @@ Animation_Definition *adef_m16_with_hands12;
 Animation_Definition *adef_m16_with_hands13;
 Animation_Definition *adef_m16_with_hands14;
 Animation_Definition *adef_m16_with_hands15;
-Animation_Definition *adef_m16_with_hands16;
 
+Animation *anim_m16_with_hands0;
 Animation *anim_m16_with_hands1;
 Animation *anim_m16_with_hands2;
 Animation *anim_m16_with_hands3;
@@ -380,7 +383,6 @@ Animation *anim_m16_with_hands12;
 Animation *anim_m16_with_hands13;
 Animation *anim_m16_with_hands14;
 Animation *anim_m16_with_hands15;
-Animation *anim_m16_with_hands16;
 // END NEW PLAYER STRUCTS 3/4/24
 
 // MUZZLE FLASH STRUCTS 3/10/24
@@ -389,6 +391,48 @@ Animation_Definition *adef_muzzle_flash_0;
 
 Sprite_Sheet sprite_sheet_muzzle_flash_1;
 Animation_Definition *adef_muzzle_flash_1;
+
+Sprite_Sheet sprite_sheet_muzzle_flash_2;
+Animation_Definition *adef_muzzle_flash_2;
+
+Sprite_Sheet sprite_sheet_muzzle_flash_3;
+Animation_Definition *adef_muzzle_flash_3;
+
+Sprite_Sheet sprite_sheet_muzzle_flash_4;
+Animation_Definition *adef_muzzle_flash_4;
+
+Sprite_Sheet sprite_sheet_muzzle_flash_5;
+Animation_Definition *adef_muzzle_flash_5;
+
+Sprite_Sheet sprite_sheet_muzzle_flash_6;
+Animation_Definition *adef_muzzle_flash_6;
+
+Sprite_Sheet sprite_sheet_muzzle_flash_7;
+Animation_Definition *adef_muzzle_flash_7;
+
+Sprite_Sheet sprite_sheet_muzzle_flash_8;
+Animation_Definition *adef_muzzle_flash_8;
+
+Sprite_Sheet sprite_sheet_muzzle_flash_9;
+Animation_Definition *adef_muzzle_flash_9;
+
+Sprite_Sheet sprite_sheet_muzzle_flash_10;
+Animation_Definition *adef_muzzle_flash_10;
+
+Sprite_Sheet sprite_sheet_muzzle_flash_11;
+Animation_Definition *adef_muzzle_flash_11;
+
+Sprite_Sheet sprite_sheet_muzzle_flash_12;
+Animation_Definition *adef_muzzle_flash_12;
+
+Sprite_Sheet sprite_sheet_muzzle_flash_13;
+Animation_Definition *adef_muzzle_flash_13;
+
+Sprite_Sheet sprite_sheet_muzzle_flash_14;
+Animation_Definition *adef_muzzle_flash_14;
+
+Sprite_Sheet sprite_sheet_muzzle_flash_15;
+Animation_Definition *adef_muzzle_flash_15;
 // END MUZZLE FLASH STRUCTS 3/10/24
 
 // bullet sprites & anims

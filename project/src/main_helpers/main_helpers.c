@@ -40,7 +40,7 @@ bool entity_is_player_or_crosshair(Entity *entity)
 void render_player_anims(Player *player, SDL_Window *window, u32 texture_slots[32], vec4 color)
 {
     vec2 weapon_position = {0, 0};
-    get_character_weapon_position(player, &weapon_position);
+    get_character_weapon_position(player, weapon_position);
 
     if (player) {
         // player is facing up, render weapon "under" player
@@ -60,20 +60,12 @@ void render_player_anims(Player *player, SDL_Window *window, u32 texture_slots[3
 /// @brief Calculates the weapon sprite's position using the player's crosshair angle
 /// @param player
 /// @param weapon_position
-void get_character_weapon_position(Player *player, vec2 *weapon_position)
+void get_character_weapon_position(Player *player, vec2 weapon_position)
 {
-    vec2_dup((*weapon_position), player->entity->body->aabb.position);
-    (*weapon_position)[0] += cos(player->crosshair_angle) * CHARACTER_WEAPON_OFFSET;
-    (*weapon_position)[1] += sin(player->crosshair_angle) * CHARACTER_WEAPON_OFFSET;
-}
-
-void create_muzzle_flash_entity(vec2 position, vec2 size, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static)
-{
-    position[0] += 25;
-    Entity *entity = entity_create(position, size, (vec2){0, 0}, collision_layer, collision_mask, on_hit, on_hit_static);
-
-    entity->animation = animation_create(adef_muzzle_flash_0, false);
-    entity->destroy_on_anim_completion = true;
+    vec2_dup(weapon_position, player->entity->body->aabb.position);
+    vec2 offset = {0, 0};
+    get_xy_components_from_vector(CHARACTER_WEAPON_OFFSET, player->crosshair_angle, offset);
+    vec2_add(weapon_position, weapon_position, offset);
 }
 
 /// @brief check all entities and destroy entities that need to be destroyed. Called each tick
@@ -85,4 +77,14 @@ void destroy_all_marked_entities(Map *map)
         if (should_destroy_entity(entity, map))
             entity_destroy(entity);
     }
+}
+
+/// @brief get the x and y components of a "vector" (magnitude + angle). result is stored in the last parameter
+/// @param magnitude
+/// @param angle
+/// @param components_result
+void get_xy_components_from_vector(f32 magnitude, f32 angle, vec2 components_result)
+{
+    components_result[0] = magnitude * cos(angle);
+    components_result[1] = magnitude * sin(angle);
 }

@@ -15,13 +15,73 @@ Player *player_two;
 static Hash_Map *bullet_adef_map;
 static Hash_Map *player_anim_map;
 static Hash_Map *weapon_anim_map;
+static Hash_Map *explosion_adef_map;
 
 void init_explosion_animation_definitions(void)
 {
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_0, "assets/wip/muzzle_flash_v3.png", 21, 21);
-    adef_muzzle_flash_0 = animation_definition_create(&sprite_sheet_muzzle_flash_0, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_1, "assets/wip/muzzle_flash_1.png", 15, 15);
-    adef_muzzle_flash_1 = animation_definition_create(&sprite_sheet_muzzle_flash_1, (f32[]){0.02, 0.02, 0.02, 0.02}, (u8[]){0, 0, 0, 0}, (u8[]){0, 1, 2, 3}, 4);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_0, "assets/wip/muzzle_flash_v3_0.png", 19, 19);
+    adef_muzzle_flash_0 =
+        animation_definition_create(&sprite_sheet_muzzle_flash_0, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_1, "assets/wip/muzzle_flash_v3_1.png", 19, 19);
+    adef_muzzle_flash_1 =
+        animation_definition_create(&sprite_sheet_muzzle_flash_1, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2, "assets/wip/muzzle_flash_v3_2.png", 19, 19);
+    adef_muzzle_flash_2 =
+        animation_definition_create(&sprite_sheet_muzzle_flash_2, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_3, "assets/wip/muzzle_flash_v3_3.png", 19, 19);
+    adef_muzzle_flash_3 =
+        animation_definition_create(&sprite_sheet_muzzle_flash_3, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_4, "assets/wip/muzzle_flash_v3_4.png", 19, 19);
+    adef_muzzle_flash_4 =
+        animation_definition_create(&sprite_sheet_muzzle_flash_4, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_5, "assets/wip/muzzle_flash_v3_5.png", 19, 19);
+    adef_muzzle_flash_5 =
+        animation_definition_create(&sprite_sheet_muzzle_flash_5, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_6, "assets/wip/muzzle_flash_v3_6.png", 19, 19);
+    adef_muzzle_flash_6 =
+        animation_definition_create(&sprite_sheet_muzzle_flash_6, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_7, "assets/wip/muzzle_flash_v3_7.png", 19, 19);
+    adef_muzzle_flash_7 =
+        animation_definition_create(&sprite_sheet_muzzle_flash_7, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_8, "assets/wip/muzzle_flash_v3_8.png", 19, 19);
+    adef_muzzle_flash_8 =
+        animation_definition_create(&sprite_sheet_muzzle_flash_8, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_9, "assets/wip/muzzle_flash_v3_9.png", 19, 19);
+    adef_muzzle_flash_9 =
+        animation_definition_create(&sprite_sheet_muzzle_flash_9, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_10, "assets/wip/muzzle_flash_v3_10.png", 19, 19);
+    adef_muzzle_flash_10 =
+        animation_definition_create(&sprite_sheet_muzzle_flash_10, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_11, "assets/wip/muzzle_flash_v3_11.png", 19, 19);
+    adef_muzzle_flash_11 =
+        animation_definition_create(&sprite_sheet_muzzle_flash_11, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_12, "assets/wip/muzzle_flash_v3_12.png", 19, 19);
+    adef_muzzle_flash_12 =
+        animation_definition_create(&sprite_sheet_muzzle_flash_12, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_13, "assets/wip/muzzle_flash_v3_13.png", 19, 19);
+    adef_muzzle_flash_13 =
+        animation_definition_create(&sprite_sheet_muzzle_flash_13, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_14, "assets/wip/muzzle_flash_v3_14.png", 19, 19);
+    adef_muzzle_flash_14 =
+        animation_definition_create(&sprite_sheet_muzzle_flash_14, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_15, "assets/wip/muzzle_flash_v3_15.png", 19, 19);
+    adef_muzzle_flash_15 =
+        animation_definition_create(&sprite_sheet_muzzle_flash_15, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
 }
 
 // init bullet animation hash_map
@@ -44,8 +104,9 @@ void init_player_anim_hashmap()
 
 void init_weapon_anim_hashmap()
 {
-    weapon_anim_map = create_hash_map(WEAPON_COUNT * ANIMS_PER_WEAPON);
+    weapon_anim_map = create_hash_map(WEAPON_COUNT * ANGLES);
 
+    insert(weapon_anim_map, "m16_with_hands_0", anim_m16_with_hands0);
     insert(weapon_anim_map, "m16_with_hands_1", anim_m16_with_hands1);
     insert(weapon_anim_map, "m16_with_hands_2", anim_m16_with_hands2);
     insert(weapon_anim_map, "m16_with_hands_3", anim_m16_with_hands3);
@@ -61,7 +122,28 @@ void init_weapon_anim_hashmap()
     insert(weapon_anim_map, "m16_with_hands_13", anim_m16_with_hands13);
     insert(weapon_anim_map, "m16_with_hands_14", anim_m16_with_hands14);
     insert(weapon_anim_map, "m16_with_hands_15", anim_m16_with_hands15);
-    insert(weapon_anim_map, "m16_with_hands_16", anim_m16_with_hands16);
+}
+
+void init_explosion_adef_hashmap()
+{
+    explosion_adef_map = create_hash_map(EXPLOSION_COUNT * ANGLES);
+
+    insert(explosion_adef_map, "muzzle_flash_1_0", adef_muzzle_flash_0);
+    insert(explosion_adef_map, "muzzle_flash_1_1", adef_muzzle_flash_1);
+    insert(explosion_adef_map, "muzzle_flash_1_2", adef_muzzle_flash_2);
+    insert(explosion_adef_map, "muzzle_flash_1_3", adef_muzzle_flash_3);
+    insert(explosion_adef_map, "muzzle_flash_1_4", adef_muzzle_flash_4);
+    insert(explosion_adef_map, "muzzle_flash_1_5", adef_muzzle_flash_5);
+    insert(explosion_adef_map, "muzzle_flash_1_6", adef_muzzle_flash_6);
+    insert(explosion_adef_map, "muzzle_flash_1_7", adef_muzzle_flash_7);
+    insert(explosion_adef_map, "muzzle_flash_1_8", adef_muzzle_flash_8);
+    insert(explosion_adef_map, "muzzle_flash_1_9", adef_muzzle_flash_9);
+    insert(explosion_adef_map, "muzzle_flash_1_10", adef_muzzle_flash_10);
+    insert(explosion_adef_map, "muzzle_flash_1_11", adef_muzzle_flash_11);
+    insert(explosion_adef_map, "muzzle_flash_1_12", adef_muzzle_flash_12);
+    insert(explosion_adef_map, "muzzle_flash_1_13", adef_muzzle_flash_13);
+    insert(explosion_adef_map, "muzzle_flash_1_14", adef_muzzle_flash_14);
+    insert(explosion_adef_map, "muzzle_flash_1_15", adef_muzzle_flash_15);
 }
 
 // sets up animations for players and bullets
@@ -101,6 +183,10 @@ void init_all_anims()
     // END NEW PLAYER ANIMS
 
     // NEW WEAPON ANIMS 3/8/24:
+    render_sprite_sheet_init(&sprite_sheet_m16_with_hands0, "assets/wip/m16_360_with_hands0.png", 25, 25);
+    adef_m16_with_hands0 = animation_definition_create(&sprite_sheet_m16_with_hands0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_with_hands0 = animation_create(adef_m16_with_hands0, false);
+
     render_sprite_sheet_init(&sprite_sheet_m16_with_hands1, "assets/wip/m16_360_with_hands1.png", 25, 25);
     adef_m16_with_hands1 = animation_definition_create(&sprite_sheet_m16_with_hands1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_m16_with_hands1 = animation_create(adef_m16_with_hands1, false);
@@ -160,10 +246,6 @@ void init_all_anims()
     render_sprite_sheet_init(&sprite_sheet_m16_with_hands15, "assets/wip/m16_360_with_hands15.png", 25, 25);
     adef_m16_with_hands15 = animation_definition_create(&sprite_sheet_m16_with_hands15, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_m16_with_hands15 = animation_create(adef_m16_with_hands15, false);
-
-    render_sprite_sheet_init(&sprite_sheet_m16_with_hands16, "assets/wip/m16_360_with_hands16.png", 25, 25);
-    adef_m16_with_hands16 = animation_definition_create(&sprite_sheet_m16_with_hands16, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_m16_with_hands16 = animation_create(adef_m16_with_hands16, false);
     // END NEW WEAPON ANIMS
 
     init_explosion_animation_definitions();
@@ -171,6 +253,7 @@ void init_all_anims()
     init_bullet_adef_hashmap();
     init_player_anim_hashmap();
     init_weapon_anim_hashmap();
+    init_explosion_adef_hashmap();
 }
 // TODO: move everyone above this (hashmap related) to a separate file
 
@@ -393,6 +476,61 @@ void update_player_anims(Player *player)
     update_player_weapon_anim(player);
 }
 
+/// @brief Anim assignment is typically broken up into 16 directions in this game. This method takes an angle (typically between the player and their crosshair) to pick an anim
+/// suffix
+/// @param angle the angle in question
+/// @param direction_result store the result here
+void get_direction_from_angle(f32 angle, char *direction_result)
+{
+    if (angle > -1 * M_PI / 16 && angle <= M_PI / 16)
+        strcpy(direction_result, "0");
+    else if (angle > M_PI / 16 && angle <= 3 * M_PI / 16)
+        strcpy(direction_result, "1");
+    else if (angle > 3 * M_PI / 16 && angle <= 5 * M_PI / 16)
+        strcpy(direction_result, "2");
+    else if (angle > 5 * M_PI / 16 && angle <= 7 * M_PI / 16)
+        strcpy(direction_result, "3");
+
+    else if (angle > 7 * M_PI / 16 && angle <= 9 * M_PI / 16)
+        strcpy(direction_result, "4");
+
+    else if (angle > 9 * M_PI / 16 && angle <= 11 * M_PI / 16)
+        strcpy(direction_result, "5");
+
+    else if (angle > 11 * M_PI / 16 && angle <= 13 * M_PI / 16)
+        strcpy(direction_result, "6");
+
+    else if (angle > 13 * M_PI / 16 && angle <= 15 * M_PI / 16)
+        strcpy(direction_result, "7");
+
+    else if (angle > 15 * M_PI / 16 || angle <= -15 * M_PI / 16)
+        strcpy(direction_result, "8");
+
+    else if (angle > -15 * M_PI / 16 && angle <= -13 * M_PI / 16)
+        strcpy(direction_result, "9");
+
+    else if (angle > -13 * M_PI / 16 && angle <= -11 * M_PI / 16)
+        strcpy(direction_result, "10");
+
+    else if (angle > -11 * M_PI / 16 && angle <= -9 * M_PI / 16)
+        strcpy(direction_result, "11");
+
+    else if (angle > -9 * M_PI / 16 && angle <= -7 * M_PI / 16)
+        strcpy(direction_result, "12");
+
+    else if (angle > -7 * M_PI / 16 && angle <= -5 * M_PI / 16)
+        strcpy(direction_result, "13");
+
+    else if (angle > -5 * M_PI / 16 && angle <= -3 * M_PI / 16)
+        strcpy(direction_result, "14");
+
+    else if (angle > -3 * M_PI / 16 && angle <= -1 * M_PI / 16)
+        strcpy(direction_result, "15");
+
+    else
+        printf("got unexpected crosshair angle: %f\n", angle);
+}
+
 static void update_player_character_anim(Player *player)
 {
     // cache old anim to check if we are SWITCHING anims
@@ -443,64 +581,17 @@ static void update_player_weapon_anim(Player *player)
     char *anim_name = calloc(50, sizeof(char));
     strcat(anim_name, "m16_with_hands_");
 
-    char *direction;
+    char *direction = calloc(5, sizeof(char));
 
-    // choose correct animation for player's direction
-    if (player->crosshair_angle > -1 * M_PI / 16 && player->crosshair_angle <= M_PI / 16) {
-        direction = "1";
-    }
-    else if (player->crosshair_angle > M_PI / 16 && player->crosshair_angle <= 3 * M_PI / 16) {
-        direction = "2";
-    }
-    else if (player->crosshair_angle > 3 * M_PI / 16 && player->crosshair_angle <= 5 * M_PI / 16) {
-        direction = "3";
-    }
-    else if (player->crosshair_angle > 5 * M_PI / 16 && player->crosshair_angle <= 7 * M_PI / 16) {
-        direction = "4";
-    }
-    else if (player->crosshair_angle > 7 * M_PI / 16 && player->crosshair_angle <= 9 * M_PI / 16) {
-        direction = "5";
-    }
-    else if (player->crosshair_angle > 9 * M_PI / 16 && player->crosshair_angle <= 11 * M_PI / 16) {
-        direction = "6";
-    }
-    else if (player->crosshair_angle > 11 * M_PI / 16 && player->crosshair_angle <= 13 * M_PI / 16) {
-        direction = "7";
-    }
-    else if (player->crosshair_angle > 13 * M_PI / 16 && player->crosshair_angle <= 15 * M_PI / 16) {
-        direction = "8";
-    }
-    else if (player->crosshair_angle > 15 * M_PI / 16 || player->crosshair_angle <= -15 * M_PI / 16) {
-        direction = "9";
-    }
-    else if (player->crosshair_angle > -15 * M_PI / 16 && player->crosshair_angle <= -13 * M_PI / 16) {
-        direction = "10";
-    }
-    else if (player->crosshair_angle > -13 * M_PI / 16 && player->crosshair_angle <= -11 * M_PI / 16) {
-        direction = "11";
-    }
-    else if (player->crosshair_angle > -11 * M_PI / 16 && player->crosshair_angle <= -9 * M_PI / 16) {
-        direction = "12";
-    }
-    else if (player->crosshair_angle > -9 * M_PI / 16 && player->crosshair_angle <= -7 * M_PI / 16) {
-        direction = "13";
-    }
-    else if (player->crosshair_angle > -7 * M_PI / 16 && player->crosshair_angle <= -5 * M_PI / 16) {
-        direction = "14";
-    }
-    else if (player->crosshair_angle > -5 * M_PI / 16 && player->crosshair_angle <= -3 * M_PI / 16) {
-        direction = "15";
-    }
-    else if (player->crosshair_angle > -3 * M_PI / 16 && player->crosshair_angle <= -1 * M_PI / 16) {
-        direction = "16";
-    }
-    else {
-        printf("got unexpected crosshair angle: %f\n", player->crosshair_angle);
-    }
+    get_direction_from_angle(player->crosshair_angle, direction);
+
     strcat(anim_name, direction);
     strcat(anim_name, "\0");
 
     Animation *weapon_character_anim = get(weapon_anim_map, anim_name);
+    free(direction);
+    free(anim_name);
+
     if (weapon_character_anim)
         player->weapon->character_anim = weapon_character_anim;
     else
@@ -509,14 +600,34 @@ static void update_player_weapon_anim(Player *player)
     // ensure we are starting new anims at the first frame
     if (player->weapon->character_anim != prev_anim)
         player->weapon->character_anim->current_frame_index = 0;
-
-    free(anim_name);
 }
 
 static void update_player_crosshair_angle(Player *player)
 {
     player->crosshair_angle = atan2(
         player->crosshair->body->aabb.position[1] - player->entity->body->aabb.position[1], player->crosshair->body->aabb.position[0] - player->entity->body->aabb.position[0]);
+}
+
+void create_muzzle_flash_entity(f32 angle, vec2 position, vec2 size, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static)
+{
+    Entity *entity = entity_create(position, size, (vec2){0, 0}, collision_layer, collision_mask, on_hit, on_hit_static);
+
+    char *adef_key = calloc(50, sizeof(char));
+    strcat(adef_key, "muzzle_flash_1_");
+
+    char *direction = calloc(5, sizeof(char));
+
+    get_direction_from_angle(angle, direction);
+
+    strcat(adef_key, direction);
+    strcat(adef_key, "\0");
+    free(direction);
+
+    Animation_Definition *adef = get(explosion_adef_map, adef_key);
+    free(adef_key);
+
+    entity->animation = animation_create(adef, false);
+    entity->destroy_on_anim_completion = true;
 }
 
 void handle_player_shooting(Player *player, Key_State shoot)
@@ -534,50 +645,18 @@ void handle_player_shooting(Player *player, Key_State shoot)
 
     // generate bullet if weapon is loaded and key state is correct
     if (player->weapon->capacity > 0 && player->weapon->ready_to_fire && key_state_ready) {
-        // Note the lack of collision masks and on hit methods - collisions aren't relevant for muzzle flash entities
-        create_muzzle_flash_entity(player->relative_position, (vec2){15, 15}, 0, 0, NULL, NULL);
-
-        f32 cx = 0;
-        f32 cy = 0;
-        f32 px = player->entity->body->aabb.position[0];
-        f32 py = player->entity->body->aabb.position[1];
-        vec2 bullet_position = {px, py};
+        vec2 bullet_position = {player->relative_position[0], player->relative_position[1]};
         vec2 bullet_velocity = {0, 0};
 
-        // shoot bullet at crosshair
-        cx = player->crosshair->body->aabb.position[0];
-        cy = player->crosshair->body->aabb.position[1];
-
-        // since the player's position is relative to the glviewport, while the crosshair's is to the window
-        if (player == player_two)
-            cx -= 0.5 * window_width;
-
-        // Calculate angle using atan2
-        f32 dx = cx - px;
-        f32 dy = cy - py;
-        f32 angle = atan2(dy, dx);
-
-        // Calculate bullet starting position using angle
-        f32 bullet_x = BULLET_DISTANCE_FROM_PLAYER * cos(angle);
-        f32 bullet_y = BULLET_DISTANCE_FROM_PLAYER * sin(angle);
+        // since the player's position is relative to the glviewport, while the crosshair's is to the window TODO: may need to readd this logic (3/12/24)
 
         // Calculate starting position using angle
-        bullet_position[0] = player->relative_position[0] + bullet_x;
-        bullet_position[1] = player->relative_position[1] + bullet_y;
+        vec2 bullet_start_offset = {0, 0};
+        get_xy_components_from_vector(BULLET_DISTANCE_FROM_PLAYER, player->crosshair_angle, bullet_start_offset);
+        vec2_add(bullet_position, bullet_position, bullet_start_offset);
 
         // Calculate velocity using angle
-        f32 vx = player->weapon->bullet_velocity * cos(angle);
-        f32 vy = player->weapon->bullet_velocity * sin(angle);
-        bullet_velocity[0] = vx;
-        bullet_velocity[1] = vy;
-
-        // correct angle
-        if (cx < px && cy > py) // 2nd quadrant
-            angle = M_PI - angle;
-        else if (cx < px && cy < py) // 3rd quadrant
-            angle += M_PI;
-        else if (cx > px && cy < py) // 4th quadrant
-            angle = 2 * M_PI - angle;
+        get_xy_components_from_vector(player->weapon->bullet_velocity, player->crosshair_angle, bullet_velocity);
 
         // check which of 16 buckets it falls into, assign animation
         char *bullet_adef_name;
@@ -589,8 +668,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
         bullet->damage = player->weapon->damage;
         bullet->entity->animation = animation_create(get(bullet_adef_map, bullet_adef_name), false);
 
-        bullet->entity->body->velocity[0] = bullet_velocity[0];
-        bullet->entity->body->velocity[1] = bullet_velocity[1];
+        vec2_dup(bullet->entity->body->velocity, bullet_velocity);
         bullet->entity->body->parent = bullet;
 
         // decrement weapon capacity
@@ -603,6 +681,13 @@ void handle_player_shooting(Player *player, Key_State shoot)
         // restart rounds per minute timer
         player->weapon->ready_to_fire = false;
         player->weapon->frames_since_last_shot = 0;
+
+        // Note the lack of collision masks and on hit methods - collisions aren't relevant for muzzle flash entities
+        vec2 muzzle_flash_position = {0, 0};
+        vec2 muzzle_flash_offset = {0, 0};
+        get_xy_components_from_vector(MUZZLE_FLASH_DISTANCE_FROM_PLAYER, player->crosshair_angle, muzzle_flash_offset);
+        vec2_add(muzzle_flash_position, player->relative_position, muzzle_flash_offset);
+        create_muzzle_flash_entity(player->crosshair_angle, muzzle_flash_position, (vec2){15, 15}, 0, 0, NULL, NULL);
     }
 }
 
