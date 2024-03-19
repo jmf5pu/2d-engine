@@ -87,12 +87,8 @@ void get_xy_components_from_vector(f32 magnitude, f32 angle, vec2 components_res
     components_result[1] = magnitude * sin(angle);
 }
 
-/// @brief seeds the rng and returns a random int within the provided range (inclusive)
+/// @brief returns a random int within the provided range (inclusive)
 /// @param min
 /// @param max
 /// @return random int
-int get_random_int_in_range(int min, int max)
-{
-    srand(time(NULL));
-    return min + rand() % (max - min + 1);
-}
+int get_random_int_in_range(int min, int max) { return min + rand() % (max - min + 1); }

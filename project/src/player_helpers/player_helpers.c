@@ -165,7 +165,7 @@ void init_all_anims()
     anim_p2_crosshair = animation_create(adef_player_2_crosshair, false);
 
     // init bullet anims
-    render_sprite_sheet_init(&sprite_sheet_bullet_0, "assets/wip/bullet_mock.png", 5, 4);
+    render_sprite_sheet_init(&sprite_sheet_bullet_0, "assets/wip/bullet_v2.png", 4, 4);
     adef_bullet_0 = animation_definition_create(&sprite_sheet_bullet_0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
     // NEW PLAYER ANIMS 3/4/24:

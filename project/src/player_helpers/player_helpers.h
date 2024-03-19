@@ -17,7 +17,7 @@
 #define MIN(x, y) (((x) < (y)) ? (x) : (y)) // used in reloading calculations
 #define BULLET_DISTANCE_FROM_PLAYER 40
 #define MUZZLE_FLASH_DISTANCE_FROM_PLAYER 25
-#define BRASS_EJECT_DISTANCE_FROM_PLAYER 8
+#define BRASS_EJECT_DISTANCE_FROM_PLAYER 5
 #define INVERT_Y_AXIS true // if true, joystick up motion will correspond to positive y axis value
 #define CROSSHAIR_SIZE 11
 

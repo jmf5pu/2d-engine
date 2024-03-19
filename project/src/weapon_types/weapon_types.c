@@ -27,11 +27,11 @@ void init_weapon_types(void)
     m16->fire_mode = AUTO;
     m16->capacity = 30;
     m16->reserve = 60;
-    m16->max_fire_rate = 900; // rounds per minute
+    m16->max_fire_rate = 700; // rounds per minute
     m16->burst_count = 3;
     m16->burst_delay = 0.4; // seconds
     m16->damage = 30;
-    m16->bullet_velocity = 1500;
+    m16->bullet_velocity = 600;
     m16->hud_ammo_icon = anim_556_burst;
 
     m44 = malloc(sizeof(Weapon_Type));
