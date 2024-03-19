@@ -17,6 +17,7 @@
 #define MIN(x, y) (((x) < (y)) ? (x) : (y)) // used in reloading calculations
 #define BULLET_DISTANCE_FROM_PLAYER 40
 #define MUZZLE_FLASH_DISTANCE_FROM_PLAYER 25
+#define BRASS_EJECT_DISTANCE_FROM_PLAYER 8
 #define INVERT_Y_AXIS true // if true, joystick up motion will correspond to positive y axis value
 #define CROSSHAIR_SIZE 11
 
@@ -469,10 +470,10 @@ void update_crosshair_position_from_cursor(Player *player);
 void maintain_controller_keypresses(Player *player);
 void maintain_controller_keypress(Key_State *key_state);
 
-// anim update methods:
 void update_player_anims(Player *player);
 static void update_player_character_anim(Player *player);
 static void update_player_weapon_anim(Player *player);
 static void update_player_crosshair_angle(Player *player);
+static void update_player_weapon_position(Player *player);
 
 #endif

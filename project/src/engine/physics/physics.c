@@ -165,13 +165,11 @@ Body *physics_body_create(vec2 position, vec2 size, vec2 velocity, u8 collision_
         ERROR_EXIT("Memory allocation failed\n");
     }
 
-    body->aabb.position[0] = position[0];
-    body->aabb.position[1] = position[1];
+    vec2_dup(body->aabb.position, position);
     body->aabb.half_size[0] = size[0] * 0.5;
     body->aabb.half_size[1] = size[1] * 0.5;
 
-    body->velocity[0] = velocity[0];
-    body->velocity[1] = velocity[1];
+    vec2_dup(body->velocity, velocity);
     body->acceleration[0] = 0;
     body->acceleration[1] = 0;
 

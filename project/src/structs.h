@@ -63,6 +63,7 @@ typedef struct weapon {
     bool ready_to_fire;
     Animation *hud_ammo_icon;
     Animation *character_anim;
+    vec2 position;
 } Weapon;
 
 typedef struct pickup_animation_set {

@@ -90,7 +90,17 @@ usize animation_get_id(Animation *target_animation)
             return i;
         }
     }
-    ERROR_EXIT("ERROR: Could not find the specified entity in the Array_List\n");
+    ERROR_EXIT("ERROR: Could not find the specified animation in the Array_List\n");
+}
+
+usize animation_definition_get_id(Animation_Definition *target_adef)
+{
+    for (usize i = 0; i < animation_definition_storage->len; ++i) {
+        if (array_list_get(animation_definition_storage, i) == target_adef) {
+            return i;
+        }
+    }
+    ERROR_EXIT("ERROR: Could not find the specified animation definition in the Array_List\n");
 }
 
 void animation_destroy(Animation *animation)
@@ -98,6 +108,13 @@ void animation_destroy(Animation *animation)
     usize id = animation_get_id(animation);
     array_list_remove(animation_storage, id);
     free(animation);
+}
+
+void animation_definition_destroy(Animation_Definition *adef)
+{
+    usize id = animation_definition_get_id(adef);
+    array_list_remove(animation_definition_storage, id);
+    free(adef);
 }
 
 Animation *animation_get(usize id) { return array_list_get(animation_storage, id); }
@@ -139,6 +156,18 @@ void animation_render(Animation *animation, SDL_Window *window, vec2 position, i
     render_sprite_sheet_frame(adef->sprite_sheet, window, aframe->row, aframe->column, position, z_index, animation->is_flipped, color, texture_slots);
 }
 
-void clear_animation_list(void) { array_list_clear(animation_storage); }
+void clear_animation_list(void)
+{
+    for (int i = animation_storage->len - 1; i >= 0; --i) {
+        animation_destroy(animation_get(i));
+    }
+    array_list_clear(animation_storage);
+}
 
-void clear_animation_definition_list(void) { array_list_clear(animation_definition_storage); }
+void clear_animation_definition_list(void)
+{
+    for (int i = animation_definition_storage->len - 1; i >= 0; --i) {
+        animation_definition_destroy(array_list_get(animation_definition_storage, i));
+    }
+    array_list_clear(animation_definition_storage);
+}

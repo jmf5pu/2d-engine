@@ -7,11 +7,16 @@
 #include <linmath.h>
 #include <stdbool.h>
 
+struct entity;
+
+typedef void(MovementScript)(struct entity *entity);
 typedef struct entity {
     Body *body;
     Animation *animation;
     bool is_active;
     bool destroy_on_anim_completion;
+    MovementScript *movement_script;
+    vec2 starting_position;
 } Entity;
 
 void entity_init(void);
@@ -19,6 +24,6 @@ Entity *entity_create(vec2 position, vec2 size, vec2 velocity, u8 collision_laye
 Entity *entity_get(usize id);
 void entity_destroy(Entity *entity);
 usize entity_count(void);
-void clear_entity_list(void);
+void free_all_entities_and_clear_array_list(void);
 
 #endif

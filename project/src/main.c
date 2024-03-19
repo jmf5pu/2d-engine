@@ -23,6 +23,7 @@
 
 // game specific headers
 #include "collision_behavior/collision_behavior.h"
+#include "effects/effects.h"
 #include "hud/hud.h"
 #include "main_helpers/main_helpers.h"
 #include "map_helpers/map_helpers.h"
@@ -58,6 +59,7 @@ int main(int argc, char *argv[])
     init_hud(window);
     init_menus();
     init_game_controllers();
+    init_effects();
 
     // init game color
     vec4_dup(game_color, WHITE);
@@ -378,6 +380,8 @@ int main(int argc, char *argv[])
 
             // destroy any entities that need to be destroyed:
             destroy_all_marked_entities(&map);
+            update_entity_movements();
+
             break;
         case GS_EXITING:
             should_quit = true;
@@ -395,7 +399,7 @@ int main(int argc, char *argv[])
     free_weapon_types();
     free_hud();
     free_menus();
-    clear_entity_list();
+    free_all_entities_and_clear_array_list();
     clear_animation_definition_list();
     clear_animation_list();
     SDL_Quit();

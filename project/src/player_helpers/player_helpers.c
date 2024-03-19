@@ -1,5 +1,6 @@
 #include "player_helpers.h"
 #include "../collision_behavior/collision_behavior.h"
+#include "../effects/effects.h"
 #include "../engine/camera.h"
 #include "../engine/global.h"
 #include "../engine/util.h"
@@ -262,6 +263,7 @@ void player_per_frame_updates(Player *player)
 {
     handle_player_input(player);
     update_player_crosshair_angle(player);
+    update_player_weapon_position(player);
     update_player_status(player);
     if (player->status != PLAYER_INACTIVE)
         update_player_anims(player);
@@ -476,6 +478,18 @@ void update_player_anims(Player *player)
     update_player_weapon_anim(player);
 }
 
+/// @brief Calculates the weapon sprite's position using the player's crosshair angle
+/// @param player
+/// @param weapon_position
+void update_player_weapon_position(Player *player)
+{
+    vec2 weapon_position = {0, 0};
+    vec2_dup(weapon_position, player->entity->body->aabb.position);
+    vec2 offset = {0, 0};
+    get_xy_components_from_vector(CHARACTER_WEAPON_OFFSET, player->crosshair_angle, offset);
+    vec2_add(player->weapon->position, weapon_position, offset);
+}
+
 /// @brief Anim assignment is typically broken up into 16 directions in this game. This method takes an angle (typically between the player and their crosshair) to pick an anim
 /// suffix
 /// @param angle the angle in question
@@ -688,6 +702,14 @@ void handle_player_shooting(Player *player, Key_State shoot)
         get_xy_components_from_vector(MUZZLE_FLASH_DISTANCE_FROM_PLAYER, player->crosshair_angle, muzzle_flash_offset);
         vec2_add(muzzle_flash_position, player->relative_position, muzzle_flash_offset);
         create_muzzle_flash_entity(player->crosshair_angle, muzzle_flash_position, (vec2){15, 15}, 0, 0, NULL, NULL);
+
+        // ccalculate brass offset from the player and create brass effect entity
+        vec2 brass_position = {0, 0};
+        vec2_dup(brass_position, player->relative_position);
+        vec2 brass_offset = {0, 0};
+        get_xy_components_from_vector(BRASS_EJECT_DISTANCE_FROM_PLAYER, player->crosshair_angle, brass_offset);
+        vec2_add(brass_position, brass_position, brass_offset);
+        create_brass_entity(brass_position, adef_brass_falling_1);
     }
 }
 

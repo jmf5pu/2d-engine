@@ -2,6 +2,7 @@
 #include "../engine/animation.h"
 #include "../engine/render.h"
 #include "../player_helpers/player_helpers.h"
+#include <stdlib.h>
 
 /// @brief  indicates if the given entity should be destroyed. We destroy any entities that are inactive or have physics bodies that are inactive and aren't associated with
 /// players, crosshairs, or pickups. Also, if the entity is marked to be destroyed on animation completion, check if the anim is completed and destroy if so.
@@ -39,36 +40,22 @@ bool entity_is_player_or_crosshair(Entity *entity)
 /// @param color
 void render_player_anims(Player *player, SDL_Window *window, u32 texture_slots[32], vec4 color)
 {
-    vec2 weapon_position = {0, 0};
-    get_character_weapon_position(player, weapon_position);
-
     if (player) {
         // player is facing up, render weapon "under" player
         if (player->crosshair_angle > M_PI / 4 && player->crosshair_angle < 3 * M_PI / 4) {
-            animation_render(player->weapon->character_anim, window, weapon_position, 0, color, texture_slots);
+            animation_render(player->weapon->character_anim, window, player->weapon->position, 0, color, texture_slots);
             animation_render(player->entity->animation, window, player->entity->body->aabb.position, 0, color, texture_slots);
         }
         else {
             animation_render(player->entity->animation, window, player->entity->body->aabb.position, 0, color, texture_slots);
-            animation_render(player->weapon->character_anim, window, weapon_position, 0, color, texture_slots);
+            animation_render(player->weapon->character_anim, window, player->weapon->position, 0, color, texture_slots);
         }
     }
     else
         printf("player must be defined to update corresponding anims");
 }
 
-/// @brief Calculates the weapon sprite's position using the player's crosshair angle
-/// @param player
-/// @param weapon_position
-void get_character_weapon_position(Player *player, vec2 weapon_position)
-{
-    vec2_dup(weapon_position, player->entity->body->aabb.position);
-    vec2 offset = {0, 0};
-    get_xy_components_from_vector(CHARACTER_WEAPON_OFFSET, player->crosshair_angle, offset);
-    vec2_add(weapon_position, weapon_position, offset);
-}
-
-/// @brief check all entities and destroy entities that need to be destroyed. Called each tick
+/// @brief check all entities and destroy entities that need to be destroyed. Called each tick/frame
 /// @param map
 void destroy_all_marked_entities(Map *map)
 {
@@ -76,6 +63,17 @@ void destroy_all_marked_entities(Map *map)
         Entity *entity = entity_get(i);
         if (should_destroy_entity(entity, map))
             entity_destroy(entity);
+    }
+}
+
+/// @brief For all entities with a pre-defined movement script, run it. Called each tick/frame
+/// @param
+void update_entity_movements(void)
+{
+    for (int i = 0; i < entity_count(); i++) {
+        Entity *entity = entity_get(i);
+        if (entity->movement_script)
+            entity->movement_script(entity);
     }
 }
 
@@ -87,4 +85,14 @@ void get_xy_components_from_vector(f32 magnitude, f32 angle, vec2 components_res
 {
     components_result[0] = magnitude * cos(angle);
     components_result[1] = magnitude * sin(angle);
+}
+
+/// @brief seeds the rng and returns a random int within the provided range (inclusive)
+/// @param min
+/// @param max
+/// @return random int
+int get_random_int_in_range(int min, int max)
+{
+    srand(time(NULL));
+    return min + rand() % (max - min + 1);
 }
