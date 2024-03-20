@@ -11,7 +11,6 @@
 #define PLAYER_ANIM_COUNT 56
 #define BULLET_ADEF_COUNT 16
 #define WEAPON_COUNT 1
-#define EXPLOSION_COUNT 1
 #define ANGLES 16
 
 #define MIN(x, y) (((x) < (y)) ? (x) : (y)) // used in reloading calculations
@@ -386,56 +385,6 @@ Animation *anim_m16_with_hands14;
 Animation *anim_m16_with_hands15;
 // END NEW PLAYER STRUCTS 3/4/24
 
-// MUZZLE FLASH STRUCTS 3/10/24
-Sprite_Sheet sprite_sheet_muzzle_flash_0;
-Animation_Definition *adef_muzzle_flash_0;
-
-Sprite_Sheet sprite_sheet_muzzle_flash_1;
-Animation_Definition *adef_muzzle_flash_1;
-
-Sprite_Sheet sprite_sheet_muzzle_flash_2;
-Animation_Definition *adef_muzzle_flash_2;
-
-Sprite_Sheet sprite_sheet_muzzle_flash_3;
-Animation_Definition *adef_muzzle_flash_3;
-
-Sprite_Sheet sprite_sheet_muzzle_flash_4;
-Animation_Definition *adef_muzzle_flash_4;
-
-Sprite_Sheet sprite_sheet_muzzle_flash_5;
-Animation_Definition *adef_muzzle_flash_5;
-
-Sprite_Sheet sprite_sheet_muzzle_flash_6;
-Animation_Definition *adef_muzzle_flash_6;
-
-Sprite_Sheet sprite_sheet_muzzle_flash_7;
-Animation_Definition *adef_muzzle_flash_7;
-
-Sprite_Sheet sprite_sheet_muzzle_flash_8;
-Animation_Definition *adef_muzzle_flash_8;
-
-Sprite_Sheet sprite_sheet_muzzle_flash_9;
-Animation_Definition *adef_muzzle_flash_9;
-
-Sprite_Sheet sprite_sheet_muzzle_flash_10;
-Animation_Definition *adef_muzzle_flash_10;
-
-Sprite_Sheet sprite_sheet_muzzle_flash_11;
-Animation_Definition *adef_muzzle_flash_11;
-
-Sprite_Sheet sprite_sheet_muzzle_flash_12;
-Animation_Definition *adef_muzzle_flash_12;
-
-Sprite_Sheet sprite_sheet_muzzle_flash_13;
-Animation_Definition *adef_muzzle_flash_13;
-
-Sprite_Sheet sprite_sheet_muzzle_flash_14;
-Animation_Definition *adef_muzzle_flash_14;
-
-Sprite_Sheet sprite_sheet_muzzle_flash_15;
-Animation_Definition *adef_muzzle_flash_15;
-// END MUZZLE FLASH STRUCTS 3/10/24
-
 // bullet sprites & anims
 Sprite_Sheet sprite_sheet_bullet_1_horizontal;
 Sprite_Sheet sprite_sheet_bullet_1_vertical;
@@ -475,5 +424,7 @@ static void update_player_character_anim(Player *player);
 static void update_player_weapon_anim(Player *player);
 static void update_player_crosshair_angle(Player *player);
 static void update_player_weapon_position(Player *player);
+
+void get_direction_from_angle(f32 angle, char *direction_result);
 
 #endif
