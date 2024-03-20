@@ -79,16 +79,16 @@ void init_all_anims()
     adef_bullet_0 = animation_definition_create(&sprite_sheet_bullet_0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
     // NEW PLAYER ANIMS 3/4/24:
-    render_sprite_sheet_init(&sprite_sheet_player_mock_1, "assets/wip/player_mock_1.png", 20, 22);
+    render_sprite_sheet_init(&sprite_sheet_player_mock_1, "assets/wip/player_mock_v3_0.png", 20, 22);
     adef_player_mock_1 = animation_definition_create(&sprite_sheet_player_mock_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_player_mock_1 = animation_create(adef_player_mock_1, false);
-    render_sprite_sheet_init(&sprite_sheet_player_mock_2, "assets/wip/player_mock_2.png", 20, 22);
+    render_sprite_sheet_init(&sprite_sheet_player_mock_2, "assets/wip/player_mock_v3_1.png", 20, 22);
     adef_player_mock_2 = animation_definition_create(&sprite_sheet_player_mock_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_player_mock_2 = animation_create(adef_player_mock_2, false);
-    render_sprite_sheet_init(&sprite_sheet_player_mock_3, "assets/wip/player_mock_3.png", 20, 22);
+    render_sprite_sheet_init(&sprite_sheet_player_mock_3, "assets/wip/player_mock_v3_2.png", 20, 22);
     adef_player_mock_3 = animation_definition_create(&sprite_sheet_player_mock_3, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_player_mock_3 = animation_create(adef_player_mock_3, false);
-    render_sprite_sheet_init(&sprite_sheet_player_mock_4, "assets/wip/player_mock_4.png", 20, 22);
+    render_sprite_sheet_init(&sprite_sheet_player_mock_4, "assets/wip/player_mock_v3_3.png", 20, 22);
     adef_player_mock_4 = animation_definition_create(&sprite_sheet_player_mock_4, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_player_mock_4 = animation_create(adef_player_mock_4, false);
     // END NEW PLAYER ANIMS

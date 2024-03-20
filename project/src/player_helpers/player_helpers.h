@@ -19,6 +19,7 @@
 #define BRASS_EJECT_DISTANCE_FROM_PLAYER 5
 #define INVERT_Y_AXIS true // if true, joystick up motion will correspond to positive y axis value
 #define CROSSHAIR_SIZE 11
+#define CHARACTER_WEAPON_OFFSET 2
 
 #define MAX_PLAYER_MOVEMENT_SPEED 250
 #define MAX_CROSSHAIR_MOVEMENT_SPEED 600

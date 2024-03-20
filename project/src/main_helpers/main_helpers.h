@@ -7,8 +7,6 @@
 #include <linmath.h>
 #include <stdbool.h>
 
-#define CHARACTER_WEAPON_OFFSET 2
-
 bool should_destroy_entity(Entity *entity, Map *map);
 bool entity_is_player_or_crosshair(Entity *entity);
 void render_player_anims(Player *player, SDL_Window *window, u32 texture_slots[32], vec4 color);
