@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     entity_init();
     animation_init(); // creates animation storage
     init_all_anims(); // initializes all our animations
-    game_state = GS_MAIN_MENU;
+    game_state = GS_RUNNING;
     init_weapon_types();
     init_map(&map);
     init_hud(window);
@@ -272,30 +272,13 @@ int main(int argc, char *argv[])
                 else // not split
                     update_all_positions(&map, (vec2){-1 * main_cam.position[0], -1 * main_cam.position[1]}, true);
 
-                // render animated entities, check if any are
-                // marked for deletion (not active OR body is
-                // not active)
-                int num_entities = (int)entity_count();
-                for (int j = num_entities - 1; j >= 0; --j) {
-                    Entity *entity = entity_get(j);
-
-                    // for debugging
-                    if (RENDER_PHYSICS_BODIES && entity->is_active)
-                        render_aabb((f32 *)&entity->body->aabb, WHITE);
-
-                    // skip inactive entities, entities that are players or crosshairs or entities with no animation
-                    if (!entity->animation || !entity->is_active || !entity->body->is_active || entity_is_player_or_crosshair(entity)) {
-                        continue;
-                    }
-
-                    // render the entity's animation
-                    animation_render(entity->animation, window, entity->body->aabb.position, 0, game_color, texture_slots);
-                }
-
                 // render player's anims (characters + weapons)
                 render_player_anims(player_one, window, texture_slots, game_color);
                 if (SPLIT_SCREEN)
                     render_player_anims(player_two, window, texture_slots, game_color);
+
+                // render all other animated entities
+                render_all_non_player_entities_with_animations(window, texture_slots, game_color);
 
                 // render map sprites
                 for (int l = 0; l < map.num_props; l++) {

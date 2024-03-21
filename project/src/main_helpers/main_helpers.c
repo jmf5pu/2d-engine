@@ -1,6 +1,7 @@
 #include "main_helpers.h"
 #include "../engine/animation.h"
 #include "../engine/render.h"
+#include "../engine/util.h"
 #include "../player_helpers/player_helpers.h"
 #include <stdlib.h>
 
@@ -53,6 +54,25 @@ void render_player_anims(Player *player, SDL_Window *window, u32 texture_slots[3
     }
     else
         printf("player must be defined to update corresponding anims");
+}
+
+void render_all_non_player_entities_with_animations(SDL_Window *window, u32 texture_slots[32], vec4 color)
+{
+    for (int j = (int)entity_count() - 1; j >= 0; --j) {
+        Entity *entity = entity_get(j);
+
+        // for debugging
+        if (RENDER_PHYSICS_BODIES && entity->is_active)
+            render_aabb((f32 *)&entity->body->aabb, WHITE);
+
+        // skip inactive entities, entities that are players or crosshairs or entities with no animation
+        if (!entity->animation || !entity->is_active || !entity->body->is_active || entity_is_player_or_crosshair(entity)) {
+            continue;
+        }
+
+        // render the entity's animation
+        animation_render(entity->animation, window, entity->body->aabb.position, 0, color, texture_slots);
+    }
 }
 
 /// @brief check all entities and destroy entities that need to be destroyed. Called each tick/frame

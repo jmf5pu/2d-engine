@@ -38,14 +38,14 @@ void create_muzzle_flash_entity(f32 angle, vec2 position, vec2 size, u8 collisio
 
 void create_brass_entity(vec2 position, Animation_Definition *adef)
 {
-    Entity *entity = entity_create(position, (vec2){3, 3}, (vec2){0, 0}, 0, 0, NULL, NULL);
+    Entity *entity = entity_create(position, (vec2){3, 3}, (vec2){100, 100}, 0, 0, NULL, NULL);
     entity->animation = animation_create(adef, true);
     entity->movement_script = brass_movement;
 }
 
 void brass_movement(Entity *entity)
 {
-    const brass_bounce_distance = 10;
+    const brass_bounce_distance = 20;
     entity->body->acceleration[1] = -25;
     if (entity->body->aabb.position[1] < entity->starting_position[1] - PLAYER_HEIGHT) {
         bool bounce_left = get_random_int_in_range(0, 1);
