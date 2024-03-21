@@ -78,6 +78,7 @@ Animation *animation_create(Animation_Definition *adef, bool does_loop)
         .animation_definition = adef,
         .does_loop = does_loop,
         .is_active = true,
+        .z_index = 0,
     };
 
     return animation;
@@ -148,12 +149,12 @@ void animation_update(f32 dt)
     }
 }
 
-void animation_render(Animation *animation, SDL_Window *window, vec2 position, i32 z_index, vec4 color, u32 texture_slots[32])
+void animation_render(Animation *animation, SDL_Window *window, vec2 position, vec4 color, u32 texture_slots[32])
 {
     animation->is_active = true;
     Animation_Definition *adef = animation->animation_definition;
     Animation_Frame *aframe = &adef->frames[animation->current_frame_index];
-    render_sprite_sheet_frame(adef->sprite_sheet, window, aframe->row, aframe->column, position, z_index, animation->is_flipped, color, texture_slots);
+    render_sprite_sheet_frame(adef->sprite_sheet, window, aframe->row, aframe->column, position, animation->z_index, animation->is_flipped, color, texture_slots);
 }
 
 void clear_animation_list(void)

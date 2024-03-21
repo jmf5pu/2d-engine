@@ -36,22 +36,26 @@ void create_muzzle_flash_entity(f32 angle, vec2 position, vec2 size, u8 collisio
     entity->destroy_on_anim_completion = true;
 }
 
-void create_brass_entity(vec2 position, Animation_Definition *adef)
+void create_brass_entity(vec2 position, Animation_Definition *adef, i32 z_index)
 {
-    Entity *entity = entity_create(position, (vec2){3, 3}, (vec2){100, 100}, 0, 0, NULL, NULL);
+    Entity *entity = entity_create(position, (vec2){3, 3}, (vec2){0, 0}, 0, 0, NULL, NULL);
     entity->animation = animation_create(adef, true);
+    entity->animation->z_index = z_index;
     entity->movement_script = brass_movement;
 }
 
 void brass_movement(Entity *entity)
 {
-    const brass_bounce_distance = 20;
+    const brass_bounce_distance = 10;
+
     entity->body->acceleration[1] = -25;
-    if (entity->body->aabb.position[1] < entity->starting_position[1] - PLAYER_HEIGHT) {
+
+    if (entity->body->aabb.position[1] < entity->starting_position[1] - 0.6 * PLAYER_HEIGHT) {
         bool bounce_left = get_random_int_in_range(0, 1);
         entity->body->velocity[0] = bounce_left ? 100 : -100;
         entity->body->velocity[1] = 100;
     }
+
     if (entity->body->aabb.position[0] > entity->starting_position[0] + brass_bounce_distance ||
         entity->body->aabb.position[0] < entity->starting_position[0] - brass_bounce_distance) {
         entity->is_active = false; // entity will be destroyed next frame

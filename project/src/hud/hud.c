@@ -182,49 +182,49 @@ void render_health(SDL_Window *window, u32 texture_slots[32], Player *player, ve
 {
     i16 health = player->health;
     if (health == 100) {
-        animation_render(anim_health_cross_0, window, position, 0, color, texture_slots);
+        animation_render(anim_health_cross_0, window, position, color, texture_slots);
     }
     else if (health > 93) {
-        animation_render(anim_health_cross_1, window, position, 0, color, texture_slots);
+        animation_render(anim_health_cross_1, window, position, color, texture_slots);
     }
     else if (health > 86) {
-        animation_render(anim_health_cross_2, window, position, 0, color, texture_slots);
+        animation_render(anim_health_cross_2, window, position, color, texture_slots);
     }
     else if (health > 79) {
-        animation_render(anim_health_cross_3, window, position, 0, color, texture_slots);
+        animation_render(anim_health_cross_3, window, position, color, texture_slots);
     }
     else if (health > 72) {
-        animation_render(anim_health_cross_4, window, position, 0, color, texture_slots);
+        animation_render(anim_health_cross_4, window, position, color, texture_slots);
     }
     else if (health > 65) {
-        animation_render(anim_health_cross_5, window, position, 0, color, texture_slots);
+        animation_render(anim_health_cross_5, window, position, color, texture_slots);
     }
     else if (health > 58) {
-        animation_render(anim_health_cross_6, window, position, 0, color, texture_slots);
+        animation_render(anim_health_cross_6, window, position, color, texture_slots);
     }
     else if (health > 51) {
-        animation_render(anim_health_cross_7, window, position, 0, color, texture_slots);
+        animation_render(anim_health_cross_7, window, position, color, texture_slots);
     }
     else if (health > 44) {
-        animation_render(anim_health_cross_8, window, position, 0, color, texture_slots);
+        animation_render(anim_health_cross_8, window, position, color, texture_slots);
     }
     else if (health > 37) {
-        animation_render(anim_health_cross_9, window, position, 0, color, texture_slots);
+        animation_render(anim_health_cross_9, window, position, color, texture_slots);
     }
     else if (health > 30) {
-        animation_render(anim_health_cross_10, window, position, 0, color, texture_slots);
+        animation_render(anim_health_cross_10, window, position, color, texture_slots);
     }
     else if (health > 23) {
-        animation_render(anim_health_cross_11, window, position, 0, color, texture_slots);
+        animation_render(anim_health_cross_11, window, position, color, texture_slots);
     }
     else if (health > 16) {
-        animation_render(anim_health_cross_12, window, position, 0, color, texture_slots);
+        animation_render(anim_health_cross_12, window, position, color, texture_slots);
     }
     else if (health > 0) {
-        animation_render(anim_health_cross_13, window, position, 0, color, texture_slots);
+        animation_render(anim_health_cross_13, window, position, color, texture_slots);
     }
     else if (health <= 0) {
-        animation_render(anim_health_cross_14, window, position, 0, color, texture_slots);
+        animation_render(anim_health_cross_14, window, position, color, texture_slots);
     }
 }
 
@@ -244,7 +244,7 @@ u16 render_ammo_digit(SDL_Window *window, u32 texture_slots[32], vec2 position, 
     if (current_ammo_fraction <= AMMO_BLINKING_THRESHOLD)
         strcat(digit_anim_name, "_blinking");
     Animation *digit_anim = get(ammo_anim_map, digit_anim_name);
-    animation_render(digit_anim, window, position, 0, color, texture_slots);
+    animation_render(digit_anim, window, position, color, texture_slots);
     free(digit_anim_name);
 
     // remove the digit we just rendered and return
@@ -266,7 +266,7 @@ void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player, vec2
     // render the player's weapon's ammo icon before numbers if on left side
     // of the screen
     if (player->weapon->hud_ammo_icon && player->is_left_player) {
-        animation_render(player->weapon->hud_ammo_icon, window, position, 0, color, texture_slots);
+        animation_render(player->weapon->hud_ammo_icon, window, position, color, texture_slots);
         position[0] -= DIGIT_WIDTH + ICON_SPACE; // add a bit of space between
                                                  // icon and the numbers
     }
@@ -286,12 +286,12 @@ void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player, vec2
 
     // add trailing 0's to get it up to 3 digits
     while (reserve_digits < 3) {
-        animation_render(anim_ammo_0, window, position, 0, color, texture_slots);
+        animation_render(anim_ammo_0, window, position, color, texture_slots);
         position[0] -= DIGIT_WIDTH;
         reserve_digits++;
     }
     // add slash in between reserve and capacity
-    animation_render(anim_forward_slash, window, position, 0, color, texture_slots);
+    animation_render(anim_forward_slash, window, position, color, texture_slots);
     position[0] -= DIGIT_WIDTH;
     // repeat logic for capacity attribute
     while (capacity > 0) {
@@ -301,7 +301,7 @@ void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player, vec2
     }
     while (capacity_digits < 3) {
         // for capacity, make the trailing 0's blink when appropriate
-        animation_render(current_ammo_fraction <= AMMO_BLINKING_THRESHOLD ? anim_ammo_0_blinking : anim_ammo_0, window, position, 0, color, texture_slots);
+        animation_render(current_ammo_fraction <= AMMO_BLINKING_THRESHOLD ? anim_ammo_0_blinking : anim_ammo_0, window, position, color, texture_slots);
         position[0] -= DIGIT_WIDTH;
         capacity_digits++;
     }
@@ -310,7 +310,7 @@ void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player, vec2
     // of the screen
     if (player->weapon->hud_ammo_icon && !player->is_left_player) {
         position[0] -= ICON_SPACE;
-        animation_render(player->weapon->hud_ammo_icon, window, position, 0, color, texture_slots);
+        animation_render(player->weapon->hud_ammo_icon, window, position, color, texture_slots);
         position[0] -= DIGIT_WIDTH; // add a bit of space between icon
                                     // and the numbers
     }
@@ -347,13 +347,13 @@ void render_hud(SDL_Window *window, u32 texture_slots[32], vec4 color)
     // render player one displays (health + ammo + crosshair)
     // render_health(window, texture_slots, player_one, (vec2){50, (window_height * DEFAULT_RENDER_SCALE_FACTOR) - 50}, color);
     // render_ammo(window, texture_slots, player_one, (vec2){0.5 * DIGIT_WIDTH + DIGIT_WIDTH * 7 + ICON_SPACE, 0.5 * DIGIT_HEIGHT}, color);
-    animation_render(player_one->crosshair->animation, window, player_one->crosshair->body->aabb.position, 0, color, texture_slots);
+    animation_render(player_one->crosshair->animation, window, player_one->crosshair->body->aabb.position, color, texture_slots);
 
     // render player two displays if relevant
     if (SPLIT_SCREEN) {
         // render_health(window, texture_slots, player_two, (vec2){render_width - 50, render_height - 50}, color);
         // render_ammo(window, texture_slots, player_two, (vec2){render_width - 0.5 * DIGIT_WIDTH, 0.5 * DIGIT_HEIGHT}, color);
-        animation_render(player_two->crosshair->animation, window, player_two->crosshair->body->aabb.position, 0, color, texture_slots);
+        animation_render(player_two->crosshair->animation, window, player_two->crosshair->body->aabb.position, color, texture_slots);
 
         // render viewport divider
         render_sprite_sheet_frame(

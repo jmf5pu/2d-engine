@@ -44,12 +44,12 @@ void render_player_anims(Player *player, SDL_Window *window, u32 texture_slots[3
     if (player) {
         // player is facing up, render weapon "under" player
         if (player->crosshair_angle > M_PI / 4 && player->crosshair_angle < 3 * M_PI / 4) {
-            animation_render(player->weapon->character_anim, window, player->weapon->position, 0, color, texture_slots);
-            animation_render(player->entity->animation, window, player->entity->body->aabb.position, 0, color, texture_slots);
+            animation_render(player->weapon->character_anim, window, player->weapon->position, color, texture_slots);
+            animation_render(player->entity->animation, window, player->entity->body->aabb.position, color, texture_slots);
         }
         else {
-            animation_render(player->entity->animation, window, player->entity->body->aabb.position, 0, color, texture_slots);
-            animation_render(player->weapon->character_anim, window, player->weapon->position, 0, color, texture_slots);
+            animation_render(player->entity->animation, window, player->entity->body->aabb.position, color, texture_slots);
+            animation_render(player->weapon->character_anim, window, player->weapon->position, color, texture_slots);
         }
     }
     else
@@ -71,7 +71,7 @@ void render_all_non_player_entities_with_animations(SDL_Window *window, u32 text
         }
 
         // render the entity's animation
-        animation_render(entity->animation, window, entity->body->aabb.position, 0, color, texture_slots);
+        animation_render(entity->animation, window, entity->body->aabb.position, color, texture_slots);
     }
 }
 

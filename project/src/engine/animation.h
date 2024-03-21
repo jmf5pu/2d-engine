@@ -24,6 +24,7 @@ typedef struct animation {
     bool does_loop;
     bool is_active;
     bool is_flipped;
+    i32 z_index;
 } Animation;
 
 void animation_init(void);
@@ -32,7 +33,7 @@ Animation *animation_create(Animation_Definition *adef, bool does_loop);
 void animation_destroy(Animation *animation);
 Animation *animation_get(usize id);
 void animation_update(f32 dt);
-void animation_render(Animation *animation, SDL_Window *window, vec2 position, i32 z_index, vec4 color, u32 texture_slots[32]);
+void animation_render(Animation *animation, SDL_Window *window, vec2 position, vec4 color, u32 texture_slots[32]);
 void clear_animation_list(void);
 void clear_animation_definition_list(void);
 

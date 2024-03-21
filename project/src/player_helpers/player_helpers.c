@@ -594,8 +594,17 @@ void handle_player_shooting(Player *player, Key_State shoot)
         vec2 brass_offset = {0, 0};
         get_xy_components_from_vector(BRASS_EJECT_DISTANCE_FROM_PLAYER, player->crosshair_angle, brass_offset);
         vec2_add(brass_position, brass_position, brass_offset);
-        create_brass_entity(brass_position, adef_brass_falling_1);
+        create_brass_entity(brass_position, adef_brass_falling_1, get_player_brass_z_index(player->crosshair_angle));
     }
+}
+
+/// @brief helper to get the z_index of brass entities based on player direction. If the player is facing up, we want to render the brass underneath the player sprite
+/// @param angle player to crosshair angle
+/// @return z index for the brass entity (1 or -1)
+static i32 get_player_brass_z_index(f32 angle)
+{
+    bool player_facing_up = angle > M_PI / 4 && angle < 3 * M_PI / 4;
+    return player_facing_up ? -1 : 1;
 }
 
 /// @brief Applies the player's input state to other relevant members, such as moving, shooting, and reloading states
