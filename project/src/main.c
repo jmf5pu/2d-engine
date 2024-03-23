@@ -51,8 +51,8 @@ int main(int argc, char *argv[])
     SDL_Window *window = render_init();
     physics_init();
     entity_init();
-    animation_init(); // creates animation storage
-    init_all_anims(); // initializes all our animations
+    animation_init();        // creates animation storage
+    init_all_player_anims(); // initializes all our animations
     game_state = GS_RUNNING;
     init_weapon_types();
     init_map(&map);

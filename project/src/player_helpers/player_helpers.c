@@ -6,6 +6,7 @@
 #include "../engine/util.h"
 #include "../main_helpers/main_helpers.h"
 #include "../weapon_types/weapon_types.h"
+#include "player_anims.h"
 #include <math.h>
 
 // declare players
@@ -14,7 +15,6 @@ Player *player_two;
 
 // animation hash maps
 static Hash_Map *bullet_adef_map;
-static Hash_Map *player_anim_map;
 static Hash_Map *weapon_anim_map;
 
 // init bullet animation hash_map
@@ -22,17 +22,6 @@ void init_bullet_adef_hashmap()
 {
     bullet_adef_map = create_hash_map(BULLET_ADEF_COUNT);
     insert(bullet_adef_map, "bullet_0", adef_bullet_0);
-}
-
-// init player animation hash_map
-void init_player_anim_hashmap()
-{
-    player_anim_map = create_hash_map(PLAYER_ANIM_COUNT);
-
-    insert(player_anim_map, "player_mock_1", anim_player_mock_1);
-    insert(player_anim_map, "player_mock_2", anim_player_mock_2);
-    insert(player_anim_map, "player_mock_3", anim_player_mock_3);
-    insert(player_anim_map, "player_mock_4", anim_player_mock_4);
 }
 
 void init_weapon_anim_hashmap()
@@ -58,8 +47,10 @@ void init_weapon_anim_hashmap()
 }
 
 // sets up animations for players and bullets
-void init_all_anims()
+void init_all_player_anims(void)
 {
+    init_player_character_anims();
+
     // TODO: separate player and non-player anims to separate methods
     // init placeholder anims
     render_sprite_sheet_init(&sprite_sheet_missing_anim_placeholder, "assets/question_mark.png", 36, 36);
@@ -77,21 +68,6 @@ void init_all_anims()
     // init bullet anims
     render_sprite_sheet_init(&sprite_sheet_bullet_0, "assets/wip/bullet_v2.png", 4, 4);
     adef_bullet_0 = animation_definition_create(&sprite_sheet_bullet_0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-
-    // NEW PLAYER ANIMS 3/4/24:
-    render_sprite_sheet_init(&sprite_sheet_player_mock_1, "assets/wip/player_mock_v3_0.png", 20, 24);
-    adef_player_mock_1 = animation_definition_create(&sprite_sheet_player_mock_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_player_mock_1 = animation_create(adef_player_mock_1, false);
-    render_sprite_sheet_init(&sprite_sheet_player_mock_2, "assets/wip/player_mock_v3_1.png", 20, 24);
-    adef_player_mock_2 = animation_definition_create(&sprite_sheet_player_mock_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_player_mock_2 = animation_create(adef_player_mock_2, false);
-    render_sprite_sheet_init(&sprite_sheet_player_mock_3, "assets/wip/player_mock_v3_2.png", 20, 24);
-    adef_player_mock_3 = animation_definition_create(&sprite_sheet_player_mock_3, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_player_mock_3 = animation_create(adef_player_mock_3, false);
-    render_sprite_sheet_init(&sprite_sheet_player_mock_4, "assets/wip/player_mock_v3_3.png", 20, 24);
-    adef_player_mock_4 = animation_definition_create(&sprite_sheet_player_mock_4, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_player_mock_4 = animation_create(adef_player_mock_4, false);
-    // END NEW PLAYER ANIMS
 
     // NEW WEAPON ANIMS 3/8/24:
     render_sprite_sheet_init(&sprite_sheet_m16_with_hands0, "assets/wip/m16_360_with_hands0.png", 25, 25);
@@ -160,8 +136,8 @@ void init_all_anims()
     // END NEW WEAPON ANIMS
 
     init_bullet_adef_hashmap();
-    init_player_anim_hashmap();
     init_weapon_anim_hashmap();
+    init_player_character_anim_hashmap();
 }
 // TODO: move everyone above this (hashmap related) to a separate file
 
@@ -450,48 +426,6 @@ void get_direction_from_angle(f32 angle, char *direction_result)
 
     else
         printf("got unexpected crosshair angle: %f\n", angle);
-}
-
-static void update_player_character_anim(Player *player)
-{
-    // cache old anim to check if we are SWITCHING anims
-    Animation *prev_anim = player->entity->animation;
-
-    char *anim_name = calloc(50, sizeof(char));
-    strcat(anim_name, "player_mock_");
-
-    char *direction;
-
-    // choose correct animation for player's direction
-    if (player->crosshair_angle > -1 * M_PI / 4 && player->crosshair_angle <= M_PI / 4) {
-        direction = "1";
-    }
-    else if (player->crosshair_angle > M_PI / 4 && player->crosshair_angle <= 3 * M_PI / 4) {
-        direction = "2";
-    }
-    else if (player->crosshair_angle > 3 * M_PI / 4 || player->crosshair_angle <= -3 * M_PI / 4) {
-        direction = "3";
-    }
-    else if (player->crosshair_angle > -3 * M_PI / 4 && player->crosshair_angle < -1 * M_PI / 4) {
-        direction = "4";
-    }
-    else {
-        printf("got unexpected crosshair angle: %f\n", player->crosshair_angle);
-    }
-    strcat(anim_name, direction);
-    strcat(anim_name, "\0");
-
-    Animation *player_anim = get(player_anim_map, anim_name);
-    if (player_anim)
-        player->entity->animation = player_anim;
-    else
-        player->entity->animation = missing_anim_placeholder;
-
-    // ensure we are starting new anims at the first frame
-    if (player->entity->animation != prev_anim)
-        player->entity->animation->current_frame_index = 0;
-
-    free(anim_name);
 }
 
 static void update_player_weapon_anim(Player *player)

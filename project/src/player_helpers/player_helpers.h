@@ -318,22 +318,6 @@ Animation *p2_anim_soldier_1_m44_brewster_running_front;
 Animation *p2_anim_soldier_1_m44_brewster_spawning_side;
 Animation *p2_anim_soldier_1_m44_brewster_dying_side;
 
-// NEW PLAYER STRUCTS 3/4/24:
-Sprite_Sheet sprite_sheet_player_mock_1;
-Sprite_Sheet sprite_sheet_player_mock_2;
-Sprite_Sheet sprite_sheet_player_mock_3;
-Sprite_Sheet sprite_sheet_player_mock_4;
-
-Animation_Definition *adef_player_mock_1;
-Animation_Definition *adef_player_mock_2;
-Animation_Definition *adef_player_mock_3;
-Animation_Definition *adef_player_mock_4;
-
-Animation *anim_player_mock_1;
-Animation *anim_player_mock_2;
-Animation *anim_player_mock_3;
-Animation *anim_player_mock_4;
-
 Sprite_Sheet sprite_sheet_m16_with_hands0;
 Sprite_Sheet sprite_sheet_m16_with_hands1;
 Sprite_Sheet sprite_sheet_m16_with_hands2;
@@ -397,8 +381,7 @@ Animation *anim_bullet_1_horizontal;
 Animation *anim_bullet_1_vertical;
 
 void init_bullet_anim_hashmap(void);
-void init_player_anim_hashmap(void);
-void init_all_anims(void);
+void init_all_player_anims(void);
 void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 despawn_time, f32 spawn_delay, f32 spawn_time, bool is_left_player);
 void spawn_player(Player *player, Weapon_Type *starting_weapon);
 void update_player_status(Player *player);
@@ -421,7 +404,6 @@ void maintain_controller_keypresses(Player *player);
 void maintain_controller_keypress(Key_State *key_state);
 
 void update_player_anims(Player *player);
-static void update_player_character_anim(Player *player);
 static void update_player_weapon_anim(Player *player);
 static void update_player_crosshair_angle(Player *player);
 static void update_player_weapon_position(Player *player);
