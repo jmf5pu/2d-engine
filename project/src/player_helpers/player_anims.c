@@ -67,16 +67,16 @@ void init_player_character_anim_hashmap(void)
 /// @param
 void init_player_character_anims(void)
 {
-    render_sprite_sheet_init(&sprite_sheet_player_skinhead_idle_1, "assets/wip/player_skinhead_idle_0.png", 20, 24);
+    render_sprite_sheet_init(&sprite_sheet_player_skinhead_idle_1, "assets/wip/player_skinhead_idle_0.png", 18, 22);
     adef_player_skinhead_idle_1 = animation_definition_create(&sprite_sheet_player_skinhead_idle_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_player_skinhead_idle_1 = animation_create(adef_player_skinhead_idle_1, false);
-    render_sprite_sheet_init(&sprite_sheet_player_skinhead_idle_2, "assets/wip/player_skinhead_idle_1.png", 20, 24);
+    render_sprite_sheet_init(&sprite_sheet_player_skinhead_idle_2, "assets/wip/player_skinhead_idle_1.png", 18, 22);
     adef_player_skinhead_idle_2 = animation_definition_create(&sprite_sheet_player_skinhead_idle_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_player_skinhead_idle_2 = animation_create(adef_player_skinhead_idle_2, false);
-    render_sprite_sheet_init(&sprite_sheet_player_skinhead_idle_3, "assets/wip/player_skinhead_idle_2.png", 20, 24);
+    render_sprite_sheet_init(&sprite_sheet_player_skinhead_idle_3, "assets/wip/player_skinhead_idle_2.png", 18, 22);
     adef_player_skinhead_idle_3 = animation_definition_create(&sprite_sheet_player_skinhead_idle_3, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_player_skinhead_idle_3 = animation_create(adef_player_skinhead_idle_3, false);
-    render_sprite_sheet_init(&sprite_sheet_player_skinhead_idle_4, "assets/wip/player_skinhead_idle_3.png", 20, 24);
+    render_sprite_sheet_init(&sprite_sheet_player_skinhead_idle_4, "assets/wip/player_skinhead_idle_3.png", 18, 22);
     adef_player_skinhead_idle_4 = animation_definition_create(&sprite_sheet_player_skinhead_idle_4, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_player_skinhead_idle_4 = animation_create(adef_player_skinhead_idle_4, false);
 }
