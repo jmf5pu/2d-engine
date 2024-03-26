@@ -2,7 +2,6 @@
 #include "../engine/hash_map.h"
 #include "../player_helpers/player_helpers.h"
 
-#define PLAYER_HEIGHT 22 // TODO: put this somewhere else
 #define GRAVITY_VELOCITY -7
 
 static Hash_Map *explosion_adef_map;
@@ -12,6 +11,7 @@ void init_effects(void)
     init_brass_animation_definitions();
     init_explosion_animation_definitions();
     init_explosion_adef_hashmap();
+    init_character_shadow_anim();
 }
 
 void create_muzzle_flash_entity(f32 angle, vec2 position, vec2 size, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static)
@@ -155,4 +155,11 @@ void init_brass_animation_definitions(void)
 {
     render_sprite_sheet_init(&sprite_sheet_brass_falling_1, "assets/wip/brass_falling_1.png", 3, 3);
     adef_brass_falling_1 = animation_definition_create(&sprite_sheet_brass_falling_1, (f32[]){0.06, 0.06, 0.06, 0.06}, (u8[]){0, 0, 0, 0}, (u8[]){0, 1, 2, 3}, 4);
+}
+
+void init_character_shadow_anim(void)
+{
+    render_sprite_sheet_init(&sprite_sheet_character_shadow, "assets/wip/character_shadow.png", 16, 5);
+    adef_character_shadow = animation_definition_create(&sprite_sheet_character_shadow, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_character_shadow = animation_create(adef_character_shadow, false);
 }

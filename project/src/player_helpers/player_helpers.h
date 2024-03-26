@@ -16,6 +16,7 @@
 #define MIN(x, y) (((x) < (y)) ? (x) : (y)) // used in reloading calculations
 #define BULLET_DISTANCE_FROM_PLAYER 40
 #define MUZZLE_FLASH_DISTANCE_FROM_PLAYER 25
+#define PLAYER_HEIGHT 22 // used for shadow position and brass bounce
 #define BRASS_EJECT_DISTANCE_FROM_PLAYER 5
 #define INVERT_Y_AXIS true // if true, joystick up motion will correspond to positive y axis value
 #define CROSSHAIR_SIZE 11
@@ -389,6 +390,7 @@ void handle_player_shooting(Player *player, Key_State shoot);
 void handle_player_input(Player *player);
 void free_players(void);
 void player_per_frame_updates(Player *player);
+void render_player_anims(Player *player, SDL_Window *window, u32 texture_slots[32], vec4 color);
 
 void assign_player_input_devices(void);
 void update_player_input_state_via_controller(Player *player, SDL_Event *event);

@@ -34,28 +34,6 @@ bool entity_is_player_or_crosshair(Entity *entity)
     return is_player || is_crosshair;
 }
 
-/// @brief Renders the player and player weapon animations. Called each frame. Rendering order depends on the player's direction (crosshair_angle)
-/// @param player active player
-/// @param window
-/// @param texture_slots
-/// @param color
-void render_player_anims(Player *player, SDL_Window *window, u32 texture_slots[32], vec4 color)
-{
-    if (player) {
-        // player is facing up, render weapon "under" player
-        if (player->crosshair_angle > M_PI / 4 && player->crosshair_angle < 3 * M_PI / 4) {
-            animation_render(player->weapon->character_anim, window, player->weapon->position, color, texture_slots);
-            animation_render(player->entity->animation, window, player->entity->body->aabb.position, color, texture_slots);
-        }
-        else {
-            animation_render(player->entity->animation, window, player->entity->body->aabb.position, color, texture_slots);
-            animation_render(player->weapon->character_anim, window, player->weapon->position, color, texture_slots);
-        }
-    }
-    else
-        printf("player must be defined to update corresponding anims");
-}
-
 void render_all_non_player_entities_with_animations(SDL_Window *window, u32 texture_slots[32], vec4 color)
 {
     for (int j = (int)entity_count() - 1; j >= 0; --j) {

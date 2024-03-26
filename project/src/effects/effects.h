@@ -5,6 +5,10 @@
 #define EXPLOSION_COUNT 1
 #define ANGLES 16
 
+Sprite_Sheet sprite_sheet_character_shadow;
+Animation_Definition *adef_character_shadow;
+Animation *anim_character_shadow;
+
 Sprite_Sheet sprite_sheet_brass_falling_1;
 Animation_Definition *adef_brass_falling_1;
 
@@ -58,6 +62,7 @@ Animation_Definition *adef_muzzle_flash_15;
 
 void init_brass_animation_definitions(void);
 void init_explosion_animation_definitions(void);
+void init_character_shadow_anim(void);
 void init_explosion_adef_hashmap(void);
 void create_muzzle_flash_entity(f32 angle, vec2 position, vec2 size, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static);
 void create_brass_entity(vec2 position, Animation_Definition *adef, i32 z_index);
