@@ -39,8 +39,6 @@ void update_player_character_anim(Player *player)
     strcat(anim_name, direction);
     strcat(anim_name, "\0");
 
-    printf("anim_name: %s\n", anim_name);
-
     // select the correct anim from hashmap or use the placeholder
     Animation *player_anim = get(player_anim_map, anim_name);
     if (player_anim)
@@ -64,7 +62,9 @@ void init_player_character_anim_hashmap(void)
     insert(player_anim_map, "player_skinhead_idle_3", anim_player_skinhead_idle_3);
     insert(player_anim_map, "player_skinhead_idle_4", anim_player_skinhead_idle_4);
     insert(player_anim_map, "player_skinhead_moving_1", anim_player_skinhead_moving_1);
+    insert(player_anim_map, "player_skinhead_moving_2", anim_player_skinhead_moving_2);
     insert(player_anim_map, "player_skinhead_moving_3", anim_player_skinhead_moving_3);
+    insert(player_anim_map, "player_skinhead_moving_4", anim_player_skinhead_moving_4);
 }
 
 /// @brief libresprite automatically appends each image with an int starting at 0, so the variables names are confusingly off by 1 :/
@@ -88,14 +88,16 @@ void init_player_character_anims(void)
     adef_player_skinhead_moving_1 =
         animation_definition_create(&sprite_sheet_player_skinhead_moving_1, (f32[]){0.07, 0.07, 0.07, 0.07, 0.07, 0.07}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
     anim_player_skinhead_moving_1 = animation_create(adef_player_skinhead_moving_1, true);
-    // render_sprite_sheet_init(&sprite_sheet_player_skinhead_moving_2, "assets/wip/player_skinhead_moving_2.png", 18, 26);
-    // adef_player_skinhead_moving_2 = animation_definition_create(&sprite_sheet_player_skinhead_moving_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    // anim_player_skinhead_moving_2 = animation_create(adef_player_skinhead_moving_2, false);
+    render_sprite_sheet_init(&sprite_sheet_player_skinhead_moving_2, "assets/wip/player_skinhead_moving_2.png", 18, 26);
+    adef_player_skinhead_moving_2 =
+        animation_definition_create(&sprite_sheet_player_skinhead_moving_2, (f32[]){0.07, 0.07, 0.07, 0.07, 0.07, 0.07}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    anim_player_skinhead_moving_2 = animation_create(adef_player_skinhead_moving_2, true);
     render_sprite_sheet_init(&sprite_sheet_player_skinhead_moving_3, "assets/wip/player_skinhead_moving_3.png", 18, 26);
     adef_player_skinhead_moving_3 =
         animation_definition_create(&sprite_sheet_player_skinhead_moving_3, (f32[]){0.07, 0.07, 0.07, 0.07, 0.07, 0.07}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
     anim_player_skinhead_moving_3 = animation_create(adef_player_skinhead_moving_3, true);
-    // render_sprite_sheet_init(&sprite_sheet_player_skinhead_moving_4, "assets/wip/player_skinhead_moving_4.png", 18, 26);
-    // adef_player_skinhead_moving_4 = animation_definition_create(&sprite_sheet_player_skinhead_moving_4, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    // anim_player_skinhead_moving_4 = animation_create(adef_player_skinhead_moving_4, false);
+    render_sprite_sheet_init(&sprite_sheet_player_skinhead_moving_4, "assets/wip/player_skinhead_moving_4.png", 18, 26);
+    adef_player_skinhead_moving_4 =
+        animation_definition_create(&sprite_sheet_player_skinhead_moving_4, (f32[]){0.07, 0.07, 0.07, 0.07, 0.07, 0.07}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    anim_player_skinhead_moving_4 = animation_create(adef_player_skinhead_moving_4, true);
 }

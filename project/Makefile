@@ -20,6 +20,8 @@ CFLAGS = /Zi /I
 
 all: clean build run
 
+prep: clean format
+
 clean:
 	rm -f *.ilk *.obj *.pdb *.exe mygame.lib mygame.exp
 
