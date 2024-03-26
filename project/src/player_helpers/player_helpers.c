@@ -367,7 +367,10 @@ void update_player_anims(Player *player)
 void update_player_weapon_position(Player *player)
 {
     vec2 weapon_position = {0, 0};
-    vec2_dup(weapon_position, player->entity->body->aabb.position);
+    vec2_add(
+        weapon_position,
+        player->entity->body->aabb.position,
+        (vec2){0, CHARACTER_ARMS_Y_OFFSET_FROM_CENTER}); // subtract some from the player pos as the hands are lower in the sprite than the center
     vec2 offset = {0, 0};
     get_xy_components_from_vector(CHARACTER_WEAPON_OFFSET, player->crosshair_angle, offset);
     vec2_add(player->weapon->position, weapon_position, offset);
@@ -519,6 +522,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
         vec2 muzzle_flash_position = {0, 0};
         vec2 muzzle_flash_offset = {0, 0};
         get_xy_components_from_vector(MUZZLE_FLASH_DISTANCE_FROM_PLAYER, player->crosshair_angle, muzzle_flash_offset);
+        vec2_add(muzzle_flash_offset, muzzle_flash_offset, (vec2){0, CHARACTER_ARMS_Y_OFFSET_FROM_CENTER});
         vec2_add(muzzle_flash_position, player->relative_position, muzzle_flash_offset);
         create_muzzle_flash_entity(player->crosshair_angle, muzzle_flash_position, (vec2){15, 15}, 0, 0, NULL, NULL);
 
@@ -528,6 +532,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
         vec2 brass_offset = {0, 0};
         get_xy_components_from_vector(BRASS_EJECT_DISTANCE_FROM_PLAYER, player->crosshair_angle, brass_offset);
         vec2_add(brass_position, brass_position, brass_offset);
+        vec2_add(brass_position, brass_position, (vec2){0, CHARACTER_ARMS_Y_OFFSET_FROM_CENTER});
         create_brass_entity(brass_position, adef_brass_falling_1, get_player_brass_z_index(player->crosshair_angle));
     }
 }

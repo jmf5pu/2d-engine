@@ -13,15 +13,28 @@ Sprite_Sheet sprite_sheet_player_skinhead_idle_1;
 Sprite_Sheet sprite_sheet_player_skinhead_idle_2;
 Sprite_Sheet sprite_sheet_player_skinhead_idle_3;
 Sprite_Sheet sprite_sheet_player_skinhead_idle_4;
+Sprite_Sheet sprite_sheet_player_skinhead_moving_1;
+Sprite_Sheet sprite_sheet_player_skinhead_moving_2;
+Sprite_Sheet sprite_sheet_player_skinhead_moving_3;
+Sprite_Sheet sprite_sheet_player_skinhead_moving_4;
 
 Animation_Definition *adef_player_skinhead_idle_1;
 Animation_Definition *adef_player_skinhead_idle_2;
 Animation_Definition *adef_player_skinhead_idle_3;
 Animation_Definition *adef_player_skinhead_idle_4;
+Animation_Definition *adef_player_skinhead_moving_1;
+Animation_Definition *adef_player_skinhead_moving_2;
+Animation_Definition *adef_player_skinhead_moving_3;
+Animation_Definition *adef_player_skinhead_moving_4;
 
+// TODO: will need to duplicate these for player two later on.
 Animation *anim_player_skinhead_idle_1;
 Animation *anim_player_skinhead_idle_2;
 Animation *anim_player_skinhead_idle_3;
 Animation *anim_player_skinhead_idle_4;
+Animation *anim_player_skinhead_moving_1;
+Animation *anim_player_skinhead_moving_2;
+Animation *anim_player_skinhead_moving_3;
+Animation *anim_player_skinhead_moving_4;
 
 #endif

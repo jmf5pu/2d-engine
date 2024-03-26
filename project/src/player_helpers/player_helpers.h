@@ -19,8 +19,8 @@
 #define BRASS_EJECT_DISTANCE_FROM_PLAYER 5
 #define INVERT_Y_AXIS true // if true, joystick up motion will correspond to positive y axis value
 #define CROSSHAIR_SIZE 11
-#define CHARACTER_WEAPON_OFFSET 2
-
+#define CHARACTER_WEAPON_OFFSET 2              // how far away the weapon should be from the character at any given angle
+#define CHARACTER_ARMS_Y_OFFSET_FROM_CENTER -3 // how far the arms depicted in the sprite are off from the center in terms of y
 #define MAX_PLAYER_MOVEMENT_SPEED 250
 #define MAX_CROSSHAIR_MOVEMENT_SPEED 600
 
