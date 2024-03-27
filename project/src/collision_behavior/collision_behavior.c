@@ -7,7 +7,7 @@
 #include <assert.h>
 
 const u8 enemy_mask = COLLISION_LAYER_PLAYER | COLLISION_LAYER_TERRAIN | COLLISION_LAYER_BULLET;
-const u8 player_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRAIN | COLLISION_LAYER_BULLET | COLLISION_LAYER_PICKUP;
+const u8 player_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRAIN | COLLISION_LAYER_PICKUP;
 const u8 bullet_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRAIN;
 const u8 pickup_mask = COLLISION_LAYER_PLAYER;
 const u8 crosshair_mask = 0;
@@ -62,7 +62,6 @@ void player_on_hit(Body *self, Body *other, Hit hit)
             player->weapon->max_fire_rate = m44->max_fire_rate;
             player->weapon->damage = m44->damage;
             player->weapon->bullet_velocity = m44->bullet_velocity;
-            player->weapon->aiming_scale_factor = m44->aiming_scale_factor;
             player->weapon->frames_since_last_shot = 0;
             player->weapon->ready_to_fire = true;
         }

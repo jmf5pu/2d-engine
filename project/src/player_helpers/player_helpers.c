@@ -1,197 +1,229 @@
 #include "player_helpers.h"
 #include "../collision_behavior/collision_behavior.h"
+#include "../effects/effects.h"
 #include "../engine/camera.h"
 #include "../engine/global.h"
 #include "../engine/util.h"
+#include "../main_helpers/main_helpers.h"
 #include "../weapon_types/weapon_types.h"
+#include "player_anims.h"
 #include <math.h>
 
 // declare players
 Player *player_one;
 Player *player_two;
 
+// animation hash maps
+static Hash_Map *bullet_adef_map;
+static Hash_Map *weapon_adef_map;
+
 // init bullet animation hash_map
-void init_bullet_anim_hashmap()
+void init_bullet_adef_hashmap(void)
 {
-    bullet_anim_map = create_hash_map(BULLET_ANIM_COUNT);
-    insert(bullet_anim_map, "bullet_0", anim_bullet_0);
-    insert(bullet_anim_map, "bullet_1", anim_bullet_1);
-    insert(bullet_anim_map, "bullet_2", anim_bullet_2);
-    insert(bullet_anim_map, "bullet_3", anim_bullet_3);
-    insert(bullet_anim_map, "bullet_4", anim_bullet_4);
-    insert(bullet_anim_map, "bullet_5", anim_bullet_5);
-    insert(bullet_anim_map, "bullet_6", anim_bullet_6);
-    insert(bullet_anim_map, "bullet_7", anim_bullet_7);
-    insert(bullet_anim_map, "bullet_8", anim_bullet_8);
-    insert(bullet_anim_map, "bullet_9", anim_bullet_9);
-    insert(bullet_anim_map, "bullet_10", anim_bullet_10);
-    insert(bullet_anim_map, "bullet_11", anim_bullet_11);
-    insert(bullet_anim_map, "bullet_12", anim_bullet_12);
-    insert(bullet_anim_map, "bullet_13", anim_bullet_13);
-    insert(bullet_anim_map, "bullet_14", anim_bullet_14);
-    insert(bullet_anim_map, "bullet_15", anim_bullet_15);
+    bullet_adef_map = create_hash_map(BULLET_ADEF_COUNT);
+    insert(bullet_adef_map, "bullet_0", adef_bullet_0);
 }
 
-// init player animation hash_map
-void init_player_anim_hashmap()
+void init_weapon_adef_hashmap(void)
 {
-    player_anim_map = create_hash_map(PLAYER_ANIM_COUNT);
+    weapon_adef_map = create_hash_map(WEAPON_STATES * WEAPON_COUNT * ANGLES);
 
-    // new player stuff 11/12
-    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_right", p1_anim_soldier_purple_base_idle_right);
-    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_left", p1_anim_soldier_purple_base_idle_left);
-    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_down", p1_anim_soldier_purple_base_idle_down);
-    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_down_left", p1_anim_soldier_purple_base_idle_down_left);
-    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_down_right", p1_anim_soldier_purple_base_idle_down_right);
-    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_up", p1_anim_soldier_purple_base_idle_up);
-    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_up_left", p1_anim_soldier_purple_base_idle_up_left);
-    insert(player_anim_map, "p1_anim_soldier_purple_base_idle_up_right", p1_anim_soldier_purple_base_idle_up_right);
+    insert(weapon_adef_map, "m16_static_0", adef_m16_static_0);
+    insert(weapon_adef_map, "m16_static_1", adef_m16_static_1);
+    insert(weapon_adef_map, "m16_static_2", adef_m16_static_2);
+    insert(weapon_adef_map, "m16_static_3", adef_m16_static_3);
+    insert(weapon_adef_map, "m16_static_4", adef_m16_static_4);
+    insert(weapon_adef_map, "m16_static_5", adef_m16_static_5);
+    insert(weapon_adef_map, "m16_static_6", adef_m16_static_6);
+    insert(weapon_adef_map, "m16_static_7", adef_m16_static_7);
+    insert(weapon_adef_map, "m16_static_8", adef_m16_static_8);
+    insert(weapon_adef_map, "m16_static_9", adef_m16_static_9);
+    insert(weapon_adef_map, "m16_static_10", adef_m16_static_10);
+    insert(weapon_adef_map, "m16_static_11", adef_m16_static_11);
+    insert(weapon_adef_map, "m16_static_12", adef_m16_static_12);
+    insert(weapon_adef_map, "m16_static_13", adef_m16_static_13);
+    insert(weapon_adef_map, "m16_static_14", adef_m16_static_14);
+    insert(weapon_adef_map, "m16_static_15", adef_m16_static_15);
 
-    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_right", p2_anim_soldier_purple_base_idle_right);
-    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_left", p2_anim_soldier_purple_base_idle_left);
-    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_down", p2_anim_soldier_purple_base_idle_down);
-    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_down_left", p2_anim_soldier_purple_base_idle_down_left);
-    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_down_right", p2_anim_soldier_purple_base_idle_down_right);
-    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_up", p2_anim_soldier_purple_base_idle_up);
-    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_up_left", p2_anim_soldier_purple_base_idle_up_left);
-    insert(player_anim_map, "p2_anim_soldier_purple_base_idle_up_right", p2_anim_soldier_purple_base_idle_up_right);
+    insert(weapon_adef_map, "m16_firing_0", adef_m16_firing_0);
+    insert(weapon_adef_map, "m16_firing_1", adef_m16_firing_1);
+    insert(weapon_adef_map, "m16_firing_2", adef_m16_firing_2);
+    insert(weapon_adef_map, "m16_firing_3", adef_m16_firing_3);
+    insert(weapon_adef_map, "m16_firing_4", adef_m16_firing_4);
+    insert(weapon_adef_map, "m16_firing_5", adef_m16_firing_5);
+    insert(weapon_adef_map, "m16_firing_6", adef_m16_firing_6);
+    insert(weapon_adef_map, "m16_firing_7", adef_m16_firing_7);
+    insert(weapon_adef_map, "m16_firing_8", adef_m16_firing_8);
+    insert(weapon_adef_map, "m16_firing_9", adef_m16_firing_9);
+    insert(weapon_adef_map, "m16_firing_10", adef_m16_firing_10);
+    insert(weapon_adef_map, "m16_firing_11", adef_m16_firing_11);
+    insert(weapon_adef_map, "m16_firing_12", adef_m16_firing_12);
+    insert(weapon_adef_map, "m16_firing_13", adef_m16_firing_13);
+    insert(weapon_adef_map, "m16_firing_14", adef_m16_firing_14);
+    insert(weapon_adef_map, "m16_firing_15", adef_m16_firing_15);
 }
 
 // sets up animations for players and bullets
-void init_all_anims()
+void init_all_player_anims(void)
 {
+    init_player_character_anims();
+
     // TODO: separate player and non-player anims to separate methods
     // init placeholder anims
-    render_sprite_sheet_init(&sprite_sheet_player_placeholder, "assets/question_mark.png", 36, 36);
-    adef_player_placeholder = animation_definition_create(&sprite_sheet_player_placeholder, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_player_placeholder = animation_create(adef_player_placeholder, false);
+    render_sprite_sheet_init(&sprite_sheet_missing_anim_placeholder, "assets/question_mark.png", 36, 36);
+    adef_missing_anim_placeholder = animation_definition_create(&sprite_sheet_missing_anim_placeholder, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    missing_anim_placeholder = animation_create(adef_missing_anim_placeholder, false);
 
     // init crosshair anims
-    render_sprite_sheet_init(&sprite_sheet_player_1_crosshair, "assets/hud/red_crosshair.png", 200, 200);
-    adef_player_1_crosshair = animation_definition_create(
-        &sprite_sheet_player_1_crosshair,
-        (f32[]){0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08},
-        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
-        12);
-    render_sprite_sheet_init(&sprite_sheet_player_2_crosshair, "assets/hud/blue_crosshair.png", 200, 200);
-    adef_player_2_crosshair = animation_definition_create(
-        &sprite_sheet_player_2_crosshair,
-        (f32[]){0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08},
-        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
-        12);
-    anim_p1_crosshair = animation_create(adef_player_1_crosshair, true);
-    anim_p2_crosshair = animation_create(adef_player_2_crosshair, true);
+    render_sprite_sheet_init(&sprite_sheet_player_1_crosshair, "assets/wip/crosshair_mock.png", 11, 11);
+    adef_player_1_crosshair = animation_definition_create(&sprite_sheet_player_1_crosshair, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_player_2_crosshair, "assets/wip/crosshair_mock.png", 11, 11);
+    adef_player_2_crosshair = animation_definition_create(&sprite_sheet_player_2_crosshair, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_p1_crosshair = animation_create(adef_player_1_crosshair, false);
+    anim_p2_crosshair = animation_create(adef_player_2_crosshair, false);
 
     // init bullet anims
-    render_sprite_sheet_init(&sprite_sheet_bullet_0, "assets/bullet_0.png", 3, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_0, "assets/wip/bullet_v2.png", 4, 4);
     adef_bullet_0 = animation_definition_create(&sprite_sheet_bullet_0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_0 = animation_create(adef_bullet_0, false);
-    render_sprite_sheet_init(&sprite_sheet_bullet_1, "assets/bullet_1.png", 3, 2);
-    adef_bullet_1 = animation_definition_create(&sprite_sheet_bullet_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_1 = animation_create(adef_bullet_1, false);
-    render_sprite_sheet_init(&sprite_sheet_bullet_2, "assets/bullet_2.png", 3, 3);
-    adef_bullet_2 = animation_definition_create(&sprite_sheet_bullet_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_2 = animation_create(adef_bullet_2, false);
 
-    render_sprite_sheet_init(&sprite_sheet_bullet_3, "assets/bullet_3.png", 2, 3);
-    adef_bullet_3 = animation_definition_create(&sprite_sheet_bullet_3, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_3 = animation_create(adef_bullet_3, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_0, "assets/wip/m16_static_0.png", 25, 25);
+    adef_m16_static_0 = animation_definition_create(&sprite_sheet_m16_static_0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
-    render_sprite_sheet_init(&sprite_sheet_bullet_4, "assets/bullet_4.png", 1, 3);
-    adef_bullet_4 = animation_definition_create(&sprite_sheet_bullet_4, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_4 = animation_create(adef_bullet_4, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_1, "assets/wip/m16_static_1.png", 25, 25);
+    adef_m16_static_1 = animation_definition_create(&sprite_sheet_m16_static_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
-    render_sprite_sheet_init(&sprite_sheet_bullet_5, "assets/bullet_5.png", 2, 3);
-    adef_bullet_5 = animation_definition_create(&sprite_sheet_bullet_5, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_5 = animation_create(adef_bullet_5, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_2, "assets/wip/m16_static_2.png", 25, 25);
+    adef_m16_static_2 = animation_definition_create(&sprite_sheet_m16_static_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
-    render_sprite_sheet_init(&sprite_sheet_bullet_6, "assets/bullet_6.png", 3, 3);
-    adef_bullet_6 = animation_definition_create(&sprite_sheet_bullet_6, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_6 = animation_create(adef_bullet_6, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_3, "assets/wip/m16_static_3.png", 25, 25);
+    adef_m16_static_3 = animation_definition_create(&sprite_sheet_m16_static_3, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
-    render_sprite_sheet_init(&sprite_sheet_bullet_7, "assets/bullet_7.png", 3, 2);
-    adef_bullet_7 = animation_definition_create(&sprite_sheet_bullet_7, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_7 = animation_create(adef_bullet_7, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_4, "assets/wip/m16_static_4.png", 25, 25);
+    adef_m16_static_4 = animation_definition_create(&sprite_sheet_m16_static_4, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
-    render_sprite_sheet_init(&sprite_sheet_bullet_8, "assets/bullet_8.png", 3, 1);
-    adef_bullet_8 = animation_definition_create(&sprite_sheet_bullet_8, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_8 = animation_create(adef_bullet_8, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_5, "assets/wip/m16_static_5.png", 25, 25);
+    adef_m16_static_5 = animation_definition_create(&sprite_sheet_m16_static_5, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
-    render_sprite_sheet_init(&sprite_sheet_bullet_9, "assets/bullet_9.png", 3, 2);
-    adef_bullet_9 = animation_definition_create(&sprite_sheet_bullet_9, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_9 = animation_create(adef_bullet_9, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_6, "assets/wip/m16_static_6.png", 25, 25);
+    adef_m16_static_6 = animation_definition_create(&sprite_sheet_m16_static_6, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
-    render_sprite_sheet_init(&sprite_sheet_bullet_10, "assets/bullet_10.png", 3, 3);
-    adef_bullet_10 = animation_definition_create(&sprite_sheet_bullet_10, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_10 = animation_create(adef_bullet_10, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_7, "assets/wip/m16_static_7.png", 25, 25);
+    adef_m16_static_7 = animation_definition_create(&sprite_sheet_m16_static_7, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
-    render_sprite_sheet_init(&sprite_sheet_bullet_11, "assets/bullet_11.png", 2, 3);
-    adef_bullet_11 = animation_definition_create(&sprite_sheet_bullet_11, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_11 = animation_create(adef_bullet_11, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_8, "assets/wip/m16_static_8.png", 25, 25);
+    adef_m16_static_8 = animation_definition_create(&sprite_sheet_m16_static_8, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
-    render_sprite_sheet_init(&sprite_sheet_bullet_12, "assets/bullet_12.png", 1, 3);
-    adef_bullet_12 = animation_definition_create(&sprite_sheet_bullet_12, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_12 = animation_create(adef_bullet_12, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_9, "assets/wip/m16_static_9.png", 25, 25);
+    adef_m16_static_9 = animation_definition_create(&sprite_sheet_m16_static_9, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
-    render_sprite_sheet_init(&sprite_sheet_bullet_13, "assets/bullet_13.png", 2, 3);
-    adef_bullet_13 = animation_definition_create(&sprite_sheet_bullet_13, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_13 = animation_create(adef_bullet_13, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_10, "assets/wip/m16_static_10.png", 25, 25);
+    adef_m16_static_10 = animation_definition_create(&sprite_sheet_m16_static_10, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
-    render_sprite_sheet_init(&sprite_sheet_bullet_14, "assets/bullet_14.png", 3, 3);
-    adef_bullet_14 = animation_definition_create(&sprite_sheet_bullet_14, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_14 = animation_create(adef_bullet_14, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_11, "assets/wip/m16_static_11.png", 25, 25);
+    adef_m16_static_11 = animation_definition_create(&sprite_sheet_m16_static_11, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
-    render_sprite_sheet_init(&sprite_sheet_bullet_15, "assets/bullet_15.png", 3, 2);
-    adef_bullet_15 = animation_definition_create(&sprite_sheet_bullet_15, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bullet_15 = animation_create(adef_bullet_15, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_12, "assets/wip/m16_static_12.png", 25, 25);
+    adef_m16_static_12 = animation_definition_create(&sprite_sheet_m16_static_12, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
-    /*
-    NEW PLAYER ANIMS 11/12
-    */
-    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_right, "assets/soldier_purple_base_idle_right.png", 175, 175);
-    adef_soldier_purple_base_idle_right = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_right, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    p1_anim_soldier_purple_base_idle_right = animation_create(adef_soldier_purple_base_idle_right, false);
-    p2_anim_soldier_purple_base_idle_right = animation_create(adef_soldier_purple_base_idle_right, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_13, "assets/wip/m16_static_13.png", 25, 25);
+    adef_m16_static_13 = animation_definition_create(&sprite_sheet_m16_static_13, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
-    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_left, "assets/soldier_purple_base_idle_left.png", 175, 175);
-    adef_soldier_purple_base_idle_left = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_left, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    p1_anim_soldier_purple_base_idle_left = animation_create(adef_soldier_purple_base_idle_left, false);
-    p2_anim_soldier_purple_base_idle_left = animation_create(adef_soldier_purple_base_idle_left, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_14, "assets/wip/m16_static_14.png", 25, 25);
+    adef_m16_static_14 = animation_definition_create(&sprite_sheet_m16_static_14, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
-    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_down, "assets/soldier_purple_base_idle_down.png", 175, 175);
-    adef_soldier_purple_base_idle_down = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_down, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    p1_anim_soldier_purple_base_idle_down = animation_create(adef_soldier_purple_base_idle_down, false);
-    p2_anim_soldier_purple_base_idle_down = animation_create(adef_soldier_purple_base_idle_down, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_15, "assets/wip/m16_static_15.png", 25, 25);
+    adef_m16_static_15 = animation_definition_create(&sprite_sheet_m16_static_15, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
-    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_down_right, "assets/soldier_purple_base_idle_down_right.png", 175, 175);
-    adef_soldier_purple_base_idle_down_right = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_down_right, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    p1_anim_soldier_purple_base_idle_down_right = animation_create(adef_soldier_purple_base_idle_down_right, false);
-    p2_anim_soldier_purple_base_idle_down_right = animation_create(adef_soldier_purple_base_idle_down_right, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_0, "assets/wip/m16_firing_0.png", 25, 25);
+    adef_m16_firing_0 = animation_definition_create(&sprite_sheet_m16_firing_0, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
 
-    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_down_left, "assets/soldier_purple_base_idle_down_left.png", 175, 175);
-    adef_soldier_purple_base_idle_down_left = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_down_left, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    p1_anim_soldier_purple_base_idle_down_left = animation_create(adef_soldier_purple_base_idle_down_left, false);
-    p2_anim_soldier_purple_base_idle_down_left = animation_create(adef_soldier_purple_base_idle_down_left, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_1, "assets/wip/m16_firing_1.png", 25, 25);
+    adef_m16_firing_1 = animation_definition_create(&sprite_sheet_m16_firing_1, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
 
-    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_up, "assets/soldier_purple_base_idle_up.png", 175, 175);
-    adef_soldier_purple_base_idle_up = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_up, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    p1_anim_soldier_purple_base_idle_up = animation_create(adef_soldier_purple_base_idle_up, false);
-    p2_anim_soldier_purple_base_idle_up = animation_create(adef_soldier_purple_base_idle_up, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_2, "assets/wip/m16_firing_2.png", 25, 25);
+    adef_m16_firing_2 = animation_definition_create(&sprite_sheet_m16_firing_2, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
 
-    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_up_right, "assets/soldier_purple_base_idle_up_right.png", 175, 175);
-    adef_soldier_purple_base_idle_up_right = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_up_right, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    p1_anim_soldier_purple_base_idle_up_right = animation_create(adef_soldier_purple_base_idle_up_right, false);
-    p2_anim_soldier_purple_base_idle_up_right = animation_create(adef_soldier_purple_base_idle_up_right, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_3, "assets/wip/m16_firing_3.png", 25, 25);
+    adef_m16_firing_3 = animation_definition_create(&sprite_sheet_m16_firing_3, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
 
-    render_sprite_sheet_init(&sprite_sheet_soldier_purple_base_idle_up_left, "assets/soldier_purple_base_idle_up_left.png", 175, 175);
-    adef_soldier_purple_base_idle_up_left = animation_definition_create(&sprite_sheet_soldier_purple_base_idle_up_left, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    p1_anim_soldier_purple_base_idle_up_left = animation_create(adef_soldier_purple_base_idle_up_left, false);
-    p2_anim_soldier_purple_base_idle_up_left = animation_create(adef_soldier_purple_base_idle_up_left, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_4, "assets/wip/m16_firing_4.png", 25, 25);
+    adef_m16_firing_4 = animation_definition_create(&sprite_sheet_m16_firing_4, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
 
-    init_bullet_anim_hashmap();
-    init_player_anim_hashmap();
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_5, "assets/wip/m16_firing_5.png", 25, 25);
+    adef_m16_firing_5 = animation_definition_create(&sprite_sheet_m16_firing_5, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_6, "assets/wip/m16_firing_6.png", 25, 25);
+    adef_m16_firing_6 = animation_definition_create(&sprite_sheet_m16_firing_6, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_7, "assets/wip/m16_firing_7.png", 25, 25);
+    adef_m16_firing_7 = animation_definition_create(&sprite_sheet_m16_firing_7, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_8, "assets/wip/m16_firing_8.png", 25, 25);
+    adef_m16_firing_8 = animation_definition_create(&sprite_sheet_m16_firing_8, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_9, "assets/wip/m16_firing_9.png", 25, 25);
+    adef_m16_firing_9 = animation_definition_create(&sprite_sheet_m16_firing_9, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_10, "assets/wip/m16_firing_10.png", 25, 25);
+    adef_m16_firing_10 = animation_definition_create(&sprite_sheet_m16_firing_10, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_11, "assets/wip/m16_firing_11.png", 25, 25);
+    adef_m16_firing_11 = animation_definition_create(&sprite_sheet_m16_firing_11, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_12, "assets/wip/m16_firing_12.png", 25, 25);
+    adef_m16_firing_12 = animation_definition_create(&sprite_sheet_m16_firing_12, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_13, "assets/wip/m16_firing_13.png", 25, 25);
+    adef_m16_firing_13 = animation_definition_create(&sprite_sheet_m16_firing_13, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_14, "assets/wip/m16_firing_14.png", 25, 25);
+    adef_m16_firing_14 = animation_definition_create(&sprite_sheet_m16_firing_14, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_15, "assets/wip/m16_firing_15.png", 25, 25);
+    adef_m16_firing_15 = animation_definition_create(&sprite_sheet_m16_firing_15, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+
+    init_bullet_adef_hashmap();
+    init_weapon_adef_hashmap();
+    init_player_character_anim_hashmap();
+}
+// TODO: move everyone above this (hashmap related) to a separate file
+
+// parent function for all the necessary player updates made each frame
+void player_per_frame_updates(Player *player)
+{
+    handle_player_input(player);
+    update_player_crosshair_angle(player);
+    update_player_weapon_position(player);
+    update_player_status(player);
+    if (player->status != PLAYER_INACTIVE)
+        update_player_anims(player);
+}
+
+/// @brief Renders the player and player weapon animations. Called each frame. Render the shadow first. Rendering order between weapon and character anim depends on the player's
+/// direction (crosshair_angle)
+/// @param player active player
+/// @param window
+/// @param texture_slots
+/// @param color
+void render_player_anims(Player *player, SDL_Window *window, u32 texture_slots[32], vec4 color)
+{
+    if (player) {
+        vec2 character_shadow_pos = {0, 0};
+        vec2_add(character_shadow_pos, player->entity->body->aabb.position, (vec2){0, -0.5 * player->entity->animation->animation_definition->sprite_sheet->cell_height});
+        animation_render(anim_character_shadow, window, character_shadow_pos, color, texture_slots);
+
+        // player is facing up, render weapon "under" player
+        if (player->crosshair_angle > M_PI / 4 && player->crosshair_angle < 3 * M_PI / 4) {
+            animation_render(player->weapon->character_anim, window, player->weapon->position, color, texture_slots);
+            animation_render(player->entity->animation, window, player->entity->body->aabb.position, color, texture_slots);
+        }
+        else {
+            animation_render(player->entity->animation, window, player->entity->body->aabb.position, color, texture_slots);
+            animation_render(player->weapon->character_anim, window, player->weapon->position, color, texture_slots);
+        }
+    }
+    else
+        printf("player must be defined to update corresponding anims");
 }
 
 // initializes the player struct
@@ -211,7 +243,6 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
         crosshair_on_hit_static);
     player->crosshair->animation = player->is_left_player ? anim_p1_crosshair : anim_p2_crosshair;
     player->crosshair->is_active = true;
-    player->direction = RIGHT;
 
     // populate weapon
     player->weapon = malloc(sizeof(Weapon));
@@ -226,10 +257,13 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
     player->weapon->bullet_velocity = starting_weapon->bullet_velocity;
     player->weapon->burst_count = starting_weapon->burst_count;
     player->weapon->burst_delay = starting_weapon->burst_delay;
-    player->weapon->aiming_scale_factor = starting_weapon->aiming_scale_factor;
     player->weapon->frames_since_last_shot = 0;
     player->weapon->ready_to_fire = true;
+    player->weapon->is_firing = false;
     player->weapon->hud_ammo_icon = starting_weapon->hud_ammo_icon;
+
+    // weapon anims will be populated each frame based on the current player inputs
+    player->weapon->character_anim = NULL;
 
     // populate armor
     player->armor = malloc(sizeof(Armor));
@@ -298,7 +332,6 @@ void spawn_player(Player *player, Weapon_Type *starting_weapon)
     player->health = 100;
 
     // reset player anims to default (may have changed from pickups)
-    player->direction = RIGHT;
 
     // reset weapon
     player->weapon->name = starting_weapon->name;
@@ -312,7 +345,6 @@ void spawn_player(Player *player, Weapon_Type *starting_weapon)
     player->weapon->bullet_velocity = starting_weapon->bullet_velocity;
     player->weapon->burst_count = starting_weapon->burst_count;
     player->weapon->burst_delay = starting_weapon->burst_delay;
-    player->weapon->aiming_scale_factor = starting_weapon->aiming_scale_factor;
     player->weapon->frames_since_last_shot = 0;
     player->weapon->ready_to_fire = true;
     player->weapon->hud_ammo_icon = starting_weapon->hud_ammo_icon;
@@ -400,71 +432,118 @@ void update_player_status(Player *player)
  * Animations are named in the following manner:
  * character_weapon_armor_movement-status_direction
  */
-void update_player_animations(Player *player)
+void update_player_anims(Player *player)
 {
-    if (player->status == PLAYER_INACTIVE) {
-        return;
-    }
+    update_player_character_anim(player);
+    update_player_weapon_anim(player);
+}
 
-    // cache old anim to check if we are SWITCHING anims
-    Animation *prev_anim = player->entity->animation;
+/// @brief Calculates the weapon sprite's position using the player's crosshair angle
+/// @param player
+/// @param weapon_position
+void update_player_weapon_position(Player *player)
+{
+    vec2 weapon_position = {0, 0};
+    vec2_add(
+        weapon_position,
+        player->entity->body->aabb.position,
+        (vec2){0, CHARACTER_ARMS_Y_OFFSET_FROM_CENTER}); // subtract some from the player pos as the hands are lower in the sprite than the center
+    vec2 offset = {0, 0};
+    get_xy_components_from_vector(CHARACTER_WEAPON_OFFSET, player->crosshair_angle, offset);
+    vec2_add(player->weapon->position, weapon_position, offset);
+}
 
-    char *anim_name = calloc(50, sizeof(char));
-    char *player_side = player->is_left_player ? "p1_anim" : "p2_anim";
-    char *character = "soldier_purple"; // player->character
-    char *weapon = player->weapon->name;
-    char *armor = player->armor->name;
-    char *status;
-    if (player->status == PLAYER_SPAWNING)
-        status = "spawning";
-    else if (player->status == PLAYER_DESPAWNING)
-        status = "dying";
-    else if (player->entity->body->velocity[0] || player->entity->body->velocity[1])
-        status = "running";
-    else // player NOT moving
-        status = "idle";
-    char *direction;
-    if (player->direction == RIGHT)
-        direction = "right";
-    else if (player->direction == LEFT)
-        direction = "left";
-    else if (player->direction == UP)
-        direction = "up";
-    else if (player->direction == UP_RIGHT)
-        direction = "up_right";
-    else if (player->direction == UP_LEFT)
-        direction = "up_left";
-    else if (player->direction == DOWN_RIGHT)
-        direction = "down_right";
-    else if (player->direction == DOWN_LEFT)
-        direction = "down_left";
-    else // player->direction == DOWN
-        direction = "down";
-    strcat(anim_name, player_side);
-    strcat(anim_name, "_");
-    strcat(anim_name, character);
-    strcat(anim_name, "_");
-    strcat(anim_name, weapon);
-    strcat(anim_name, "_");
-    if (strcmp(armor, "") != 0) {
-        strcat(anim_name, armor);
-        strcat(anim_name, "_");
-    }
-    strcat(anim_name, status);
-    strcat(anim_name, "_");
-    strcat(anim_name, direction);
+/// @brief Anim assignment is typically broken up into 16 directions in this game. This method takes an angle (typically between the player and their crosshair) to pick an anim
+/// suffix
+/// @param angle the angle in question
+/// @param direction_result store the result here
+void get_direction_from_angle(f32 angle, char *direction_result)
+{
+    if (angle > -1 * M_PI / 16 && angle <= M_PI / 16)
+        strcpy(direction_result, "0");
+    else if (angle > M_PI / 16 && angle <= 3 * M_PI / 16)
+        strcpy(direction_result, "1");
+    else if (angle > 3 * M_PI / 16 && angle <= 5 * M_PI / 16)
+        strcpy(direction_result, "2");
+    else if (angle > 5 * M_PI / 16 && angle <= 7 * M_PI / 16)
+        strcpy(direction_result, "3");
 
-    Animation *player_anim = get(player_anim_map, anim_name);
-    if (player_anim)
-        player->entity->animation = player_anim;
+    else if (angle > 7 * M_PI / 16 && angle <= 9 * M_PI / 16)
+        strcpy(direction_result, "4");
+
+    else if (angle > 9 * M_PI / 16 && angle <= 11 * M_PI / 16)
+        strcpy(direction_result, "5");
+
+    else if (angle > 11 * M_PI / 16 && angle <= 13 * M_PI / 16)
+        strcpy(direction_result, "6");
+
+    else if (angle > 13 * M_PI / 16 && angle <= 15 * M_PI / 16)
+        strcpy(direction_result, "7");
+
+    else if (angle > 15 * M_PI / 16 || angle <= -15 * M_PI / 16)
+        strcpy(direction_result, "8");
+
+    else if (angle > -15 * M_PI / 16 && angle <= -13 * M_PI / 16)
+        strcpy(direction_result, "9");
+
+    else if (angle > -13 * M_PI / 16 && angle <= -11 * M_PI / 16)
+        strcpy(direction_result, "10");
+
+    else if (angle > -11 * M_PI / 16 && angle <= -9 * M_PI / 16)
+        strcpy(direction_result, "11");
+
+    else if (angle > -9 * M_PI / 16 && angle <= -7 * M_PI / 16)
+        strcpy(direction_result, "12");
+
+    else if (angle > -7 * M_PI / 16 && angle <= -5 * M_PI / 16)
+        strcpy(direction_result, "13");
+
+    else if (angle > -5 * M_PI / 16 && angle <= -3 * M_PI / 16)
+        strcpy(direction_result, "14");
+
+    else if (angle > -3 * M_PI / 16 && angle <= -1 * M_PI / 16)
+        strcpy(direction_result, "15");
+
     else
-        player->entity->animation = anim_player_placeholder;
+        printf("got unexpected crosshair angle: %f\n", angle);
+}
 
-    // ensure we are starting new anims at the first frame
-    if (player->entity->animation != prev_anim)
-        player->entity->animation->current_frame_index = 0;
+static void update_player_weapon_anim(Player *player)
+{
+    // cache old anim to check if we are SWITCHING anims
+    Animation_Definition *prev_adef = player->weapon->character_anim ? player->weapon->character_anim->animation_definition : NULL;
 
-    free(anim_name);
+    char *adef_name = calloc(50, sizeof(char));
+    strcat(adef_name, "m16_");
+
+    bool show_firing_anim = player->weapon->is_firing ||
+                            (player->weapon->character_anim && player->weapon->character_anim->current_frame_index > 0 && player->weapon->character_anim->reset_count == 0);
+    char *firing_state = show_firing_anim ? "firing" : "static";
+
+    char *direction = calloc(5, sizeof(char));
+    get_direction_from_angle(player->crosshair_angle, direction);
+
+    strcat(adef_name, firing_state);
+    strcat(adef_name, "_");
+    strcat(adef_name, direction);
+    strcat(adef_name, "\0");
+
+    Animation_Definition *weapon_character_adef = get(weapon_adef_map, adef_name);
+    free(direction);
+    free(adef_name);
+
+    // only update the animation if it's a new one (otherwise keep looping through the old one)
+    if (weapon_character_adef != prev_adef) {
+        if (prev_adef)
+            animation_destroy(player->weapon->character_anim);
+        player->weapon->character_anim = animation_create(weapon_character_adef, true);
+    }
+}
+
+static void update_player_crosshair_angle(Player *player)
+{
+    player->crosshair_angle = atan2(
+        player->crosshair->body->aabb.position[1] - player->entity->body->aabb.position[1], player->crosshair->body->aabb.position[0] - player->entity->body->aabb.position[0]);
 }
 
 void handle_player_shooting(Player *player, Key_State shoot)
@@ -482,106 +561,33 @@ void handle_player_shooting(Player *player, Key_State shoot)
 
     // generate bullet if weapon is loaded and key state is correct
     if (player->weapon->capacity > 0 && player->weapon->ready_to_fire && key_state_ready) {
-        f32 cx = 0;
-        f32 cy = 0;
-        f32 px = player->entity->body->aabb.position[0];
-        f32 py = player->entity->body->aabb.position[1];
-        vec2 bullet_position = {px, py};
+        // update flag on the weapon struct (used for anim assignment)
+        player->weapon->is_firing = true;
+
+        vec2 bullet_position = {player->relative_position[0], player->relative_position[1]};
         vec2 bullet_velocity = {0, 0};
 
-        // shoot bullet at crosshair
-        cx = player->crosshair->body->aabb.position[0];
-        cy = player->crosshair->body->aabb.position[1];
-
-        // since the player's position is relative to the glviewport, while the crosshair's is to the window
-        if(player == player_two)
-            cx -= 0.5 * window_width;
-
-        // Calculate angle using atan2
-        f32 dx = cx - px;
-        f32 dy = cy - py;
-        f32 angle = atan2(dy, dx);
-
-        // Calculate bullet starting position using angle
-        f32 bullet_x = BULLET_DISTANCE_FROM_PLAYER * cos(angle);
-        f32 bullet_y = BULLET_DISTANCE_FROM_PLAYER * sin(angle);
+        // since the player's position is relative to the glviewport, while the crosshair's is to the window TODO: may need to readd this logic (3/12/24)
 
         // Calculate starting position using angle
-        bullet_position[0] = player->relative_position[0] + bullet_x;
-        bullet_position[1] = player->relative_position[1] + bullet_y;
+        vec2 bullet_start_offset = {0, 0};
+        get_xy_components_from_vector(BULLET_DISTANCE_FROM_PLAYER, player->crosshair_angle, bullet_start_offset);
+        vec2_add(bullet_position, bullet_position, bullet_start_offset);
 
         // Calculate velocity using angle
-        f32 vx = player->weapon->bullet_velocity * cos(angle);
-        f32 vy = player->weapon->bullet_velocity * sin(angle);
-        bullet_velocity[0] = vx;
-        bullet_velocity[1] = vy;
-
-        // correct angle
-        if (cx < px && cy > py) // 2nd quadrant
-            angle = M_PI - angle;
-        else if (cx < px && cy < py) // 3rd quadrant
-            angle += M_PI;
-        else if (cx > px && cy < py) // 4th quadrant
-            angle = 2 * M_PI - angle;
+        get_xy_components_from_vector(player->weapon->bullet_velocity, player->crosshair_angle, bullet_velocity);
 
         // check which of 16 buckets it falls into, assign animation
-        char *bullet_anim_name;
-        if (angle >= 6.1 || angle < 0.2) {
-            bullet_anim_name = "bullet_0";
-        }
-        else if (angle >= 0.2 && angle < 0.59) {
-            bullet_anim_name = "bullet_1";
-        }
-        else if (angle >= 0.59 && angle < 0.983) {
-            bullet_anim_name = "bullet_2";
-        }
-        else if (angle >= 0.983 && angle < 1.375) {
-            bullet_anim_name = "bullet_3";
-        }
-        else if (angle >= 1.375 && angle < 1.769) {
-            bullet_anim_name = "bullet_4";
-        }
-        else if (angle >= 1.769 && angle < 2.163) {
-            bullet_anim_name = "bullet_5";
-        }
-        else if (angle >= 2.163 && angle < 2.557) {
-            bullet_anim_name = "bullet_6";
-        }
-        else if (angle >= 2.557 && angle < 2.95) {
-            bullet_anim_name = "bullet_7";
-        }
-        else if (angle >= 2.95 && angle < 3.344) {
-            bullet_anim_name = "bullet_8";
-        }
-        else if (angle >= 3.344 && angle < 3.738) {
-            bullet_anim_name = "bullet_9";
-        }
-        else if (angle >= 3.738 && angle < 4.131) {
-            bullet_anim_name = "bullet_10";
-        }
-        else if (angle >= 4.131 && angle < 4.525) {
-            bullet_anim_name = "bullet_11";
-        }
-        else if (angle >= 4.525 && angle < 4.919) {
-            bullet_anim_name = "bullet_12";
-        }
-        else if (angle >= 4.919 && angle < 5.313) {
-            bullet_anim_name = "bullet_13";
-        }
-        else if (angle >= 5.313 && angle < 5.706) {
-            bullet_anim_name = "bullet_14";
-        }
-        else if (angle >= 5.706 && angle < 6.1) {
-            bullet_anim_name = "bullet_15";
-        }
+        char *bullet_adef_name;
+        bullet_adef_name = "bullet_0";
 
         // create bullet struct and calculated anim and velocity
         Bullet *bullet = malloc(sizeof(Bullet));
         bullet->entity = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
         bullet->damage = player->weapon->damage;
-        bullet->entity->animation = get(bullet_anim_map, bullet_anim_name);
-        bullet->entity->body->velocity[0] = bullet_velocity[0];
-        bullet->entity->body->velocity[1] = bullet_velocity[1];
+        bullet->entity->animation = animation_create(get(bullet_adef_map, bullet_adef_name), false);
+
+        vec2_dup(bullet->entity->body->velocity, bullet_velocity);
         bullet->entity->body->parent = bullet;
 
         // decrement weapon capacity
@@ -594,7 +600,35 @@ void handle_player_shooting(Player *player, Key_State shoot)
         // restart rounds per minute timer
         player->weapon->ready_to_fire = false;
         player->weapon->frames_since_last_shot = 0;
+
+        // Note the lack of collision masks and on hit methods - collisions aren't relevant for muzzle flash entities
+        vec2 muzzle_flash_position = {0, 0};
+        vec2 muzzle_flash_offset = {0, 0};
+        get_xy_components_from_vector(MUZZLE_FLASH_DISTANCE_FROM_PLAYER, player->crosshair_angle, muzzle_flash_offset);
+        vec2_add(muzzle_flash_offset, muzzle_flash_offset, (vec2){0, CHARACTER_ARMS_Y_OFFSET_FROM_CENTER});
+        vec2_add(muzzle_flash_position, player->relative_position, muzzle_flash_offset);
+        create_muzzle_flash_entity(player->crosshair_angle, muzzle_flash_position, (vec2){15, 15}, player->entity->body->velocity, 0, 0, NULL, NULL);
+
+        // ccalculate brass offset from the player and create brass effect entity
+        vec2 brass_position = {0, 0};
+        vec2_dup(brass_position, player->relative_position);
+        vec2 brass_offset = {0, 0};
+        get_xy_components_from_vector(BRASS_EJECT_DISTANCE_FROM_PLAYER, player->crosshair_angle, brass_offset);
+        vec2_add(brass_position, brass_position, brass_offset);
+        vec2_add(brass_position, brass_position, (vec2){0, CHARACTER_ARMS_Y_OFFSET_FROM_CENTER});
+        create_brass_entity(brass_position, adef_brass_falling_1, get_player_brass_z_index(player->crosshair_angle));
     }
+    else
+        player->weapon->is_firing = false;
+}
+
+/// @brief helper to get the z_index of brass entities based on player direction. If the player is facing up, we want to render the brass underneath the player sprite
+/// @param angle player to crosshair angle
+/// @return z index for the brass entity (1 or -1)
+static i32 get_player_brass_z_index(f32 angle)
+{
+    bool player_facing_up = angle > M_PI / 4 && angle < 3 * M_PI / 4;
+    return player_facing_up ? -1 : 1;
 }
 
 /// @brief Applies the player's input state to other relevant members, such as moving, shooting, and reloading states
@@ -611,6 +645,8 @@ void apply_player_input_state(Player *player)
 
     if (player->input_state->key_state->shoot)
         handle_player_shooting(player, player->input_state->key_state->shoot);
+    else
+        player->weapon->is_firing = false;
 }
 
 /// @brief Update the player's entity's velocity from its current key state. Supports 8 directional movement
@@ -624,42 +660,34 @@ void update_player_velocity_from_key_state(Player *player)
     f32 xy_magnitude = sin(angle) * MAX_PLAYER_MOVEMENT_SPEED;
 
     if (key_state->up && key_state->right) {
-        player->direction = UP_RIGHT;
         velx += xy_magnitude;
         vely += xy_magnitude;
     }
     else if (key_state->up && key_state->left) {
-        player->direction = UP_LEFT;
         velx -= xy_magnitude;
         vely += xy_magnitude;
     }
     else if (key_state->down && key_state->right) {
-        player->direction = DOWN_RIGHT;
         velx += xy_magnitude;
         vely -= xy_magnitude;
     }
     else if (key_state->down && key_state->left) {
-        player->direction = DOWN_LEFT;
         velx -= xy_magnitude;
         vely -= xy_magnitude;
     }
     else if (key_state->right) {
-        player->direction = RIGHT;
         velx += MAX_PLAYER_MOVEMENT_SPEED;
     }
 
     else if (key_state->left) {
-        player->direction = LEFT;
         velx -= MAX_PLAYER_MOVEMENT_SPEED;
     }
 
     else if (key_state->up) {
-        player->direction = UP;
         vely += MAX_PLAYER_MOVEMENT_SPEED;
     }
 
     else if (key_state->down) {
-        player->direction = DOWN;
         vely -= MAX_PLAYER_MOVEMENT_SPEED;
     }
     player->entity->body->velocity[0] = velx;
@@ -668,7 +696,7 @@ void update_player_velocity_from_key_state(Player *player)
 
 void free_player(Player *player)
 {
-    free(player->crosshair);
+    // crosshair mem is deallocated when we clear the entity array_list
     free(player->input_state->controller_input_state);
     free(player->input_state->key_state);
     free(player->input_state);
@@ -685,12 +713,4 @@ void free_players()
     if (player_two) {
         free_player(player_two);
     }
-}
-
-// parent function for all the necessary player updates made each frame
-void player_per_frame_updates(Player *player)
-{
-    handle_player_input(player);
-    update_player_status(player);
-    update_player_animations(player);
 }

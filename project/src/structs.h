@@ -10,17 +10,6 @@
 #include "engine/render.h"
 #include "engine/types.h"
 
-enum Direction {
-    UP,
-    RIGHT,
-    DOWN,
-    LEFT,
-    UP_RIGHT,
-    UP_LEFT,
-    DOWN_RIGHT,
-    DOWN_LEFT,
-};
-
 enum Pickup_Name { M44_PICKUP, BREWSTER_PICKUP };
 
 enum Fire_Mode { AUTO, SEMI, BURST };
@@ -53,8 +42,6 @@ typedef struct weapon_type {
     f32 burst_delay;   // in seconds
     i16 damage;
     i16 bullet_velocity;
-    f32 aiming_scale_factor; // factor by which the rendering dimensions
-                             // change when player is crouching
     Animation *hud_ammo_icon;
 } Weapon_Type;
 
@@ -72,10 +59,12 @@ typedef struct weapon {
     f32 burst_delay;
     i16 damage;
     i16 bullet_velocity;
-    f32 aiming_scale_factor;
     u16 frames_since_last_shot;
     bool ready_to_fire;
+    bool is_firing;
     Animation *hud_ammo_icon;
+    Animation *character_anim;
+    vec2 position;
 } Weapon;
 
 typedef struct pickup_animation_set {
@@ -101,7 +90,6 @@ typedef struct camera {
 
 typedef struct zombie {
     Entity *entity;
-    enum Direction direction;
     enum Enemy_Status status;
     f32 despawn_time;
     u32 frames_on_status;

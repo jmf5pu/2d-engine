@@ -176,7 +176,7 @@ void render_text_line(SDL_Window *window, u32 texture_slots[32], char *text, vec
         if (*character != ' ') {
             // render associated anim
             Animation *char_anim = get(letter_anim_map, (char[]){*character, '\0'});
-            animation_render(char_anim, window, starting_position, 0, WHITE, texture_slots);
+            animation_render(char_anim, window, starting_position, WHITE, texture_slots);
         }
 
         // update the starting position and go to next character
@@ -200,7 +200,7 @@ void render_menu_item(SDL_Window *window, u32 texture_slots[32], char *text, vec
 {
     // if selected render left bracket anim
     if (is_selected)
-        animation_render(anim_selected_bracket_left, window, starting_position, 0, WHITE, texture_slots);
+        animation_render(anim_selected_bracket_left, window, starting_position, WHITE, texture_slots);
 
     // render the item's text
     vec2_add(starting_position, starting_position, (vec2){(SELECTED_ANIM_WIDTH * 0.5) + (LETTER_WIDTH * 0.5), 0});
@@ -209,7 +209,7 @@ void render_menu_item(SDL_Window *window, u32 texture_slots[32], char *text, vec
     // if selected render left bracket anim
     if (is_selected) {
         vec2_add(starting_position, starting_position, (vec2){(SELECTED_ANIM_WIDTH * 0.5), 0});
-        animation_render(anim_selected_bracket_right, window, starting_position, 0, WHITE, texture_slots);
+        animation_render(anim_selected_bracket_right, window, starting_position, WHITE, texture_slots);
     }
 }
 
@@ -235,7 +235,7 @@ void render_main_menu(SDL_Window *window, u32 texture_slots[32])
             window,
             texture_slots,
             main_menu->items[i],
-            (vec2){SELECTED_ANIM_WIDTH * 0.5, window_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
+            (vec2){SELECTED_ANIM_WIDTH * 0.5, render_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
             main_menu->selected_item == i);
     }
 }
@@ -261,7 +261,7 @@ void render_mode_menu(SDL_Window *window, u32 texture_slots[32])
             window,
             texture_slots,
             mode_menu->items[i],
-            (vec2){SELECTED_ANIM_WIDTH * 0.5, window_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
+            (vec2){SELECTED_ANIM_WIDTH * 0.5, render_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
             mode_menu->selected_item == i);
     }
 }
@@ -287,7 +287,7 @@ void render_survival_menu(SDL_Window *window, u32 texture_slots[32])
             window,
             texture_slots,
             survival_menu->items[i],
-            (vec2){SELECTED_ANIM_WIDTH * 0.5, window_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
+            (vec2){SELECTED_ANIM_WIDTH * 0.5, render_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
             survival_menu->selected_item == i);
     }
 }
@@ -310,7 +310,7 @@ void render_pause_menu(SDL_Window *window, u32 texture_slots[32])
             window,
             texture_slots,
             pause_menu->items[i],
-            (vec2){SELECTED_ANIM_WIDTH * 0.5, window_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
+            (vec2){SELECTED_ANIM_WIDTH * 0.5, render_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
             pause_menu->selected_item == i);
     }
 }

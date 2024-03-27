@@ -18,6 +18,9 @@ Entity *entity_create(vec2 position, vec2 size, vec2 velocity, u8 collision_laye
     entity->body = physics_body_create(position, size, velocity, collision_layer, collision_mask, on_hit, on_hit_static);
     entity->animation = NULL;
     entity->is_active = true;
+    entity->destroy_on_anim_completion = false;
+    entity->movement_script = NULL;
+    vec2_dup(entity->starting_position, position);
 
     if (array_list_append(entity_list, entity) == (usize)-1) {
         free(entity); // Clean up allocated memory in case of failure
@@ -47,9 +50,18 @@ void entity_destroy(Entity *entity)
     entity->body->is_active = false; // physics bodies for inactive entities should be inactive
     entity->is_active = false;       // probably not even necessary, remove later
     physics_body_destroy(entity->body);
-    // animation_destroy(entity->animation_id); TODO: probably not needed
+    animation_destroy(entity->animation);
     array_list_remove(entity_list, id);
     free(entity); // free entity memory
 }
 
 usize entity_count() { return entity_list->len; }
+
+void free_all_entities_and_clear_array_list(void)
+{
+    // this array list contains address to allocated mem, free each address, then free the memory for the array list itself (array_list_clear)
+    for (int i = (int)entity_count() - 1; i >= 0; --i) {
+        entity_destroy(entity_get(i));
+    }
+    array_list_clear(entity_list);
+}

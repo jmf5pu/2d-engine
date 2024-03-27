@@ -30,7 +30,6 @@ typedef struct player {
     vec2 spawn_point;
     vec2 relative_position; // position relative to the rest of the map NOT
                             // to the window
-    enum Direction direction;
     enum Player_Status status;
     Player_Input_State *input_state;
     f32 render_scale_factor; // render scale factor (determines FOV of the
@@ -41,7 +40,8 @@ typedef struct player {
                              // 0
     f32 spawn_delay;         // time in s from INACTIVE status to SPAWNING status
     f32 spawn_time;          // time in s from SPAWNING status to ACTIVE status
-    u32 frames_on_status;    // # of frames since last status change
+    f32 crosshair_angle;
+    u32 frames_on_status; // # of frames since last status change
     i16 health;
     bool is_left_player;
 } Player;

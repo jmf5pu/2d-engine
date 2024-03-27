@@ -23,6 +23,7 @@
 
 // game specific headers
 #include "collision_behavior/collision_behavior.h"
+#include "effects/effects.h"
 #include "hud/hud.h"
 #include "main_helpers/main_helpers.h"
 #include "map_helpers/map_helpers.h"
@@ -50,14 +51,15 @@ int main(int argc, char *argv[])
     SDL_Window *window = render_init();
     physics_init();
     entity_init();
-    animation_init(); // creates animation storage
-    init_all_anims(); // initializes all our animations
-    game_state = GS_MAIN_MENU;
+    animation_init();        // creates animation storage
+    init_all_player_anims(); // initializes all our animations
+    game_state = GS_RUNNING;
     init_weapon_types();
     init_map(&map);
     init_hud(window);
     init_menus();
     init_game_controllers();
+    init_effects();
 
     // init game color
     vec4_dup(game_color, WHITE);
@@ -66,11 +68,10 @@ int main(int argc, char *argv[])
     while (!should_quit) {
         time_update();
 
-
         // needed for controller support:
-        if(player_one)
+        if (player_one)
             maintain_controller_keypresses(player_one);
-        if(player_two)
+        if (player_two)
             maintain_controller_keypresses(player_two);
 
         // grab current inputs
@@ -139,11 +140,14 @@ int main(int argc, char *argv[])
                 player_one = malloc(sizeof(Player));
                 init_player(player_one, &map, m16, 2.9, 5, 2, true);
                 spawn_player(player_one, m16);
-                if (SPLIT_SCREEN && !player_two) {
-                    player_two = malloc(sizeof(Player));
-                    init_player(player_two, &map, m16, 2.9, 5, 2, false);
-                    spawn_player(player_two, m16);
-                }
+                update_player_anims(player_one);
+            }
+
+            if (SPLIT_SCREEN && !player_two) {
+                player_two = malloc(sizeof(Player));
+                init_player(player_two, &map, m16, 2.9, 5, 2, false);
+                spawn_player(player_two, m16);
+                update_player_anims(player_two);
             }
 
             // check if pause was hit, update game state
@@ -207,6 +211,8 @@ int main(int argc, char *argv[])
                 player_two->entity->body->aabb.position[1] = p2_pos_holder[1] + (player_two->entity->body->aabb.position[1] - player_two->relative_position[1]);
             }
 
+            set_render_dimensions(DEFAULT_RENDER_SCALE_FACTOR, false, true);
+
             // need to run render loop twice if we are actively
             // splitting the screen
             int player_count = SPLIT_SCREEN ? 2 : 1;
@@ -222,14 +228,12 @@ int main(int argc, char *argv[])
                 // BEFORE rendering because entities can be
                 // created in `handle_player_shooting`
                 if (SPLIT_SCREEN && i == 0) {
-                    set_render_dimensions(player_one->render_scale_factor, false, true);
                     camera_update(player_one, &map);
                     render_begin_left();
                     if (game_state == GS_RUNNING)
                         player_per_frame_updates(player_one);
                 }
                 else if (SPLIT_SCREEN && i == 1) {
-                    set_render_dimensions(player_two->render_scale_factor, false, true);
                     camera_update(player_two, &map);
                     render_begin_right();
                     if (game_state == GS_RUNNING)
@@ -237,7 +241,6 @@ int main(int argc, char *argv[])
                 }
                 else // hit when screen is not being split
                 {
-                    set_render_dimensions(player_one->render_scale_factor, false, true);
                     camera_update(player_one, &map);
                     render_begin();
                     if (game_state == GS_RUNNING)
@@ -269,32 +272,13 @@ int main(int argc, char *argv[])
                 else // not split
                     update_all_positions(&map, (vec2){-1 * main_cam.position[0], -1 * main_cam.position[1]}, true);
 
-                // render animated entities, check if any are
-                // marked for deletion (not active OR body is
-                // not active)
-                int num_entities = (int)entity_count();
-                for (int j = num_entities - 1; j >= 0; --j) {
-                    Entity *entity = entity_get(j);
+                // render player's anims (characters + weapons)
+                render_player_anims(player_one, window, texture_slots, game_color);
+                if (SPLIT_SCREEN)
+                    render_player_anims(player_two, window, texture_slots, game_color);
 
-                    // for debugging
-                    if (RENDER_PHYSICS_BODIES && entity->is_active)
-                        render_aabb((f32 *)&entity->body->aabb, WHITE);
-
-                    if (should_destroy_entity(entity, &map)) {
-                        entity_destroy(entity);
-                        continue;
-                    }
-
-                    // skip entities with no associated
-                    // animations, check if players and
-                    // pickups are inactive
-                    if (!entity->animation || !entity->is_active || !entity->body->is_active || entity_is_crosshair(entity)) {
-                        continue;
-                    }
-
-                    // render the entity's animation
-                    animation_render(entity->animation, window, entity->body->aabb.position, 0, game_color, texture_slots);
-                }
+                // render all other animated entities
+                render_all_non_player_entities_with_animations(window, texture_slots, game_color);
 
                 // render map sprites
                 for (int l = 0; l < map.num_props; l++) {
@@ -376,6 +360,11 @@ int main(int argc, char *argv[])
                 render_pause_menu(window, texture_slots);
             }
             render_end(window, texture_slots, true);
+
+            // destroy any entities that need to be destroyed:
+            destroy_all_marked_entities(&map);
+            update_entity_movements();
+
             break;
         case GS_EXITING:
             should_quit = true;
@@ -393,6 +382,9 @@ int main(int argc, char *argv[])
     free_weapon_types();
     free_hud();
     free_menus();
+    free_all_entities_and_clear_array_list();
+    clear_animation_definition_list();
+    clear_animation_list();
     SDL_Quit();
     return 0;
 }

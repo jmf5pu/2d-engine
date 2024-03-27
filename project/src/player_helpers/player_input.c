@@ -1,5 +1,6 @@
 #include "../engine/input/input.h"
 #include "../engine/render.h"
+#include "../hud/hud.h"
 #include "player_helpers.h"
 
 /// @brief Assigns a controller to each player. -1 indicates no associated controller
@@ -22,6 +23,7 @@ void handle_player_input(Player *player)
         update_player_input_state_from_keyboard(player);
     }
     apply_player_joystick_movement(player);
+    fix_crosshair_position(player);
     apply_player_input_state(player);
 }
 
@@ -91,22 +93,25 @@ void update_crosshair_position_from_cursor(Player *player)
 {
     int mouse_x, mouse_y;
     SDL_GetMouseState(&mouse_x, &mouse_y);
-    player->crosshair->body->aabb.position[0] = mouse_x;
-    player->crosshair->body->aabb.position[1] = render_height - mouse_y;
+    player->crosshair->body->aabb.position[0] = mouse_x * DEFAULT_RENDER_SCALE_FACTOR;
+    player->crosshair->body->aabb.position[1] = render_height - (mouse_y * DEFAULT_RENDER_SCALE_FACTOR);
 }
 
 /// @brief maintain all the keypresses on the controller with a "held" state until the key is lifted.
-/// @param player 
-void maintain_controller_keypresses(Player *player){
+/// @param player
+void maintain_controller_keypresses(Player *player)
+{
     maintain_controller_keypress(&player->input_state->key_state->shoot);
     maintain_controller_keypress(&player->input_state->key_state->reload);
     maintain_controller_keypress(&player->input_state->key_state->use);
     maintain_controller_keypress(&player->input_state->key_state->pause);
 }
 
-/// @brief If a controller input key is pressed at the beginning of a given frame, update it to 2 to indicate it is being held. This will be overriden by the event loop if the user lifts the button that frame. This is necessary because otherwise "held" will not be tracked
-/// @param key_state 
-void maintain_controller_keypress(Key_State * key_state){
-    if(*key_state == 1)
+/// @brief If a controller input key is pressed at the beginning of a given frame, update it to 2 to indicate it is being held. This will be overriden by the event loop if the user
+/// lifts the button that frame. This is necessary because otherwise "held" will not be tracked
+/// @param key_state
+void maintain_controller_keypress(Key_State *key_state)
+{
+    if (*key_state == 1)
         *key_state = 2;
 }

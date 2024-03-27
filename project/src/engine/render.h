@@ -1,13 +1,13 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#define SPLIT_SCREEN true
+#define SPLIT_SCREEN false
 #define RENDER_PHYSICS_BODIES false
 
 #define MAX_BATCH_QUADS 10000
 #define MAX_BATCH_VERTICES 40000
 #define MAX_BATCH_ELEMENTS 60000
-#define DEFAULT_RENDER_SCALE_FACTOR 1
+#define DEFAULT_RENDER_SCALE_FACTOR 0.25
 
 #include <SDL2/SDL.h>
 #include <linmath.h>

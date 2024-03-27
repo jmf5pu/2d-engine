@@ -15,5 +15,6 @@ usize array_list_append(Array_List *list, void *item);
 void *array_list_get(Array_List *list, usize index);
 void array_list_remove(Array_List *list, usize index);
 void array_list_clear(Array_List *list);
+void free_array_list(Array_List *list);
 
 #endif
