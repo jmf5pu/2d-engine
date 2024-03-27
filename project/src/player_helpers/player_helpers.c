@@ -152,7 +152,8 @@ void player_per_frame_updates(Player *player)
         update_player_anims(player);
 }
 
-/// @brief Renders the player and player weapon animations. Called each frame. Rendering order depends on the player's direction (crosshair_angle)
+/// @brief Renders the player and player weapon animations. Called each frame. Render the shadow first. Rendering order between weapon and character anim depends on the player's
+/// direction (crosshair_angle)
 /// @param player active player
 /// @param window
 /// @param texture_slots
@@ -160,9 +161,8 @@ void player_per_frame_updates(Player *player)
 void render_player_anims(Player *player, SDL_Window *window, u32 texture_slots[32], vec4 color)
 {
     if (player) {
-        // render the shadow under "everything"
         vec2 character_shadow_pos = {0, 0};
-        vec2_add(character_shadow_pos, player->entity->body->aabb.position, (vec2){0, -13});
+        vec2_add(character_shadow_pos, player->entity->body->aabb.position, (vec2){0, -0.5 * player->entity->animation->animation_definition->sprite_sheet->cell_height});
         animation_render(anim_character_shadow, window, character_shadow_pos, color, texture_slots);
 
         // player is facing up, render weapon "under" player
@@ -551,7 +551,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
         get_xy_components_from_vector(MUZZLE_FLASH_DISTANCE_FROM_PLAYER, player->crosshair_angle, muzzle_flash_offset);
         vec2_add(muzzle_flash_offset, muzzle_flash_offset, (vec2){0, CHARACTER_ARMS_Y_OFFSET_FROM_CENTER});
         vec2_add(muzzle_flash_position, player->relative_position, muzzle_flash_offset);
-        create_muzzle_flash_entity(player->crosshair_angle, muzzle_flash_position, (vec2){15, 15}, 0, 0, NULL, NULL);
+        create_muzzle_flash_entity(player->crosshair_angle, muzzle_flash_position, (vec2){15, 15}, player->entity->body->velocity, 0, 0, NULL, NULL);
 
         // ccalculate brass offset from the player and create brass effect entity
         vec2 brass_position = {0, 0};
