@@ -61,6 +61,7 @@ typedef struct weapon {
     i16 bullet_velocity;
     u16 frames_since_last_shot;
     bool ready_to_fire;
+    bool is_firing;
     Animation *hud_ammo_icon;
     Animation *character_anim;
     vec2 position;

@@ -79,6 +79,7 @@ Animation *animation_create(Animation_Definition *adef, bool does_loop)
         .does_loop = does_loop,
         .is_active = true,
         .z_index = 0,
+        .reset_count = 0,
     };
 
     return animation;
@@ -137,6 +138,7 @@ void animation_update(f32 dt)
                 if (animation->current_frame_index == adef->frame_count) {
                     if (animation->does_loop) {
                         animation->current_frame_index = 0;
+                        animation->reset_count += 1;
                     }
                     else {
                         animation->current_frame_index -= 1;

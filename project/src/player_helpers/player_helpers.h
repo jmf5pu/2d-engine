@@ -11,6 +11,7 @@
 #define PLAYER_ANIM_COUNT 56
 #define BULLET_ADEF_COUNT 16
 #define WEAPON_COUNT 1
+#define WEAPON_STATES 2
 #define ANGLES 16
 
 #define MIN(x, y) (((x) < (y)) ? (x) : (y)) // used in reloading calculations
@@ -319,57 +320,101 @@ Animation *p2_anim_soldier_1_m44_brewster_running_front;
 Animation *p2_anim_soldier_1_m44_brewster_spawning_side;
 Animation *p2_anim_soldier_1_m44_brewster_dying_side;
 
-Sprite_Sheet sprite_sheet_m16_with_hands0;
-Sprite_Sheet sprite_sheet_m16_with_hands1;
-Sprite_Sheet sprite_sheet_m16_with_hands2;
-Sprite_Sheet sprite_sheet_m16_with_hands3;
-Sprite_Sheet sprite_sheet_m16_with_hands4;
-Sprite_Sheet sprite_sheet_m16_with_hands5;
-Sprite_Sheet sprite_sheet_m16_with_hands6;
-Sprite_Sheet sprite_sheet_m16_with_hands7;
-Sprite_Sheet sprite_sheet_m16_with_hands8;
-Sprite_Sheet sprite_sheet_m16_with_hands9;
-Sprite_Sheet sprite_sheet_m16_with_hands10;
-Sprite_Sheet sprite_sheet_m16_with_hands11;
-Sprite_Sheet sprite_sheet_m16_with_hands12;
-Sprite_Sheet sprite_sheet_m16_with_hands13;
-Sprite_Sheet sprite_sheet_m16_with_hands14;
-Sprite_Sheet sprite_sheet_m16_with_hands15;
+Sprite_Sheet sprite_sheet_m16_static_0;
+Animation_Definition *adef_m16_static_0;
 
-Animation_Definition *adef_m16_with_hands0;
-Animation_Definition *adef_m16_with_hands1;
-Animation_Definition *adef_m16_with_hands2;
-Animation_Definition *adef_m16_with_hands3;
-Animation_Definition *adef_m16_with_hands4;
-Animation_Definition *adef_m16_with_hands5;
-Animation_Definition *adef_m16_with_hands6;
-Animation_Definition *adef_m16_with_hands7;
-Animation_Definition *adef_m16_with_hands8;
-Animation_Definition *adef_m16_with_hands9;
-Animation_Definition *adef_m16_with_hands10;
-Animation_Definition *adef_m16_with_hands11;
-Animation_Definition *adef_m16_with_hands12;
-Animation_Definition *adef_m16_with_hands13;
-Animation_Definition *adef_m16_with_hands14;
-Animation_Definition *adef_m16_with_hands15;
+Sprite_Sheet sprite_sheet_m16_static_1;
+Animation_Definition *adef_m16_static_1;
 
-Animation *anim_m16_with_hands0;
-Animation *anim_m16_with_hands1;
-Animation *anim_m16_with_hands2;
-Animation *anim_m16_with_hands3;
-Animation *anim_m16_with_hands4;
-Animation *anim_m16_with_hands5;
-Animation *anim_m16_with_hands6;
-Animation *anim_m16_with_hands7;
-Animation *anim_m16_with_hands8;
-Animation *anim_m16_with_hands9;
-Animation *anim_m16_with_hands10;
-Animation *anim_m16_with_hands11;
-Animation *anim_m16_with_hands12;
-Animation *anim_m16_with_hands13;
-Animation *anim_m16_with_hands14;
-Animation *anim_m16_with_hands15;
-// END NEW PLAYER STRUCTS 3/4/24
+Sprite_Sheet sprite_sheet_m16_static_2;
+Animation_Definition *adef_m16_static_2;
+
+Sprite_Sheet sprite_sheet_m16_static_3;
+Animation_Definition *adef_m16_static_3;
+
+Sprite_Sheet sprite_sheet_m16_static_4;
+Animation_Definition *adef_m16_static_4;
+
+Sprite_Sheet sprite_sheet_m16_static_5;
+Animation_Definition *adef_m16_static_5;
+
+Sprite_Sheet sprite_sheet_m16_static_6;
+Animation_Definition *adef_m16_static_6;
+
+Sprite_Sheet sprite_sheet_m16_static_7;
+Animation_Definition *adef_m16_static_7;
+
+Sprite_Sheet sprite_sheet_m16_static_8;
+Animation_Definition *adef_m16_static_8;
+
+Sprite_Sheet sprite_sheet_m16_static_9;
+Animation_Definition *adef_m16_static_9;
+
+Sprite_Sheet sprite_sheet_m16_static_10;
+Animation_Definition *adef_m16_static_10;
+
+Sprite_Sheet sprite_sheet_m16_static_11;
+Animation_Definition *adef_m16_static_11;
+
+Sprite_Sheet sprite_sheet_m16_static_12;
+Animation_Definition *adef_m16_static_12;
+
+Sprite_Sheet sprite_sheet_m16_static_13;
+Animation_Definition *adef_m16_static_13;
+
+Sprite_Sheet sprite_sheet_m16_static_14;
+Animation_Definition *adef_m16_static_14;
+
+Sprite_Sheet sprite_sheet_m16_static_15;
+Animation_Definition *adef_m16_static_15;
+
+Sprite_Sheet sprite_sheet_m16_firing_0;
+Animation_Definition *adef_m16_firing_0;
+
+Sprite_Sheet sprite_sheet_m16_firing_1;
+Animation_Definition *adef_m16_firing_1;
+
+Sprite_Sheet sprite_sheet_m16_firing_2;
+Animation_Definition *adef_m16_firing_2;
+
+Sprite_Sheet sprite_sheet_m16_firing_3;
+Animation_Definition *adef_m16_firing_3;
+
+Sprite_Sheet sprite_sheet_m16_firing_4;
+Animation_Definition *adef_m16_firing_4;
+
+Sprite_Sheet sprite_sheet_m16_firing_5;
+Animation_Definition *adef_m16_firing_5;
+
+Sprite_Sheet sprite_sheet_m16_firing_6;
+Animation_Definition *adef_m16_firing_6;
+
+Sprite_Sheet sprite_sheet_m16_firing_7;
+Animation_Definition *adef_m16_firing_7;
+
+Sprite_Sheet sprite_sheet_m16_firing_8;
+Animation_Definition *adef_m16_firing_8;
+
+Sprite_Sheet sprite_sheet_m16_firing_9;
+Animation_Definition *adef_m16_firing_9;
+
+Sprite_Sheet sprite_sheet_m16_firing_10;
+Animation_Definition *adef_m16_firing_10;
+
+Sprite_Sheet sprite_sheet_m16_firing_11;
+Animation_Definition *adef_m16_firing_11;
+
+Sprite_Sheet sprite_sheet_m16_firing_12;
+Animation_Definition *adef_m16_firing_12;
+
+Sprite_Sheet sprite_sheet_m16_firing_13;
+Animation_Definition *adef_m16_firing_13;
+
+Sprite_Sheet sprite_sheet_m16_firing_14;
+Animation_Definition *adef_m16_firing_14;
+
+Sprite_Sheet sprite_sheet_m16_firing_15;
+Animation_Definition *adef_m16_firing_15;
 
 // bullet sprites & anims
 Sprite_Sheet sprite_sheet_bullet_1_horizontal;
@@ -382,6 +427,7 @@ Animation *anim_bullet_1_horizontal;
 Animation *anim_bullet_1_vertical;
 
 void init_bullet_anim_hashmap(void);
+void init_weapon_adef_hashmap(void);
 void init_all_player_anims(void);
 void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 despawn_time, f32 spawn_delay, f32 spawn_time, bool is_left_player);
 void spawn_player(Player *player, Weapon_Type *starting_weapon);

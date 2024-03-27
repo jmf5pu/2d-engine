@@ -25,6 +25,7 @@ typedef struct animation {
     bool is_active;
     bool is_flipped;
     i32 z_index;
+    i32 reset_count;
 } Animation;
 
 void animation_init(void);
