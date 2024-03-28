@@ -21,7 +21,7 @@ static Hash_Map *weapon_adef_map;
 void init_bullet_adef_hashmap(void)
 {
     bullet_adef_map = create_hash_map(BULLET_ADEF_COUNT);
-    insert(bullet_adef_map, "bullet_0", adef_bullet_0);
+    insert(bullet_adef_map, "bullet_0", adef_bullet_medium);
 }
 
 void init_weapon_adef_hashmap(void)
@@ -83,8 +83,8 @@ void init_all_player_anims(void)
     anim_p2_crosshair = animation_create(adef_player_2_crosshair, false);
 
     // init bullet anims
-    render_sprite_sheet_init(&sprite_sheet_bullet_0, "assets/wip/bullet_v2.png", 4, 4);
-    adef_bullet_0 = animation_definition_create(&sprite_sheet_bullet_0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_medium, "assets/wip/bullet_v2.png", 4, 4);
+    adef_bullet_medium = animation_definition_create(&sprite_sheet_bullet_medium, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
     render_sprite_sheet_init(&sprite_sheet_m16_static_0, "assets/wip/m16_static_0.png", 25, 25);
     adef_m16_static_0 = animation_definition_create(&sprite_sheet_m16_static_0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
