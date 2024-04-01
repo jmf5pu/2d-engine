@@ -1,8 +1,9 @@
-* add effects for bullet impacts on static bodies
-* add effects for footstep dust on player movement
-* create map tiles
+* effects
+    * bullet impacts on static bodies
+    * dust after footsteps
 * create enemies
     * build enemy sprites
     * implement enemy generator logic
     * implement animation assignment logic for enemy entities
 * refactor bullet generation logic to methods attached to the weapon struct, so different guns can shoot bullets at different angles
+* potentially bump up batch size of rendering - noticing occasional flickers when player is turning AND shooting
