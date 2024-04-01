@@ -2,7 +2,7 @@
 #define RENDER_H
 
 #define SPLIT_SCREEN false
-#define RENDER_PHYSICS_BODIES false
+#define RENDER_PHYSICS_BODIES true
 
 #define MAX_BATCH_QUADS 10000
 #define MAX_BATCH_VERTICES 40000

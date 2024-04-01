@@ -230,11 +230,11 @@ void render_player_anims(Player *player, SDL_Window *window, u32 texture_slots[3
 void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 despawn_time, f32 spawn_delay, f32 spawn_time, bool is_left_player)
 {
     player->entity =
-        entity_create((vec2){render_width * 0.5, render_height * 0.5}, (vec2){40, 75}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
+        entity_create((vec2){render_width * 0.5, render_height * 0.5}, (vec2){18, 22}, (vec2){0, 0}, COLLISION_LAYER_PLAYER, player_mask, player_on_hit, player_on_hit_static);
     player->entity->body->parent = player;
     player->crosshair = malloc(sizeof(Entity));
     player->crosshair = entity_create(
-        (vec2){player->entity->body->aabb.position[0] + 150, player->entity->body->aabb.position[1] + 150},
+        (vec2){player->entity->body->aabb.position[0], player->entity->body->aabb.position[1]},
         (vec2){CROSSHAIR_SIZE, CROSSHAIR_SIZE},
         (vec2){0, 0},
         COLLISION_LAYER_CROSSHAIR,

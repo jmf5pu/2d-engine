@@ -22,15 +22,15 @@ void init_map(Map *map)
     map->frames_since_last_spawn = 0;
 
     Sprite_Sheet *sprite_sheet_map_1_main_bg = malloc(sizeof(Sprite_Sheet));
-    render_sprite_sheet_init(sprite_sheet_map_1_main_bg, "assets/shooting_range_map.png", 1215, 560);
+    render_sprite_sheet_init(sprite_sheet_map_1_main_bg, "assets/wip/bunker_map.png", 327, 195);
     Sprite *map_1_main_bg = malloc(sizeof(Sprite));
     map_1_main_bg->sprite_sheet = sprite_sheet_map_1_main_bg;
     map_1_main_bg->row = 0;
     map_1_main_bg->column = 0;
-    map_1_main_bg->position[0] = 607;
-    map_1_main_bg->position[1] = 280;
-    map_1_main_bg->half_size[0] = 607;
-    map_1_main_bg->half_size[1] = 280;
+    map_1_main_bg->position[0] = 163.5;
+    map_1_main_bg->position[1] = 97.5;
+    map_1_main_bg->half_size[0] = 163.5;
+    map_1_main_bg->half_size[1] = 97.5;
     map_1_main_bg->z_index = -5;
     map_1_main_bg->is_flipped = false;
     map_1_main_bg->color[0] = 1;
@@ -44,11 +44,11 @@ void init_map(Map *map)
         .num_static_bodies = 4,
     };
     background_prop.static_bodies = malloc(background_prop.num_static_bodies * sizeof(Static_Body *));
-    background_prop.static_bodies[0] = physics_static_body_create((vec2){607, 45}, (vec2){1230, 5},
-                                                                  COLLISION_LAYER_TERRAIN);                                    // bottom
-    background_prop.static_bodies[1] = physics_static_body_create((vec2){607, 525}, (vec2){1230, 5}, COLLISION_LAYER_TERRAIN); // top
-    background_prop.static_bodies[2] = physics_static_body_create((vec2){40, 280}, (vec2){5, 560}, COLLISION_LAYER_TERRAIN);   // left
-    background_prop.static_bodies[3] = physics_static_body_create((vec2){1180, 280}, (vec2){5, 560},
+    background_prop.static_bodies[0] = physics_static_body_create((vec2){163.5, 10}, (vec2){327, 5},
+                                                                  COLLISION_LAYER_TERRAIN);                                     // bottom
+    background_prop.static_bodies[1] = physics_static_body_create((vec2){163.5, 185}, (vec2){327, 5}, COLLISION_LAYER_TERRAIN); // top
+    background_prop.static_bodies[2] = physics_static_body_create((vec2){5, 97.5}, (vec2){5, 195}, COLLISION_LAYER_TERRAIN);    // left
+    background_prop.static_bodies[3] = physics_static_body_create((vec2){322, 97.5}, (vec2){5, 195},
                                                                   COLLISION_LAYER_TERRAIN); // right
 
     /*
@@ -71,12 +71,12 @@ void init_map(Map *map)
     Create spawn points
     */
     vec2 *p1_spawn_point_array = malloc(sizeof(vec2) * map->num_p1_spawns);
-    vec2 p1_spawn_1 = {100, 200};
+    vec2 p1_spawn_1 = {25, 50};
     p1_spawn_point_array[0][0] = p1_spawn_1[0];
     p1_spawn_point_array[0][1] = p1_spawn_1[1];
 
     vec2 *p2_spawn_point_array = malloc(sizeof(vec2) * map->num_p2_spawns);
-    vec2 p2_spawn_1 = {100, 100};
+    vec2 p2_spawn_1 = {25, 25};
     p2_spawn_point_array[0][0] = p2_spawn_1[0];
     p2_spawn_point_array[0][1] = p2_spawn_1[1];
 
