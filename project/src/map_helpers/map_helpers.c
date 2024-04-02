@@ -8,9 +8,27 @@
 
 Map map;
 
+void init_map_assets(void)
+{
+    render_sprite_sheet_init(&sprite_sheet_bunker_background, "assets/wip/bunker_map.png", 327, 195);
+    adef_bunker_background = animation_definition_create(&sprite_sheet_bunker_background, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_bunker_background = animation_create(adef_bunker_background, false);
+    anim_bunker_background->z_index = INT32_MIN;
+
+    render_sprite_sheet_init(&sprite_sheet_metal_table_vertical_1, "assets/wip/metal_table_vertical_1.png", 23, 48);
+    adef_metal_table_vertical_1 = animation_definition_create(&sprite_sheet_metal_table_vertical_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_metal_table_vertical_1 = animation_create(adef_metal_table_vertical_1, false);
+
+    render_sprite_sheet_init(&sprite_sheet_metal_table_vertical_2, "assets/wip/metal_table_vertical_2.png", 23, 48);
+    adef_metal_table_vertical_2 = animation_definition_create(&sprite_sheet_metal_table_vertical_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_metal_table_vertical_2 = animation_create(adef_metal_table_vertical_2, false);
+}
+
 // set up map & props
 void init_map(Map *map)
 {
+    init_map_assets();
+
     // we use these to track array length later on
     map->num_pickups = 0;
     map->num_props = 1; // min of 1, background counts as a prop
@@ -21,35 +39,49 @@ void init_map(Map *map)
     map->enemy_spawn_delay = 120; // in frames
     map->frames_since_last_spawn = 0;
 
-    Sprite_Sheet *sprite_sheet_map_1_main_bg = malloc(sizeof(Sprite_Sheet));
-    render_sprite_sheet_init(sprite_sheet_map_1_main_bg, "assets/wip/bunker_map.png", 327, 195);
-    Sprite *map_1_main_bg = malloc(sizeof(Sprite));
-    map_1_main_bg->sprite_sheet = sprite_sheet_map_1_main_bg;
-    map_1_main_bg->row = 0;
-    map_1_main_bg->column = 0;
-    map_1_main_bg->position[0] = 163.5;
-    map_1_main_bg->position[1] = 97.5;
-    map_1_main_bg->half_size[0] = 163.5;
-    map_1_main_bg->half_size[1] = 97.5;
-    map_1_main_bg->z_index = -5;
-    map_1_main_bg->is_flipped = false;
-    map_1_main_bg->color[0] = 1;
-    map_1_main_bg->color[1] = 1;
-    map_1_main_bg->color[2] = 1;
-    map_1_main_bg->color[3] = 1;
-    Prop background_prop = (Prop){
-        .sprite = map_1_main_bg,
+    Prop bunker_background_prop = (Prop){
+        .anim = anim_bunker_background,
         .layer_threshold = INT32_MIN, // this prop should ALWAYS render
                                       // before (underneath) everything else
         .num_static_bodies = 4,
     };
-    background_prop.static_bodies = malloc(background_prop.num_static_bodies * sizeof(Static_Body *));
-    background_prop.static_bodies[0] = physics_static_body_create((vec2){163.5, 10}, (vec2){327, 5},
-                                                                  COLLISION_LAYER_TERRAIN);                                     // bottom
-    background_prop.static_bodies[1] = physics_static_body_create((vec2){163.5, 185}, (vec2){327, 5}, COLLISION_LAYER_TERRAIN); // top
-    background_prop.static_bodies[2] = physics_static_body_create((vec2){5, 97.5}, (vec2){5, 195}, COLLISION_LAYER_TERRAIN);    // left
-    background_prop.static_bodies[3] = physics_static_body_create((vec2){322, 97.5}, (vec2){5, 195},
-                                                                  COLLISION_LAYER_TERRAIN); // right
+    vec2_dup(bunker_background_prop.position, (vec2){163.5, 97.5});
+    vec2_dup(bunker_background_prop.half_size, (vec2){163.5, 97.5});
+
+    bunker_background_prop.static_bodies = malloc(bunker_background_prop.num_static_bodies * sizeof(Static_Body *));
+    bunker_background_prop.static_bodies[0] = physics_static_body_create((vec2){163.5, 10}, (vec2){327, 5},
+                                                                         COLLISION_LAYER_TERRAIN);                                     // bottom
+    bunker_background_prop.static_bodies[1] = physics_static_body_create((vec2){163.5, 185}, (vec2){327, 5}, COLLISION_LAYER_TERRAIN); // top
+    bunker_background_prop.static_bodies[2] = physics_static_body_create((vec2){5, 97.5}, (vec2){5, 195}, COLLISION_LAYER_TERRAIN);    // left
+    bunker_background_prop.static_bodies[3] = physics_static_body_create((vec2){322, 97.5}, (vec2){5, 195},
+                                                                         COLLISION_LAYER_TERRAIN); // right
+
+    // Animation *anim_metal_table = malloc(sizeof(Sprite_Sheet));
+    // render_sprite_sheet_init(sprite_sheet_metal_table_vertical_1, "assets/wip/metal_table_vertical_1.png", 23, 48);
+    // Sprite *sprite_metal_table_vertical_1 = malloc(sizeof(Sprite));
+    // map_1_main_bg->sprite_sheet = sprite_sheet_map_1_main_bg;
+    // map_1_main_bg->row = 0;
+    // map_1_main_bg->column = 0;
+    // map_1_main_bg->position[0] = 163.5;
+    // map_1_main_bg->position[1] = 97.5;
+    // map_1_main_bg->half_size[0] = 163.5;
+    // map_1_main_bg->half_size[1] = 97.5;
+    // map_1_main_bg->z_index = -5;
+    // map_1_main_bg->is_flipped = false;
+    // map_1_main_bg->color[0] = 1;
+    // map_1_main_bg->color[1] = 1;
+    // map_1_main_bg->color[2] = 1;
+    // map_1_main_bg->color[3] = 1;
+    // Prop table_prop_1 = (Prop){
+    //     .sprite = table_1_sprite,
+    //     .layer_threshold = 0,
+    //     .num_static_bodies = 1,
+    // };
+    // Prop table_prop_2 = (Prop){
+    //     .sprite = table_2_sprite,
+    //     .layer_threshold = 0,
+    //     .num_static_bodies = 1,
+    // };
 
     /*
     Create props
@@ -60,7 +92,9 @@ void init_map(Map *map)
         // ...
     }
     // populate prop array
-    prop_array[0] = background_prop;
+    prop_array[0] = bunker_background_prop;
+    // prop_array[1] = table_prop_1;
+    // prop_array[2] = table_prop_2;
 
     /*
     Create pickups
@@ -166,7 +200,6 @@ void update_map(Map *map)
 void free_map_attributes(Map *map)
 {
     for (int i = 0; i < map->num_props; i++) {
-        free(map->props[i].sprite);
         for (int j = 0; j < map->props[i].num_static_bodies; j++) {
             free(map->props[i].static_bodies[j]);
         }
@@ -207,8 +240,7 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
         bool is_active_player_body = (body == player_one->entity->body && left_player_is_active) || (SPLIT_SCREEN && body == player_two->entity->body && !left_player_is_active);
         bool is_crosshair = SPLIT_SCREEN ? (body == player_one->crosshair->body || body == player_two->crosshair->body) : body == player_one->crosshair->body;
         if (!is_active_player_body && !is_crosshair) {
-            body->aabb.position[0] += shift[0];
-            body->aabb.position[1] += shift[1];
+            vec2_add(body->aabb.position, body->aabb.position, shift);
         }
     }
 
@@ -217,15 +249,13 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
     Array_List *static_body_list = get_all_static_bodies();
     for (u32 i = 0; i < static_body_list->len; ++i) {
         static_body = array_list_get(static_body_list, i);
-        static_body->aabb.position[0] += shift[0];
-        static_body->aabb.position[1] += shift[1];
+        vec2_add(static_body->aabb.position, static_body->aabb.position, shift);
     }
 
     // update positions of all props on the map
     for (int i = 0; i < map->num_props; i++) {
-        Prop prop = map->props[i];
-        prop.sprite->position[0] += shift[0];
-        prop.sprite->position[1] += shift[1];
+        Prop *prop = &map->props[i];
+        vec2_add(prop->position, prop->position, shift);
     }
 
     // spawn points are relative, no need to shift them

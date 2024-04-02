@@ -267,9 +267,9 @@ int main(int argc, char *argv[])
                     player_one->entity->body->aabb.position[1] = player_one->relative_position[1];
                     update_all_positions(&map, (vec2){-1 * right_cam.position[0], -1 * right_cam.position[1]}, false);
                 }
-                else // not split
+                else { // not split
                     update_all_positions(&map, (vec2){-1 * main_cam.position[0], -1 * main_cam.position[1]}, true);
-
+                }
                 // render player's anims (characters + weapons)
                 render_player_anims(player_one, window, texture_slots, game_color);
                 if (SPLIT_SCREEN)
@@ -277,7 +277,6 @@ int main(int argc, char *argv[])
 
                 // render all other animated entities
                 render_all_non_player_entities_with_animations(window, texture_slots, game_color);
-
                 // render map sprites
                 for (int l = 0; l < map.num_props; l++) {
                     Prop prop = map.props[l];
@@ -293,27 +292,18 @@ int main(int argc, char *argv[])
                      * is rendered beneath the player no
                      * matter what
                      */
-                    f32 player_y_min;
-                    if (i == 0) { // rendering left side
-                        player_y_min = player_one->entity->body->aabb.position[1] - player_one->entity->body->aabb.half_size[1];
-                    }
-                    else { // rendering right side (if it
-                           // exists)
-                        player_y_min = player_two->entity->body->aabb.position[1] - player_two->entity->body->aabb.half_size[1];
-                    }
-                    bool is_below_player = player_y_min < (prop.sprite->position[1] - prop.sprite->half_size[1] + prop.layer_threshold) ||
-                                           player_y_min > (prop.sprite->position[1] + prop.sprite->half_size[1]) || l == 0;
-                    i32 z_index = is_below_player ? prop.sprite->z_index : 1;
-                    render_sprite_sheet_frame(
-                        prop.sprite->sprite_sheet,
-                        window,
-                        prop.sprite->row,
-                        prop.sprite->column,
-                        prop.sprite->position,
-                        z_index,
-                        prop.sprite->is_flipped,
-                        RENDER_PHYSICS_BODIES ? SEMI_TRANSPARENT : game_color,
-                        texture_slots);
+                    // f32 player_y_min;
+                    // if (i == 0) { // rendering left side
+                    //     player_y_min = player_one->entity->body->aabb.position[1] - player_one->entity->body->aabb.half_size[1];
+                    // }
+                    // else { // rendering right side (if it
+                    //        // exists)
+                    //     player_y_min = player_two->entity->body->aabb.position[1] - player_two->entity->body->aabb.half_size[1];
+                    // }
+                    // bool is_below_player =
+                    //     player_y_min < (prop.position[1] - prop.half_size[1] + prop.layer_threshold) || player_y_min > (prop.position[1] + prop.half_size[1]) || l == 0;
+                    // i32 z_index = is_below_player ? prop.anim->z_index : 1;
+                    animation_render(prop.anim, window, prop.position, RENDER_PHYSICS_BODIES ? SEMI_TRANSPARENT : game_color, texture_slots);
 
                     // render the static bodies
                     if (RENDER_PHYSICS_BODIES) {

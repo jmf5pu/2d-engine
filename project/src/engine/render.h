@@ -47,7 +47,7 @@ typedef struct sprite_sheet {
     u32 texture_id;
 } Sprite_Sheet;
 
-typedef struct sprite {
+typedef struct sprite_sheet_frame {
     Sprite_Sheet *sprite_sheet;
     f32 row;
     f32 column;
@@ -56,7 +56,7 @@ typedef struct sprite {
     i32 z_index; // for layering sprites
     bool is_flipped;
     vec4 color;
-} Sprite;
+} Sprite_Sheet_Frame;
 
 SDL_Window *render_init();
 void set_render_dimensions(f32 scale_factor, bool rendering_hud, bool update_shaders);

@@ -107,40 +107,10 @@ typedef struct pickup {
 
 } Pickup;
 
-typedef struct prop {
-    Sprite *sprite;              // sprite to render for this prop
-    i32 layer_threshold;         // if entity is ABOVE this y coordinate, the entity
-                                 // will render BEFORE this prop, and vice-versa
-    usize num_static_bodies;     // number of static bodies associated with this
-                                 // prop
-    Static_Body **static_bodies; // holds the references of the static
-                                 // bodies for this prop
-} Prop;
-
-typedef struct map {
-    // these indicate the lengths of their respective arrays
-    usize num_pickups;
-    usize num_props;
-    usize num_p1_spawns;
-    usize num_p2_spawns;
-    usize num_enemy_spawns;
-    usize max_enemies;
-
-    // used when calculating when to spawn enemies
-    i32 enemy_spawn_delay;
-    i32 frames_since_last_spawn;
-
-    Pickup *pickups;               // start of pickups array
-    Prop *props;                   // start of props array
-    vec2 *player_one_spawn_points; // player one's spawn points
-    vec2 *player_two_spawn_points; // player two's spawn points
-    vec2 *enemy_spawn_points;
-} Map;
-
 typedef struct hud {
     SDL_Window *window;
-    Sprite *p1_health_display;
-    Sprite *p2_health_display;
+    Sprite_Sheet_Frame *p1_health_display;
+    Sprite_Sheet_Frame *p2_health_display;
 } HUD;
 
 typedef struct menu {

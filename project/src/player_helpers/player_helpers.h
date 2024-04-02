@@ -4,6 +4,7 @@
 #include "../engine/animation.h"
 #include "../engine/global.h"
 #include "../engine/hash_map.h"
+#include "../map_helpers/map_helpers.h"
 #include "../structs.h"
 #include "player_structs.h"
 
