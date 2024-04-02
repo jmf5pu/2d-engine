@@ -89,12 +89,16 @@ void array_list_remove(Array_List *list, usize index)
     }
 }
 
-void array_list_clear(Array_List *list)
+/// @brief frees each element (if requested) in the array list then sets the arraylist size to 0, freeing the arraylist's memory.
+/// @param list
+/// @param free_elements specifies whether the elements of the array list should be freed
+void array_list_clear(Array_List *list, bool free_elements)
 {
-    for (usize i = 0; i < list->len; ++i) {
-        void *item = array_list_get(list, i);
-        free(item);
+    if (free_elements) {
+        for (usize i = 0; i < list->len; ++i) {
+            void *item = array_list_get(list, i);
+            free(item);
+        }
     }
-
     list->len = 0;
 }

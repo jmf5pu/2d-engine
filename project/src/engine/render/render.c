@@ -331,11 +331,11 @@ void render_quad_line(vec2 pos, vec2 size, vec4 color)
     render_line_segment(points[3], points[0], color);
 }
 
-void render_aabb(f32 *aabb, vec4 color)
+void render_aabb(AABB *aabb, vec4 color)
 {
     vec2 size;
-    vec2_scale(size, &aabb[2], 2);
-    render_quad_line(&aabb[0], size, color);
+    vec2_scale(size, (f32 *)&aabb->half_size, 2);
+    render_quad_line((f32 *)&aabb->position, size, color);
 }
 
 f32 render_get_scale() { return scale; }
@@ -403,9 +403,9 @@ void render_sprite_sheet_frame(Sprite_Sheet *sprite_sheet, SDL_Window *window, f
         render_end(
             window,
             texture_slots,
-            false);                   // render all the batched frames before resetting
-                                      // for another write
-        array_list_clear(list_batch); // free old batch vertices
+            false);                         // render all the batched frames before resetting
+                                            // for another write
+        array_list_clear(list_batch, true); // free old batch vertices
 
         // flush texture_slots array
         memset(texture_slots, 0, sizeof(u32) * 32);

@@ -341,3 +341,7 @@ Hit ray_intersect_aabb(vec2 pos, vec2 magnitude, AABB aabb)
 
     return hit;
 }
+
+void free_all_non_static_bodies(void) { array_list_clear(state.body_list, true); }
+
+void free_all_static_bodies(void) { array_list_clear(state.static_body_list, true); }

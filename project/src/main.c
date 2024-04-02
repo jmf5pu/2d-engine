@@ -276,41 +276,17 @@ int main(int argc, char *argv[])
                     render_player_anims(player_two, window, texture_slots, game_color);
 
                 // render all other animated entities
-                render_all_non_player_entities_with_animations(window, texture_slots, game_color);
+                render_all_non_player_entities_with_animations(window, texture_slots, RENDER_PHYSICS_BODIES ? SEMI_TRANSPARENT : game_color);
+
                 // render map sprites
                 for (int l = 0; l < map.num_props; l++) {
                     Prop prop = map.props[l];
-
-                    /*
-                     * Determining the props z_index based
-                     * on position relative to player
-                     * z_index should be below the players
-                     * (0) if the lowest point of the player
-                     * is under the y threshold we set OR
-                     * they are above the prop entirely.
-                     * Also the main background, (index 0)
-                     * is rendered beneath the player no
-                     * matter what
-                     */
-                    // f32 player_y_min;
-                    // if (i == 0) { // rendering left side
-                    //     player_y_min = player_one->entity->body->aabb.position[1] - player_one->entity->body->aabb.half_size[1];
-                    // }
-                    // else { // rendering right side (if it
-                    //        // exists)
-                    //     player_y_min = player_two->entity->body->aabb.position[1] - player_two->entity->body->aabb.half_size[1];
-                    // }
-                    // bool is_below_player =
-                    //     player_y_min < (prop.position[1] - prop.half_size[1] + prop.layer_threshold) || player_y_min > (prop.position[1] + prop.half_size[1]) || l == 0;
-                    // i32 z_index = is_below_player ? prop.anim->z_index : 1;
                     animation_render(prop.anim, window, prop.position, RENDER_PHYSICS_BODIES ? SEMI_TRANSPARENT : game_color, texture_slots);
+                }
 
-                    // render the static bodies
-                    if (RENDER_PHYSICS_BODIES) {
-                        for (int k = 0; k < prop.num_static_bodies; k++) {
-                            render_aabb((f32 *)&prop.static_bodies[k]->aabb, WHITE);
-                        }
-                    }
+                // render physics bodies:
+                if (RENDER_PHYSICS_BODIES) {
+                    render_physics_bodies();
                 }
 
                 // throw left side stuff into the rendering
@@ -373,6 +349,8 @@ int main(int argc, char *argv[])
     free_all_entities_and_clear_array_list();
     clear_animation_definition_list();
     clear_animation_list();
+    free_all_non_static_bodies();
+    free_all_static_bodies();
     SDL_Quit();
     return 0;
 }

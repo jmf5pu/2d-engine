@@ -6,15 +6,9 @@
 #include "../structs.h"
 
 typedef struct prop {
-    Animation *anim;             // sprite to render for this prop
-    vec2 position;               // where the animation is rendered
-    vec2 half_size;              // half size of the animation member
-    i32 layer_threshold;         // if entity is ABOVE this y coordinate, the entity
-                                 // will render BEFORE this prop, and vice-versa
-    usize num_static_bodies;     // number of static bodies associated with this
-                                 // prop
-    Static_Body **static_bodies; // holds the references of the static
-                                 // bodies for this prop
+    Animation *anim; // sprite to render for this prop
+    vec2 position;   // where the animation is rendered
+    vec2 half_size;  // half size of the animation member
 } Prop;
 
 typedef struct map {

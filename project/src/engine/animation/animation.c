@@ -159,18 +159,6 @@ void animation_render(Animation *animation, SDL_Window *window, vec2 position, v
     render_sprite_sheet_frame(adef->sprite_sheet, window, aframe->row, aframe->column, position, animation->z_index, animation->is_flipped, color, texture_slots);
 }
 
-void clear_animation_list(void)
-{
-    for (int i = animation_storage->len - 1; i >= 0; --i) {
-        animation_destroy(animation_get(i));
-    }
-    array_list_clear(animation_storage);
-}
+void clear_animation_list(void) { array_list_clear(animation_storage, true); }
 
-void clear_animation_definition_list(void)
-{
-    for (int i = animation_definition_storage->len - 1; i >= 0; --i) {
-        animation_definition_destroy(array_list_get(animation_definition_storage, i));
-    }
-    array_list_clear(animation_definition_storage);
-}
+void clear_animation_definition_list(void) { array_list_clear(animation_definition_storage, true); }

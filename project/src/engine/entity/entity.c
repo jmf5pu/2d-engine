@@ -63,5 +63,5 @@ void free_all_entities_and_clear_array_list(void)
     for (int i = (int)entity_count() - 1; i >= 0; --i) {
         entity_destroy(entity_get(i));
     }
-    array_list_clear(entity_list);
+    array_list_clear(entity_list, false);
 }

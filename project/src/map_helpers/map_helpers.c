@@ -41,47 +41,20 @@ void init_map(Map *map)
 
     Prop bunker_background_prop = (Prop){
         .anim = anim_bunker_background,
-        .layer_threshold = INT32_MIN, // this prop should ALWAYS render
-                                      // before (underneath) everything else
-        .num_static_bodies = 4,
     };
     vec2_dup(bunker_background_prop.position, (vec2){163.5, 97.5});
     vec2_dup(bunker_background_prop.half_size, (vec2){163.5, 97.5});
 
-    bunker_background_prop.static_bodies = malloc(bunker_background_prop.num_static_bodies * sizeof(Static_Body *));
-    bunker_background_prop.static_bodies[0] = physics_static_body_create((vec2){163.5, 10}, (vec2){327, 5},
-                                                                         COLLISION_LAYER_TERRAIN);                                     // bottom
-    bunker_background_prop.static_bodies[1] = physics_static_body_create((vec2){163.5, 185}, (vec2){327, 5}, COLLISION_LAYER_TERRAIN); // top
-    bunker_background_prop.static_bodies[2] = physics_static_body_create((vec2){5, 97.5}, (vec2){5, 195}, COLLISION_LAYER_TERRAIN);    // left
-    bunker_background_prop.static_bodies[3] = physics_static_body_create((vec2){322, 97.5}, (vec2){5, 195},
-                                                                         COLLISION_LAYER_TERRAIN); // right
+    physics_static_body_create((vec2){163.5, 10}, (vec2){327, 5},
+                               COLLISION_LAYER_TERRAIN);                                     // bottom
+    physics_static_body_create((vec2){163.5, 185}, (vec2){327, 5}, COLLISION_LAYER_TERRAIN); // top
+    physics_static_body_create((vec2){5, 97.5}, (vec2){5, 195}, COLLISION_LAYER_TERRAIN);    // left
+    physics_static_body_create((vec2){322, 97.5}, (vec2){5, 195},
+                               COLLISION_LAYER_TERRAIN); // right
 
     // Animation *anim_metal_table = malloc(sizeof(Sprite_Sheet));
     // render_sprite_sheet_init(sprite_sheet_metal_table_vertical_1, "assets/wip/metal_table_vertical_1.png", 23, 48);
     // Sprite *sprite_metal_table_vertical_1 = malloc(sizeof(Sprite));
-    // map_1_main_bg->sprite_sheet = sprite_sheet_map_1_main_bg;
-    // map_1_main_bg->row = 0;
-    // map_1_main_bg->column = 0;
-    // map_1_main_bg->position[0] = 163.5;
-    // map_1_main_bg->position[1] = 97.5;
-    // map_1_main_bg->half_size[0] = 163.5;
-    // map_1_main_bg->half_size[1] = 97.5;
-    // map_1_main_bg->z_index = -5;
-    // map_1_main_bg->is_flipped = false;
-    // map_1_main_bg->color[0] = 1;
-    // map_1_main_bg->color[1] = 1;
-    // map_1_main_bg->color[2] = 1;
-    // map_1_main_bg->color[3] = 1;
-    // Prop table_prop_1 = (Prop){
-    //     .sprite = table_1_sprite,
-    //     .layer_threshold = 0,
-    //     .num_static_bodies = 1,
-    // };
-    // Prop table_prop_2 = (Prop){
-    //     .sprite = table_2_sprite,
-    //     .layer_threshold = 0,
-    //     .num_static_bodies = 1,
-    // };
 
     /*
     Create props
@@ -199,14 +172,10 @@ void update_map(Map *map)
 // frees all map attributes that used malloc to init
 void free_map_attributes(Map *map)
 {
-    for (int i = 0; i < map->num_props; i++) {
-        for (int j = 0; j < map->props[i].num_static_bodies; j++) {
-            free(map->props[i].static_bodies[j]);
-        }
-    }
-
     free(map->props);
     free(map->pickups);
+    free(map->player_one_spawn_points);
+    free(map->player_two_spawn_points);
 }
 
 // returns the pickup associated with a physics body if it exists in the current

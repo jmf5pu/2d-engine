@@ -39,10 +39,6 @@ void render_all_non_player_entities_with_animations(SDL_Window *window, u32 text
     for (int j = (int)entity_count() - 1; j >= 0; --j) {
         Entity *entity = entity_get(j);
 
-        // for debugging
-        if (RENDER_PHYSICS_BODIES && entity->is_active)
-            render_aabb((f32 *)&entity->body->aabb, WHITE);
-
         // skip inactive entities, entities that are players or crosshairs or entities with no animation
         if (!entity->animation || !entity->is_active || !entity->body->is_active || entity_is_player_or_crosshair(entity)) {
             continue;
@@ -90,3 +86,20 @@ void get_xy_components_from_vector(f32 magnitude, f32 angle, vec2 components_res
 /// @param max
 /// @return random int
 int get_random_int_in_range(int min, int max) { return min + rand() % (max - min + 1); }
+
+/// @brief renders all physics bodies (both static + nonstatic)
+/// @param
+void render_physics_bodies(void)
+{
+    Array_List *non_static_bodies = get_all_bodies();
+    for (int j = 0; j < non_static_bodies->len; j++) {
+        Body *body = array_list_get(non_static_bodies, j);
+        render_aabb(&body->aabb, WHITE);
+    }
+
+    Array_List *static_bodies = get_all_static_bodies();
+    for (int j = 0; j < static_bodies->len; j++) {
+        Body *static_body = array_list_get(static_bodies, j);
+        render_aabb(&static_body->aabb, RED);
+    }
+}
