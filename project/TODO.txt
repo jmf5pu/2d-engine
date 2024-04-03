@@ -8,5 +8,4 @@
 * refactor bullet generation logic to methods attached to the weapon struct, so different guns can shoot bullets at different angles
 * add reloading timer and animation
 * potentially bump up batch size of rendering - noticing occasional flickers when player is turning AND shooting
-* remove static bodies member from map struct and accompanying destructor logic (already being malloc'd by the engine)
 * remove Sprite_Sheet_Frame struct, replace occurrences with animations

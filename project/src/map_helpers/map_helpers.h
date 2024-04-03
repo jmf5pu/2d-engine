@@ -5,16 +5,9 @@
 #include "../engine/render.h"
 #include "../structs.h"
 
-typedef struct prop {
-    Animation *anim; // sprite to render for this prop
-    vec2 position;   // where the animation is rendered
-    vec2 half_size;  // half size of the animation member
-} Prop;
-
 typedef struct map {
     // these indicate the lengths of their respective arrays
     usize num_pickups;
-    usize num_props;
     usize num_p1_spawns;
     usize num_p2_spawns;
     usize num_enemy_spawns;
@@ -25,7 +18,6 @@ typedef struct map {
     i32 frames_since_last_spawn;
 
     Pickup *pickups;               // start of pickups array
-    Prop *props;                   // start of props array
     vec2 *player_one_spawn_points; // player one's spawn points
     vec2 *player_two_spawn_points; // player two's spawn points
     vec2 *enemy_spawn_points;

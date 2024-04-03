@@ -278,12 +278,6 @@ int main(int argc, char *argv[])
                 // render all other animated entities
                 render_all_non_player_entities_with_animations(window, texture_slots, RENDER_PHYSICS_BODIES ? SEMI_TRANSPARENT : game_color);
 
-                // render map sprites
-                for (int l = 0; l < map.num_props; l++) {
-                    Prop prop = map.props[l];
-                    animation_render(prop.anim, window, prop.position, RENDER_PHYSICS_BODIES ? SEMI_TRANSPARENT : game_color, texture_slots);
-                }
-
                 // render physics bodies:
                 if (RENDER_PHYSICS_BODIES) {
                     render_physics_bodies();

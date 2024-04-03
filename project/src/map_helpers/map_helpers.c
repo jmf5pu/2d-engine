@@ -18,10 +18,12 @@ void init_map_assets(void)
     render_sprite_sheet_init(&sprite_sheet_metal_table_vertical_1, "assets/wip/metal_table_vertical_1.png", 23, 48);
     adef_metal_table_vertical_1 = animation_definition_create(&sprite_sheet_metal_table_vertical_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_metal_table_vertical_1 = animation_create(adef_metal_table_vertical_1, false);
+    anim_metal_table_vertical_1->z_index = -5;
 
     render_sprite_sheet_init(&sprite_sheet_metal_table_vertical_2, "assets/wip/metal_table_vertical_2.png", 23, 48);
     adef_metal_table_vertical_2 = animation_definition_create(&sprite_sheet_metal_table_vertical_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_metal_table_vertical_2 = animation_create(adef_metal_table_vertical_2, false);
+    anim_metal_table_vertical_2->z_index = anim_metal_table_vertical_1->z_index + 1;
 }
 
 // set up map & props
@@ -31,7 +33,6 @@ void init_map(Map *map)
 
     // we use these to track array length later on
     map->num_pickups = 0;
-    map->num_props = 1; // min of 1, background counts as a prop
     map->num_p1_spawns = 1;
     map->num_p2_spawns = 1;
     map->num_enemy_spawns = 1;
@@ -39,12 +40,8 @@ void init_map(Map *map)
     map->enemy_spawn_delay = 120; // in frames
     map->frames_since_last_spawn = 0;
 
-    Prop bunker_background_prop = (Prop){
-        .anim = anim_bunker_background,
-    };
-    vec2_dup(bunker_background_prop.position, (vec2){163.5, 97.5});
-    vec2_dup(bunker_background_prop.half_size, (vec2){163.5, 97.5});
-
+    Entity *bunker_background = entity_create((vec2){163.5, 97.5}, (vec2){327, 195}, (vec2){0, 0}, 0, 0, NULL, NULL);
+    bunker_background->animation = anim_bunker_background;
     physics_static_body_create((vec2){163.5, 10}, (vec2){327, 5},
                                COLLISION_LAYER_TERRAIN);                                     // bottom
     physics_static_body_create((vec2){163.5, 185}, (vec2){327, 5}, COLLISION_LAYER_TERRAIN); // top
@@ -52,22 +49,15 @@ void init_map(Map *map)
     physics_static_body_create((vec2){322, 97.5}, (vec2){5, 195},
                                COLLISION_LAYER_TERRAIN); // right
 
+    Entity *metal_table_1 = entity_create((vec2){21, 88}, (vec2){23, 48}, (vec2){0, 0}, 0, 0, NULL, NULL);
+    metal_table_1->animation = anim_metal_table_vertical_1;
+    Entity *metal_table_2 = entity_create((vec2){22, 45}, (vec2){23, 48}, (vec2){0, 0}, 0, 0, NULL, NULL);
+    metal_table_2->animation = anim_metal_table_vertical_2;
+    physics_static_body_create((vec2){22, 69}, (vec2){23, 96}, COLLISION_LAYER_TERRAIN);
+
     // Animation *anim_metal_table = malloc(sizeof(Sprite_Sheet));
     // render_sprite_sheet_init(sprite_sheet_metal_table_vertical_1, "assets/wip/metal_table_vertical_1.png", 23, 48);
     // Sprite *sprite_metal_table_vertical_1 = malloc(sizeof(Sprite));
-
-    /*
-    Create props
-    */
-    Prop *prop_array = malloc(map->num_props * sizeof(Prop));
-    if (!prop_array) {
-        // Handle memory allocation error
-        // ...
-    }
-    // populate prop array
-    prop_array[0] = bunker_background_prop;
-    // prop_array[1] = table_prop_1;
-    // prop_array[2] = table_prop_2;
 
     /*
     Create pickups
@@ -78,12 +68,12 @@ void init_map(Map *map)
     Create spawn points
     */
     vec2 *p1_spawn_point_array = malloc(sizeof(vec2) * map->num_p1_spawns);
-    vec2 p1_spawn_1 = {25, 50};
+    vec2 p1_spawn_1 = {75, 50};
     p1_spawn_point_array[0][0] = p1_spawn_1[0];
     p1_spawn_point_array[0][1] = p1_spawn_1[1];
 
     vec2 *p2_spawn_point_array = malloc(sizeof(vec2) * map->num_p2_spawns);
-    vec2 p2_spawn_1 = {25, 25};
+    vec2 p2_spawn_1 = {75, 25};
     p2_spawn_point_array[0][0] = p2_spawn_1[0];
     p2_spawn_point_array[0][1] = p2_spawn_1[1];
 
@@ -96,7 +86,6 @@ void init_map(Map *map)
     Populate parent struct
     */
     map->pickups = pickup_array;
-    map->props = prop_array;
     map->player_one_spawn_points = p1_spawn_point_array;
     map->player_two_spawn_points = p2_spawn_point_array;
     map->enemy_spawn_points = enemy_spawn_point_array;
@@ -172,7 +161,6 @@ void update_map(Map *map)
 // frees all map attributes that used malloc to init
 void free_map_attributes(Map *map)
 {
-    free(map->props);
     free(map->pickups);
     free(map->player_one_spawn_points);
     free(map->player_two_spawn_points);
@@ -196,7 +184,10 @@ Pickup *get_pickup_from_body(Body *body)
     return NULL;
 }
 
-// moves all sprites in the particular vec2 direction. Used for camera movement
+/// @brief Moves all static bodies and bodies ( and therefore entities ) by the shift parameter. Used for camera movements.
+/// @param map
+/// @param shift
+/// @param left_player_is_active
 void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
 {
     // update all bodies' positions (includes pickups, players, etc)
@@ -219,12 +210,6 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
     for (u32 i = 0; i < static_body_list->len; ++i) {
         static_body = array_list_get(static_body_list, i);
         vec2_add(static_body->aabb.position, static_body->aabb.position, shift);
-    }
-
-    // update positions of all props on the map
-    for (int i = 0; i < map->num_props; i++) {
-        Prop *prop = &map->props[i];
-        vec2_add(prop->position, prop->position, shift);
     }
 
     // spawn points are relative, no need to shift them
