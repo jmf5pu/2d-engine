@@ -256,6 +256,7 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
     player->weapon->damage = starting_weapon->damage;
     player->weapon->bullet_velocity = starting_weapon->bullet_velocity;
     player->weapon->burst_count = starting_weapon->burst_count;
+    player->weapon->burst_shots_remaining = starting_weapon->burst_count;
     player->weapon->burst_delay = starting_weapon->burst_delay;
     player->weapon->frames_since_last_shot = 0;
     player->weapon->ready_to_fire = true;
