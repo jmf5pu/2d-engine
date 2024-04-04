@@ -138,8 +138,8 @@ int main(int argc, char *argv[])
                 camera_init();
 
                 player_one = malloc(sizeof(Player));
-                init_player(player_one, &map, m16, 2.9, 5, 2, true);
-                spawn_player(player_one, m16);
+                init_player(player_one, &map, base, 2.9, 5, 2, true);
+                spawn_player(player_one, base);
             }
 
             if (SPLIT_SCREEN && !player_two) {

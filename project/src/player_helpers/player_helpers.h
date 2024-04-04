@@ -47,99 +47,102 @@ Animation *missing_anim_placeholder;
 // weapon sprite sheets/ animation definitions
 Sprite_Sheet sprite_sheet_m16_static_0;
 Animation_Definition *adef_m16_static_0;
-
 Sprite_Sheet sprite_sheet_m16_static_1;
 Animation_Definition *adef_m16_static_1;
-
 Sprite_Sheet sprite_sheet_m16_static_2;
 Animation_Definition *adef_m16_static_2;
-
 Sprite_Sheet sprite_sheet_m16_static_3;
 Animation_Definition *adef_m16_static_3;
-
 Sprite_Sheet sprite_sheet_m16_static_4;
 Animation_Definition *adef_m16_static_4;
-
 Sprite_Sheet sprite_sheet_m16_static_5;
 Animation_Definition *adef_m16_static_5;
-
 Sprite_Sheet sprite_sheet_m16_static_6;
 Animation_Definition *adef_m16_static_6;
-
 Sprite_Sheet sprite_sheet_m16_static_7;
 Animation_Definition *adef_m16_static_7;
-
 Sprite_Sheet sprite_sheet_m16_static_8;
 Animation_Definition *adef_m16_static_8;
-
 Sprite_Sheet sprite_sheet_m16_static_9;
 Animation_Definition *adef_m16_static_9;
-
 Sprite_Sheet sprite_sheet_m16_static_10;
 Animation_Definition *adef_m16_static_10;
-
 Sprite_Sheet sprite_sheet_m16_static_11;
 Animation_Definition *adef_m16_static_11;
-
 Sprite_Sheet sprite_sheet_m16_static_12;
 Animation_Definition *adef_m16_static_12;
-
 Sprite_Sheet sprite_sheet_m16_static_13;
 Animation_Definition *adef_m16_static_13;
-
 Sprite_Sheet sprite_sheet_m16_static_14;
 Animation_Definition *adef_m16_static_14;
-
 Sprite_Sheet sprite_sheet_m16_static_15;
 Animation_Definition *adef_m16_static_15;
 
 Sprite_Sheet sprite_sheet_m16_firing_0;
 Animation_Definition *adef_m16_firing_0;
-
 Sprite_Sheet sprite_sheet_m16_firing_1;
 Animation_Definition *adef_m16_firing_1;
-
 Sprite_Sheet sprite_sheet_m16_firing_2;
 Animation_Definition *adef_m16_firing_2;
-
 Sprite_Sheet sprite_sheet_m16_firing_3;
 Animation_Definition *adef_m16_firing_3;
-
 Sprite_Sheet sprite_sheet_m16_firing_4;
 Animation_Definition *adef_m16_firing_4;
-
 Sprite_Sheet sprite_sheet_m16_firing_5;
 Animation_Definition *adef_m16_firing_5;
-
 Sprite_Sheet sprite_sheet_m16_firing_6;
 Animation_Definition *adef_m16_firing_6;
-
 Sprite_Sheet sprite_sheet_m16_firing_7;
 Animation_Definition *adef_m16_firing_7;
-
 Sprite_Sheet sprite_sheet_m16_firing_8;
 Animation_Definition *adef_m16_firing_8;
-
 Sprite_Sheet sprite_sheet_m16_firing_9;
 Animation_Definition *adef_m16_firing_9;
-
 Sprite_Sheet sprite_sheet_m16_firing_10;
 Animation_Definition *adef_m16_firing_10;
-
 Sprite_Sheet sprite_sheet_m16_firing_11;
 Animation_Definition *adef_m16_firing_11;
-
 Sprite_Sheet sprite_sheet_m16_firing_12;
 Animation_Definition *adef_m16_firing_12;
-
 Sprite_Sheet sprite_sheet_m16_firing_13;
 Animation_Definition *adef_m16_firing_13;
-
 Sprite_Sheet sprite_sheet_m16_firing_14;
 Animation_Definition *adef_m16_firing_14;
-
 Sprite_Sheet sprite_sheet_m16_firing_15;
 Animation_Definition *adef_m16_firing_15;
+
+Sprite_Sheet sprite_sheet_glock_static_0;
+Animation_Definition *adef_glock_static_0;
+Sprite_Sheet sprite_sheet_glock_static_1;
+Animation_Definition *adef_glock_static_1;
+Sprite_Sheet sprite_sheet_glock_static_2;
+Animation_Definition *adef_glock_static_2;
+Sprite_Sheet sprite_sheet_glock_static_3;
+Animation_Definition *adef_glock_static_3;
+Sprite_Sheet sprite_sheet_glock_static_4;
+Animation_Definition *adef_glock_static_4;
+Sprite_Sheet sprite_sheet_glock_static_5;
+Animation_Definition *adef_glock_static_5;
+Sprite_Sheet sprite_sheet_glock_static_6;
+Animation_Definition *adef_glock_static_6;
+Sprite_Sheet sprite_sheet_glock_static_7;
+Animation_Definition *adef_glock_static_7;
+Sprite_Sheet sprite_sheet_glock_static_8;
+Animation_Definition *adef_glock_static_8;
+Sprite_Sheet sprite_sheet_glock_static_9;
+Animation_Definition *adef_glock_static_9;
+Sprite_Sheet sprite_sheet_glock_static_10;
+Animation_Definition *adef_glock_static_10;
+Sprite_Sheet sprite_sheet_glock_static_11;
+Animation_Definition *adef_glock_static_11;
+Sprite_Sheet sprite_sheet_glock_static_12;
+Animation_Definition *adef_glock_static_12;
+Sprite_Sheet sprite_sheet_glock_static_13;
+Animation_Definition *adef_glock_static_13;
+Sprite_Sheet sprite_sheet_glock_static_14;
+Animation_Definition *adef_glock_static_14;
+Sprite_Sheet sprite_sheet_glock_static_15;
+Animation_Definition *adef_glock_static_15;
 
 // bullet sprite sheets/animation definitions
 Sprite_Sheet sprite_sheet_bullet_medium;
@@ -177,5 +180,7 @@ static void update_player_weapon_position(Player *player);
 static i32 get_player_brass_z_index(f32 angle);
 
 void get_direction_from_angle(f32 angle, char *direction_result);
+
+void update_player_weapon(Player *player, Weapon_Type *weapon_type);
 
 #endif

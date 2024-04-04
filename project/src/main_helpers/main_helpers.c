@@ -16,11 +16,6 @@ bool should_destroy_entity(Entity *entity, Map *map)
     bool is_player = SPLIT_SCREEN ? (entity == player_one->entity || entity == player_two->entity) : (entity == player_one->entity);
     bool is_pickup = false;
 
-    for (int k = 0; k < map->num_pickups; k++) {
-        if (entity == map->pickups[k].entity)
-            is_pickup = true;
-    }
-
     return (anim_requesting_destroy || !entity->is_active || !entity->body->is_active) && !is_player && !is_pickup && !entity_is_player_or_crosshair(entity);
 }
 

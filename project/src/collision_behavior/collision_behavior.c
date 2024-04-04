@@ -12,6 +12,24 @@ const u8 bullet_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRAIN;
 const u8 pickup_mask = COLLISION_LAYER_PLAYER;
 const u8 crosshair_mask = 0;
 
+void weapon_pickup_base(Body *self, Body *other, Weapon_Type *weapon_type)
+{
+    Player *player = NULL;
+    if (other == player_one->entity->body)
+        player = player_one;
+    else if (other == player_two->entity->body)
+        player = player_two;
+
+    if (player) {
+        update_player_weapon(player, weapon_type);
+        self->is_active = false;
+    }
+}
+
+void m16_pickup_on_hit(Body *self, Body *other, Hit hit) { weapon_pickup_base(self, other, m16); }
+
+void glock_pickup_on_hit(Body *self, Body *other, Hit hit) { weapon_pickup_base(self, other, glock); }
+
 void player_on_hit(Body *self, Body *other, Hit hit)
 {
     // make sure player_on_hit is only called on player physics bodies
@@ -40,42 +58,12 @@ void player_on_hit(Body *self, Body *other, Hit hit)
                 player->health -= bullet->damage;
             }
             other->is_active = false;
-            free(bullet);
         }
     }
 
     // prevents players from pushing through enemies
     if (other->collision_layer == COLLISION_LAYER_ENEMY && other->is_active && self->is_active) {
         vec2_add(self->aabb.position, self->aabb.position, hit.normal);
-    }
-
-    if (other->collision_layer == COLLISION_LAYER_PICKUP && other->is_active && self->is_active) {
-        Pickup *pickup = get_pickup_from_body(other);
-        if (pickup->name == M44_PICKUP && pickup->status == PICKUP_ACTIVE) {
-            // update player weapon
-            player->weapon->name = m44->name;
-            player->weapon->fire_mode = m44->fire_mode;
-            player->weapon->capacity = m44->capacity;
-            player->weapon->max_capacity = m44->capacity;
-            player->weapon->reserve = m44->reserve;
-            player->weapon->max_reserve = m44->reserve;
-            player->weapon->max_fire_rate = m44->max_fire_rate;
-            player->weapon->damage = m44->damage;
-            player->weapon->bullet_velocity = m44->bullet_velocity;
-            player->weapon->frames_since_last_shot = 0;
-            player->weapon->ready_to_fire = true;
-        }
-        else if (pickup->name == BREWSTER_PICKUP && pickup->status == PICKUP_ACTIVE) {
-
-            // apply armor to player
-            player->armor->name = "brewster";
-            player->armor->integrity = 200;
-        }
-
-        // deactivate pickup and start respawn timer
-        pickup->entity->body->is_active = false;
-        pickup->status = PICKUP_INACTIVE;
-        pickup->frames_on_status = 0;
     }
 }
 

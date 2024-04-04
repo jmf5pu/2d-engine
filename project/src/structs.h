@@ -96,17 +96,6 @@ typedef struct zombie {
     i16 health;
 } Zombie;
 
-typedef struct pickup {
-    Entity *entity;
-    Pickup_Animation_Set *animation_set;
-    enum Pickup_Name name;
-    enum Pickup_Status status;
-    f32 spawn_delay;
-    f32 spawn_time;
-    u32 frames_on_status;
-
-} Pickup;
-
 typedef struct hud {
     SDL_Window *window;
     Sprite_Sheet_Frame *p1_health_display;

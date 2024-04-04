@@ -3,7 +3,7 @@
 
 Weapon_Type *base;
 Weapon_Type *m16;
-Weapon_Type *m44;
+Weapon_Type *glock;
 
 void init_weapon_types(void)
 {
@@ -31,22 +31,23 @@ void init_weapon_types(void)
     m16->burst_count = 3;
     m16->burst_delay = 0.3; // seconds
     m16->damage = 30;
-    m16->bullet_velocity = 600;
+    m16->bullet_velocity = 800;
     m16->hud_ammo_icon = anim_556_burst;
 
-    m44 = malloc(sizeof(Weapon_Type));
-    m44->name = "m44";
-    m44->fire_mode = SEMI;
-    m44->capacity = 5;
-    m44->reserve = 10;
-    m44->max_fire_rate = 30;
-    m44->damage = 100;
-    m44->bullet_velocity = 2000;
+    glock = malloc(sizeof(Weapon_Type));
+    glock->name = "glock";
+    glock->fire_mode = SEMI;
+    glock->capacity = 15;
+    glock->reserve = 900;
+    glock->max_fire_rate = 1200;
+    glock->damage = 15;
+    glock->bullet_velocity = 600;
+    glock->hud_ammo_icon = anim_556_burst; // placeholder, update
 }
 
 void free_weapon_types(void)
 {
     free(base);
     free(m16);
-    free(m44);
+    free(glock);
 }

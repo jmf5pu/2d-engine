@@ -5,7 +5,7 @@
 
 extern Weapon_Type *base;
 extern Weapon_Type *m16;
-extern Weapon_Type *m44;
+extern Weapon_Type *glock;
 
 Sprite_Sheet sprite_sheet_556_burst;
 Animation_Definition *adef_556_burst;

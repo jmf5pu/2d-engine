@@ -30,4 +30,7 @@ void pickup_on_hit_static(Body *self, Static_Body *other, Hit hit);
 void crosshair_on_hit(Body *self, Body *other, Hit hit);
 void crosshair_on_hit_static(Body *self, Static_Body *other, Hit hit);
 
+void m16_pickup_on_hit(Body *self, Body *other, Hit hit);
+void glock_pickup_on_hit(Body *self, Body *other, Hit hit);
+
 #endif

@@ -24,6 +24,14 @@ void init_map_assets(void)
     adef_metal_table_vertical_2 = animation_definition_create(&sprite_sheet_metal_table_vertical_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_metal_table_vertical_2 = animation_create(adef_metal_table_vertical_2, false);
     anim_metal_table_vertical_2->z_index = anim_metal_table_vertical_1->z_index + 1;
+
+    render_sprite_sheet_init(&sprite_sheet_m16_pickup, "assets/wip/m16_pickup.png", 20, 9);
+    adef_m16_pickup = animation_definition_create(&sprite_sheet_m16_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_pickup = animation_create(adef_m16_pickup, false);
+
+    render_sprite_sheet_init(&sprite_sheet_glock_pickup, "assets/wip/glock_pickup.png", 7, 9);
+    adef_glock_pickup = animation_definition_create(&sprite_sheet_glock_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_glock_pickup = animation_create(adef_glock_pickup, false);
 }
 
 // set up map & props
@@ -32,7 +40,6 @@ void init_map(Map *map)
     init_map_assets();
 
     // we use these to track array length later on
-    map->num_pickups = 0;
     map->num_p1_spawns = 1;
     map->num_p2_spawns = 1;
     map->num_enemy_spawns = 1;
@@ -40,6 +47,7 @@ void init_map(Map *map)
     map->enemy_spawn_delay = 120; // in frames
     map->frames_since_last_spawn = 0;
 
+    // create prop entities and corresponding static bodies
     Entity *bunker_background = entity_create((vec2){163.5, 97.5}, (vec2){327, 195}, (vec2){0, 0}, 0, 0, NULL, NULL);
     bunker_background->animation = anim_bunker_background;
     physics_static_body_create((vec2){163.5, 10}, (vec2){327, 5},
@@ -55,18 +63,14 @@ void init_map(Map *map)
     metal_table_2->animation = anim_metal_table_vertical_2;
     physics_static_body_create((vec2){22, 69}, (vec2){23, 96}, COLLISION_LAYER_TERRAIN);
 
-    // Animation *anim_metal_table = malloc(sizeof(Sprite_Sheet));
-    // render_sprite_sheet_init(sprite_sheet_metal_table_vertical_1, "assets/wip/metal_table_vertical_1.png", 23, 48);
-    // Sprite *sprite_metal_table_vertical_1 = malloc(sizeof(Sprite));
+    // create pickup entities
+    Entity *m16_pickup = entity_create((vec2){27, 55}, (vec2){20, 9}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, m16_pickup_on_hit, NULL);
+    m16_pickup->animation = anim_m16_pickup;
 
-    /*
-    Create pickups
-    */
-    Pickup *pickup_array = malloc(map->num_pickups * sizeof(Pickup));
+    Entity *glock_pickup = entity_create((vec2){35, 70}, (vec2){7, 9}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, glock_pickup_on_hit, NULL);
+    glock_pickup->animation = anim_glock_pickup;
 
-    /*
-    Create spawn points
-    */
+    // create spawn points
     vec2 *p1_spawn_point_array = malloc(sizeof(vec2) * map->num_p1_spawns);
     vec2 p1_spawn_1 = {75, 50};
     p1_spawn_point_array[0][0] = p1_spawn_1[0];
@@ -85,7 +89,6 @@ void init_map(Map *map)
     /*
     Populate parent struct
     */
-    map->pickups = pickup_array;
     map->player_one_spawn_points = p1_spawn_point_array;
     map->player_two_spawn_points = p2_spawn_point_array;
     map->enemy_spawn_points = enemy_spawn_point_array;
@@ -94,41 +97,6 @@ void init_map(Map *map)
     initialize enemies arraylist
     */
     init_enemies(sizeof(Zombie *), map->max_enemies);
-}
-
-// updates the status of a pickup, should be called once per frame for each
-// pickup
-void update_pickup_status(Pickup *pickup)
-{
-    // inactive to spawning
-    if (pickup->status == PICKUP_INACTIVE && pickup->frames_on_status >= (pickup->spawn_delay * global.time.frame_rate)) {
-
-        pickup->status = PICKUP_SPAWNING;
-        pickup->entity->body->is_active = true;
-        pickup->frames_on_status = 0;
-    }
-    // spawning to active
-    else if (pickup->status == PICKUP_SPAWNING && pickup->frames_on_status >= (pickup->spawn_time * global.time.frame_rate)) {
-
-        pickup->status = PICKUP_ACTIVE;
-        pickup->frames_on_status = 0;
-    }
-
-    // active to inactive is handled in player_on_hit in
-    // collision_behavior.c
-
-    pickup->frames_on_status++;
-}
-
-// updates pickup animations, should be called once per frame for each pickup
-void update_pickup_animations(Pickup *pickup)
-{
-    if (pickup->status == PICKUP_SPAWNING) {
-        pickup->entity->animation = pickup->animation_set->spawning;
-    }
-    else if (pickup->status == PICKUP_ACTIVE) {
-        pickup->entity->animation = pickup->animation_set->active;
-    }
 }
 
 // update the enemy spawns (spawn enemies if needed) TODO: potentially move this
@@ -145,12 +113,6 @@ void update_enemy_spawns(Map *map)
 // updates map attributes each frame
 void update_map(Map *map)
 {
-    // update the pickups
-    for (int i = 0; i < map->num_pickups; i++) {
-        update_pickup_status(&map->pickups[i]);
-        update_pickup_animations(&map->pickups[i]);
-    }
-
     // update the enemies (generate if needed)
     if (map->num_enemy_spawns > 0) {
         update_enemy_spawns(map);
@@ -161,27 +123,8 @@ void update_map(Map *map)
 // frees all map attributes that used malloc to init
 void free_map_attributes(Map *map)
 {
-    free(map->pickups);
     free(map->player_one_spawn_points);
     free(map->player_two_spawn_points);
-}
-
-// returns the pickup associated with a physics body if it exists in the current
-// map, returns NULL if not found
-Pickup *get_pickup_from_body(Body *body)
-{
-    if (!map.pickups) {
-        ERROR_EXIT("ERROR: Map not yet initialized or initialized "
-                   "incorrectly.\n")
-    }
-
-    for (int i = 0; i < map.num_pickups; i++) {
-        if (map.pickups[i].entity->body == body) {
-            return &map.pickups[i];
-        }
-    }
-
-    return NULL;
 }
 
 /// @brief Moves all static bodies and bodies ( and therefore entities ) by the shift parameter. Used for camera movements.
