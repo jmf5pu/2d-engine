@@ -1,11 +1,13 @@
 * effects
     * bullet impacts on static bodies
     * dust after footsteps
+    * add logic to assign different muzzle flashes to different guns (attach to weapon struct)
 * create enemies
     * build enemy sprites
     * implement enemy generator logic
     * implement animation assignment logic for enemy entities
 * refactor bullet generation logic to methods attached to the weapon struct, so different guns can shoot bullets at different angles
+* add logic to fire on mouse click instead of space
 * add reloading timer and animation
 * potentially bump up batch size of rendering - noticing occasional flickers when player is turning AND shooting
 * remove Sprite_Sheet_Frame struct, replace occurrences with animations

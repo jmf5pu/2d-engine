@@ -78,6 +78,23 @@ void init_weapon_adef_hashmap(void)
     insert(weapon_adef_map, "glock_static_13", adef_glock_static_13);
     insert(weapon_adef_map, "glock_static_14", adef_glock_static_14);
     insert(weapon_adef_map, "glock_static_15", adef_glock_static_15);
+
+    insert(weapon_adef_map, "glock_firing_0", adef_glock_firing_0);
+    insert(weapon_adef_map, "glock_firing_1", adef_glock_firing_1);
+    insert(weapon_adef_map, "glock_firing_2", adef_glock_firing_2);
+    insert(weapon_adef_map, "glock_firing_3", adef_glock_firing_3);
+    insert(weapon_adef_map, "glock_firing_4", adef_glock_firing_4);
+    insert(weapon_adef_map, "glock_firing_5", adef_glock_firing_5);
+    insert(weapon_adef_map, "glock_firing_6", adef_glock_firing_6);
+    insert(weapon_adef_map, "glock_firing_7", adef_glock_firing_7);
+    insert(weapon_adef_map, "glock_firing_8", adef_glock_firing_8);
+    insert(weapon_adef_map, "glock_firing_9", adef_glock_firing_9);
+    insert(weapon_adef_map, "glock_firing_10", adef_glock_firing_10);
+    insert(weapon_adef_map, "glock_firing_11", adef_glock_firing_11);
+    insert(weapon_adef_map, "glock_firing_12", adef_glock_firing_12);
+    insert(weapon_adef_map, "glock_firing_13", adef_glock_firing_13);
+    insert(weapon_adef_map, "glock_firing_14", adef_glock_firing_14);
+    insert(weapon_adef_map, "glock_firing_15", adef_glock_firing_15);
 }
 
 // sets up animations for players and bullets
@@ -201,6 +218,39 @@ void init_all_player_anims(void)
     adef_glock_static_14 = animation_definition_create(&sprite_sheet_glock_static_14, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     render_sprite_sheet_init(&sprite_sheet_glock_static_15, "assets/wip/glock_static_15.png", 25, 25);
     adef_glock_static_15 = animation_definition_create(&sprite_sheet_glock_static_15, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_0, "assets/wip/glock_firing_0.png", 25, 25);
+    adef_glock_firing_0 = animation_definition_create(&sprite_sheet_glock_firing_0, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_1, "assets/wip/glock_firing_1.png", 25, 25);
+    adef_glock_firing_1 = animation_definition_create(&sprite_sheet_glock_firing_1, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_2, "assets/wip/glock_firing_2.png", 25, 25);
+    adef_glock_firing_2 = animation_definition_create(&sprite_sheet_glock_firing_2, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_3, "assets/wip/glock_firing_3.png", 25, 25);
+    adef_glock_firing_3 = animation_definition_create(&sprite_sheet_glock_firing_3, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_4, "assets/wip/glock_firing_4.png", 25, 25);
+    adef_glock_firing_4 = animation_definition_create(&sprite_sheet_glock_firing_4, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_5, "assets/wip/glock_firing_5.png", 25, 25);
+    adef_glock_firing_5 = animation_definition_create(&sprite_sheet_glock_firing_5, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_6, "assets/wip/glock_firing_6.png", 25, 25);
+    adef_glock_firing_6 = animation_definition_create(&sprite_sheet_glock_firing_6, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_7, "assets/wip/glock_firing_7.png", 25, 25);
+    adef_glock_firing_7 = animation_definition_create(&sprite_sheet_glock_firing_7, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_8, "assets/wip/glock_firing_8.png", 25, 25);
+    adef_glock_firing_8 = animation_definition_create(&sprite_sheet_glock_firing_8, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_9, "assets/wip/glock_firing_9.png", 25, 25);
+    adef_glock_firing_9 = animation_definition_create(&sprite_sheet_glock_firing_9, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_10, "assets/wip/glock_firing_10.png", 25, 25);
+    adef_glock_firing_10 = animation_definition_create(&sprite_sheet_glock_firing_10, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_11, "assets/wip/glock_firing_11.png", 25, 25);
+    adef_glock_firing_11 = animation_definition_create(&sprite_sheet_glock_firing_11, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_12, "assets/wip/glock_firing_12.png", 25, 25);
+    adef_glock_firing_12 = animation_definition_create(&sprite_sheet_glock_firing_12, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_13, "assets/wip/glock_firing_13.png", 25, 25);
+    adef_glock_firing_13 = animation_definition_create(&sprite_sheet_glock_firing_13, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_14, "assets/wip/glock_firing_14.png", 25, 25);
+    adef_glock_firing_14 = animation_definition_create(&sprite_sheet_glock_firing_14, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_15, "assets/wip/glock_firing_15.png", 25, 25);
+    adef_glock_firing_15 = animation_definition_create(&sprite_sheet_glock_firing_15, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
 
     init_bullet_adef_hashmap();
     init_weapon_adef_hashmap();
