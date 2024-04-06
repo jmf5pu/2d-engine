@@ -14,15 +14,7 @@ Player *player_one;
 Player *player_two;
 
 // animation hash maps
-static Hash_Map *bullet_adef_map;
 static Hash_Map *weapon_adef_map;
-
-// init bullet animation hash_map
-void init_bullet_adef_hashmap(void)
-{
-    bullet_adef_map = create_hash_map(BULLET_ADEF_COUNT);
-    insert(bullet_adef_map, "bullet_0", adef_bullet_medium);
-}
 
 void init_weapon_adef_hashmap(void)
 {
@@ -115,10 +107,6 @@ void init_all_player_anims(void)
     adef_player_2_crosshair = animation_definition_create(&sprite_sheet_player_2_crosshair, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_p1_crosshair = animation_create(adef_player_1_crosshair, false);
     anim_p2_crosshair = animation_create(adef_player_2_crosshair, false);
-
-    // init bullet anims
-    render_sprite_sheet_init(&sprite_sheet_bullet_medium, "assets/wip/bullet_v2.png", 4, 4);
-    adef_bullet_medium = animation_definition_create(&sprite_sheet_bullet_medium, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
     render_sprite_sheet_init(&sprite_sheet_m16_static_0, "assets/wip/m16_static_0.png", 25, 25);
     adef_m16_static_0 = animation_definition_create(&sprite_sheet_m16_static_0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
@@ -252,7 +240,6 @@ void init_all_player_anims(void)
     render_sprite_sheet_init(&sprite_sheet_glock_firing_15, "assets/wip/glock_firing_15.png", 25, 25);
     adef_glock_firing_15 = animation_definition_create(&sprite_sheet_glock_firing_15, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
 
-    init_bullet_adef_hashmap();
     init_weapon_adef_hashmap();
     init_player_character_anim_hashmap();
 }
@@ -309,8 +296,8 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
         (vec2){0, 0},
         COLLISION_LAYER_CROSSHAIR,
         crosshair_mask,
-        crosshair_on_hit,
-        crosshair_on_hit_static);
+        NULL,
+        NULL);
     player->crosshair->animation = player->is_left_player ? anim_p1_crosshair : anim_p2_crosshair;
     player->crosshair->is_active = true;
 
@@ -332,6 +319,7 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
     player->weapon->ready_to_fire = true;
     player->weapon->is_firing = false;
     player->weapon->hud_ammo_icon = starting_weapon->hud_ammo_icon;
+    player->weapon->on_shoot = starting_weapon->on_shoot;
 
     // weapon anims will be populated each frame based on the current player inputs
     player->weapon->character_anim = NULL;
@@ -639,31 +627,10 @@ void handle_player_shooting(Player *player, Key_State shoot)
         // update flag on the weapon struct (used for anim assignment)
         player->weapon->is_firing = true;
 
-        vec2 bullet_position = {player->relative_position[0], player->relative_position[1]};
-        vec2 bullet_velocity = {0, 0};
+        // create bullet(s) [anims and direction will be specific to the weapon's type]
+        printf("player->weapon->bullet_velocity: %d\n", player->weapon->bullet_velocity);
 
-        // since the player's position is relative to the glviewport, while the crosshair's is to the window TODO: may need to readd this logic (3/12/24)
-
-        // Calculate starting position using angle
-        vec2 bullet_start_offset = {0, 0};
-        get_xy_components_from_vector(BULLET_DISTANCE_FROM_PLAYER, player->crosshair_angle, bullet_start_offset);
-        vec2_add(bullet_position, bullet_position, bullet_start_offset);
-
-        // Calculate velocity using angle
-        get_xy_components_from_vector(player->weapon->bullet_velocity, player->crosshair_angle, bullet_velocity);
-
-        // check which of 16 buckets it falls into, assign animation
-        char *bullet_adef_name;
-        bullet_adef_name = "bullet_0";
-
-        // create bullet struct and calculated anim and velocity
-        Bullet *bullet = malloc(sizeof(Bullet));
-        bullet->entity = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
-        bullet->damage = player->weapon->damage;
-        bullet->entity->animation = animation_create(get(bullet_adef_map, bullet_adef_name), false);
-
-        vec2_dup(bullet->entity->body->velocity, bullet_velocity);
-        bullet->entity->body->parent = bullet;
+        player->weapon->on_shoot(player);
 
         // decrement weapon capacity
         player->weapon->capacity -= 1;
@@ -790,6 +757,7 @@ void update_player_weapon(Player *player, Weapon_Type *weapon_type)
     player->weapon->hud_ammo_icon = weapon_type->hud_ammo_icon;
     player->weapon->ready_to_fire = true;
     player->weapon->is_firing = false;
+    player->weapon->on_shoot = weapon_type->on_shoot;
 }
 
 void free_player(Player *player)

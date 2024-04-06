@@ -69,25 +69,6 @@ void player_on_hit(Body *self, Body *other, Hit hit)
 
 void player_on_hit_static(Body *self, Static_Body *other, Hit hit) {}
 
-void bullet_on_hit(Body *self, Body *other, Hit hit)
-{
-    // // mark for body (and entity) for destruction
-    // if (other->is_active)
-    // {
-    //     self->is_active = false;
-    // }
-}
-
-void bullet_on_hit_static(Body *self, Static_Body *other, Hit hit)
-{
-    // all bullet bodies should have a pointer to their parent struct
-    assert(self->parent);
-    assert(sizeof(self->parent) == sizeof(Bullet *));
-
-    // mark for body (and entity) for destruction
-    self->is_active = false;
-}
-
 void enemy_on_hit(Body *self, Body *other, Hit hit)
 {
     // every enemy body should have an associated enemy struct
@@ -131,6 +112,21 @@ void pickup_on_hit(Body *self, Body *other, Hit hit) {}
 
 void pickup_on_hit_static(Body *self, Static_Body *other, Hit hit) {}
 
-// not needed atm
-void crosshair_on_hit(Body *self, Body *other, Hit hit) {}
-void crosshair_on_hit_static(Body *self, Static_Body *other, Hit hit) {}
+// for bullets, always mark as inactive when they hit another body
+void bullet_on_hit(Body *self, Body *other, Hit hit)
+{
+    // mark for body (and entity) for destruction
+    if (other->is_active) {
+        self->is_active = false;
+    }
+}
+
+void bullet_on_hit_static(Body *self, Static_Body *other, Hit hit)
+{
+    // all bullet bodies should have a pointer to their parent struct
+    assert(self->parent);
+    assert(sizeof(self->parent) == sizeof(Bullet *));
+
+    // mark for body (and entity) for destruction
+    self->is_active = false;
+}

@@ -4,7 +4,9 @@
 #include "../engine/entity.h"
 #include "../engine/types.h"
 #include "../structs.h"
+#include "../weapon_types/weapon_types.h"
 
+typedef struct weapon Weapon;
 typedef struct player_key_state {
     Key_State left;
     Key_State right;

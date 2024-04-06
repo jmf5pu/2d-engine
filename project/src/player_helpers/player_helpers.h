@@ -6,6 +6,7 @@
 #include "../engine/hash_map.h"
 #include "../map_helpers/map_helpers.h"
 #include "../structs.h"
+#include "../weapon_types/weapon_types.h"
 #include "player_structs.h"
 
 // number of animations to be stored in player_anim_map
@@ -16,7 +17,6 @@
 #define ANGLES 16
 
 #define MIN(x, y) (((x) < (y)) ? (x) : (y)) // used in reloading calculations
-#define BULLET_DISTANCE_FROM_PLAYER 40
 #define MUZZLE_FLASH_DISTANCE_FROM_PLAYER 25
 #define PLAYER_HEIGHT 22 // used for shadow position and brass bounce
 #define BRASS_EJECT_DISTANCE_FROM_PLAYER 5
@@ -177,11 +177,6 @@ Animation_Definition *adef_glock_firing_14;
 Sprite_Sheet sprite_sheet_glock_firing_15;
 Animation_Definition *adef_glock_firing_15;
 
-// bullet sprite sheets/animation definitions
-Sprite_Sheet sprite_sheet_bullet_medium;
-Animation_Definition *adef_bullet_medium;
-
-void init_bullet_anim_hashmap(void);
 void init_weapon_adef_hashmap(void);
 void init_all_player_anims(void);
 void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 despawn_time, f32 spawn_delay, f32 spawn_time, bool is_left_player);
