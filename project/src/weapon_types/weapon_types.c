@@ -1,6 +1,7 @@
 #include "weapon_types.h"
 #include "../collision_behavior/collision_behavior.h"
 #include "../engine/render.h"
+#include "../main_helpers/main_helpers.h"
 
 Weapon_Type *base;
 Weapon_Type *m16;
@@ -39,8 +40,6 @@ void m16_on_shoot(Player *player)
 
 void glock_on_shoot(Player *player)
 {
-    printf("xhair angle: %f, bullet_velocity member: %f\n", player->crosshair_angle, player->weapon->bullet_velocity);
-
     vec2 bullet_position = {player->relative_position[0], player->relative_position[1]};
     vec2 bullet_velocity = {0, 0};
 
@@ -63,7 +62,6 @@ void glock_on_shoot(Player *player)
     bullet->entity = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
     bullet->damage = player->weapon->damage;
     bullet->entity->animation = animation_create(adef_bullet_medium, true);
-
     vec2_dup(bullet->entity->body->velocity, bullet_velocity);
     bullet->entity->body->parent = bullet;
 }

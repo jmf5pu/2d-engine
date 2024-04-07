@@ -2,7 +2,6 @@
 #define MAIN_HELPERS_H
 
 #include "../map_helpers/map_helpers.h"
-#include "../player_helpers/player_structs.h"
 #include "../structs.h"
 #include <SDL2/SDL.h>
 #include <linmath.h>

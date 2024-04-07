@@ -9,7 +9,6 @@
 #include "engine/input/input.h"
 #include "engine/render.h"
 #include "engine/types.h"
-//#include "weapon_types/weapon_types.h"
 
 enum Pickup_Name { M44_PICKUP, BREWSTER_PICKUP };
 
@@ -29,6 +28,63 @@ enum Enemy_Status {
 
 enum Pickup_Status { PICKUP_ACTIVE, PICKUP_INACTIVE, PICKUP_SPAWNING };
 
+enum Fire_Mode { AUTO, SEMI, BURST };
+
+typedef struct player_key_state {
+    Key_State left;
+    Key_State right;
+    Key_State up;
+    Key_State down;
+    Key_State shoot;
+    Key_State reload;
+    Key_State use;
+    Key_State pause;
+} Player_Key_State;
+
+typedef struct player_input_state {
+    Controller_Input_State *controller_input_state;
+    Player_Key_State *key_state;
+} Player_Input_State;
+
+typedef struct player Player; // forward dec for OnShoot
+typedef void (*OnShoot)(Player *player);
+typedef struct weapon {
+    char *name;
+    enum Fire_Mode fire_mode;
+    u16 capacity;
+    u16 max_capacity;
+    u16 reserve;
+    u16 max_reserve;
+    u16 max_fire_rate;
+    i8 burst_shots_remaining;
+    u16 burst_count;
+    f32 burst_delay;
+    i16 damage;
+    i16 bullet_velocity;
+    u16 frames_since_last_shot;
+    bool ready_to_fire;
+    bool is_firing;
+    Animation *hud_ammo_icon;
+    Animation *character_anim;
+    vec2 position;
+    OnShoot on_shoot;
+} Weapon;
+
+typedef struct weapon_type {
+    char *name;
+    enum Fire_Mode fire_mode;
+    u16 capacity;      // max ammo in a magazine
+    u16 reserve;       // maximum amount of spare ammo
+    u16 max_fire_rate; // rounds per minute
+    u16 burst_count;   // maximum number of shots in a "burst", both burst
+                       // attributes will be null if Fire_Mode != BURST
+    f32 burst_delay;   // in seconds
+    i16 damage;
+    i16 bullet_velocity;
+    Animation *hud_ammo_icon;
+    OnShoot on_shoot; // handles bullet entity creation when the weapon is fired
+} Weapon_Type;
+
 typedef struct pickup_animation_set {
     Animation *active;
     Animation *spawning;
@@ -39,16 +95,42 @@ typedef struct armor {
     i16 integrity;
 } Armor;
 
-typedef struct bullet {
-    Entity *entity;
-    i32 damage;
-} Bullet;
-
 typedef struct camera {
     vec2 position;
     vec2 *target_position;
     vec4 buffer;
 } Camera;
+typedef struct player {
+    Entity *entity;
+    Entity *crosshair;
+    Camera *camera;
+    Weapon *weapon;
+    Armor *armor;
+    vec2 spawn_point;
+    vec2 relative_position; // position relative to the rest of the map NOT
+                            // to the window
+    enum Player_Status status;
+    Player_Input_State *input_state;
+    f32 render_scale_factor; // render scale factor (determines FOV of the
+                             // player). Normal is 0.5, render width is 0.5
+                             // of window width
+    f32 despawn_time;        // time it takes for animation to complete after
+                             // health <=
+                             // 0
+    f32 spawn_delay;         // time in s from INACTIVE status to SPAWNING status
+    f32 spawn_time;          // time in s from SPAWNING status to ACTIVE status
+    f32 crosshair_angle;
+    u32 frames_on_status; // # of frames since last status change
+    i16 health;
+    bool is_left_player;
+} Player;
+
+typedef void (*OnShoot)(Player *player);
+
+typedef struct bullet {
+    Entity *entity;
+    i32 damage;
+} Bullet;
 
 typedef struct zombie {
     Entity *entity;
@@ -70,5 +152,21 @@ typedef struct menu {
     u8 items_count;
     u8 selected_item;
 } Menu;
+
+typedef struct map {
+    // these indicate the lengths of their respective arrays
+    usize num_p1_spawns;
+    usize num_p2_spawns;
+    usize num_enemy_spawns;
+    usize max_enemies;
+
+    // used when calculating when to spawn enemies
+    i32 enemy_spawn_delay;
+    i32 frames_since_last_spawn;
+
+    vec2 *player_one_spawn_points; // player one's spawn points
+    vec2 *player_two_spawn_points; // player two's spawn points
+    vec2 *enemy_spawn_points;
+} Map;
 
 #endif

@@ -5,6 +5,7 @@
 #include "../engine/global.h"
 #include "../engine/util.h"
 #include "../main_helpers/main_helpers.h"
+#include "../structs.h"
 #include "../weapon_types/weapon_types.h"
 #include "player_anims.h"
 #include <math.h>
@@ -628,8 +629,6 @@ void handle_player_shooting(Player *player, Key_State shoot)
         player->weapon->is_firing = true;
 
         // create bullet(s) [anims and direction will be specific to the weapon's type]
-        printf("player->weapon->bullet_velocity: %d\n", player->weapon->bullet_velocity);
-
         player->weapon->on_shoot(player);
 
         // decrement weapon capacity
@@ -734,30 +733,6 @@ void update_player_velocity_from_key_state(Player *player)
     }
     player->entity->body->velocity[0] = velx;
     player->entity->body->velocity[1] = vely;
-}
-
-/// @brief updates all the attributes of the player's weapon to the specified weapon type
-/// @param player relevant player
-/// @param weapon_type new weapon_type
-void update_player_weapon(Player *player, Weapon_Type *weapon_type)
-{
-    player->weapon->name = weapon_type->name;
-    player->weapon->fire_mode = weapon_type->fire_mode;
-    player->weapon->capacity = weapon_type->capacity;
-    player->weapon->max_capacity = weapon_type->capacity;
-    player->weapon->reserve = weapon_type->reserve;
-    player->weapon->max_reserve = weapon_type->reserve;
-    player->weapon->max_fire_rate = weapon_type->max_fire_rate;
-    player->weapon->damage = weapon_type->damage;
-    player->weapon->bullet_velocity = weapon_type->bullet_velocity;
-    player->weapon->burst_count = weapon_type->burst_count;
-    player->weapon->burst_shots_remaining = weapon_type->burst_count;
-    player->weapon->burst_delay = weapon_type->burst_delay;
-    player->weapon->frames_since_last_shot = 0;
-    player->weapon->hud_ammo_icon = weapon_type->hud_ammo_icon;
-    player->weapon->ready_to_fire = true;
-    player->weapon->is_firing = false;
-    player->weapon->on_shoot = weapon_type->on_shoot;
 }
 
 void free_player(Player *player)

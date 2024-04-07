@@ -5,22 +5,6 @@
 #include "../engine/render.h"
 #include "../structs.h"
 
-typedef struct map {
-    // these indicate the lengths of their respective arrays
-    usize num_p1_spawns;
-    usize num_p2_spawns;
-    usize num_enemy_spawns;
-    usize max_enemies;
-
-    // used when calculating when to spawn enemies
-    i32 enemy_spawn_delay;
-    i32 frames_since_last_spawn;
-
-    vec2 *player_one_spawn_points; // player one's spawn points
-    vec2 *player_two_spawn_points; // player two's spawn points
-    vec2 *enemy_spawn_points;
-} Map;
-
 extern Map map;
 
 Sprite_Sheet sprite_sheet_bunker_background;
