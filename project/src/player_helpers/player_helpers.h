@@ -187,6 +187,7 @@ void render_player_anims(Player *player, SDL_Window *window, u32 texture_slots[3
 
 void assign_player_input_devices(void);
 void update_player_input_state_via_controller(Player *player, SDL_Event *event);
+void update_player_input_state_via_mouse_clicks(Player *player, SDL_Event *event);
 void update_player_input_state_from_joysticks(Player *player);
 void update_player_input_state_from_keyboard(Player *player);
 void update_menu_input_state(Menu_Input_State menu_input_state);

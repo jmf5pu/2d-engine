@@ -50,6 +50,16 @@ void update_player_input_state_via_controller(Player *player, SDL_Event *event)
     }
 }
 
+/// @brief update the player's key state from mouse clicks
+/// @param player the active player
+/// @param event the sdl event
+void update_player_input_state_via_mouse_clicks(Player *player, SDL_Event *event)
+{
+    u8 press_value = event->type == SDL_MOUSEBUTTONDOWN ? 1 : 0;
+    if (event->button.button == SDL_BUTTON_LEFT)
+        update_key_state(press_value, &player->input_state->key_state->shoot);
+}
+
 /// @brief Checks for joystick movements and updates the player's input state accordingly. Called once per frame for each player
 void update_player_input_state_from_joysticks(Player *player)
 {
@@ -66,7 +76,7 @@ void update_player_input_state_from_joysticks(Player *player)
     }
 }
 
-/// @brief Updates the player's input state via keyboard inputs
+/// @brief Updates the player's input state via keyboard inputs. Note that input_state->key_state->shoot is only updated via mouse click/controller
 /// @param player the relevant player
 void update_player_input_state_from_keyboard(Player *player)
 {
@@ -74,7 +84,6 @@ void update_player_input_state_from_keyboard(Player *player)
     player->input_state->key_state->down = global.input.down;
     player->input_state->key_state->left = global.input.left;
     player->input_state->key_state->right = global.input.right;
-    player->input_state->key_state->shoot = global.input.shoot;
     player->input_state->key_state->reload = global.input.reload;
     player->input_state->key_state->use = global.input.use;
     player->input_state->key_state->pause = global.input.pause;

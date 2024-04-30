@@ -15,7 +15,6 @@ typedef enum input_key {
     INPUT_KEY_DOWN,
     INPUT_KEY_LEFT,
     INPUT_KEY_RIGHT,
-    INPUT_KEY_SHOOT,
     INPUT_KEY_RELOAD,
     INPUT_KEY_USE,
     INPUT_KEY_PAUSE,

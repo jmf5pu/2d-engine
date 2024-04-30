@@ -7,64 +7,38 @@ Weapon_Type *base;
 Weapon_Type *m16;
 Weapon_Type *glock;
 
+void create_bullet_straight(Player *player)
+{
+    vec2 bullet_position = {player->relative_position[0], player->relative_position[1]};
+    vec2 bullet_velocity = {0, 0};
+
+    // Calculate starting position using angle
+    vec2 bullet_start_offset = {0, 0};
+    get_xy_components_from_vector(BULLET_DISTANCE_FROM_PLAYER, player->crosshair_angle, bullet_start_offset);
+    vec2_add(bullet_position, bullet_position, bullet_start_offset);
+
+    // Calculate velocity using angle
+    get_xy_components_from_vector(player->weapon->bullet_velocity, player->crosshair_angle, bullet_velocity);
+
+    // check which of 16 buckets it falls into, assign animation
+    char *bullet_adef_name;
+    bullet_adef_name = "bullet_0";
+
+    // create bullet struct and calculated anim and velocity
+    Bullet *bullet = malloc(sizeof(Bullet));
+    bullet->entity = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
+    bullet->damage = player->weapon->damage;
+    bullet->entity->animation = animation_create(adef_bullet_medium, true);
+
+    vec2_dup(bullet->entity->body->velocity, bullet_velocity);
+    bullet->entity->body->parent = bullet;
+}
+
 void base_on_shoot(Player *player) { return; }
 
-void m16_on_shoot(Player *player)
-{
-    vec2 bullet_position = {player->relative_position[0], player->relative_position[1]};
-    vec2 bullet_velocity = {0, 0};
+void m16_on_shoot(Player *player) { create_bullet_straight(player); }
 
-    // since the player's position is relative to the glviewport, while the crosshair's is to the window TODO: may need to readd this logic (3/12/24)
-
-    // Calculate starting position using angle
-    vec2 bullet_start_offset = {0, 0};
-    get_xy_components_from_vector(BULLET_DISTANCE_FROM_PLAYER, player->crosshair_angle, bullet_start_offset);
-    vec2_add(bullet_position, bullet_position, bullet_start_offset);
-
-    // Calculate velocity using angle
-    get_xy_components_from_vector(player->weapon->bullet_velocity, player->crosshair_angle, bullet_velocity);
-
-    // check which of 16 buckets it falls into, assign animation
-    char *bullet_adef_name;
-    bullet_adef_name = "bullet_0";
-
-    // create bullet struct and calculated anim and velocity
-    Bullet *bullet = malloc(sizeof(Bullet));
-    bullet->entity = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
-    bullet->damage = player->weapon->damage;
-    bullet->entity->animation = animation_create(adef_bullet_medium, true);
-
-    vec2_dup(bullet->entity->body->velocity, bullet_velocity);
-    bullet->entity->body->parent = bullet;
-}
-
-void glock_on_shoot(Player *player)
-{
-    vec2 bullet_position = {player->relative_position[0], player->relative_position[1]};
-    vec2 bullet_velocity = {0, 0};
-
-    // since the player's position is relative to the glviewport, while the crosshair's is to the window TODO: may need to readd this logic (3/12/24)
-
-    // Calculate starting position using angle
-    vec2 bullet_start_offset = {0, 0};
-    get_xy_components_from_vector(BULLET_DISTANCE_FROM_PLAYER, player->crosshair_angle, bullet_start_offset);
-    vec2_add(bullet_position, bullet_position, bullet_start_offset);
-
-    // Calculate velocity using angle
-    get_xy_components_from_vector(player->weapon->bullet_velocity, player->crosshair_angle, bullet_velocity);
-
-    // check which of 16 buckets it falls into, assign animation
-    char *bullet_adef_name;
-    bullet_adef_name = "bullet_0";
-
-    // create bullet struct and calculated anim and velocity
-    Bullet *bullet = malloc(sizeof(Bullet));
-    bullet->entity = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
-    bullet->damage = player->weapon->damage;
-    bullet->entity->animation = animation_create(adef_bullet_medium, true);
-    vec2_dup(bullet->entity->body->velocity, bullet_velocity);
-    bullet->entity->body->parent = bullet;
-}
+void glock_on_shoot(Player *player) { create_bullet_straight(player); }
 
 void init_weapon_types(void)
 {
