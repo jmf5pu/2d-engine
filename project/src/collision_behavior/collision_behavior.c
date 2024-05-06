@@ -1,4 +1,5 @@
 #include "collision_behavior.h"
+#include "../effects/effects.h"
 #include "../engine/physics.h"
 #include "../map_helpers/map_helpers.h"
 #include "../player_helpers/player_helpers.h"
@@ -136,21 +137,23 @@ void pickup_on_hit(Body *self, Body *other, Hit hit) {}
 
 void pickup_on_hit_static(Body *self, Static_Body *other, Hit hit) {}
 
-// for bullets, always mark as inactive when they hit another body
+/// @brief Mark the bullet as inactive (will be destroyed next frame) when it hits any body
+/// @param self
+/// @param other
+/// @param hit
 void bullet_on_hit(Body *self, Body *other, Hit hit)
 {
-    // mark for body (and entity) for destruction
     if (other->is_active) {
         self->is_active = false;
     }
 }
 
+/// @brief Mark the bullet as inactive and create the impact effect's entity
+/// @param self
+/// @param other
+/// @param hit
 void bullet_on_hit_static(Body *self, Static_Body *other, Hit hit)
 {
-    // all bullet bodies should have a pointer to their parent struct
-    assert(self->parent);
-    assert(sizeof(self->parent) == sizeof(Bullet *));
-
-    // mark for body (and entity) for destruction
+    create_bullet_impact_entity(self->aabb.position, adef_bullet_impact_0);
     self->is_active = false;
 }
