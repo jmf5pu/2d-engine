@@ -36,6 +36,13 @@ void create_muzzle_flash_entity(f32 angle, vec2 position, vec2 size, vec2 veloci
     entity->destroy_on_anim_completion = true;
 }
 
+void create_bullet_impact_entity(vec2 position, Animation_Definition *adef)
+{
+    Entity *entity = entity_create(position, (vec2){BULLET_IMPACT_DIMENSIONS[0], BULLET_IMPACT_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
+    entity->animation = animation_create(adef, false);
+    entity->destroy_on_anim_completion = true;
+}
+
 void create_brass_entity(vec2 position, Animation_Definition *adef, i32 z_index)
 {
     Entity *entity = entity_create(position, (vec2){3, 3}, (vec2){0, 0}, 0, 0, NULL, NULL);
@@ -62,71 +69,61 @@ void brass_movement(Entity *entity)
     }
 }
 
+void init_bullet_impact_animation_definitions(void)
+{
+    render_sprite_sheet_init(&sprite_sheet_bullet_impact_0, "assets/wip/bullet_impact_0.png", BULLET_IMPACT_DIMENSIONS[0], BULLET_IMPACT_DIMENSIONS[1]);
+    adef_bullet_impact_0 = animation_definition_create(&sprite_sheet_bullet_impact_0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 0); // TODO: populate
+}
+
 void init_explosion_animation_definitions(void)
 {
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_0, "assets/wip/muzzle_flash_v3_0.png", 19, 19);
-    adef_muzzle_flash_0 =
-        animation_definition_create(&sprite_sheet_muzzle_flash_0, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_0, "assets/wip/muzzle_flash_v3_0.png", MUZZLE_FLASH_DIMENSIONS[0], MUZZLE_FLASH_DIMENSIONS[1]);
+    adef_muzzle_flash_0 = animation_definition_create(&sprite_sheet_muzzle_flash_0, MUZZLE_FLASH_DURATIONS, MUZZLE_FLASH_ROWS, MUZZLE_FLASH_COLS, MUZZLE_FLASH_FRAME_COUNT);
 
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_1, "assets/wip/muzzle_flash_v3_1.png", 19, 19);
-    adef_muzzle_flash_1 =
-        animation_definition_create(&sprite_sheet_muzzle_flash_1, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_1, "assets/wip/muzzle_flash_v3_1.png", MUZZLE_FLASH_DIMENSIONS[0], MUZZLE_FLASH_DIMENSIONS[1]);
+    adef_muzzle_flash_1 = animation_definition_create(&sprite_sheet_muzzle_flash_1, MUZZLE_FLASH_DURATIONS, MUZZLE_FLASH_ROWS, MUZZLE_FLASH_COLS, MUZZLE_FLASH_FRAME_COUNT);
 
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2, "assets/wip/muzzle_flash_v3_2.png", 19, 19);
-    adef_muzzle_flash_2 =
-        animation_definition_create(&sprite_sheet_muzzle_flash_2, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2, "assets/wip/muzzle_flash_v3_2.png", MUZZLE_FLASH_DIMENSIONS[0], MUZZLE_FLASH_DIMENSIONS[1]);
+    adef_muzzle_flash_2 = animation_definition_create(&sprite_sheet_muzzle_flash_2, MUZZLE_FLASH_DURATIONS, MUZZLE_FLASH_ROWS, MUZZLE_FLASH_COLS, MUZZLE_FLASH_FRAME_COUNT);
 
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_3, "assets/wip/muzzle_flash_v3_3.png", 19, 19);
-    adef_muzzle_flash_3 =
-        animation_definition_create(&sprite_sheet_muzzle_flash_3, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_3, "assets/wip/muzzle_flash_v3_3.png", MUZZLE_FLASH_DIMENSIONS[0], MUZZLE_FLASH_DIMENSIONS[1]);
+    adef_muzzle_flash_3 = animation_definition_create(&sprite_sheet_muzzle_flash_3, MUZZLE_FLASH_DURATIONS, MUZZLE_FLASH_ROWS, MUZZLE_FLASH_COLS, MUZZLE_FLASH_FRAME_COUNT);
 
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_4, "assets/wip/muzzle_flash_v3_4.png", 19, 19);
-    adef_muzzle_flash_4 =
-        animation_definition_create(&sprite_sheet_muzzle_flash_4, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_4, "assets/wip/muzzle_flash_v3_4.png", MUZZLE_FLASH_DIMENSIONS[0], MUZZLE_FLASH_DIMENSIONS[1]);
+    adef_muzzle_flash_4 = animation_definition_create(&sprite_sheet_muzzle_flash_4, MUZZLE_FLASH_DURATIONS, MUZZLE_FLASH_ROWS, MUZZLE_FLASH_COLS, MUZZLE_FLASH_FRAME_COUNT);
 
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_5, "assets/wip/muzzle_flash_v3_5.png", 19, 19);
-    adef_muzzle_flash_5 =
-        animation_definition_create(&sprite_sheet_muzzle_flash_5, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_5, "assets/wip/muzzle_flash_v3_5.png", MUZZLE_FLASH_DIMENSIONS[0], MUZZLE_FLASH_DIMENSIONS[1]);
+    adef_muzzle_flash_5 = animation_definition_create(&sprite_sheet_muzzle_flash_5, MUZZLE_FLASH_DURATIONS, MUZZLE_FLASH_ROWS, MUZZLE_FLASH_COLS, MUZZLE_FLASH_FRAME_COUNT);
 
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_6, "assets/wip/muzzle_flash_v3_6.png", 19, 19);
-    adef_muzzle_flash_6 =
-        animation_definition_create(&sprite_sheet_muzzle_flash_6, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_6, "assets/wip/muzzle_flash_v3_6.png", MUZZLE_FLASH_DIMENSIONS[0], MUZZLE_FLASH_DIMENSIONS[1]);
+    adef_muzzle_flash_6 = animation_definition_create(&sprite_sheet_muzzle_flash_6, MUZZLE_FLASH_DURATIONS, MUZZLE_FLASH_ROWS, MUZZLE_FLASH_COLS, MUZZLE_FLASH_FRAME_COUNT);
 
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_7, "assets/wip/muzzle_flash_v3_7.png", 19, 19);
-    adef_muzzle_flash_7 =
-        animation_definition_create(&sprite_sheet_muzzle_flash_7, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_7, "assets/wip/muzzle_flash_v3_7.png", MUZZLE_FLASH_DIMENSIONS[0], MUZZLE_FLASH_DIMENSIONS[1]);
+    adef_muzzle_flash_7 = animation_definition_create(&sprite_sheet_muzzle_flash_7, MUZZLE_FLASH_DURATIONS, MUZZLE_FLASH_ROWS, MUZZLE_FLASH_COLS, MUZZLE_FLASH_FRAME_COUNT);
 
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_8, "assets/wip/muzzle_flash_v3_8.png", 19, 19);
-    adef_muzzle_flash_8 =
-        animation_definition_create(&sprite_sheet_muzzle_flash_8, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_8, "assets/wip/muzzle_flash_v3_8.png", MUZZLE_FLASH_DIMENSIONS[0], MUZZLE_FLASH_DIMENSIONS[1]);
+    adef_muzzle_flash_8 = animation_definition_create(&sprite_sheet_muzzle_flash_8, MUZZLE_FLASH_DURATIONS, MUZZLE_FLASH_ROWS, MUZZLE_FLASH_COLS, MUZZLE_FLASH_FRAME_COUNT);
 
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_9, "assets/wip/muzzle_flash_v3_9.png", 19, 19);
-    adef_muzzle_flash_9 =
-        animation_definition_create(&sprite_sheet_muzzle_flash_9, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_9, "assets/wip/muzzle_flash_v3_9.png", MUZZLE_FLASH_DIMENSIONS[0], MUZZLE_FLASH_DIMENSIONS[1]);
+    adef_muzzle_flash_9 = animation_definition_create(&sprite_sheet_muzzle_flash_9, MUZZLE_FLASH_DURATIONS, MUZZLE_FLASH_ROWS, MUZZLE_FLASH_COLS, MUZZLE_FLASH_FRAME_COUNT);
 
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_10, "assets/wip/muzzle_flash_v3_10.png", 19, 19);
-    adef_muzzle_flash_10 =
-        animation_definition_create(&sprite_sheet_muzzle_flash_10, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_10, "assets/wip/muzzle_flash_v3_10.png", MUZZLE_FLASH_DIMENSIONS[0], MUZZLE_FLASH_DIMENSIONS[1]);
+    adef_muzzle_flash_10 = animation_definition_create(&sprite_sheet_muzzle_flash_10, MUZZLE_FLASH_DURATIONS, MUZZLE_FLASH_ROWS, MUZZLE_FLASH_COLS, MUZZLE_FLASH_FRAME_COUNT);
 
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_11, "assets/wip/muzzle_flash_v3_11.png", 19, 19);
-    adef_muzzle_flash_11 =
-        animation_definition_create(&sprite_sheet_muzzle_flash_11, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_11, "assets/wip/muzzle_flash_v3_11.png", MUZZLE_FLASH_DIMENSIONS[0], MUZZLE_FLASH_DIMENSIONS[1]);
+    adef_muzzle_flash_11 = animation_definition_create(&sprite_sheet_muzzle_flash_11, MUZZLE_FLASH_DURATIONS, MUZZLE_FLASH_ROWS, MUZZLE_FLASH_COLS, MUZZLE_FLASH_FRAME_COUNT);
 
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_12, "assets/wip/muzzle_flash_v3_12.png", 19, 19);
-    adef_muzzle_flash_12 =
-        animation_definition_create(&sprite_sheet_muzzle_flash_12, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_12, "assets/wip/muzzle_flash_v3_12.png", MUZZLE_FLASH_DIMENSIONS[0], MUZZLE_FLASH_DIMENSIONS[1]);
+    adef_muzzle_flash_12 = animation_definition_create(&sprite_sheet_muzzle_flash_12, MUZZLE_FLASH_DURATIONS, MUZZLE_FLASH_ROWS, MUZZLE_FLASH_COLS, MUZZLE_FLASH_FRAME_COUNT);
 
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_13, "assets/wip/muzzle_flash_v3_13.png", 19, 19);
-    adef_muzzle_flash_13 =
-        animation_definition_create(&sprite_sheet_muzzle_flash_13, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_13, "assets/wip/muzzle_flash_v3_13.png", MUZZLE_FLASH_DIMENSIONS[0], MUZZLE_FLASH_DIMENSIONS[1]);
+    adef_muzzle_flash_13 = animation_definition_create(&sprite_sheet_muzzle_flash_13, MUZZLE_FLASH_DURATIONS, MUZZLE_FLASH_ROWS, MUZZLE_FLASH_COLS, MUZZLE_FLASH_FRAME_COUNT);
 
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_14, "assets/wip/muzzle_flash_v3_14.png", 19, 19);
-    adef_muzzle_flash_14 =
-        animation_definition_create(&sprite_sheet_muzzle_flash_14, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_14, "assets/wip/muzzle_flash_v3_14.png", MUZZLE_FLASH_DIMENSIONS[0], MUZZLE_FLASH_DIMENSIONS[1]);
+    adef_muzzle_flash_14 = animation_definition_create(&sprite_sheet_muzzle_flash_14, MUZZLE_FLASH_DURATIONS, MUZZLE_FLASH_ROWS, MUZZLE_FLASH_COLS, MUZZLE_FLASH_FRAME_COUNT);
 
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_15, "assets/wip/muzzle_flash_v3_15.png", 19, 19);
-    adef_muzzle_flash_15 =
-        animation_definition_create(&sprite_sheet_muzzle_flash_15, (f32[]){0.005, 0.005, 0.005, 0.01, 0.01, 0.01}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_15, "assets/wip/muzzle_flash_v3_15.png", MUZZLE_FLASH_DIMENSIONS[0], MUZZLE_FLASH_DIMENSIONS[1]);
+    adef_muzzle_flash_15 = animation_definition_create(&sprite_sheet_muzzle_flash_15, MUZZLE_FLASH_DURATIONS, MUZZLE_FLASH_ROWS, MUZZLE_FLASH_COLS, MUZZLE_FLASH_FRAME_COUNT);
 }
 
 void init_explosion_adef_hashmap(void)
