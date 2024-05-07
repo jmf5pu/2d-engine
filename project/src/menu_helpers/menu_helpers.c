@@ -1,5 +1,6 @@
 #include "menu_helpers.h"
 #include "../engine/util.h"
+#include "../main_helpers/main_helpers.h"
 #include <string.h>
 
 int game_state;

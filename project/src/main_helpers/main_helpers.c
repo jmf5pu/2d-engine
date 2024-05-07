@@ -98,3 +98,18 @@ void render_physics_bodies(void)
         render_aabb(&static_body->aabb, RED);
     }
 }
+
+/// @brief checks if the contents of 2 vec4's are equal
+/// @param first
+/// @param second
+/// @return
+bool vec4_is_equal(vec4 first, vec4 second) { return first[0] == second[0] && first[1] == second[1] && first[2] == second[2] && first[3] == second[3]; }
+
+// returns TRUE if the first RGB value is less than the second for each value in
+// RGB, otherwise returns false
+
+/// @brief Returns true if the first RGB value is less than the second for each value in RGB, otherwise returns false
+/// @param first
+/// @param second
+/// @return
+bool vec4_color_cmp(vec4 first, vec4 second) { return first[0] < second[0] && first[1] < second[1] && first[2] < second[2]; }

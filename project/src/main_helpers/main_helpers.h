@@ -13,4 +13,7 @@ void render_all_non_player_entities_with_animations(SDL_Window *window, u32 text
 void destroy_all_marked_entities(Map *map);
 void get_xy_components_from_vector(f32 magnitude, f32 angle, vec2 components_result);
 void render_physics_bodies(void);
+bool vec4_is_equal(vec4 first, vec4 second);
+bool vec4_color_cmp(vec4 first, vec4 second);
+
 #endif

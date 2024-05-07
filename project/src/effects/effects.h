@@ -1,3 +1,6 @@
+#ifndef EFFECTS_H
+#define EFFECTS_H
+
 #include "../engine/animation.h"
 #include "../engine/entity.h"
 #include "../engine/render.h"
@@ -15,16 +18,10 @@ Sprite_Sheet sprite_sheet_brass_falling_1;
 Animation_Definition *adef_brass_falling_1;
 
 // bullet impact
-const u8 BULLET_IMPACT_DIMENSIONS[] = {5, 5};
 Sprite_Sheet sprite_sheet_bullet_impact_0;
 Animation_Definition *adef_bullet_impact_0;
 
 // muzzle flash
-const u8 MUZZLE_FLASH_DIMENSIONS[] = {19, 19};
-const f32 MUZZLE_FLASH_DURATIONS[] = {0.005, 0.005, 0.005, 0.01, 0.01, 0.01};
-const u8 MUZZLE_FLASH_ROWS[] = {0, 0, 0, 0, 0, 0};
-const u8 MUZZLE_FLASH_COLS[] = {0, 1, 2, 3, 4, 5};
-const u8 MUZZLE_FLASH_FRAME_COUNT = 6;
 Sprite_Sheet sprite_sheet_muzzle_flash_0;
 Sprite_Sheet sprite_sheet_muzzle_flash_1;
 Sprite_Sheet sprite_sheet_muzzle_flash_2;
@@ -67,3 +64,5 @@ void create_muzzle_flash_entity(f32 angle, vec2 position, vec2 size, vec2 veloci
 void create_bullet_impact_entity(vec2 position, Animation_Definition *adef);
 void create_brass_entity(vec2 position, Animation_Definition *adef, i32 z_index);
 void brass_movement(Entity *entity);
+
+#endif
