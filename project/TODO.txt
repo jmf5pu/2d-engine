@@ -1,8 +1,8 @@
 immediate:
-* create anim for bullet impacts
+* create animations for bullet impacts
 * add logic for a couple different types of impact effects
 
-long term:
+other:
 * effects
     * bullet impacts on static bodies
     * dust after footsteps
@@ -14,3 +14,9 @@ long term:
 * add reloading timer and animation
 * potentially bump up batch size of rendering - noticing occasional flickers when player is turning AND shooting
 * remove Sprite_Sheet_Frame struct, replace occurrences with animations
+* redo hud sprites
+* add idle player animations
+* implement sdl2 mixer sound logic
+    * background music
+    * weapon shooting sound
+    * reloading sound

@@ -13,6 +13,9 @@
 bool should_destroy_entity(Entity *entity, Map *map)
 {
     bool anim_requesting_destroy = entity->destroy_on_anim_completion && entity->animation->current_frame_index == entity->animation->animation_definition->frame_count - 1;
+    if (anim_requesting_destroy) {
+        printf("size on destroy: %f, %f\n", entity->body->aabb.half_size[0], entity->body->aabb.half_size[1]);
+    }
     bool is_player = SPLIT_SCREEN ? (entity == player_one->entity || entity == player_two->entity) : (entity == player_one->entity);
     bool is_pickup = false;
 

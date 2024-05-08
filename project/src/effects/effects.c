@@ -17,6 +17,7 @@ const u8 MUZZLE_FLASH_FRAME_COUNT = 6;
 void init_effects(void)
 {
     init_brass_animation_definitions();
+    init_bullet_impact_animation_definitions();
     init_explosion_animation_definitions();
     init_explosion_adef_hashmap();
     init_character_shadow_anim();
@@ -47,6 +48,7 @@ void create_muzzle_flash_entity(f32 angle, vec2 position, vec2 size, vec2 veloci
 void create_bullet_impact_entity(vec2 position, Animation_Definition *adef)
 {
     Entity *entity = entity_create(position, (vec2){BULLET_IMPACT_DIMENSIONS[0], BULLET_IMPACT_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
+    printf("%f, %f\n", entity->body->aabb.half_size[0], entity->body->aabb.half_size[1]);
     entity->animation = animation_create(adef, false);
     entity->destroy_on_anim_completion = true;
 }
@@ -80,7 +82,7 @@ void brass_movement(Entity *entity)
 void init_bullet_impact_animation_definitions(void)
 {
     render_sprite_sheet_init(&sprite_sheet_bullet_impact_0, "assets/wip/bullet_impact_0.png", BULLET_IMPACT_DIMENSIONS[0], BULLET_IMPACT_DIMENSIONS[1]);
-    adef_bullet_impact_0 = animation_definition_create(&sprite_sheet_bullet_impact_0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 0); // TODO: populate
+    adef_bullet_impact_0 = animation_definition_create(&sprite_sheet_bullet_impact_0, (f32[]){0.3, 0.3, 0.3}, (u8[]){0, 0, 0}, (u8[]){0, 1, 2}, 3); // TODO: populate
 }
 
 void init_explosion_animation_definitions(void)
