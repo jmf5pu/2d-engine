@@ -7,6 +7,7 @@
 #include <linmath.h>
 #include <stdbool.h>
 
+void poll_sdl_events_and_update_input_states(void);
 bool should_destroy_entity(Entity *entity, Map *map);
 bool entity_is_player_or_crosshair(Entity *entity);
 void render_all_non_player_entities_with_animations(SDL_Window *window, u32 texture_slots[32], vec4 color);

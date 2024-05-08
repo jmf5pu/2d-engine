@@ -32,8 +32,9 @@
 #include "structs.h"
 #include "weapon_types/weapon_types.h"
 
+bool should_quit = false;
+
 static u32 texture_slots[32] = {0}; // texture slots array for batch rendering
-static bool should_quit = false;    // quit flag
 vec4 game_color;
 
 const u8 frame_rate = 60; // frame rate
@@ -68,31 +69,7 @@ int main(int argc, char *argv[])
         if (player_two)
             maintain_controller_keypresses(player_two);
 
-        // grab current inputs
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            switch (event.type) {
-            case SDL_QUIT:
-                should_quit = true;
-                break;
-            case SDL_MOUSEBUTTONDOWN:
-            case SDL_MOUSEBUTTONUP:
-                // player one always takes priority for mouse/keyboard inputs
-                if (player_one && player_one->input_state->controller_input_state->controller_id == -1)
-                    update_player_input_state_via_mouse_clicks(player_one, &event);
-                else if (player_two && player_two->input_state->controller_input_state->controller_id == -1)
-                    update_player_input_state_via_mouse_clicks(player_two, &event);
-            case SDL_JOYBUTTONDOWN:
-            case SDL_JOYBUTTONUP:
-                if (player_one && event.cbutton.which == player_one->input_state->controller_input_state->controller_id)
-                    update_player_input_state_via_controller(player_one, &event);
-                if (player_two && event.cbutton.which == player_two->input_state->controller_input_state->controller_id)
-                    update_player_input_state_via_controller(player_two, &event);
-                break;
-            default:
-                break;
-            }
-        }
+        poll_sdl_events_and_update_input_states();
 
         update_bound_key_states();
 
