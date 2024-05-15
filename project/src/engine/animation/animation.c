@@ -151,7 +151,7 @@ void animation_update(f32 dt)
     }
 }
 
-void animation_render(Animation *animation, SDL_Window *window, vec2 position, vec4 color, u32 texture_slots[32])
+void animation_render(Animation *animation, SDL_Window *window, vec2 position, vec4 color, u32 texture_slots[BATCH_SIZE])
 {
     animation->is_active = true;
     Animation_Definition *adef = animation->animation_definition;

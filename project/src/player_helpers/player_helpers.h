@@ -183,7 +183,7 @@ void handle_player_shooting(Player *player, Key_State shoot);
 void handle_player_input(Player *player);
 void free_players(void);
 void player_per_frame_updates(Player *player);
-void render_player_anims(Player *player, SDL_Window *window, u32 texture_slots[32], vec4 color);
+void render_player_anims(Player *player, SDL_Window *window, u32 texture_slots[BATCH_SIZE], vec4 color);
 
 void assign_player_input_devices(void);
 void update_player_input_state_via_controller(Player *player, SDL_Event *event);

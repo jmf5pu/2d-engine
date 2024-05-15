@@ -3,7 +3,7 @@
 
 #define SPLIT_SCREEN false
 #define RENDER_PHYSICS_BODIES true
-
+#define BATCH_SIZE 32
 #define MAX_BATCH_QUADS 10000
 #define MAX_BATCH_VERTICES 40000
 #define MAX_BATCH_ELEMENTS 60000
@@ -72,6 +72,7 @@ void render_aabb(AABB *aabb, vec4 color);
 f32 render_get_scale();
 
 void render_sprite_sheet_init(Sprite_Sheet *sprite_sheet, const char *path, f32 cell_width, f32 cell_height);
-void render_sprite_sheet_frame(Sprite_Sheet *sprite_sheet, SDL_Window *window, f32 row, f32 column, vec2 position, i32 z_index, bool is_flipped, vec4 color, u32 texture_slots[16]);
+void render_sprite_sheet_frame(
+    Sprite_Sheet *sprite_sheet, SDL_Window *window, f32 row, f32 column, vec2 position, i32 z_index, bool is_flipped, vec4 color, u32 texture_slots[BATCH_SIZE]);
 
 #endif

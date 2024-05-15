@@ -178,7 +178,7 @@ void init_ammo_anims(void)
     anim_forward_slash = animation_create(adef_forward_slash, false);
 }
 
-void render_health(SDL_Window *window, u32 texture_slots[32], Player *player, vec2 position, vec4 color)
+void render_health(SDL_Window *window, u32 texture_slots[BATCH_SIZE], Player *player, vec2 position, vec4 color)
 {
     i16 health = player->health;
     if (health == 100) {
@@ -230,7 +230,7 @@ void render_health(SDL_Window *window, u32 texture_slots[32], Player *player, ve
 
 // renders the ammo display digit and returns the updated value for calculating
 // the next position
-u16 render_ammo_digit(SDL_Window *window, u32 texture_slots[32], vec2 position, vec4 color, u16 value, f32 current_ammo_fraction)
+u16 render_ammo_digit(SDL_Window *window, u32 texture_slots[BATCH_SIZE], vec2 position, vec4 color, u16 value, f32 current_ammo_fraction)
 {
     // get least significant digit and convert to string for use with anim
     // hashmap
@@ -252,7 +252,7 @@ u16 render_ammo_digit(SDL_Window *window, u32 texture_slots[32], vec2 position, 
 }
 
 // Renders the ammo display. Renders the digits in each value from left to right
-void render_ammo(SDL_Window *window, u32 texture_slots[32], Player *player, vec2 position, vec4 color)
+void render_ammo(SDL_Window *window, u32 texture_slots[BATCH_SIZE], Player *player, vec2 position, vec4 color)
 {
     f32 current_ammo_fraction = (f32)player->weapon->capacity / player->weapon->max_capacity;
 
@@ -342,7 +342,7 @@ void init_hud(SDL_Window *window)
 }
 
 // renders the heads up display (should be called once per frame)
-void render_hud(SDL_Window *window, u32 texture_slots[32], vec4 color)
+void render_hud(SDL_Window *window, u32 texture_slots[BATCH_SIZE], vec4 color)
 {
     // render player one displays (health + ammo + crosshair)
     // render_health(window, texture_slots, player_one, (vec2){50, (window_height * DEFAULT_RENDER_SCALE_FACTOR) - 50}, color);

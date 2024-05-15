@@ -48,7 +48,6 @@ void create_muzzle_flash_entity(f32 angle, vec2 position, vec2 size, vec2 veloci
 void create_bullet_impact_entity(vec2 position, Animation_Definition *adef)
 {
     Entity *entity = entity_create(position, (vec2){BULLET_IMPACT_DIMENSIONS[0], BULLET_IMPACT_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
-    printf("%f, %f\n", entity->body->aabb.half_size[0], entity->body->aabb.half_size[1]);
     entity->animation = animation_create(adef, false);
     entity->destroy_on_anim_completion = true;
 }

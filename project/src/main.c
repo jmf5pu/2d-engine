@@ -34,7 +34,7 @@
 
 bool should_quit = false;
 
-static u32 texture_slots[32] = {0}; // texture slots array for batch rendering
+static u32 texture_slots[BATCH_SIZE] = {0}; // texture slots array for batch rendering
 vec4 game_color;
 
 const u8 frame_rate = 60; // frame rate

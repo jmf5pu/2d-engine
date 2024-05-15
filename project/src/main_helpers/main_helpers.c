@@ -45,13 +45,11 @@ void poll_sdl_events_and_update_input_states(void)
 bool should_destroy_entity(Entity *entity, Map *map)
 {
     bool anim_requesting_destroy = entity->destroy_on_anim_completion && entity->animation->current_frame_index == entity->animation->animation_definition->frame_count - 1;
-    if (anim_requesting_destroy) {
-        printf("size on destroy: %f, %f\n", entity->body->aabb.half_size[0], entity->body->aabb.half_size[1]);
-    }
     bool is_player = SPLIT_SCREEN ? (entity == player_one->entity || entity == player_two->entity) : (entity == player_one->entity);
     bool is_pickup = false;
+    bool is_inactive = !entity->is_active || !entity->body->is_active;
 
-    return (anim_requesting_destroy || !entity->is_active || !entity->body->is_active) && !is_player && !is_pickup && !entity_is_player_or_crosshair(entity);
+    return (anim_requesting_destroy || is_inactive) && !is_player && !is_pickup && !entity_is_player_or_crosshair(entity);
 }
 
 /// @brief Checks if an entity is a crosshair
@@ -64,7 +62,7 @@ bool entity_is_player_or_crosshair(Entity *entity)
     return is_player || is_crosshair;
 }
 
-void render_all_non_player_entities_with_animations(SDL_Window *window, u32 texture_slots[32], vec4 color)
+void render_all_non_player_entities_with_animations(SDL_Window *window, u32 texture_slots[BATCH_SIZE], vec4 color)
 {
     for (int j = (int)entity_count() - 1; j >= 0; --j) {
         Entity *entity = entity_get(j);

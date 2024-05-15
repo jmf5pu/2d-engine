@@ -263,7 +263,7 @@ void player_per_frame_updates(Player *player)
 /// @param window
 /// @param texture_slots
 /// @param color
-void render_player_anims(Player *player, SDL_Window *window, u32 texture_slots[32], vec4 color)
+void render_player_anims(Player *player, SDL_Window *window, u32 texture_slots[BATCH_SIZE], vec4 color)
 {
     if (player) {
         vec2 character_shadow_pos = {0, 0};
