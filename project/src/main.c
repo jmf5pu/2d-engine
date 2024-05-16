@@ -149,17 +149,13 @@ int main(int argc, char *argv[])
 
             // need to pass the RELATIVE position of the players
             // into the physics engine to properly detect collisions
-            p1_pos_holder[0] = player_one->entity->body->aabb.position[0];
-            p1_pos_holder[1] = player_one->entity->body->aabb.position[1];
-            player_one->entity->body->aabb.position[0] = player_one->relative_position[0];
-            player_one->entity->body->aabb.position[1] = player_one->relative_position[1];
+            vec2_dup(p1_pos_holder, player_one->entity->body->aabb.position);
+            vec2_dup(player_one->entity->body->aabb.position, player_one->relative_position);
 
             if (SPLIT_SCREEN) {
                 vec2_add(player_two->relative_position, player_two->entity->body->aabb.position, right_cam.position);
-                p2_pos_holder[0] = player_two->entity->body->aabb.position[0];
-                p2_pos_holder[1] = player_two->entity->body->aabb.position[1];
-                player_two->entity->body->aabb.position[0] = player_two->relative_position[0];
-                player_two->entity->body->aabb.position[1] = player_two->relative_position[1];
+                vec2_dup(p2_pos_holder, player_two->entity->body->aabb.position);
+                vec2_dup(player_two->entity->body->aabb.position, player_two->relative_position);
             }
 
             // update physics bodies

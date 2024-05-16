@@ -3,11 +3,13 @@
 
 #define SPLIT_SCREEN false
 #define RENDER_PHYSICS_BODIES true
+#define RENDER_FULLSCREEN true
+#define DEFAULT_RENDER_SCALE_FACTOR 0.25
+
 #define BATCH_SIZE 32
 #define MAX_BATCH_QUADS 10000
 #define MAX_BATCH_VERTICES 40000
 #define MAX_BATCH_ELEMENTS 60000
-#define DEFAULT_RENDER_SCALE_FACTOR 0.25
 
 #include "physics.h"
 #include <SDL2/SDL.h>
@@ -59,7 +61,7 @@ typedef struct sprite_sheet_frame {
     vec4 color;
 } Sprite_Sheet_Frame;
 
-SDL_Window *render_init();
+SDL_Window *render_init(void);
 void set_render_dimensions(f32 scale_factor, bool rendering_hud, bool update_shaders);
 void render_begin(void);
 void render_begin_left(void);

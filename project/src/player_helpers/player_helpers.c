@@ -624,7 +624,8 @@ void handle_player_shooting(Player *player, Key_State shoot)
     }
 
     // generate bullet if weapon is loaded and key state is correct
-    if (player->weapon->capacity > 0 && player->weapon->ready_to_fire && key_state_ready) {
+    player->weapon->is_firing = player->weapon->capacity > 0 && player->weapon->ready_to_fire && key_state_ready;
+    if (player->weapon->is_firing) {
         // update flag on the weapon struct (used for anim assignment)
         player->weapon->is_firing = true;
 
@@ -659,8 +660,6 @@ void handle_player_shooting(Player *player, Key_State shoot)
         vec2_add(brass_position, brass_position, (vec2){0, CHARACTER_ARMS_Y_OFFSET_FROM_CENTER});
         create_brass_entity(brass_position, adef_brass_falling_1, get_player_brass_z_index(player->crosshair_angle));
     }
-    else
-        player->weapon->is_firing = false;
 }
 
 /// @brief helper to get the z_index of brass entities based on player direction. If the player is facing up, we want to render the brass underneath the player sprite

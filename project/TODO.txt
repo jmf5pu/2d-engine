@@ -1,5 +1,7 @@
 immediate:
-* create animations for bullet impacts
+* figure out why bullets are being destroyed immediately
+    * (thoughts) a BUNCH of entities are being created on bullet impact since they are hanging around for a few frames 
+    and that is why everything slows down now that the impact entities have been added
 * add logic for a couple different types of impact effects
 
 other:
