@@ -64,7 +64,7 @@ void init_weapon_types(void)
 
     m16 = malloc(sizeof(Weapon_Type));
     m16->name = "m16";
-    m16->fire_mode = BURST;
+    m16->fire_mode = AUTO;
     m16->capacity = 30;
     m16->reserve = 900;
     m16->max_fire_rate = 800; // rounds per minute
@@ -77,7 +77,7 @@ void init_weapon_types(void)
 
     glock = malloc(sizeof(Weapon_Type));
     glock->name = "glock";
-    glock->fire_mode = SEMI;
+    glock->fire_mode = AUTO;
     glock->capacity = 15;
     glock->reserve = 900;
     glock->max_fire_rate = 1200;

@@ -48,7 +48,6 @@ bool should_destroy_entity(Entity *entity, Map *map)
     bool is_player = SPLIT_SCREEN ? (entity == player_one->entity || entity == player_two->entity) : (entity == player_one->entity);
     bool is_pickup = false;
     bool is_inactive = !entity->is_active || !entity->body->is_active;
-
     return (anim_requesting_destroy || is_inactive) && !is_player && !is_pickup && !entity_is_player_or_crosshair(entity);
 }
 
@@ -83,8 +82,10 @@ void destroy_all_marked_entities(Map *map)
 {
     for (int i = (int)entity_count() - 1; i >= 0; --i) {
         Entity *entity = entity_get(i);
-        if (should_destroy_entity(entity, map))
+        if (should_destroy_entity(entity, map)) {
+            printf("[%p] entity requesting destroy\n", entity);
             entity_destroy(entity);
+        }
     }
 }
 
