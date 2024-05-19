@@ -3,11 +3,11 @@
 #include "../hud/hud.h"
 #include "player_helpers.h"
 
-/// @brief Assigns a controller to each player. -1 indicates no associated controller
+/// @brief Assigns a controller to each player. -1 indicates no associated controller. Second player gets controller priority if split screen mode is enabled.
 /// @param
 void assign_player_input_devices(void)
 {
-    player_one->input_state->controller_input_state->controller_id = open_controller_ids[1];
+    player_one->input_state->controller_input_state->controller_id = open_controller_ids[SPLIT_SCREEN ? 1 : 0];
     if (SPLIT_SCREEN)
         player_two->input_state->controller_input_state->controller_id = open_controller_ids[0];
 }
