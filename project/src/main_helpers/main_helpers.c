@@ -82,10 +82,8 @@ void destroy_all_marked_entities(Map *map)
 {
     for (int i = (int)entity_count() - 1; i >= 0; --i) {
         Entity *entity = entity_get(i);
-        if (should_destroy_entity(entity, map)) {
-            printf("[%p] entity requesting destroy\n", entity);
+        if (should_destroy_entity(entity, map))
             entity_destroy(entity);
-        }
     }
 }
 

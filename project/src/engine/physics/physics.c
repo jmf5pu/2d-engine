@@ -7,7 +7,7 @@
 
 static Physics_State_Internal state;
 
-static u32 iterations = 60;
+static const u32 iterations = 60;
 static f32 tick_rate;
 
 // returns all bodies
@@ -106,7 +106,7 @@ static void sweep_response(Body *body, vec2 velocity)
             body->velocity[1] = 0;
         }
 
-        if (body->on_hit_static != NULL) {
+        if (body->on_hit_static != NULL && body->is_active) {
             body->on_hit_static(body, physics_static_body_get(hit.other_id), hit);
         }
     }
