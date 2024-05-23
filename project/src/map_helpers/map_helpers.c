@@ -40,28 +40,7 @@ void init_map(Map *map)
     map->enemy_spawn_delay = 120; // in frames
     map->frames_since_last_spawn = 0;
 
-    // create prop entities and corresponding static bodies
-    Entity *bunker_background = entity_create((vec2){163.5, 97.5}, (vec2){327, 195}, (vec2){0, 0}, 0, 0, NULL, NULL);
-    bunker_background->animation = anim_bunker_background;
-    physics_static_body_create((vec2){163.5, 10}, (vec2){327, 5},
-                               COLLISION_LAYER_TERRAIN);                                     // bottom
-    physics_static_body_create((vec2){163.5, 185}, (vec2){327, 5}, COLLISION_LAYER_TERRAIN); // top
-    physics_static_body_create((vec2){5, 97.5}, (vec2){5, 195}, COLLISION_LAYER_TERRAIN);    // left
-    physics_static_body_create((vec2){322, 97.5}, (vec2){5, 195},
-                               COLLISION_LAYER_TERRAIN); // right
-
-    Entity *metal_table_1 = entity_create((vec2){21, 88}, (vec2){23, 48}, (vec2){0, 0}, 0, 0, NULL, NULL);
-    metal_table_1->animation = anim_metal_table_vertical_1;
-    Entity *metal_table_2 = entity_create((vec2){22, 45}, (vec2){23, 48}, (vec2){0, 0}, 0, 0, NULL, NULL);
-    metal_table_2->animation = anim_metal_table_vertical_2;
-    physics_static_body_create((vec2){22, 69}, (vec2){23, 96}, COLLISION_LAYER_TERRAIN);
-
-    // create pickup entities
-    Entity *m16_pickup = entity_create((vec2){27, 55}, (vec2){20, 9}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, m16_pickup_on_hit, NULL);
-    m16_pickup->animation = anim_m16_pickup;
-
-    Entity *glock_pickup = entity_create((vec2){35, 70}, (vec2){7, 9}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, glock_pickup_on_hit, NULL);
-    glock_pickup->animation = anim_glock_pickup;
+    init_map_props();
 
     // create spawn points
     vec2 *p1_spawn_point_array = malloc(sizeof(vec2) * map->num_p1_spawns);
@@ -86,51 +65,6 @@ void init_map(Map *map)
 
     // initialize enemies arraylist
     init_enemies(sizeof(Zombie *), map->max_enemies);
-}
-
-void init_map_assets(void)
-{
-    render_sprite_sheet_init(&sprite_sheet_bunker_background, "assets/wip/bunker_map.png", 327, 195);
-    adef_bunker_background = animation_definition_create(&sprite_sheet_bunker_background, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_bunker_background = animation_create(adef_bunker_background, false);
-    anim_bunker_background->z_index = INT32_MIN;
-
-    render_sprite_sheet_init(&sprite_sheet_metal_table_vertical_1, "assets/wip/metal_table_vertical_1.png", 23, 48);
-    adef_metal_table_vertical_1 = animation_definition_create(&sprite_sheet_metal_table_vertical_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_metal_table_vertical_1 = animation_create(adef_metal_table_vertical_1, false);
-    anim_metal_table_vertical_1->z_index = -5;
-
-    render_sprite_sheet_init(&sprite_sheet_metal_table_vertical_2, "assets/wip/metal_table_vertical_2.png", 23, 48);
-    adef_metal_table_vertical_2 = animation_definition_create(&sprite_sheet_metal_table_vertical_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_metal_table_vertical_2 = animation_create(adef_metal_table_vertical_2, false);
-    anim_metal_table_vertical_2->z_index = anim_metal_table_vertical_1->z_index + 1;
-
-    render_sprite_sheet_init(&sprite_sheet_m16_pickup, "assets/wip/m16_pickup.png", 20, 9);
-    adef_m16_pickup = animation_definition_create(&sprite_sheet_m16_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_m16_pickup = animation_create(adef_m16_pickup, false);
-
-    render_sprite_sheet_init(&sprite_sheet_glock_pickup, "assets/wip/glock_pickup.png", 7, 9);
-    adef_glock_pickup = animation_definition_create(&sprite_sheet_glock_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_glock_pickup = animation_create(adef_glock_pickup, false);
-
-    render_sprite_sheet_init(&sprite_sheet_teleporter_inactive, "assets/wip/teleporter_inactive.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
-    adef_teleporter_inactive = animation_definition_create(&sprite_sheet_teleporter_inactive, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-
-    render_sprite_sheet_init(&sprite_sheet_teleporter_spin_up, "assets/wip/teleporter_spin_up.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
-    adef_teleporter_spin_up = animation_definition_create(
-        &sprite_sheet_teleporter_spin_up, TELEPORTER_SPIN_UP_DURATIONS, TELEPORTER_SPIN_UP_ROWS, TELEPORTER_SPIN_UP_COLS, ARRAY_LENGTH(TELEPORTER_SPIN_UP_COLS));
-
-    render_sprite_sheet_init(&sprite_sheet_teleporter_active, "assets/wip/teleporter_active.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
-    adef_teleporter_active = animation_definition_create(
-        &sprite_sheet_teleporter_active, TELEPORTER_ACTIVE_DURATIONS, TELEPORTER_ACTIVE_ROWS, TELEPORTER_ACTIVE_COLS, ARRAY_LENGTH(TELEPORTER_ACTIVE_COLS));
-
-    render_sprite_sheet_init(&sprite_sheet_teleporter_spin_down, "assets/wip/teleporter_spin_down.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
-    adef_teleporter_spin_down = animation_definition_create(
-        &sprite_sheet_teleporter_spin_down, TELEPORTER_SPIN_DOWN_DURATIONS, TELEPORTER_SPIN_DOWN_ROWS, TELEPORTER_SPIN_DOWN_COLS, ARRAY_LENGTH(TELEPORTER_SPIN_DOWN_COLS));
-
-    render_sprite_sheet_init(&sprite_sheet_teleporter_glow, "assets/wip/teleporter_glow.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
-    adef_teleporter_glow =
-        animation_definition_create(&sprite_sheet_teleporter_glow, TELEPORTER_GLOW_DURATIONS, TELEPORTER_GLOW_ROWS, TELEPORTER_GLOW_COLS, ARRAY_LENGTH(TELEPORTER_GLOW_COLS));
 }
 
 // update the enemy spawns (spawn enemies if needed) TODO: potentially move this
@@ -190,4 +124,102 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
     }
 
     // spawn points are relative, no need to shift them
+}
+
+void init_map_assets(void)
+{
+    render_sprite_sheet_init(&sprite_sheet_bunker_background, "assets/wip/bunker_map.png", 327, 195);
+    adef_bunker_background = animation_definition_create(&sprite_sheet_bunker_background, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_bunker_background = animation_create(adef_bunker_background, false);
+    anim_bunker_background->z_index = INT32_MIN;
+
+    render_sprite_sheet_init(&sprite_sheet_metal_table_vertical_1, "assets/wip/metal_table_vertical_1.png", 23, 48);
+    adef_metal_table_vertical_1 = animation_definition_create(&sprite_sheet_metal_table_vertical_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_metal_table_vertical_1 = animation_create(adef_metal_table_vertical_1, false);
+    anim_metal_table_vertical_1->z_index = -5;
+
+    render_sprite_sheet_init(&sprite_sheet_metal_table_vertical_2, "assets/wip/metal_table_vertical_2.png", 23, 48);
+    adef_metal_table_vertical_2 = animation_definition_create(&sprite_sheet_metal_table_vertical_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_metal_table_vertical_2 = animation_create(adef_metal_table_vertical_2, false);
+    anim_metal_table_vertical_2->z_index = anim_metal_table_vertical_1->z_index + 1;
+
+    render_sprite_sheet_init(&sprite_sheet_m16_pickup, "assets/wip/m16_pickup.png", 20, 9);
+    adef_m16_pickup = animation_definition_create(&sprite_sheet_m16_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_pickup = animation_create(adef_m16_pickup, false);
+
+    render_sprite_sheet_init(&sprite_sheet_glock_pickup, "assets/wip/glock_pickup.png", 7, 9);
+    adef_glock_pickup = animation_definition_create(&sprite_sheet_glock_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_glock_pickup = animation_create(adef_glock_pickup, false);
+
+    printf("%llu\n", ARRAY_LENGTH(TELEPORTER_SPIN_UP_COLS));
+
+    render_sprite_sheet_init(&sprite_sheet_teleporter_inactive, "assets/wip/teleporter_inactive.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    adef_teleporter_inactive = animation_definition_create(&sprite_sheet_teleporter_inactive, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+
+    render_sprite_sheet_init(&sprite_sheet_teleporter_spin_up, "assets/wip/teleporter_spin_up.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    adef_teleporter_spin_up = animation_definition_create(
+        &sprite_sheet_teleporter_spin_up,
+        (f32 *)TELEPORTER_SPIN_UP_DURATIONS,
+        (u8 *)TELEPORTER_SPIN_UP_ROWS,
+        (u8 *)TELEPORTER_SPIN_UP_COLS,
+        (u8)ARRAY_LENGTH(TELEPORTER_SPIN_UP_COLS));
+
+    render_sprite_sheet_init(&sprite_sheet_teleporter_active, "assets/wip/teleporter_active.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    adef_teleporter_active = animation_definition_create(
+        &sprite_sheet_teleporter_active, (f32 *)TELEPORTER_ACTIVE_DURATIONS, (u8 *)TELEPORTER_ACTIVE_ROWS, (u8 *)TELEPORTER_ACTIVE_COLS, (u8)ARRAY_LENGTH(TELEPORTER_ACTIVE_COLS));
+
+    render_sprite_sheet_init(&sprite_sheet_teleporter_spin_down, "assets/wip/teleporter_spin_down.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    adef_teleporter_spin_down = animation_definition_create(
+        &sprite_sheet_teleporter_spin_down,
+        (f32 *)TELEPORTER_SPIN_DOWN_DURATIONS,
+        (u8 *)TELEPORTER_SPIN_DOWN_ROWS,
+        (u8 *)TELEPORTER_SPIN_DOWN_COLS,
+        (u8)ARRAY_LENGTH(TELEPORTER_SPIN_DOWN_COLS));
+
+    render_sprite_sheet_init(&sprite_sheet_teleporter_glow, "assets/wip/teleporter_glow.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    adef_teleporter_glow = animation_definition_create(
+        &sprite_sheet_teleporter_glow, (f32 *)TELEPORTER_GLOW_DURATIONS, (u8 *)TELEPORTER_GLOW_ROWS, (u8 *)TELEPORTER_GLOW_COLS, (u8)ARRAY_LENGTH(TELEPORTER_GLOW_COLS));
+}
+
+void init_map_props(void)
+{
+    init_map_background_prop();
+    init_metal_table_props();
+    init_teleporter_prop();
+    init_pickup_props();
+}
+
+void init_map_background_prop(void)
+{
+    Entity *bunker_background = entity_create((vec2){163.5, 97.5}, (vec2){327, 195}, (vec2){0, 0}, 0, 0, NULL, NULL);
+    bunker_background->animation = anim_bunker_background;
+    physics_static_body_create((vec2){163.5, 10}, (vec2){327, 5},
+                               COLLISION_LAYER_TERRAIN);                                     // bottom
+    physics_static_body_create((vec2){163.5, 185}, (vec2){327, 5}, COLLISION_LAYER_TERRAIN); // top
+    physics_static_body_create((vec2){5, 97.5}, (vec2){5, 195}, COLLISION_LAYER_TERRAIN);    // left
+    physics_static_body_create((vec2){322, 97.5}, (vec2){5, 195},
+                               COLLISION_LAYER_TERRAIN); // right
+}
+
+void init_metal_table_props(void)
+{
+    Entity *metal_table_1 = entity_create((vec2){21, 88}, (vec2){23, 48}, (vec2){0, 0}, 0, 0, NULL, NULL);
+    metal_table_1->animation = anim_metal_table_vertical_1;
+    Entity *metal_table_2 = entity_create((vec2){22, 45}, (vec2){23, 48}, (vec2){0, 0}, 0, 0, NULL, NULL);
+    metal_table_2->animation = anim_metal_table_vertical_2;
+    physics_static_body_create((vec2){22, 69}, (vec2){23, 96}, COLLISION_LAYER_TERRAIN);
+}
+
+void init_teleporter_prop(void)
+{
+    Entity *teleporter = entity_create((vec2){300, 300}, (vec2){TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
+    teleporter->animation = animation_create(adef_teleporter_inactive, false);
+}
+
+void init_pickup_props(void)
+{
+    Entity *m16_pickup = entity_create((vec2){27, 55}, (vec2){20, 9}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, m16_pickup_on_hit, NULL);
+    m16_pickup->animation = anim_m16_pickup;
+    Entity *glock_pickup = entity_create((vec2){35, 70}, (vec2){7, 9}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, glock_pickup_on_hit, NULL);
+    glock_pickup->animation = anim_glock_pickup;
 }
