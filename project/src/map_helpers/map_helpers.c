@@ -4,6 +4,7 @@
 #include "../engine./util.h"
 #include "../engine/global.h"
 #include "../player_helpers/player_helpers.h"
+#include "../structs.h"
 #include <stdlib.h>
 
 Map map;
@@ -35,10 +36,8 @@ void init_map(Map *map)
     // we use these to track array length later on
     map->num_p1_spawns = 1;
     map->num_p2_spawns = 1;
-    map->num_enemy_spawns = 1;
-    map->max_enemies = 1;         // max number of enemies that can be present at the same time
-    map->enemy_spawn_delay = 120; // in frames
-    map->frames_since_last_spawn = 0;
+    map->num_enemy_spawners = 1;
+    map->max_enemies = 1; // max number of enemies that can be present at the same time
 
     init_map_props();
 
@@ -53,39 +52,54 @@ void init_map(Map *map)
     p2_spawn_point_array[0][0] = p2_spawn_1[0];
     p2_spawn_point_array[0][1] = p2_spawn_1[1];
 
-    vec2 *enemy_spawn_point_array = malloc(sizeof(vec2) * map->num_enemy_spawns);
-    vec2 enemy_spawn_1 = {1100, 280};
-    enemy_spawn_point_array[0][0] = enemy_spawn_1[0];
-    enemy_spawn_point_array[0][1] = enemy_spawn_1[1];
+    TimeSpawner *enemy_spawner_array = malloc(sizeof(TimeSpawner) * map->num_enemy_spawners);
+    TimeSpawner enemy_spawner_1 =
+        (TimeSpawner){.is_active = true, .max_frames_seconds = 10 * FRAME_RATE, .wait_frames_remaining = 10 * FRAME_RATE, .position = {1100, 280}, .spawn = spawn_zombie};
+    enemy_spawner_array[0] = enemy_spawner_1;
 
     // Populate parent struct
     map->player_one_spawn_points = p1_spawn_point_array;
     map->player_two_spawn_points = p2_spawn_point_array;
-    map->enemy_spawn_points = enemy_spawn_point_array;
+    map->enemy_spawners = enemy_spawner_array;
 
     // initialize enemies arraylist
     init_enemies(sizeof(Zombie *), map->max_enemies);
 }
 
-// update the enemy spawns (spawn enemies if needed) TODO: potentially move this
-// to a struct attribute, will vary from map to map
-void update_enemy_spawns(Map *map)
-{
-    if (get_all_enemies()->len < map->max_enemies && map->frames_since_last_spawn >= map->enemy_spawn_delay) {
-        create_enemy(map->enemy_spawn_points[0], (vec2){70, 70});
-        map->frames_since_last_spawn = 0;
-    }
-    map->frames_since_last_spawn++;
-}
+// // update the enemy spawns (spawn enemies if needed) TODO: potentially move this
+// // to a struct attribute, will vary from map to map
+// void update_enemy_spawns(Map *map)
+// {
+//     if (get_all_enemies()->len < map->max_enemies && map->frames_since_last_spawn >= map->enemy_spawn_delay) {
+//         create_enemy(map->enemy_spawn_points[0], (vec2){70, 70});
+//         map->frames_since_last_spawn = 0;
+//     }
+//     map->frames_since_last_spawn++;
+// }
 
 // updates map attributes each frame
 void update_map(Map *map)
 {
-    // update the enemies (generate if needed)
-    if (map->num_enemy_spawns > 0) {
-        update_enemy_spawns(map);
-    }
+    update_spawners(map);
     update_current_enemies();
+}
+
+void update_spawners(Map *map)
+{
+    // update enemy spawners
+    for (int i = 0; i < map->num_enemy_spawners; i++) {
+        if (map->enemy_spawners[i].is_active)
+            update_spawner(&map->enemy_spawners[i]);
+    }
+}
+
+void update_spawner(TimeSpawner *spawner)
+{
+    spawner->wait_frames_remaining--;
+    if (spawner->wait_frames_remaining == 0) {
+        spawner->wait_frames_remaining = spawner->max_frames_seconds;
+        spawner->spawn(spawner->position);
+    }
 }
 
 // frees all map attributes that used malloc to init
@@ -93,6 +107,7 @@ void free_map_attributes(Map *map)
 {
     free(map->player_one_spawn_points);
     free(map->player_two_spawn_points);
+    free(map->enemy_spawners);
 }
 
 /// @brief Moves all static bodies and bodies ( and therefore entities ) by the shift parameter. Used for camera movements.
@@ -151,34 +166,34 @@ void init_map_assets(void)
     adef_glock_pickup = animation_definition_create(&sprite_sheet_glock_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_glock_pickup = animation_create(adef_glock_pickup, false);
 
-    printf("%llu\n", ARRAY_LENGTH(TELEPORTER_SPIN_UP_COLS));
+    // TODO: uncomment once sprites are present
+    // render_sprite_sheet_init(&sprite_sheet_teleporter_inactive, "assets/wip/teleporter_inactive.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    // adef_teleporter_inactive = animation_definition_create(&sprite_sheet_teleporter_inactive, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
-    render_sprite_sheet_init(&sprite_sheet_teleporter_inactive, "assets/wip/teleporter_inactive.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
-    adef_teleporter_inactive = animation_definition_create(&sprite_sheet_teleporter_inactive, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    // render_sprite_sheet_init(&sprite_sheet_teleporter_spin_up, "assets/wip/teleporter_spin_up.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    // adef_teleporter_spin_up = animation_definition_create(
+    //     &sprite_sheet_teleporter_spin_up,
+    //     (f32 *)TELEPORTER_SPIN_UP_DURATIONS,
+    //     (u8 *)TELEPORTER_SPIN_UP_ROWS,
+    //     (u8 *)TELEPORTER_SPIN_UP_COLS,
+    //     (u8)ARRAY_LENGTH(TELEPORTER_SPIN_UP_COLS));
 
-    render_sprite_sheet_init(&sprite_sheet_teleporter_spin_up, "assets/wip/teleporter_spin_up.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
-    adef_teleporter_spin_up = animation_definition_create(
-        &sprite_sheet_teleporter_spin_up,
-        (f32 *)TELEPORTER_SPIN_UP_DURATIONS,
-        (u8 *)TELEPORTER_SPIN_UP_ROWS,
-        (u8 *)TELEPORTER_SPIN_UP_COLS,
-        (u8)ARRAY_LENGTH(TELEPORTER_SPIN_UP_COLS));
+    // render_sprite_sheet_init(&sprite_sheet_teleporter_active, "assets/wip/teleporter_active.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    // adef_teleporter_active = animation_definition_create(
+    //     &sprite_sheet_teleporter_active, (f32 *)TELEPORTER_ACTIVE_DURATIONS, (u8 *)TELEPORTER_ACTIVE_ROWS, (u8 *)TELEPORTER_ACTIVE_COLS,
+    //     (u8)ARRAY_LENGTH(TELEPORTER_ACTIVE_COLS));
 
-    render_sprite_sheet_init(&sprite_sheet_teleporter_active, "assets/wip/teleporter_active.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
-    adef_teleporter_active = animation_definition_create(
-        &sprite_sheet_teleporter_active, (f32 *)TELEPORTER_ACTIVE_DURATIONS, (u8 *)TELEPORTER_ACTIVE_ROWS, (u8 *)TELEPORTER_ACTIVE_COLS, (u8)ARRAY_LENGTH(TELEPORTER_ACTIVE_COLS));
+    // render_sprite_sheet_init(&sprite_sheet_teleporter_spin_down, "assets/wip/teleporter_spin_down.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    // adef_teleporter_spin_down = animation_definition_create(
+    //     &sprite_sheet_teleporter_spin_down,
+    //     (f32 *)TELEPORTER_SPIN_DOWN_DURATIONS,
+    //     (u8 *)TELEPORTER_SPIN_DOWN_ROWS,
+    //     (u8 *)TELEPORTER_SPIN_DOWN_COLS,
+    //     (u8)ARRAY_LENGTH(TELEPORTER_SPIN_DOWN_COLS));
 
-    render_sprite_sheet_init(&sprite_sheet_teleporter_spin_down, "assets/wip/teleporter_spin_down.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
-    adef_teleporter_spin_down = animation_definition_create(
-        &sprite_sheet_teleporter_spin_down,
-        (f32 *)TELEPORTER_SPIN_DOWN_DURATIONS,
-        (u8 *)TELEPORTER_SPIN_DOWN_ROWS,
-        (u8 *)TELEPORTER_SPIN_DOWN_COLS,
-        (u8)ARRAY_LENGTH(TELEPORTER_SPIN_DOWN_COLS));
-
-    render_sprite_sheet_init(&sprite_sheet_teleporter_glow, "assets/wip/teleporter_glow.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
-    adef_teleporter_glow = animation_definition_create(
-        &sprite_sheet_teleporter_glow, (f32 *)TELEPORTER_GLOW_DURATIONS, (u8 *)TELEPORTER_GLOW_ROWS, (u8 *)TELEPORTER_GLOW_COLS, (u8)ARRAY_LENGTH(TELEPORTER_GLOW_COLS));
+    // render_sprite_sheet_init(&sprite_sheet_teleporter_glow, "assets/wip/teleporter_glow.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    // adef_teleporter_glow = animation_definition_create(
+    //     &sprite_sheet_teleporter_glow, (f32 *)TELEPORTER_GLOW_DURATIONS, (u8 *)TELEPORTER_GLOW_ROWS, (u8 *)TELEPORTER_GLOW_COLS, (u8)ARRAY_LENGTH(TELEPORTER_GLOW_COLS));
 }
 
 void init_map_props(void)
@@ -212,8 +227,9 @@ void init_metal_table_props(void)
 
 void init_teleporter_prop(void)
 {
-    Entity *teleporter = entity_create((vec2){300, 300}, (vec2){TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
-    teleporter->animation = animation_create(adef_teleporter_inactive, false);
+    // TODO: uncomment when teleporter sprites are present
+    // Entity *teleporter = entity_create((vec2){300, 300}, (vec2){TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
+    // teleporter->animation = animation_create(adef_teleporter_inactive, false);
 }
 
 void init_pickup_props(void)

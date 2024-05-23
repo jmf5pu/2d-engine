@@ -25,11 +25,11 @@ Array_List *get_all_enemies(void) { return current_enemies; }
 void init_enemies(usize item_size, usize initial_capacity) { current_enemies = array_list_create(sizeof(item_size), initial_capacity); }
 
 // initializes a single enemy and adds to current_enemies
-void create_enemy(vec2 spawn_point, vec2 size)
+void create_enemy(vec2 spawn_point)
 {
     if (SPAWN_ENEMIES) {
         Zombie *enemy = malloc(sizeof(Zombie));
-        enemy->entity = entity_create(spawn_point, size, (vec2){0, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
+        enemy->entity = entity_create(spawn_point, (vec2){70, 70}, (vec2){0, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
         enemy->entity->body->parent = enemy;
         enemy->despawn_time = 1;
         enemy->frames_on_status = 0;

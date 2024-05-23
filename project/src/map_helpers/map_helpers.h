@@ -47,7 +47,12 @@ void init_metal_table_props(void);
 void init_teleporter_prop(void);
 void init_pickup_props(void);
 void update_map(Map *map);
+void update_spawners(Map *map);
+void update_spawner(TimeSpawner *spawner);
 void free_map_attributes(Map *map);
 void update_all_positions(Map *map, vec2 shift, bool left_player_is_active);
+
+// spawning logic callbacks
+void spawn_zombie(vec2 spawn_point);
 
 #endif

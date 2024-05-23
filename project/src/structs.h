@@ -125,8 +125,6 @@ typedef struct player {
     bool is_left_player;
 } Player;
 
-typedef void (*OnShoot)(Player *player);
-
 typedef struct bullet {
     Entity *entity;
     i32 damage;
@@ -153,20 +151,26 @@ typedef struct menu {
     u8 selected_item;
 } Menu;
 
+typedef struct time_spawner TimeSpawer;
+typedef void (*Spawn)(vec2 spawn_point);
+
+typedef struct time_spawner {
+    bool is_active;
+    vec2 position;
+    u32 wait_frames_remaining;
+    u32 max_frames_seconds;
+    Spawn spawn;
+} TimeSpawner;
+
 typedef struct map {
     // these indicate the lengths of their respective arrays
     usize num_p1_spawns;
     usize num_p2_spawns;
-    usize num_enemy_spawns;
+    usize num_enemy_spawners;
     usize max_enemies;
-
-    // used when calculating when to spawn enemies
-    i32 enemy_spawn_delay;
-    i32 frames_since_last_spawn;
-
     vec2 *player_one_spawn_points; // player one's spawn points
     vec2 *player_two_spawn_points; // player two's spawn points
-    vec2 *enemy_spawn_points;
+    TimeSpawner *enemy_spawners;
 } Map;
 
 #endif
