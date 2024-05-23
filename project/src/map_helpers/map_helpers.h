@@ -28,8 +28,8 @@ Sprite_Sheet sprite_sheet_teleporter_active;
 Animation_Definition *adef_teleporter_active;
 Sprite_Sheet sprite_sheet_teleporter_spin_down;
 Animation_Definition *adef_teleporter_spin_down;
-Sprite_Sheet sprite_sheet_teleporter_spawn_glow;
-Animation_Definition *adef_teleporter_spawn_glow;
+Sprite_Sheet sprite_sheet_teleporter_glow;
+Animation_Definition *adef_teleporter_glow;
 
 // weapon pickups
 Sprite_Sheet sprite_sheet_m16_pickup;
@@ -40,6 +40,7 @@ Animation_Definition *adef_glock_pickup;
 Animation *anim_glock_pickup;
 
 void init_map(Map *map);
+void init_map_assets(void);
 void update_map(Map *map);
 void free_map_attributes(Map *map);
 void update_all_positions(Map *map, vec2 shift, bool left_player_is_active);
