@@ -9,24 +9,24 @@
 
 Map map;
 
-const u8 TELEPORTER_DIMENSIONS[] = {30, 50};
-const u8 TELEPORTER_GLOW_DIMENSIONS[] = {30, 50};
+const u8 TELEPORTER_DIMENSIONS[] = {19, 19};
+const u8 TELEPORTER_GLOW_DIMENSIONS[] = {15, 32};
 
-const f32 TELEPORTER_SPIN_UP_DURATIONS[] = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
-const u8 TELEPORTER_SPIN_UP_ROWS[] = {0, 0, 0, 0, 0, 0};
-const u8 TELEPORTER_SPIN_UP_COLS[] = {1, 2, 3, 4, 5, 6};
+const f32 TELEPORTER_SPIN_UP_DURATIONS[] = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
+const u8 TELEPORTER_SPIN_UP_ROWS[] = {0, 0, 0, 0, 0, 0, 0, 0};
+const u8 TELEPORTER_SPIN_UP_COLS[] = {1, 2, 3, 4, 5, 6, 7, 8};
 
-const f32 TELEPORTER_ACTIVE_DURATIONS[] = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
-const u8 TELEPORTER_ACTIVE_ROWS[] = {0, 0, 0, 0, 0, 0};
-const u8 TELEPORTER_ACTIVE_COLS[] = {1, 2, 3, 4, 5, 6};
+const f32 TELEPORTER_ACTIVE_DURATIONS[] = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
+const u8 TELEPORTER_ACTIVE_ROWS[] = {0, 0, 0, 0, 0, 0, 0, 0};
+const u8 TELEPORTER_ACTIVE_COLS[] = {1, 2, 3, 4, 5, 6, 7, 8};
 
-const f32 TELEPORTER_SPIN_DOWN_DURATIONS[] = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
-const u8 TELEPORTER_SPIN_DOWN_ROWS[] = {0, 0, 0, 0, 0, 0};
-const u8 TELEPORTER_SPIN_DOWN_COLS[] = {1, 2, 3, 4, 5, 6};
+const f32 TELEPORTER_SPIN_DOWN_DURATIONS[] = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
+const u8 TELEPORTER_SPIN_DOWN_ROWS[] = {0, 0, 0, 0, 0, 0, 0, 0};
+const u8 TELEPORTER_SPIN_DOWN_COLS[] = {1, 2, 3, 4, 5, 6, 7, 8};
 
-const f32 TELEPORTER_GLOW_DURATIONS[] = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
-const u8 TELEPORTER_GLOW_ROWS[] = {0, 0, 0, 0, 0, 0};
-const u8 TELEPORTER_GLOW_COLS[] = {1, 2, 3, 4, 5, 6};
+const f32 TELEPORTER_GLOW_DURATIONS[] = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
+const u8 TELEPORTER_GLOW_ROWS[] = {0, 0, 0, 0, 0, 0, 0, 0};
+const u8 TELEPORTER_GLOW_COLS[] = {1, 2, 3, 4, 5, 6, 7, 8};
 
 // set up map & props
 void init_map(Map *map)
@@ -54,7 +54,7 @@ void init_map(Map *map)
 
     TimeSpawner *enemy_spawner_array = malloc(sizeof(TimeSpawner) * map->num_enemy_spawners);
     TimeSpawner enemy_spawner_1 =
-        (TimeSpawner){.is_active = true, .max_frames_seconds = 10 * FRAME_RATE, .wait_frames_remaining = 10 * FRAME_RATE, .position = {1100, 280}, .spawn = spawn_zombie};
+        (TimeSpawner){.is_active = true, .max_frames_seconds = 10 * FRAME_RATE, .wait_frames_remaining = 10 * FRAME_RATE, .position = {250, 100}, .spawn = spawn_zombie};
     enemy_spawner_array[0] = enemy_spawner_1;
 
     // Populate parent struct
@@ -152,7 +152,6 @@ void init_map_assets(void)
     adef_metal_table_vertical_1 = animation_definition_create(&sprite_sheet_metal_table_vertical_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_metal_table_vertical_1 = animation_create(adef_metal_table_vertical_1, false);
     anim_metal_table_vertical_1->z_index = -5;
-
     render_sprite_sheet_init(&sprite_sheet_metal_table_vertical_2, "assets/wip/metal_table_vertical_2.png", 23, 48);
     adef_metal_table_vertical_2 = animation_definition_create(&sprite_sheet_metal_table_vertical_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_metal_table_vertical_2 = animation_create(adef_metal_table_vertical_2, false);
@@ -161,39 +160,32 @@ void init_map_assets(void)
     render_sprite_sheet_init(&sprite_sheet_m16_pickup, "assets/wip/m16_pickup.png", 20, 9);
     adef_m16_pickup = animation_definition_create(&sprite_sheet_m16_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_m16_pickup = animation_create(adef_m16_pickup, false);
-
     render_sprite_sheet_init(&sprite_sheet_glock_pickup, "assets/wip/glock_pickup.png", 7, 9);
     adef_glock_pickup = animation_definition_create(&sprite_sheet_glock_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_glock_pickup = animation_create(adef_glock_pickup, false);
 
-    // TODO: uncomment once sprites are present
-    // render_sprite_sheet_init(&sprite_sheet_teleporter_inactive, "assets/wip/teleporter_inactive.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
-    // adef_teleporter_inactive = animation_definition_create(&sprite_sheet_teleporter_inactive, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-
-    // render_sprite_sheet_init(&sprite_sheet_teleporter_spin_up, "assets/wip/teleporter_spin_up.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
-    // adef_teleporter_spin_up = animation_definition_create(
-    //     &sprite_sheet_teleporter_spin_up,
-    //     (f32 *)TELEPORTER_SPIN_UP_DURATIONS,
-    //     (u8 *)TELEPORTER_SPIN_UP_ROWS,
-    //     (u8 *)TELEPORTER_SPIN_UP_COLS,
-    //     (u8)ARRAY_LENGTH(TELEPORTER_SPIN_UP_COLS));
-
-    // render_sprite_sheet_init(&sprite_sheet_teleporter_active, "assets/wip/teleporter_active.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
-    // adef_teleporter_active = animation_definition_create(
-    //     &sprite_sheet_teleporter_active, (f32 *)TELEPORTER_ACTIVE_DURATIONS, (u8 *)TELEPORTER_ACTIVE_ROWS, (u8 *)TELEPORTER_ACTIVE_COLS,
-    //     (u8)ARRAY_LENGTH(TELEPORTER_ACTIVE_COLS));
-
-    // render_sprite_sheet_init(&sprite_sheet_teleporter_spin_down, "assets/wip/teleporter_spin_down.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
-    // adef_teleporter_spin_down = animation_definition_create(
-    //     &sprite_sheet_teleporter_spin_down,
-    //     (f32 *)TELEPORTER_SPIN_DOWN_DURATIONS,
-    //     (u8 *)TELEPORTER_SPIN_DOWN_ROWS,
-    //     (u8 *)TELEPORTER_SPIN_DOWN_COLS,
-    //     (u8)ARRAY_LENGTH(TELEPORTER_SPIN_DOWN_COLS));
-
-    // render_sprite_sheet_init(&sprite_sheet_teleporter_glow, "assets/wip/teleporter_glow.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
-    // adef_teleporter_glow = animation_definition_create(
-    //     &sprite_sheet_teleporter_glow, (f32 *)TELEPORTER_GLOW_DURATIONS, (u8 *)TELEPORTER_GLOW_ROWS, (u8 *)TELEPORTER_GLOW_COLS, (u8)ARRAY_LENGTH(TELEPORTER_GLOW_COLS));
+    render_sprite_sheet_init(&sprite_sheet_teleporter_inactive, "assets/wip/teleporter_spinning.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    adef_teleporter_inactive = animation_definition_create(&sprite_sheet_teleporter_inactive, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_teleporter_spin_up, "assets/wip/teleporter_spinning.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    adef_teleporter_spin_up = animation_definition_create(
+        &sprite_sheet_teleporter_spin_up,
+        (f32 *)TELEPORTER_SPIN_UP_DURATIONS,
+        (u8 *)TELEPORTER_SPIN_UP_ROWS,
+        (u8 *)TELEPORTER_SPIN_UP_COLS,
+        (u8)ARRAY_LENGTH(TELEPORTER_SPIN_UP_COLS));
+    render_sprite_sheet_init(&sprite_sheet_teleporter_active, "assets/wip/teleporter_active.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    adef_teleporter_active = animation_definition_create(
+        &sprite_sheet_teleporter_active, (f32 *)TELEPORTER_ACTIVE_DURATIONS, (u8 *)TELEPORTER_ACTIVE_ROWS, (u8 *)TELEPORTER_ACTIVE_COLS, (u8)ARRAY_LENGTH(TELEPORTER_ACTIVE_COLS));
+    render_sprite_sheet_init(&sprite_sheet_teleporter_spin_down, "assets/wip/teleporter_spinning.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    adef_teleporter_spin_down = animation_definition_create(
+        &sprite_sheet_teleporter_spin_down,
+        (f32 *)TELEPORTER_SPIN_DOWN_DURATIONS,
+        (u8 *)TELEPORTER_SPIN_DOWN_ROWS,
+        (u8 *)TELEPORTER_SPIN_DOWN_COLS,
+        (u8)ARRAY_LENGTH(TELEPORTER_SPIN_DOWN_COLS));
+    render_sprite_sheet_init(&sprite_sheet_teleporter_glow, "assets/wip/teleporter_glow.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    adef_teleporter_glow = animation_definition_create(
+        &sprite_sheet_teleporter_glow, (f32 *)TELEPORTER_GLOW_DURATIONS, (u8 *)TELEPORTER_GLOW_ROWS, (u8 *)TELEPORTER_GLOW_COLS, (u8)ARRAY_LENGTH(TELEPORTER_GLOW_COLS));
 }
 
 void init_map_props(void)
@@ -227,9 +219,8 @@ void init_metal_table_props(void)
 
 void init_teleporter_prop(void)
 {
-    // TODO: uncomment when teleporter sprites are present
-    // Entity *teleporter = entity_create((vec2){300, 300}, (vec2){TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
-    // teleporter->animation = animation_create(adef_teleporter_inactive, false);
+    Entity *teleporter = entity_create((vec2){300, 300}, (vec2){TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
+    teleporter->animation = animation_create(adef_teleporter_inactive, false);
 }
 
 void init_pickup_props(void)
