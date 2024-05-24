@@ -162,15 +162,33 @@ typedef struct time_spawner {
     Spawn spawn;
 } TimeSpawner;
 
+typedef enum {
+    ACTIVE,
+    INACTIVE,
+    SPINNING_UP,
+    SPINNING_DOWN,
+} TeleporterStateEnum;
+typedef union {
+    TeleporterStateEnum teleporter_state_enum;
+} StateEnum;
+typedef void (*UpdateState)(Entity *entity, StateEnum *state);
+typedef struct dynamic_prop {
+    Entity *entity;
+    StateEnum state;
+    UpdateState update_state;
+} DynamicProp;
+
 typedef struct map {
     // these indicate the lengths of their respective arrays
     usize num_p1_spawns;
     usize num_p2_spawns;
     usize num_enemy_spawners;
     usize max_enemies;
+    usize num_dynamic_props;
     vec2 *player_one_spawn_points; // player one's spawn points
     vec2 *player_two_spawn_points; // player two's spawn points
     TimeSpawner *enemy_spawners;
+    DynamicProp **dynamic_props;
 } Map;
 
 #endif

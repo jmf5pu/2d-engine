@@ -2,8 +2,8 @@
 #define RENDER_H
 
 #define SPLIT_SCREEN false
-#define RENDER_PHYSICS_BODIES true
-#define RENDER_FULLSCREEN true
+#define RENDER_PHYSICS_BODIES false
+#define RENDER_FULLSCREEN true // TODO: does nothing, fix this
 #define DEFAULT_RENDER_SCALE_FACTOR 0.25
 #define FRAME_RATE 60
 

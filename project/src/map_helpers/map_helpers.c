@@ -16,7 +16,7 @@ const f32 TELEPORTER_SPIN_UP_DURATIONS[] = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0
 const u8 TELEPORTER_SPIN_UP_ROWS[] = {0, 0, 0, 0, 0, 0, 0, 0};
 const u8 TELEPORTER_SPIN_UP_COLS[] = {1, 2, 3, 4, 5, 6, 7, 8};
 
-const f32 TELEPORTER_ACTIVE_DURATIONS[] = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
+const f32 TELEPORTER_ACTIVE_DURATIONS[] = {0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05};
 const u8 TELEPORTER_ACTIVE_ROWS[] = {0, 0, 0, 0, 0, 0, 0, 0};
 const u8 TELEPORTER_ACTIVE_COLS[] = {1, 2, 3, 4, 5, 6, 7, 8};
 
@@ -38,8 +38,9 @@ void init_map(Map *map)
     map->num_p2_spawns = 1;
     map->num_enemy_spawners = 1;
     map->max_enemies = 1; // max number of enemies that can be present at the same time
+    map->num_dynamic_props = 1;
 
-    init_map_props();
+    init_map_props(map);
 
     // create spawn points
     vec2 *p1_spawn_point_array = malloc(sizeof(vec2) * map->num_p1_spawns);
@@ -81,12 +82,24 @@ void init_map(Map *map)
 void update_map(Map *map)
 {
     update_spawners(map);
+    update_dynamic_props(map);
     update_current_enemies();
 }
 
+/// @brief Update state of all dynamic props associated with the map
+/// @param map
+void update_dynamic_props(Map *map)
+{
+    for (int i = 0; i < map->num_dynamic_props; i++) {
+        DynamicProp *prop = map->dynamic_props[i];
+        prop->update_state(prop->entity, &prop->state);
+    }
+}
+
+/// @brief Update all enemy spawners associated with the map
+/// @param map
 void update_spawners(Map *map)
 {
-    // update enemy spawners
     for (int i = 0; i < map->num_enemy_spawners; i++) {
         if (map->enemy_spawners[i].is_active)
             update_spawner(&map->enemy_spawners[i]);
@@ -108,6 +121,10 @@ void free_map_attributes(Map *map)
     free(map->player_one_spawn_points);
     free(map->player_two_spawn_points);
     free(map->enemy_spawners);
+    for (int i = 0; i < map->num_dynamic_props; i++) {
+        free(map->dynamic_props[i]);
+    }
+    free(map->dynamic_props);
 }
 
 /// @brief Moves all static bodies and bodies ( and therefore entities ) by the shift parameter. Used for camera movements.
@@ -183,17 +200,19 @@ void init_map_assets(void)
         (u8 *)TELEPORTER_SPIN_DOWN_ROWS,
         (u8 *)TELEPORTER_SPIN_DOWN_COLS,
         (u8)ARRAY_LENGTH(TELEPORTER_SPIN_DOWN_COLS));
-    render_sprite_sheet_init(&sprite_sheet_teleporter_glow, "assets/wip/teleporter_glow.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_teleporter_glow, "assets/wip/teleporter_glow.png", TELEPORTER_GLOW_DIMENSIONS[0], TELEPORTER_GLOW_DIMENSIONS[1]);
     adef_teleporter_glow = animation_definition_create(
         &sprite_sheet_teleporter_glow, (f32 *)TELEPORTER_GLOW_DURATIONS, (u8 *)TELEPORTER_GLOW_ROWS, (u8 *)TELEPORTER_GLOW_COLS, (u8)ARRAY_LENGTH(TELEPORTER_GLOW_COLS));
 }
 
-void init_map_props(void)
+void init_map_props(Map *map)
 {
     init_map_background_prop();
     init_metal_table_props();
-    init_teleporter_prop();
     init_pickup_props();
+
+    map->dynamic_props = malloc(sizeof(DynamicProp *) * map->num_dynamic_props);
+    map->dynamic_props[0] = init_teleporter_prop();
 }
 
 void init_map_background_prop(void)
@@ -217,10 +236,43 @@ void init_metal_table_props(void)
     physics_static_body_create((vec2){22, 69}, (vec2){23, 96}, COLLISION_LAYER_TERRAIN);
 }
 
-void init_teleporter_prop(void)
+void teleporter_update_state(Entity *entity, StateEnum *state) // TODO: move this to a separate file
 {
-    Entity *teleporter = entity_create((vec2){300, 300}, (vec2){TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
-    teleporter->animation = animation_create(adef_teleporter_inactive, false);
+    static u32 frames_on_state = 0;
+    const u32 active_frames = 0.05 * 8 * FRAME_RATE;
+
+    switch (state->teleporter_state_enum) {
+    case ACTIVE:
+        if (frames_on_state == 0) {
+            Entity *teleporter_glow = entity_create((vec2){150, 108}, (vec2){TELEPORTER_GLOW_DIMENSIONS[0], TELEPORTER_GLOW_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
+            teleporter_glow->animation = animation_create(adef_teleporter_glow, false);
+            teleporter_glow->destroy_on_anim_completion = true;
+            // TODO: trigger an enemy spawn here
+        }
+        else if (frames_on_state >= active_frames) {
+            frames_on_state = 0;
+            state->teleporter_state_enum = INACTIVE;
+        }
+    case INACTIVE:
+        animation_destroy(entity->animation);
+        entity->animation = animation_create(adef_teleporter_inactive, false);
+    case SPINNING_UP: // TODO: add logic for a button press to trigger this
+    case SPINNING_DOWN:
+    default:
+        break;
+    };
+
+    frames_on_state++;
+}
+
+DynamicProp *init_teleporter_prop(void)
+{
+    DynamicProp *teleporter = malloc(sizeof(DynamicProp));
+    teleporter->entity = entity_create((vec2){150, 100}, (vec2){TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
+    teleporter->state.teleporter_state_enum = ACTIVE;
+    teleporter->update_state = teleporter_update_state;
+    teleporter->entity->animation = animation_create(adef_teleporter_active, true);
+    return teleporter;
 }
 
 void init_pickup_props(void)

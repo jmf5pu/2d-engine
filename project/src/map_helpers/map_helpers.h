@@ -41,13 +41,14 @@ Animation *anim_glock_pickup;
 
 void init_map(Map *map);
 void init_map_assets(void);
-void init_map_props(void);
+void init_map_props(Map *map);
 void init_map_background_prop(void);
 void init_metal_table_props(void);
-void init_teleporter_prop(void);
+DynamicProp *init_teleporter_prop(void);
 void init_pickup_props(void);
 void update_map(Map *map);
 void update_spawners(Map *map);
+void update_dynamic_props(Map *map);
 void update_spawner(TimeSpawner *spawner);
 void free_map_attributes(Map *map);
 void update_all_positions(Map *map, vec2 shift, bool left_player_is_active);
