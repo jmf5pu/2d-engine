@@ -67,17 +67,6 @@ void init_map(Map *map)
     init_enemies(sizeof(Zombie *), map->max_enemies);
 }
 
-// // update the enemy spawns (spawn enemies if needed) TODO: potentially move this
-// // to a struct attribute, will vary from map to map
-// void update_enemy_spawns(Map *map)
-// {
-//     if (get_all_enemies()->len < map->max_enemies && map->frames_since_last_spawn >= map->enemy_spawn_delay) {
-//         create_enemy(map->enemy_spawn_points[0], (vec2){70, 70});
-//         map->frames_since_last_spawn = 0;
-//     }
-//     map->frames_since_last_spawn++;
-// }
-
 // updates map attributes each frame
 void update_map(Map *map)
 {
@@ -242,7 +231,7 @@ DynamicProp *init_teleporter_prop(void)
     teleporter->entity = entity_create((vec2){150, 100}, (vec2){TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
     teleporter->state.teleporter_state_enum = ACTIVE;
     teleporter->update_state = teleporter_update_state;
-    teleporter->entity->animation = animation_create(adef_teleporter_active, true);
+    teleporter->entity->animation = animation_create(adef_teleporter_inactive, false);
     return teleporter;
 }
 
