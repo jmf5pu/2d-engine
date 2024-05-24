@@ -5,6 +5,25 @@
 #include "../engine/render.h"
 #include "../structs.h"
 
+extern const u8 TELEPORTER_DIMENSIONS[];
+extern const u8 TELEPORTER_GLOW_DIMENSIONS[];
+
+extern const f32 TELEPORTER_SPIN_UP_DURATIONS[];
+extern const u8 TELEPORTER_SPIN_UP_ROWS[];
+extern const u8 TELEPORTER_SPIN_UP_COLS[];
+
+extern const f32 TELEPORTER_ACTIVE_DURATIONS[];
+extern const u8 TELEPORTER_ACTIVE_ROWS[];
+extern const u8 TELEPORTER_ACTIVE_COLS[];
+
+extern const f32 TELEPORTER_SPIN_DOWN_DURATIONS[];
+extern const u8 TELEPORTER_SPIN_DOWN_ROWS[];
+extern const u8 TELEPORTER_SPIN_DOWN_COLS[];
+
+extern const f32 TELEPORTER_GLOW_DURATIONS[];
+extern const u8 TELEPORTER_GLOW_ROWS[];
+extern const u8 TELEPORTER_GLOW_COLS[];
+
 extern Map map;
 
 Sprite_Sheet sprite_sheet_bunker_background;
@@ -55,5 +74,8 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active);
 
 // spawning logic callbacks
 void spawn_zombie(vec2 spawn_point);
+
+// dynamic prop logic callbacks
+void teleporter_update_state(Entity *entity, StateEnum *state);
 
 #endif
