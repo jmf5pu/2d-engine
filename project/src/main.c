@@ -120,8 +120,8 @@ int main(int argc, char *argv[])
 
             if (SPLIT_SCREEN && !player_two) {
                 player_two = malloc(sizeof(Player));
-                init_player(player_two, &map, m16, 2.9, 5, 2, false);
-                spawn_player(player_two, m16);
+                init_player(player_two, &map, base, 2.9, 5, 2, false);
+                spawn_player(player_two, base);
             }
 
             // check if pause was hit, update game state

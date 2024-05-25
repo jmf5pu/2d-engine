@@ -4,9 +4,7 @@
 void teleporter_update_state(Entity *entity, StateEnum *state)
 {
     static u32 frames_on_state = 0;
-    const u32 active_frames = 600; // FRAME_RATE * (0.1 * 8);
-
-    printf("%d\n", state->teleporter_state_enum);
+    const u32 active_frames = FRAME_RATE * (0.1 * 8);
 
     switch (state->teleporter_state_enum) {
     case ACTIVE:
@@ -22,11 +20,15 @@ void teleporter_update_state(Entity *entity, StateEnum *state)
             frames_on_state = 0;
             state->teleporter_state_enum = INACTIVE;
         }
+        break;
     case INACTIVE:
         animation_destroy(entity->animation);
         entity->animation = animation_create(adef_teleporter_inactive, false);
+        break;
     case SPINNING_UP: // TODO: add logic for a button press to trigger this
+        break;
     case SPINNING_DOWN:
+        break;
     default:
         break;
     };
