@@ -1,5 +1,4 @@
 TODO:
-* fix `ERROR: Could not find the specified animation in the Array_List` on enemy death
 * effects
     * dust after footsteps
     * add logic to assign different muzzle flashes to different guns (attach to weapon struct)
