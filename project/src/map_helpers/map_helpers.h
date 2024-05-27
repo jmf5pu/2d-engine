@@ -41,12 +41,10 @@ Animation *anim_metal_table_vertical_2;
 // teleporter prop
 Sprite_Sheet sprite_sheet_teleporter_inactive;
 Animation_Definition *adef_teleporter_inactive;
-Sprite_Sheet sprite_sheet_teleporter_spin_up;
-Animation_Definition *adef_teleporter_spin_up;
 Sprite_Sheet sprite_sheet_teleporter_active;
 Animation_Definition *adef_teleporter_active;
-Sprite_Sheet sprite_sheet_teleporter_spin_down;
-Animation_Definition *adef_teleporter_spin_down;
+Sprite_Sheet sprite_sheet_teleporter_spinning;
+Animation_Definition *adef_teleporter_spinning;
 Sprite_Sheet sprite_sheet_teleporter_glow;
 Animation_Definition *adef_teleporter_glow;
 
@@ -75,7 +73,10 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active);
 // spawning logic callbacks
 void spawn_zombie(vec2 spawn_point);
 
-// dynamic prop logic callbacks
+// dynamic prop logic callbacks & corresponding helpers
 void teleporter_update_state(Entity *entity, StateEnum *state);
+void teleporter_spin_up_and_down_states(
+    Entity *entity, TeleporterStateEnum *teleporter_state_enum, u32 *frames_on_state, TeleporterStateEnum next_state, f32 first_duration, f32 second_duration, f32 third_duration);
+void update_adef_frame_durations(Animation_Definition *adef, f32 duration);
 
 #endif

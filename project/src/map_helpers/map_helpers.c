@@ -12,17 +12,13 @@ Map map;
 const u8 TELEPORTER_DIMENSIONS[] = {19, 19};
 const u8 TELEPORTER_GLOW_DIMENSIONS[] = {15, 32};
 
-const f32 TELEPORTER_SPIN_UP_DURATIONS[] = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
-const u8 TELEPORTER_SPIN_UP_ROWS[] = {0, 0, 0, 0, 0, 0, 0, 0};
-const u8 TELEPORTER_SPIN_UP_COLS[] = {1, 2, 3, 4, 5, 6, 7, 8};
-
-const f32 TELEPORTER_ACTIVE_DURATIONS[] = {0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05};
+const f32 TELEPORTER_ACTIVE_DURATIONS[] = {0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04};
 const u8 TELEPORTER_ACTIVE_ROWS[] = {0, 0, 0, 0, 0, 0, 0, 0};
 const u8 TELEPORTER_ACTIVE_COLS[] = {1, 2, 3, 4, 5, 6, 7, 8};
 
-const f32 TELEPORTER_SPIN_DOWN_DURATIONS[] = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
-const u8 TELEPORTER_SPIN_DOWN_ROWS[] = {0, 0, 0, 0, 0, 0, 0, 0};
-const u8 TELEPORTER_SPIN_DOWN_COLS[] = {1, 2, 3, 4, 5, 6, 7, 8};
+const f32 TELEPORTER_SPINNING_DURATIONS[] = {0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08};
+const u8 TELEPORTER_SPINNING_ROWS[] = {0, 0, 0, 0, 0, 0, 0, 0};
+const u8 TELEPORTER_SPINNING_COLS[] = {1, 2, 3, 4, 5, 6, 7, 8};
 
 const f32 TELEPORTER_GLOW_DURATIONS[] = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
 const u8 TELEPORTER_GLOW_ROWS[] = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -173,23 +169,16 @@ void init_map_assets(void)
 
     render_sprite_sheet_init(&sprite_sheet_teleporter_inactive, "assets/wip/teleporter_spinning.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
     adef_teleporter_inactive = animation_definition_create(&sprite_sheet_teleporter_inactive, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_teleporter_spin_up, "assets/wip/teleporter_spinning.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
-    adef_teleporter_spin_up = animation_definition_create(
-        &sprite_sheet_teleporter_spin_up,
-        (f32 *)TELEPORTER_SPIN_UP_DURATIONS,
-        (u8 *)TELEPORTER_SPIN_UP_ROWS,
-        (u8 *)TELEPORTER_SPIN_UP_COLS,
-        (u8)ARRAY_LENGTH(TELEPORTER_SPIN_UP_COLS));
     render_sprite_sheet_init(&sprite_sheet_teleporter_active, "assets/wip/teleporter_active.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
     adef_teleporter_active = animation_definition_create(
         &sprite_sheet_teleporter_active, (f32 *)TELEPORTER_ACTIVE_DURATIONS, (u8 *)TELEPORTER_ACTIVE_ROWS, (u8 *)TELEPORTER_ACTIVE_COLS, (u8)ARRAY_LENGTH(TELEPORTER_ACTIVE_COLS));
-    render_sprite_sheet_init(&sprite_sheet_teleporter_spin_down, "assets/wip/teleporter_spinning.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
-    adef_teleporter_spin_down = animation_definition_create(
-        &sprite_sheet_teleporter_spin_down,
-        (f32 *)TELEPORTER_SPIN_DOWN_DURATIONS,
-        (u8 *)TELEPORTER_SPIN_DOWN_ROWS,
-        (u8 *)TELEPORTER_SPIN_DOWN_COLS,
-        (u8)ARRAY_LENGTH(TELEPORTER_SPIN_DOWN_COLS));
+    render_sprite_sheet_init(&sprite_sheet_teleporter_spinning, "assets/wip/teleporter_spinning.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    adef_teleporter_spinning = animation_definition_create(
+        &sprite_sheet_teleporter_spinning,
+        (f32 *)TELEPORTER_SPINNING_DURATIONS,
+        (u8 *)TELEPORTER_SPINNING_ROWS,
+        (u8 *)TELEPORTER_SPINNING_COLS,
+        (u8)ARRAY_LENGTH(TELEPORTER_SPINNING_COLS));
     render_sprite_sheet_init(&sprite_sheet_teleporter_glow, "assets/wip/teleporter_glow.png", TELEPORTER_GLOW_DIMENSIONS[0], TELEPORTER_GLOW_DIMENSIONS[1]);
     adef_teleporter_glow = animation_definition_create(
         &sprite_sheet_teleporter_glow, (f32 *)TELEPORTER_GLOW_DURATIONS, (u8 *)TELEPORTER_GLOW_ROWS, (u8 *)TELEPORTER_GLOW_COLS, (u8)ARRAY_LENGTH(TELEPORTER_GLOW_COLS));
@@ -230,7 +219,7 @@ DynamicProp *init_teleporter_prop(void)
 {
     DynamicProp *teleporter = malloc(sizeof(DynamicProp));
     teleporter->entity = entity_create((vec2){150, 100}, (vec2){TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
-    teleporter->state.teleporter_state_enum = ACTIVE;
+    teleporter->state.teleporter_state_enum = SPINNING_UP;
     teleporter->update_state = teleporter_update_state;
     teleporter->entity->animation = animation_create(adef_teleporter_inactive, false);
     return teleporter;
