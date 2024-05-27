@@ -50,7 +50,8 @@ void entity_destroy(Entity *entity)
     entity->body->is_active = false; // physics bodies for inactive entities should be inactive
     entity->is_active = false;       // probably not even necessary, remove later
     physics_body_destroy(entity->body);
-    animation_destroy(entity->animation);
+    if (entity->animation)
+        animation_destroy(entity->animation);
     array_list_remove(entity_list, id);
     free(entity); // free entity memory
 }

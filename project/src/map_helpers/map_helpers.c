@@ -222,6 +222,7 @@ DynamicProp *init_teleporter_prop(void)
     teleporter->state.teleporter_state_enum = SPINNING_UP;
     teleporter->update_state = teleporter_update_state;
     teleporter->entity->animation = animation_create(adef_teleporter_inactive, false);
+    teleporter->entity->animation->z_index = -1;
     return teleporter;
 }
 

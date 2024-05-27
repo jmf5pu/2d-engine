@@ -234,10 +234,8 @@ int main(int argc, char *argv[])
                 render_all_non_player_entities_with_animations(window, texture_slots, RENDER_PHYSICS_BODIES ? SEMI_TRANSPARENT : game_color);
 
                 // render physics bodies:
-                if (RENDER_PHYSICS_BODIES) {
+                if (RENDER_PHYSICS_BODIES)
                     render_physics_bodies();
-                }
-
                 // throw left side stuff into the rendering
                 // buffer, without performing the screen swap
                 // yet
@@ -275,7 +273,6 @@ int main(int argc, char *argv[])
             // destroy any entities that need to be destroyed:
             destroy_all_marked_entities(&map);
             update_entity_movements();
-
             break;
         case GS_EXITING:
             should_quit = true;

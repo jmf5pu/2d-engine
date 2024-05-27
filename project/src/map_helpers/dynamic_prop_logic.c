@@ -58,6 +58,7 @@ void teleporter_spin_up_and_down_states(
     if (*frames_on_state == 1) {
         animation_destroy(entity->animation);
         entity->animation = animation_create(adef_teleporter_spinning, true);
+        entity->animation->z_index = -1;
         update_adef_frame_durations(entity->animation->animation_definition, first_duration);
     }
     else if (*frames_on_state == (u32)total_frames / 3)

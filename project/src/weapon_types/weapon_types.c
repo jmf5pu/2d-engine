@@ -42,7 +42,6 @@ void glock_on_shoot(Player *player) { create_bullet_straight(player); }
 
 void init_weapon_types(void)
 {
-
     render_sprite_sheet_init(&sprite_sheet_556_burst, "assets/hud/556_burst.png", 20, 44);
     adef_556_burst = animation_definition_create(&sprite_sheet_556_burst, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_556_burst = animation_create(adef_556_burst, false);
