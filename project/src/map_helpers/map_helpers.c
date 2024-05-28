@@ -10,6 +10,7 @@
 Map map;
 
 const u8 TELEPORTER_DIMENSIONS[] = {19, 19};
+const u8 TELEPORTER_BUTTON_DIMENSIONS[] = {20, 20};
 const u8 TELEPORTER_GLOW_DIMENSIONS[] = {15, 32};
 
 const f32 TELEPORTER_ACTIVE_DURATIONS[] = {0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04};
@@ -32,7 +33,7 @@ void init_map(Map *map)
     // we use these to track array length later on
     map->num_p1_spawns = 1;
     map->num_p2_spawns = 1;
-    map->num_enemy_spawners = 1;
+    map->num_enemy_spawners = 0;
     map->max_enemies = 1; // max number of enemies that can be present at the same time
     map->num_dynamic_props = 2;
 
@@ -50,9 +51,9 @@ void init_map(Map *map)
     p2_spawn_point_array[0][1] = p2_spawn_1[1];
 
     TimeSpawner *enemy_spawner_array = malloc(sizeof(TimeSpawner) * map->num_enemy_spawners);
-    TimeSpawner enemy_spawner_1 =
-        (TimeSpawner){.is_active = true, .max_frames_seconds = 10 * FRAME_RATE, .wait_frames_remaining = 10 * FRAME_RATE, .position = {250, 100}, .spawn = spawn_zombie};
-    enemy_spawner_array[0] = enemy_spawner_1;
+    // TimeSpawner enemy_spawner_1 =
+    //     (TimeSpawner){.is_active = true, .max_frames_seconds = 10 * FRAME_RATE, .wait_frames_remaining = 10 * FRAME_RATE, .position = {250, 100}, .spawn = spawn_zombie};
+    // enemy_spawner_array[0] = enemy_spawner_1;
 
     // Populate parent struct
     map->player_one_spawn_points = p1_spawn_point_array;
@@ -147,10 +148,13 @@ void init_map_assets(void)
 {
     const u8 teleporter_num_frames = (u8)ARRAY_LENGTH(TELEPORTER_ACTIVE_COLS);
     render_sprite_sheet_init(&sprite_sheet_bunker_background, "assets/wip/bunker_map.png", 327, 195);
+
+    // map background
     adef_bunker_background = animation_definition_create(&sprite_sheet_bunker_background, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_bunker_background = animation_create(adef_bunker_background, false);
     anim_bunker_background->z_index = INT32_MIN;
 
+    // tables
     render_sprite_sheet_init(&sprite_sheet_metal_table_vertical_1, "assets/wip/metal_table_vertical_1.png", 23, 48);
     adef_metal_table_vertical_1 = animation_definition_create(&sprite_sheet_metal_table_vertical_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_metal_table_vertical_1 = animation_create(adef_metal_table_vertical_1, false);
@@ -160,6 +164,7 @@ void init_map_assets(void)
     anim_metal_table_vertical_2 = animation_create(adef_metal_table_vertical_2, false);
     anim_metal_table_vertical_2->z_index = anim_metal_table_vertical_1->z_index + 1;
 
+    // weapon pickups
     render_sprite_sheet_init(&sprite_sheet_m16_pickup, "assets/wip/m16_pickup.png", 20, 9);
     adef_m16_pickup = animation_definition_create(&sprite_sheet_m16_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_m16_pickup = animation_create(adef_m16_pickup, false);
@@ -167,6 +172,7 @@ void init_map_assets(void)
     adef_glock_pickup = animation_definition_create(&sprite_sheet_glock_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_glock_pickup = animation_create(adef_glock_pickup, false);
 
+    // teleporter
     render_sprite_sheet_init(&sprite_sheet_teleporter_inactive, "assets/wip/teleporter_spinning.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
     adef_teleporter_inactive = animation_definition_create(&sprite_sheet_teleporter_inactive, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     render_sprite_sheet_init(&sprite_sheet_teleporter_active, "assets/wip/teleporter_active.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
@@ -179,9 +185,18 @@ void init_map_assets(void)
         (u8 *)TELEPORTER_SPINNING_ROWS,
         (u8 *)TELEPORTER_SPINNING_COLS,
         (u8)ARRAY_LENGTH(TELEPORTER_SPINNING_COLS));
+
+    // teleporter glow
     render_sprite_sheet_init(&sprite_sheet_teleporter_glow, "assets/wip/teleporter_glow.png", TELEPORTER_GLOW_DIMENSIONS[0], TELEPORTER_GLOW_DIMENSIONS[1]);
     adef_teleporter_glow = animation_definition_create(
         &sprite_sheet_teleporter_glow, (f32 *)TELEPORTER_GLOW_DURATIONS, (u8 *)TELEPORTER_GLOW_ROWS, (u8 *)TELEPORTER_GLOW_COLS, (u8)ARRAY_LENGTH(TELEPORTER_GLOW_COLS));
+
+    // teleporter button
+    render_sprite_sheet_init(&sprite_sheet_teleporter_button_pressed, "assets/wip/teleporter_button_pressed.png", TELEPORTER_BUTTON_DIMENSIONS[0], TELEPORTER_BUTTON_DIMENSIONS[1]);
+    adef_teleporter_button_pressed = animation_definition_create(&sprite_sheet_teleporter_button_pressed, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(
+        &sprite_sheet_teleporter_button_unpressed, "assets/wip/teleporter_button_unpressed.png", TELEPORTER_BUTTON_DIMENSIONS[0], TELEPORTER_BUTTON_DIMENSIONS[1]);
+    adef_teleporter_button_unpressed = animation_definition_create(&sprite_sheet_teleporter_button_unpressed, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 }
 
 void init_map_props(Map *map)
@@ -232,12 +247,20 @@ DynamicProp *init_teleporter_prop(void)
 DynamicProp *init_button_prop(void)
 {
     DynamicProp *teleporter_button = malloc(sizeof(DynamicProp));
-    teleporter_button->entity = entity_create((vec2){50, 50}, (vec2){12, 12}, (vec2){0, 0}, COLLISION_LAYER_BUTTON, COLLISION_LAYER_PLAYER, teleporter_button_on_hit, NULL);
+    teleporter_button->entity = entity_create(
+        (vec2){80, 50},
+        (vec2){TELEPORTER_BUTTON_DIMENSIONS[0], TELEPORTER_BUTTON_DIMENSIONS[1]},
+        (vec2){0, 0},
+        COLLISION_LAYER_BUTTON,
+        COLLISION_LAYER_PLAYER,
+        teleporter_button_on_hit,
+        NULL);
     teleporter_button->state.button_state_enum = UNPRESSED;
     teleporter_button->update_state = teleporter_button_update_state;
     teleporter_button->type = TELEPORTER_BUTTON;
+    teleporter_button->entity->animation = animation_create(adef_teleporter_button_unpressed, false);
+    teleporter_button->entity->animation->z_index = -1;
     teleporter_button->entity->body->parent = teleporter_button;
-    // TODO: assign initial anim here, update z index
     return teleporter_button;
 }
 

@@ -1,3 +1,4 @@
+#include "../enemy_helpers/enemy_helpers.h"
 #include "../structs.h"
 #include "map_helpers.h"
 
@@ -22,7 +23,9 @@ void teleporter_update_state(Entity *entity, StateEnum *state)
             Entity *teleporter_glow = entity_create((vec2){150, 108}, (vec2){TELEPORTER_GLOW_DIMENSIONS[0], TELEPORTER_GLOW_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
             teleporter_glow->animation = animation_create(adef_teleporter_glow, false);
             teleporter_glow->destroy_on_anim_completion = true;
-            // TODO: trigger an enemy spawn here
+        }
+        else if (frames_on_state == active_frames / 2) {
+            create_enemy(entity->body->aabb.position);
         }
         else if (frames_on_state >= active_frames) {
             frames_on_state = 0;
@@ -31,12 +34,13 @@ void teleporter_update_state(Entity *entity, StateEnum *state)
         break;
     case INACTIVE:
         entity->animation->does_loop = false;
-        for (int i = 0; i < map.num_dynamic_props; i++) {
+        for (int i = 0; i < map.num_dynamic_props; i++) { // TODO: figure out a way to only call this on the first inactive frame
             if (map.dynamic_props[i]->type == TELEPORTER_BUTTON)
                 map.dynamic_props[i]->state.button_state_enum = UNPRESSED;
         }
+        frames_on_state = 0;
         break;
-    case SPINNING_UP: // TODO: add logic for a button press to trigger this
+    case SPINNING_UP:
         teleporter_spin_up_and_down_states(entity, &state->teleporter_state_enum, &frames_on_state, ACTIVE, spin_slow, spin_med, spin_fast);
         break;
     case SPINNING_DOWN:
@@ -49,9 +53,23 @@ void teleporter_update_state(Entity *entity, StateEnum *state)
     frames_on_state++;
 }
 
+/// @brief Checks the button state and assigns the appropriate animation to the entity
+/// @param entity
+/// @param state
 void teleporter_button_update_state(Entity *entity, StateEnum *state)
 {
-    // TODO: update anims based on the state parameter here
+    switch (state->button_state_enum) {
+    case PRESSED:
+        animation_destroy(entity->animation);
+        entity->animation = animation_create(adef_teleporter_button_pressed, false);
+        break;
+    case UNPRESSED:
+        animation_destroy(entity->animation);
+        entity->animation = animation_create(adef_teleporter_button_unpressed, false);
+        break;
+    default:
+        break;
+    }
 }
 
 /// @brief Helper method for logic between active and inactive states for the teleporter

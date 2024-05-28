@@ -30,6 +30,7 @@ void create_enemy(vec2 spawn_point)
     if (SPAWN_ENEMIES) {
         Zombie *enemy = malloc(sizeof(Zombie));
         enemy->entity = entity_create(spawn_point, (vec2){25, 25}, (vec2){0, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
+        // TODO: create & assign enemy animation
         enemy->entity->body->parent = enemy;
         enemy->despawn_time = 1;
         enemy->frames_on_status = 0;
@@ -68,17 +69,14 @@ void update_current_enemies(void)
         f32 y_dist = closest_player->relative_position[1] - zombie->entity->body->aabb.position[1];
 
         f32 angle;
-        if (x_dist != 0.0) {
+        if (x_dist != 0.0)
             angle = atan(y_dist / x_dist);
-        }
-        else {
+        else
             angle = (y_dist >= 0.0) ? M_PI / 2.0 : -M_PI / 2.0;
-        }
 
         // Adjust for quadrants
-        if (x_dist < 0) {
+        if (x_dist < 0)
             angle += M_PI;
-        }
 
         zombie->entity->body->velocity[0] = ZOMBIE_MOVEMENT_SPEED * cos(angle);
         zombie->entity->body->velocity[1] = ZOMBIE_MOVEMENT_SPEED * sin(angle);

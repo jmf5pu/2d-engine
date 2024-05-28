@@ -1,6 +1,7 @@
 #ifndef MAP_HELPERS_H
 #define MAP_HELPERS_H
 
+#include "../engine/animation.h"
 #include "../engine/physics.h"
 #include "../engine/render.h"
 #include "../structs.h"
@@ -47,6 +48,12 @@ Sprite_Sheet sprite_sheet_teleporter_spinning;
 Animation_Definition *adef_teleporter_spinning;
 Sprite_Sheet sprite_sheet_teleporter_glow;
 Animation_Definition *adef_teleporter_glow;
+
+// teleporter button prop
+Sprite_Sheet sprite_sheet_teleporter_button_pressed;
+Animation_Definition *adef_teleporter_button_pressed;
+Sprite_Sheet sprite_sheet_teleporter_button_unpressed;
+Animation_Definition *adef_teleporter_button_unpressed;
 
 // weapon pickups
 Sprite_Sheet sprite_sheet_m16_pickup;
