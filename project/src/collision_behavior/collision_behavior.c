@@ -8,7 +8,7 @@
 #include <assert.h>
 
 const u8 enemy_mask = COLLISION_LAYER_PLAYER | COLLISION_LAYER_TERRAIN | COLLISION_LAYER_BULLET;
-const u8 player_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRAIN | COLLISION_LAYER_PICKUP;
+const u8 player_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRAIN | COLLISION_LAYER_PICKUP | COLLISION_LAYER_BUTTON;
 const u8 bullet_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRAIN;
 const u8 pickup_mask = COLLISION_LAYER_PLAYER;
 const u8 crosshair_mask = 0;
@@ -143,9 +143,8 @@ void pickup_on_hit_static(Body *self, Static_Body *other, Hit hit) {}
 /// @param hit
 void bullet_on_hit(Body *self, Body *other, Hit hit)
 {
-    if (other->is_active) {
+    if (other->is_active)
         self->is_active = false;
-    }
 }
 
 /// @brief Mark the bullet as inactive and create the impact effect's entity
@@ -156,4 +155,21 @@ void bullet_on_hit_static(Body *self, Static_Body *other, Hit hit)
 {
     create_bullet_impact_entity(self->aabb.position, adef_bullet_impact_0);
     self->is_active = false;
+}
+
+/// @brief Check if the player is interacting with button and if so, spin up all props marked as teleporters and update button state
+/// @param self
+/// @param other
+/// @param hit
+void teleporter_button_on_hit(Body *self, Body *other, Hit hit)
+{
+    Player *player = get_player_from_body(other);
+    DynamicProp *teleporter_button = self->parent;
+    if (teleporter_button->state.button_state_enum == UNPRESSED && player != NULL && player->input_state->key_state->use) {
+        for (int i = 0; i < map.num_dynamic_props; i++) {
+            if (map.dynamic_props[i]->type == TELEPORTER)
+                map.dynamic_props[i]->state.teleporter_state_enum = SPINNING_UP;
+        }
+        teleporter_button->state.button_state_enum = PRESSED;
+    }
 }

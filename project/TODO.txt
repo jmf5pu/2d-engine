@@ -1,4 +1,9 @@
 TODO:
+* teleporter
+    * create sprites for button (pressed/unpressed)
+    * add anim assignment logic to dynamic_prop_logic.c
+    * position entity on map
+    * figure out why spin up anim isn't working on teleporter
 * effects
     * dust after footsteps
     * add logic to assign different muzzle flashes to different guns (attach to weapon struct)
@@ -6,6 +11,7 @@ TODO:
     * build enemy sprites
     * implement enemy generator logic
     * implement animation assignment logic for enemy entities
+* update animation struct so that animation_definition is copied, not a reference
 * add reloading timer and animation
 * potentially bump up batch size of rendering - noticing occasional flickers when player is turning AND shooting
 * remove Sprite_Sheet_Frame struct, replace occurrences with animations

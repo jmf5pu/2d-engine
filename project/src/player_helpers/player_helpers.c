@@ -747,10 +747,21 @@ void free_player(Player *player)
 
 void free_players()
 {
-    if (player_one) {
+    if (player_one)
         free_player(player_one);
-    }
-    if (player_two) {
+    if (player_two)
         free_player(player_two);
-    }
+}
+
+/// @brief Get the player struct from the given physics body. Returns a null pointer if neither player matches. Used in collision helpers
+/// @param body
+/// @return
+Player *get_player_from_body(Body *body)
+{
+    Player *player = NULL;
+    if (body == player_one->entity->body)
+        player = player_one;
+    else if (body == player_two->entity->body)
+        player = player_two;
+    return player;
 }

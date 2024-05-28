@@ -34,7 +34,7 @@ void init_map(Map *map)
     map->num_p2_spawns = 1;
     map->num_enemy_spawners = 1;
     map->max_enemies = 1; // max number of enemies that can be present at the same time
-    map->num_dynamic_props = 1;
+    map->num_dynamic_props = 2;
 
     init_map_props(map);
 
@@ -192,6 +192,7 @@ void init_map_props(Map *map)
 
     map->dynamic_props = malloc(sizeof(DynamicProp *) * map->num_dynamic_props);
     map->dynamic_props[0] = init_teleporter_prop();
+    map->dynamic_props[1] = init_button_prop();
 }
 
 void init_map_background_prop(void)
@@ -219,11 +220,25 @@ DynamicProp *init_teleporter_prop(void)
 {
     DynamicProp *teleporter = malloc(sizeof(DynamicProp));
     teleporter->entity = entity_create((vec2){150, 100}, (vec2){TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
-    teleporter->state.teleporter_state_enum = SPINNING_UP;
+    teleporter->state.teleporter_state_enum = INACTIVE;
     teleporter->update_state = teleporter_update_state;
+    teleporter->type = TELEPORTER;
     teleporter->entity->animation = animation_create(adef_teleporter_inactive, false);
     teleporter->entity->animation->z_index = -1;
+    teleporter->entity->body->parent = teleporter;
     return teleporter;
+}
+
+DynamicProp *init_button_prop(void)
+{
+    DynamicProp *teleporter_button = malloc(sizeof(DynamicProp));
+    teleporter_button->entity = entity_create((vec2){50, 50}, (vec2){12, 12}, (vec2){0, 0}, COLLISION_LAYER_BUTTON, COLLISION_LAYER_PLAYER, teleporter_button_on_hit, NULL);
+    teleporter_button->state.button_state_enum = UNPRESSED;
+    teleporter_button->update_state = teleporter_button_update_state;
+    teleporter_button->type = TELEPORTER_BUTTON;
+    teleporter_button->entity->body->parent = teleporter_button;
+    // TODO: assign initial anim here, update z index
+    return teleporter_button;
 }
 
 void init_pickup_props(void)

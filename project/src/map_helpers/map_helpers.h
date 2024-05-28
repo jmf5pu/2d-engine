@@ -62,6 +62,7 @@ void init_map_props(Map *map);
 void init_map_background_prop(void);
 void init_metal_table_props(void);
 DynamicProp *init_teleporter_prop(void);
+DynamicProp *init_button_prop(void);
 void init_pickup_props(void);
 void update_map(Map *map);
 void update_spawners(Map *map);
@@ -75,6 +76,7 @@ void spawn_zombie(vec2 spawn_point);
 
 // dynamic prop logic callbacks & corresponding helpers
 void teleporter_update_state(Entity *entity, StateEnum *state);
+void teleporter_button_update_state(Entity *entity, StateEnum *state);
 void teleporter_spin_up_and_down_states(
     Entity *entity, TeleporterStateEnum *teleporter_state_enum, u32 *frames_on_state, TeleporterStateEnum next_state, f32 first_duration, f32 second_duration, f32 third_duration);
 void update_adef_frame_durations(Animation_Definition *adef, f32 duration);

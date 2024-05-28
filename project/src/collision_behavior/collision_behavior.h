@@ -10,6 +10,7 @@ typedef enum collision_layer {
     COLLISION_LAYER_BULLET = 1 << 3,
     COLLISION_LAYER_PICKUP = 1 << 4,
     COLLISION_LAYER_CROSSHAIR = 1 << 5,
+    COLLISION_LAYER_BUTTON = 1 << 6,
 } Collision_Layer;
 
 // collision masks
@@ -30,5 +31,7 @@ void pickup_on_hit_static(Body *self, Static_Body *other, Hit hit);
 
 void m16_pickup_on_hit(Body *self, Body *other, Hit hit);
 void glock_pickup_on_hit(Body *self, Body *other, Hit hit);
+
+void teleporter_button_on_hit(Body *self, Body *other, Hit hit);
 
 #endif

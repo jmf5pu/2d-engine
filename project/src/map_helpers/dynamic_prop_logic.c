@@ -1,6 +1,9 @@
 #include "../structs.h"
 #include "map_helpers.h"
 
+/// @brief state machine for teleporter
+/// @param entity
+/// @param state
 void teleporter_update_state(Entity *entity, StateEnum *state)
 {
     static u32 frames_on_state = 0;
@@ -28,6 +31,10 @@ void teleporter_update_state(Entity *entity, StateEnum *state)
         break;
     case INACTIVE:
         entity->animation->does_loop = false;
+        for (int i = 0; i < map.num_dynamic_props; i++) {
+            if (map.dynamic_props[i]->type == TELEPORTER_BUTTON)
+                map.dynamic_props[i]->state.button_state_enum = UNPRESSED;
+        }
         break;
     case SPINNING_UP: // TODO: add logic for a button press to trigger this
         teleporter_spin_up_and_down_states(entity, &state->teleporter_state_enum, &frames_on_state, ACTIVE, spin_slow, spin_med, spin_fast);
@@ -40,6 +47,11 @@ void teleporter_update_state(Entity *entity, StateEnum *state)
     };
 
     frames_on_state++;
+}
+
+void teleporter_button_update_state(Entity *entity, StateEnum *state)
+{
+    // TODO: update anims based on the state parameter here
 }
 
 /// @brief Helper method for logic between active and inactive states for the teleporter

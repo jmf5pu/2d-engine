@@ -163,19 +163,31 @@ typedef struct time_spawner {
 } TimeSpawner;
 
 typedef enum {
+    TELEPORTER,
+    TELEPORTER_BUTTON,
+} DynamicPropType;
+
+typedef enum {
     ACTIVE,
     INACTIVE,
     SPINNING_UP,
     SPINNING_DOWN,
 } TeleporterStateEnum;
+
+typedef enum {
+    PRESSED,
+    UNPRESSED,
+} ButtonStateEnum;
 typedef union {
     TeleporterStateEnum teleporter_state_enum;
+    ButtonStateEnum button_state_enum;
 } StateEnum;
 typedef void (*UpdateState)(Entity *entity, StateEnum *state);
 typedef struct dynamic_prop {
     Entity *entity;
     StateEnum state;
     UpdateState update_state;
+    DynamicPropType type; // used to group types of dynamic props when controller interactions between them
 } DynamicProp;
 
 typedef struct map {
