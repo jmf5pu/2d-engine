@@ -6,8 +6,7 @@ TODO:
     * dust after footsteps
     * add logic to assign different muzzle flashes to different guns (attach to weapon struct)
 * create enemies
-    * build enemy sprites
-    * implement animation assignment logic for enemy entities
+    * create enemy sprites
 * update animation struct so that animation_definition is copied, not a reference
 * add reloading timer and animation
 * potentially bump up batch size of rendering - noticing occasional flickers when player is turning AND shooting

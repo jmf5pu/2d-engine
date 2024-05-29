@@ -22,7 +22,12 @@ bool player_visible(Player *player)
 Array_List *get_all_enemies(void) { return current_enemies; }
 
 // initializes enemy array list
-void init_enemies(usize item_size, usize initial_capacity) { current_enemies = array_list_create(sizeof(item_size), initial_capacity); }
+void init_enemies(usize item_size, usize initial_capacity)
+{
+    current_enemies = array_list_create(sizeof(item_size), initial_capacity);
+    init_enemy_adefs();
+    init_enemy_adef_hashmap();
+}
 
 // initializes a single enemy and adds to current_enemies
 void create_enemy(vec2 spawn_point)
@@ -30,7 +35,7 @@ void create_enemy(vec2 spawn_point)
     if (SPAWN_ENEMIES) {
         Zombie *enemy = malloc(sizeof(Zombie));
         enemy->entity = entity_create(spawn_point, (vec2){25, 25}, (vec2){0, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
-        // TODO: create & assign enemy animation
+        enemy->entity->animation = animation_create(adef_zombie_idle_4, true);
         enemy->entity->body->parent = enemy;
         enemy->despawn_time = 1;
         enemy->frames_on_status = 0;
@@ -80,5 +85,7 @@ void update_current_enemies(void)
 
         zombie->entity->body->velocity[0] = ZOMBIE_MOVEMENT_SPEED * cos(angle);
         zombie->entity->body->velocity[1] = ZOMBIE_MOVEMENT_SPEED * sin(angle);
+
+        update_enemy_anim(zombie);
     }
 }
