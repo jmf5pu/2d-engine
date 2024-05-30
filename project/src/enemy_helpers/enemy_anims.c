@@ -64,13 +64,13 @@ void init_enemy_adef_hashmap(void)
 void init_enemy_adefs(void)
 {
     // TODO: update to the correct .png files once they are created
-    render_sprite_sheet_init(&sprite_sheet_zombie_idle_1, "assets/wip/player_skinhead_idle_0.png", 18, 26);
+    render_sprite_sheet_init(&sprite_sheet_zombie_idle_1, "assets/wip/zombie_idle_0.png", 18, 23);
     adef_zombie_idle_1 = animation_definition_create(&sprite_sheet_zombie_idle_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_zombie_idle_2, "assets/wip/player_skinhead_idle_1.png", 18, 26);
+    render_sprite_sheet_init(&sprite_sheet_zombie_idle_2, "assets/wip/zombie_idle_1.png", 18, 23);
     adef_zombie_idle_2 = animation_definition_create(&sprite_sheet_zombie_idle_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_zombie_idle_3, "assets/wip/player_skinhead_idle_2.png", 18, 26);
+    render_sprite_sheet_init(&sprite_sheet_zombie_idle_3, "assets/wip/zombie_idle_2.png", 18, 23);
     adef_zombie_idle_3 = animation_definition_create(&sprite_sheet_zombie_idle_3, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_zombie_idle_4, "assets/wip/player_skinhead_idle_3.png", 18, 26);
+    render_sprite_sheet_init(&sprite_sheet_zombie_idle_4, "assets/wip/zombie_idle_3.png", 18, 23);
     adef_zombie_idle_4 = animation_definition_create(&sprite_sheet_zombie_idle_4, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
     render_sprite_sheet_init(&sprite_sheet_zombie_moving_1, "assets/wip/player_skinhead_moving_1.png", 18, 26);
