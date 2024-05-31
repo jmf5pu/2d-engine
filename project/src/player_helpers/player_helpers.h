@@ -1,6 +1,7 @@
 #ifndef PLAYER_HELPERS_H
 #define PLAYER_HELPERS_H
 
+#include "../effects/effects.h"
 #include "../engine/animation.h"
 #include "../engine/global.h"
 #include "../engine/hash_map.h"

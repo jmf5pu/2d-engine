@@ -34,14 +34,15 @@
 
 bool should_quit = false;
 
-static u32 texture_slots[BATCH_SIZE] = {0}; // texture slots array for batch rendering
-vec4 game_color;
+extern u32 texture_slots[BATCH_SIZE] = {0}; // texture slots array for batch rendering
+extern vec4 game_color;
+extern SDL_Window *window;
 
 int main(int argc, char *argv[])
 {
     time_init(FRAME_RATE);
     config_init();
-    SDL_Window *window = render_init();
+    window = render_init();
     physics_init();
     entity_init();
     animation_init();        // creates animation storage

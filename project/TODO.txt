@@ -7,9 +7,10 @@ TODO:
     * add logic to assign different muzzle flashes to different guns (attach to weapon struct)
 * create enemies
     * create enemy sprites
+* update window, texture_slots, color parameters to now use extern variables from main.c instead
 * update animation struct so that animation_definition is copied, not a reference
 * add reloading timer and animation
-* potentially bump up batch size of rendering - noticing occasional flickers when player is turning AND shooting
+* debug sprite flickers
 * remove Sprite_Sheet_Frame struct, replace occurrences with animations
 * redo hud sprites
 * add idle player animations

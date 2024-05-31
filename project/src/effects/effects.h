@@ -64,5 +64,6 @@ void create_muzzle_flash_entity(f32 angle, vec2 position, vec2 size, vec2 veloci
 void create_bullet_impact_entity(vec2 position, Animation_Definition *adef);
 void create_brass_entity(vec2 position, Animation_Definition *adef, i32 z_index);
 void brass_movement(Entity *entity);
+void render_character_shadow(vec2 character_position, f32 character_sprite_height);
 
 #endif

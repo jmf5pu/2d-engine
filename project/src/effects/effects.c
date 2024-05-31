@@ -9,6 +9,11 @@ static Hash_Map *explosion_adef_map;
 
 const u8 BULLET_IMPACT_DIMENSIONS[] = {5, 5};
 
+// extern variables from main
+u32 texture_slots[BATCH_SIZE];
+vec4 game_color;
+SDL_Window *window;
+
 void init_effects(void)
 {
     init_brass_animation_definitions();
@@ -57,14 +62,16 @@ void create_brass_entity(vec2 position, Animation_Definition *adef, i32 z_index)
 
 void brass_movement(Entity *entity)
 {
-    const brass_bounce_distance = 10;
+    const f32 brass_bounce_distance = 10;
+    const f32 bounce_x_magnitude = 100;
+    const f32 bounce_y_magnitude = 100;
 
     entity->body->acceleration[1] = -25;
 
     if (entity->body->aabb.position[1] < entity->starting_position[1] - 0.6 * PLAYER_HEIGHT) {
         bool bounce_left = get_random_int_in_range(0, 1);
-        entity->body->velocity[0] = bounce_left ? 100 : -100;
-        entity->body->velocity[1] = 100;
+        entity->body->velocity[0] = bounce_left ? bounce_x_magnitude : -1 * bounce_x_magnitude;
+        entity->body->velocity[1] = bounce_y_magnitude;
     }
 
     if (entity->body->aabb.position[0] > entity->starting_position[0] + brass_bounce_distance ||
@@ -73,10 +80,18 @@ void brass_movement(Entity *entity)
     }
 }
 
+void render_character_shadow(vec2 character_position, f32 character_sprite_height)
+{
+    vec2 shadow_position = {0, 0};
+    vec2_add(shadow_position, character_position, (vec2){0, -0.5 * character_sprite_height});
+    anim_character_shadow->z_index = 100;
+    animation_render(anim_character_shadow, window, shadow_position, WHITE, texture_slots);
+}
+
 void init_bullet_impact_animation_definitions(void)
 {
     render_sprite_sheet_init(&sprite_sheet_bullet_impact_0, "assets/wip/bullet_impact_0.png", BULLET_IMPACT_DIMENSIONS[0], BULLET_IMPACT_DIMENSIONS[1]);
-    adef_bullet_impact_0 = animation_definition_create(&sprite_sheet_bullet_impact_0, (f32[]){0.05, 0.05, 0.05}, (u8[]){0, 0, 0}, (u8[]){0, 1, 2}, 3); // TODO: populate
+    adef_bullet_impact_0 = animation_definition_create(&sprite_sheet_bullet_impact_0, (f32[]){0.05, 0.05, 0.05}, (u8[]){0, 0, 0}, (u8[]){0, 1, 2}, 3);
 }
 
 void init_explosion_animation_definitions(void)

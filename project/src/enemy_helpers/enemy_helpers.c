@@ -1,5 +1,6 @@
 #include "enemy_helpers.h"
 #include "../collision_behavior/collision_behavior.h"
+#include "../effects/effects.h"
 #include "../engine/array_list.h"
 #include "../player_helpers/player_helpers.h"
 #include <float.h>
@@ -59,33 +60,35 @@ void update_current_enemies(void)
             array_list_remove(current_enemies, i);
         }
 
+        render_character_shadow(zombie->entity->body->aabb.position, zombie->entity->animation->animation_definition->sprite_sheet->cell_height);
+
         if (!player_visible(player_one) && !player_visible(player_two)) {
             zombie->entity->body->velocity[0] = 0;
             zombie->entity->body->velocity[1] = 0;
-            continue;
         }
+        else {
+            f32 p1_distance = player_visible(player_one) ? get_distance(player_one->relative_position, zombie->entity->body->aabb.position) : FLT_MAX;
+            f32 p2_distance = player_visible(player_two) ? get_distance(player_two->relative_position, zombie->entity->body->aabb.position) : FLT_MAX;
+            Player *closest_player = p1_distance < p2_distance ? player_one : player_two;
 
-        f32 p1_distance = player_visible(player_one) ? get_distance(player_one->relative_position, zombie->entity->body->aabb.position) : FLT_MAX;
-        f32 p2_distance = player_visible(player_two) ? get_distance(player_two->relative_position, zombie->entity->body->aabb.position) : FLT_MAX;
-        Player *closest_player = p1_distance < p2_distance ? player_one : player_two;
+            // calculate enemy movement vector
+            f32 x_dist = closest_player->relative_position[0] - zombie->entity->body->aabb.position[0];
+            f32 y_dist = closest_player->relative_position[1] - zombie->entity->body->aabb.position[1];
 
-        // calculate enemy movement vector
-        f32 x_dist = closest_player->relative_position[0] - zombie->entity->body->aabb.position[0];
-        f32 y_dist = closest_player->relative_position[1] - zombie->entity->body->aabb.position[1];
+            f32 angle;
+            if (x_dist != 0.0)
+                angle = atan(y_dist / x_dist);
+            else
+                angle = (y_dist >= 0.0) ? M_PI / 2.0 : -M_PI / 2.0;
 
-        f32 angle;
-        if (x_dist != 0.0)
-            angle = atan(y_dist / x_dist);
-        else
-            angle = (y_dist >= 0.0) ? M_PI / 2.0 : -M_PI / 2.0;
+            // Adjust for quadrants
+            if (x_dist < 0)
+                angle += M_PI;
 
-        // Adjust for quadrants
-        if (x_dist < 0)
-            angle += M_PI;
+            zombie->entity->body->velocity[0] = ZOMBIE_MOVEMENT_SPEED * cos(angle);
+            zombie->entity->body->velocity[1] = ZOMBIE_MOVEMENT_SPEED * sin(angle);
 
-        zombie->entity->body->velocity[0] = ZOMBIE_MOVEMENT_SPEED * cos(angle);
-        zombie->entity->body->velocity[1] = ZOMBIE_MOVEMENT_SPEED * sin(angle);
-
-        update_enemy_anim(zombie);
+            update_enemy_anim(zombie);
+        }
     }
 }

@@ -266,9 +266,7 @@ void player_per_frame_updates(Player *player)
 void render_player_anims(Player *player, SDL_Window *window, u32 texture_slots[BATCH_SIZE], vec4 color)
 {
     if (player) {
-        vec2 character_shadow_pos = {0, 0};
-        vec2_add(character_shadow_pos, player->entity->body->aabb.position, (vec2){0, -0.5 * player->entity->animation->animation_definition->sprite_sheet->cell_height});
-        animation_render(anim_character_shadow, window, character_shadow_pos, color, texture_slots);
+        render_character_shadow(player->entity->body->aabb.position, player->entity->animation->animation_definition->sprite_sheet->cell_height);
 
         // player is facing up, render weapon "under" player
         if (player->crosshair_angle > M_PI / 4 && player->crosshair_angle < 3 * M_PI / 4) {
