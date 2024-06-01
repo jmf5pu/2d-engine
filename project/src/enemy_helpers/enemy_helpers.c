@@ -60,8 +60,6 @@ void update_current_enemies(void)
             array_list_remove(current_enemies, i);
         }
 
-        render_character_shadow(zombie->entity->body->aabb.position, zombie->entity->animation->animation_definition->sprite_sheet->cell_height);
-
         if (!player_visible(player_one) && !player_visible(player_two)) {
             zombie->entity->body->velocity[0] = 0;
             zombie->entity->body->velocity[1] = 0;
@@ -90,5 +88,13 @@ void update_current_enemies(void)
 
             update_enemy_anim(zombie);
         }
+    }
+}
+
+void render_enemy_shadows(void)
+{
+    for (int i = 0; i < current_enemies->len; i++) {
+        Zombie *zombie = array_list_get(current_enemies, i);
+        render_character_shadow(zombie->entity->body->aabb.position, zombie->entity->animation->animation_definition->sprite_sheet->cell_height);
     }
 }

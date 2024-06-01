@@ -231,8 +231,9 @@ int main(int argc, char *argv[])
                 if (SPLIT_SCREEN)
                     render_player_anims(player_two, window, texture_slots, game_color);
 
-                // render all other animated entities
                 render_all_non_player_entities_with_animations(window, texture_slots, RENDER_PHYSICS_BODIES ? SEMI_TRANSPARENT : game_color);
+
+                render_enemy_shadows();
 
                 // render physics bodies:
                 if (RENDER_PHYSICS_BODIES)

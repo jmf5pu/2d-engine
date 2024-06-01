@@ -33,6 +33,7 @@ void create_enemy(vec2 spawn_point);
 Array_List *get_all_enemies(void);
 
 void update_enemy_anim(Zombie *zombie);
+void render_enemy_shadows(void);
 void init_enemy_adef_hashmap(void);
 void init_enemy_adefs(void);
 
