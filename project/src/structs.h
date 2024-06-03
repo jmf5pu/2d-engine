@@ -182,10 +182,14 @@ typedef union {
     TeleporterStateEnum teleporter_state_enum;
     ButtonStateEnum button_state_enum;
 } StateEnum;
-typedef void (*UpdateState)(Entity *entity, StateEnum *state);
+
+typedef struct dynamic_prop DynamicProp;
+
+typedef void (*UpdateState)(DynamicProp *prop);
 typedef struct dynamic_prop {
     Entity *entity;
     StateEnum state;
+    u32 frames_on_state;
     UpdateState update_state;
     DynamicPropType type; // used to group types of dynamic props when controller interactions between them
 } DynamicProp;

@@ -5,9 +5,8 @@
 /// @brief state machine for teleporter
 /// @param entity
 /// @param state
-void teleporter_update_state(Entity *entity, StateEnum *state)
+void teleporter_update_state(DynamicProp *prop)
 {
-    static u32 frames_on_state = 0;
     const u8 spinning_adef_frames = 8;
     const u8 active_adef_frames = 8;
     const f32 spin_slow = 0.08;
@@ -15,61 +14,68 @@ void teleporter_update_state(Entity *entity, StateEnum *state)
     const f32 spin_fast = 0.04;
     const u32 active_frames = FRAME_RATE * (spin_fast * active_adef_frames);
 
-    switch (state->teleporter_state_enum) {
+    switch (prop->state.teleporter_state_enum) {
     case ACTIVE:
-        if (frames_on_state == 1) {
-            animation_destroy(entity->animation);
-            entity->animation = animation_create(adef_teleporter_active, true);
+        if (prop->frames_on_state == 1) {
+            animation_destroy(prop->entity->animation);
+            prop->entity->animation = animation_create(adef_teleporter_active, true);
             Entity *teleporter_glow = entity_create((vec2){150, 108}, (vec2){TELEPORTER_GLOW_DIMENSIONS[0], TELEPORTER_GLOW_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
             teleporter_glow->animation = animation_create(adef_teleporter_glow, false);
             teleporter_glow->destroy_on_anim_completion = true;
         }
-        else if (frames_on_state == active_frames / 2) {
-            create_enemy(entity->body->aabb.position);
+        else if (prop->frames_on_state == active_frames / 2) {
+            create_enemy(prop->entity->body->aabb.position);
         }
-        else if (frames_on_state >= active_frames) {
-            frames_on_state = 0;
-            state->teleporter_state_enum = SPINNING_DOWN;
+        else if (prop->frames_on_state >= active_frames) {
+            prop->state.teleporter_state_enum = SPINNING_DOWN;
+            prop->frames_on_state = 0;
         }
         break;
     case INACTIVE:
-        entity->animation->does_loop = false;
-        for (int i = 0; i < map.num_dynamic_props; i++) { // TODO: figure out a way to only call this on the first inactive frame
-            if (map.dynamic_props[i]->type == TELEPORTER_BUTTON)
-                map.dynamic_props[i]->state.button_state_enum = UNPRESSED;
+        prop->entity->animation->does_loop = false;
+        if (prop->frames_on_state == 1) {
+            for (int i = 0; i < map.num_dynamic_props; i++) {
+                if (map.dynamic_props[i]->type == TELEPORTER_BUTTON) {
+                    map.dynamic_props[i]->state.button_state_enum = UNPRESSED;
+                    map.dynamic_props[i]->frames_on_state = 0;
+                }
+            }
         }
-        frames_on_state = 0;
         break;
     case SPINNING_UP:
-        teleporter_spin_up_and_down_states(entity, &state->teleporter_state_enum, &frames_on_state, ACTIVE, spin_slow, spin_med, spin_fast);
+        teleporter_spin_up_and_down_states(prop->entity, &prop->state.teleporter_state_enum, &prop->frames_on_state, ACTIVE, spin_slow, spin_med, spin_fast);
         break;
     case SPINNING_DOWN:
-        teleporter_spin_up_and_down_states(entity, &state->teleporter_state_enum, &frames_on_state, INACTIVE, spin_fast, spin_med, spin_slow);
+        teleporter_spin_up_and_down_states(prop->entity, &prop->state.teleporter_state_enum, &prop->frames_on_state, INACTIVE, spin_fast, spin_med, spin_slow);
         break;
     default:
         break;
     };
-
-    frames_on_state++;
+    prop->frames_on_state++;
 }
 
 /// @brief Checks the button state and assigns the appropriate animation to the entity
 /// @param entity
 /// @param state
-void teleporter_button_update_state(Entity *entity, StateEnum *state)
+void teleporter_button_update_state(DynamicProp *prop)
 {
-    switch (state->button_state_enum) {
+    switch (prop->state.button_state_enum) {
     case PRESSED:
-        animation_destroy(entity->animation);
-        entity->animation = animation_create(adef_teleporter_button_pressed, false);
+        if (prop->frames_on_state == 0) {
+            animation_destroy(prop->entity->animation);
+            prop->entity->animation = animation_create(adef_teleporter_button_pressed, false);
+        }
         break;
     case UNPRESSED:
-        animation_destroy(entity->animation);
-        entity->animation = animation_create(adef_teleporter_button_unpressed, false);
+        if (prop->frames_on_state == 0) {
+            animation_destroy(prop->entity->animation);
+            prop->entity->animation = animation_create(adef_teleporter_button_unpressed, true);
+        }
         break;
     default:
         break;
     }
+    prop->frames_on_state++;
 }
 
 /// @brief Helper method for logic between active and inactive states for the teleporter

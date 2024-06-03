@@ -82,8 +82,8 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active);
 void spawn_zombie(vec2 spawn_point);
 
 // dynamic prop logic callbacks & corresponding helpers
-void teleporter_update_state(Entity *entity, StateEnum *state);
-void teleporter_button_update_state(Entity *entity, StateEnum *state);
+void teleporter_update_state(DynamicProp *prop);
+void teleporter_button_update_state(DynamicProp *prop);
 void teleporter_spin_up_and_down_states(
     Entity *entity, TeleporterStateEnum *teleporter_state_enum, u32 *frames_on_state, TeleporterStateEnum next_state, f32 first_duration, f32 second_duration, f32 third_duration);
 void update_adef_frame_durations(Animation_Definition *adef, f32 duration);
