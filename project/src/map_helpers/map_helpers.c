@@ -77,8 +77,7 @@ void update_map(Map *map)
 void update_dynamic_props(Map *map)
 {
     for (int i = 0; i < map->num_dynamic_props; i++) {
-        DynamicProp *prop = map->dynamic_props[i];
-        prop->update_state(prop->entity, &prop->state);
+        map->dynamic_props[i]->update_state(map->dynamic_props[i]);
     }
 }
 
@@ -196,7 +195,7 @@ void init_map_assets(void)
     adef_teleporter_button_pressed = animation_definition_create(&sprite_sheet_teleporter_button_pressed, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     render_sprite_sheet_init(
         &sprite_sheet_teleporter_button_unpressed, "assets/wip/teleporter_button_unpressed.png", TELEPORTER_BUTTON_DIMENSIONS[0], TELEPORTER_BUTTON_DIMENSIONS[1]);
-    adef_teleporter_button_unpressed = animation_definition_create(&sprite_sheet_teleporter_button_unpressed, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    adef_teleporter_button_unpressed = animation_definition_create(&sprite_sheet_teleporter_button_unpressed, (f32[]){0.75, 0.75}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
 }
 
 void init_map_props(Map *map)
@@ -237,6 +236,7 @@ DynamicProp *init_teleporter_prop(void)
     teleporter->entity = entity_create((vec2){150, 100}, (vec2){TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
     teleporter->state.teleporter_state_enum = INACTIVE;
     teleporter->update_state = teleporter_update_state;
+    teleporter->frames_on_state = 0;
     teleporter->type = TELEPORTER;
     teleporter->entity->animation = animation_create(adef_teleporter_inactive, false);
     teleporter->entity->animation->z_index = -1;
@@ -257,8 +257,9 @@ DynamicProp *init_button_prop(void)
         NULL);
     teleporter_button->state.button_state_enum = UNPRESSED;
     teleporter_button->update_state = teleporter_button_update_state;
+    teleporter_button->frames_on_state = 0;
     teleporter_button->type = TELEPORTER_BUTTON;
-    teleporter_button->entity->animation = animation_create(adef_teleporter_button_unpressed, false);
+    teleporter_button->entity->animation = animation_create(adef_teleporter_button_unpressed, true);
     teleporter_button->entity->animation->z_index = -1;
     teleporter_button->entity->body->parent = teleporter_button;
     return teleporter_button;

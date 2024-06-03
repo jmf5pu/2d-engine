@@ -165,11 +165,13 @@ void teleporter_button_on_hit(Body *self, Body *other, Hit hit)
 {
     Player *player = get_player_from_body(other);
     DynamicProp *teleporter_button = self->parent;
+
     if (teleporter_button->state.button_state_enum == UNPRESSED && player != NULL && player->input_state->key_state->use) {
         for (int i = 0; i < map.num_dynamic_props; i++) {
             if (map.dynamic_props[i]->type == TELEPORTER)
                 map.dynamic_props[i]->state.teleporter_state_enum = SPINNING_UP;
         }
         teleporter_button->state.button_state_enum = PRESSED;
+        teleporter_button->frames_on_state = 0;
     }
 }
