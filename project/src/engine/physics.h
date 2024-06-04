@@ -27,6 +27,8 @@ typedef struct body {
     u8 collision_layer;
     u8 collision_mask;
     bool is_active;
+    bool is_being_hit;
+    bool first_frame_being_hit;
     void *parent; // used to associate a body with a bullet, player, etc.
 } Body;
 

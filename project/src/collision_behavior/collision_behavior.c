@@ -1,5 +1,6 @@
 #include "collision_behavior.h"
 #include "../effects/effects.h"
+#include "../engine/animation.h"
 #include "../engine/physics.h"
 #include "../map_helpers/map_helpers.h"
 #include "../player_helpers/player_helpers.h"
@@ -120,17 +121,7 @@ void enemy_on_hit(Body *self, Body *other, Hit hit)
     }
 }
 
-void enemy_on_hit_static(Body *self, Static_Body *other, Hit hit)
-{
-    // if (hit.normal[0] > 0)
-    // {
-    //     self->velocity[0] = 400;
-    // }
-    // if (hit.normal[0] < 0)
-    // {
-    //     self->velocity[0] = -400;
-    // }
-}
+void enemy_on_hit_static(Body *self, Static_Body *other, Hit hit) {}
 
 // these aren't needed atm since pickups aren't moving around
 void pickup_on_hit(Body *self, Body *other, Hit hit) {}
@@ -165,6 +156,13 @@ void teleporter_button_on_hit(Body *self, Body *other, Hit hit)
 {
     Player *player = get_player_from_body(other);
     DynamicProp *teleporter_button = self->parent;
+
+    if (self->first_frame_being_hit) {
+        Entity *button_highlight = entity_create(self->aabb.position, (vec2){TELEPORTER_BUTTON_DIMENSIONS[0], TELEPORTER_BUTTON_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
+        button_highlight->animation = animation_create(adef_teleporter_button_highlight, false);
+        button_highlight->animation->z_index = 1;
+        button_highlight->destroy_on_anim_completion = true;
+    }
 
     if (teleporter_button->state.button_state_enum == UNPRESSED && player != NULL && player->input_state->key_state->use) {
         for (int i = 0; i < map.num_dynamic_props; i++) {

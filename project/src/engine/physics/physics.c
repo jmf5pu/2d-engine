@@ -92,7 +92,6 @@ static void sweep_response(Body *body, vec2 velocity)
             body->on_hit(body, physics_body_get(hit_moving.other_id), hit_moving);
         }
     }
-
     if (hit.is_hit) {
         // check with axis collided, update that
         body->aabb.position[0] = hit.position[0];
@@ -114,6 +113,11 @@ static void sweep_response(Body *body, vec2 velocity)
         // no hit? Then update position on both axes
         vec2_add(body->aabb.position, body->aabb.position, velocity);
     }
+
+    // if we want to trigger stuff on only the first frame of a series of continuous collisions
+    bool body_was_hit_prev_frame = body->is_being_hit;
+    body->is_being_hit = hit.is_hit || hit_moving.is_hit;
+    body->first_frame_being_hit = body->is_being_hit && !body_was_hit_prev_frame;
 }
 
 static void stationary_response(Body *body)
@@ -180,6 +184,8 @@ Body *physics_body_create(vec2 position, vec2 size, vec2 velocity, u8 collision_
     body->on_hit_static = on_hit_static;
 
     body->is_active = true;
+    body->is_being_hit = false;
+    body->first_frame_being_hit = false;
 
     if (array_list_append(state.body_list, body) == (usize)-1) {
         free(body); // Clean up allocated memory in case of failure

@@ -25,6 +25,8 @@ extern const f32 TELEPORTER_GLOW_DURATIONS[];
 extern const u8 TELEPORTER_GLOW_ROWS[];
 extern const u8 TELEPORTER_GLOW_COLS[];
 
+extern const f32 TELEPORTER_BUTTON_DIMENSIONS[];
+
 extern Map map;
 
 Sprite_Sheet sprite_sheet_bunker_background;
@@ -54,6 +56,8 @@ Sprite_Sheet sprite_sheet_teleporter_button_pressed;
 Animation_Definition *adef_teleporter_button_pressed;
 Sprite_Sheet sprite_sheet_teleporter_button_unpressed;
 Animation_Definition *adef_teleporter_button_unpressed;
+Sprite_Sheet sprite_sheet_teleporter_button_highlight;
+Animation_Definition *adef_teleporter_button_highlight;
 
 // weapon pickups
 Sprite_Sheet sprite_sheet_m16_pickup;

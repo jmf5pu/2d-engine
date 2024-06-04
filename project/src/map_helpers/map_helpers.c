@@ -195,7 +195,10 @@ void init_map_assets(void)
     adef_teleporter_button_pressed = animation_definition_create(&sprite_sheet_teleporter_button_pressed, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     render_sprite_sheet_init(
         &sprite_sheet_teleporter_button_unpressed, "assets/wip/teleporter_button_unpressed.png", TELEPORTER_BUTTON_DIMENSIONS[0], TELEPORTER_BUTTON_DIMENSIONS[1]);
-    adef_teleporter_button_unpressed = animation_definition_create(&sprite_sheet_teleporter_button_unpressed, (f32[]){0.75, 0.75}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
+    adef_teleporter_button_unpressed = animation_definition_create(&sprite_sheet_teleporter_button_unpressed, (f32[]){1, 1}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
+    render_sprite_sheet_init(&sprite_sheet_teleporter_button_highlight, "assets/wip/teleporter_button_highlight.png", 20, 20);
+    adef_teleporter_button_highlight = animation_definition_create(
+        &sprite_sheet_teleporter_button_highlight, (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1}, (u8[]){0, 0, 0, 0, 0, 0, 0}, (u8[]){1, 2, 3, 4, 5, 6, 7}, 7);
 }
 
 void init_map_props(Map *map)
@@ -260,7 +263,7 @@ DynamicProp *init_button_prop(void)
     teleporter_button->frames_on_state = 0;
     teleporter_button->type = TELEPORTER_BUTTON;
     teleporter_button->entity->animation = animation_create(adef_teleporter_button_unpressed, true);
-    teleporter_button->entity->animation->z_index = -1;
+    teleporter_button->entity->animation->z_index = 0;
     teleporter_button->entity->body->parent = teleporter_button;
     return teleporter_button;
 }
