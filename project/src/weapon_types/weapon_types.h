@@ -10,6 +10,7 @@
 extern Weapon_Type *base;
 extern Weapon_Type *m16;
 extern Weapon_Type *glock;
+extern Weapon_Type *coach_gun;
 
 // bullet sprite sheets/animation definitions
 Sprite_Sheet sprite_sheet_bullet_medium;
@@ -21,5 +22,7 @@ Animation *anim_556_burst;
 
 void init_weapon_types(void);
 void free_weapon_types(void);
+void create_bullet_straight(Player *player, f32 angle);
+void create_scatter_shot(Player *player, f32 spread_angle, u8 shot_count);
 
 #endif

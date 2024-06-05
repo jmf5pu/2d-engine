@@ -72,6 +72,12 @@ Animation *anim_glock_pickup;
 Sprite_Sheet sprite_sheet_glock_pickup_highlight;
 Animation_Definition *adef_glock_pickup_highlight;
 
+Sprite_Sheet sprite_sheet_coach_gun_pickup;
+Animation_Definition *adef_coach_gun_pickup;
+Animation *anim_coach_gun_pickup;
+Sprite_Sheet sprite_sheet_coach_gun_pickup_highlight;
+Animation_Definition *adef_coach_gun_pickup_highlight;
+
 void init_map(Map *map);
 void init_map_assets(void);
 void init_map_props(Map *map);

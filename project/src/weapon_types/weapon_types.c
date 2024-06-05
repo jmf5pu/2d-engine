@@ -6,19 +6,20 @@
 Weapon_Type *base;
 Weapon_Type *m16;
 Weapon_Type *glock;
+Weapon_Type *coach_gun;
 
-void create_bullet_straight(Player *player)
+void create_bullet_straight(Player *player, f32 angle)
 {
     vec2 bullet_position = {player->relative_position[0], player->relative_position[1]};
     vec2 bullet_velocity = {0, 0};
 
     // Calculate starting position using angle
     vec2 bullet_start_offset = {0, 0};
-    get_xy_components_from_vector(BULLET_DISTANCE_FROM_PLAYER, player->crosshair_angle, bullet_start_offset);
+    get_xy_components_from_vector(BULLET_DISTANCE_FROM_PLAYER, angle, bullet_start_offset);
     vec2_add(bullet_position, bullet_position, bullet_start_offset);
 
     // Calculate velocity using angle
-    get_xy_components_from_vector(player->weapon->bullet_velocity, player->crosshair_angle, bullet_velocity);
+    get_xy_components_from_vector(player->weapon->bullet_velocity, angle, bullet_velocity);
 
     // check which of 16 buckets it falls into, assign animation
     char *bullet_adef_name;
@@ -34,11 +35,29 @@ void create_bullet_straight(Player *player)
     bullet->entity->body->parent = bullet;
 }
 
+void create_scatter_shot(Player *player, f32 spread_angle, u8 shot_count)
+{
+    f32 angle_step = spread_angle / shot_count;
+    f32 angle = player->crosshair_angle - (angle_step / 2);
+
+    for (int i = 0; i < shot_count; i++) {
+        create_bullet_straight(player, angle);
+        angle += angle_step;
+    }
+}
+
 void base_on_shoot(Player *player) { return; }
 
-void m16_on_shoot(Player *player) { create_bullet_straight(player); }
+void m16_on_shoot(Player *player) { create_bullet_straight(player, player->crosshair_angle); }
 
-void glock_on_shoot(Player *player) { create_bullet_straight(player); }
+void glock_on_shoot(Player *player) { create_bullet_straight(player, player->crosshair_angle); }
+
+void coach_gun_on_shoot(Player *player)
+{
+    const f32 scatter_angle = 0.5236; // 30 degrees in radians
+    const u8 num_shots = 7;
+    create_scatter_shot(player, scatter_angle, num_shots);
+}
 
 void init_weapon_types(void)
 {
@@ -84,6 +103,17 @@ void init_weapon_types(void)
     glock->bullet_velocity = 600;
     glock->hud_ammo_icon = anim_556_burst; // placeholder, update
     glock->on_shoot = glock_on_shoot;
+
+    coach_gun = malloc(sizeof(Weapon_Type));
+    coach_gun->name = "coach_gun";
+    coach_gun->fire_mode = SEMI;
+    coach_gun->capacity = 2;
+    coach_gun->reserve = 900;
+    coach_gun->max_fire_rate = 400;
+    coach_gun->damage = 15;
+    coach_gun->bullet_velocity = 600;
+    coach_gun->hud_ammo_icon = anim_556_burst; // placeholder, update
+    coach_gun->on_shoot = coach_gun_on_shoot;
 }
 
 void free_weapon_types(void)
@@ -91,4 +121,5 @@ void free_weapon_types(void)
     free(base);
     free(m16);
     free(glock);
+    free(coach_gun);
 }

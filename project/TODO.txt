@@ -1,5 +1,4 @@
 TODO:
-* add highlight and interact pickup logic for both weapon pickups
 * figure out why anims when *not* set to loop skip back to first frame at end
 * effects
     * dust after footsteps

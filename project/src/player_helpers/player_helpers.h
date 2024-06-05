@@ -10,7 +10,7 @@
 // number of animations to be stored in player_anim_map
 #define PLAYER_ANIM_COUNT 56
 #define BULLET_ADEF_COUNT 16
-#define WEAPON_COUNT 1
+#define WEAPON_COUNT 3
 #define WEAPON_STATES 2
 #define ANGLES 16
 
@@ -175,7 +175,77 @@ Animation_Definition *adef_glock_firing_14;
 Sprite_Sheet sprite_sheet_glock_firing_15;
 Animation_Definition *adef_glock_firing_15;
 
+Sprite_Sheet sprite_sheet_coach_gun_static_0;
+Animation_Definition *adef_coach_gun_static_0;
+Sprite_Sheet sprite_sheet_coach_gun_static_1;
+Animation_Definition *adef_coach_gun_static_1;
+Sprite_Sheet sprite_sheet_coach_gun_static_2;
+Animation_Definition *adef_coach_gun_static_2;
+Sprite_Sheet sprite_sheet_coach_gun_static_3;
+Animation_Definition *adef_coach_gun_static_3;
+Sprite_Sheet sprite_sheet_coach_gun_static_4;
+Animation_Definition *adef_coach_gun_static_4;
+Sprite_Sheet sprite_sheet_coach_gun_static_5;
+Animation_Definition *adef_coach_gun_static_5;
+Sprite_Sheet sprite_sheet_coach_gun_static_6;
+Animation_Definition *adef_coach_gun_static_6;
+Sprite_Sheet sprite_sheet_coach_gun_static_7;
+Animation_Definition *adef_coach_gun_static_7;
+Sprite_Sheet sprite_sheet_coach_gun_static_8;
+Animation_Definition *adef_coach_gun_static_8;
+Sprite_Sheet sprite_sheet_coach_gun_static_9;
+Animation_Definition *adef_coach_gun_static_9;
+Sprite_Sheet sprite_sheet_coach_gun_static_10;
+Animation_Definition *adef_coach_gun_static_10;
+Sprite_Sheet sprite_sheet_coach_gun_static_11;
+Animation_Definition *adef_coach_gun_static_11;
+Sprite_Sheet sprite_sheet_coach_gun_static_12;
+Animation_Definition *adef_coach_gun_static_12;
+Sprite_Sheet sprite_sheet_coach_gun_static_13;
+Animation_Definition *adef_coach_gun_static_13;
+Sprite_Sheet sprite_sheet_coach_gun_static_14;
+Animation_Definition *adef_coach_gun_static_14;
+Sprite_Sheet sprite_sheet_coach_gun_static_15;
+Animation_Definition *adef_coach_gun_static_15;
+
+Sprite_Sheet sprite_sheet_coach_gun_firing_0;
+Animation_Definition *adef_coach_gun_firing_0;
+Sprite_Sheet sprite_sheet_coach_gun_firing_1;
+Animation_Definition *adef_coach_gun_firing_1;
+Sprite_Sheet sprite_sheet_coach_gun_firing_2;
+Animation_Definition *adef_coach_gun_firing_2;
+Sprite_Sheet sprite_sheet_coach_gun_firing_3;
+Animation_Definition *adef_coach_gun_firing_3;
+Sprite_Sheet sprite_sheet_coach_gun_firing_4;
+Animation_Definition *adef_coach_gun_firing_4;
+Sprite_Sheet sprite_sheet_coach_gun_firing_5;
+Animation_Definition *adef_coach_gun_firing_5;
+Sprite_Sheet sprite_sheet_coach_gun_firing_6;
+Animation_Definition *adef_coach_gun_firing_6;
+Sprite_Sheet sprite_sheet_coach_gun_firing_7;
+Animation_Definition *adef_coach_gun_firing_7;
+Sprite_Sheet sprite_sheet_coach_gun_firing_8;
+Animation_Definition *adef_coach_gun_firing_8;
+Sprite_Sheet sprite_sheet_coach_gun_firing_9;
+Animation_Definition *adef_coach_gun_firing_9;
+Sprite_Sheet sprite_sheet_coach_gun_firing_10;
+Animation_Definition *adef_coach_gun_firing_10;
+Sprite_Sheet sprite_sheet_coach_gun_firing_11;
+Animation_Definition *adef_coach_gun_firing_11;
+Sprite_Sheet sprite_sheet_coach_gun_firing_12;
+Animation_Definition *adef_coach_gun_firing_12;
+Sprite_Sheet sprite_sheet_coach_gun_firing_13;
+Animation_Definition *adef_coach_gun_firing_13;
+Sprite_Sheet sprite_sheet_coach_gun_firing_14;
+Animation_Definition *adef_coach_gun_firing_14;
+Sprite_Sheet sprite_sheet_coach_gun_firing_15;
+Animation_Definition *adef_coach_gun_firing_15;
+
 void init_weapon_adef_hashmap(void);
+void init_player_weapon_adefs(void);
+void init_player_m16_adefs(void);
+void init_player_glock_adefs(void);
+void init_player_coach_gun_adefs(void);
 void init_all_player_anims(void);
 void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 despawn_time, f32 spawn_delay, f32 spawn_time, bool is_left_player);
 void spawn_player(Player *player, Weapon_Type *starting_weapon);
