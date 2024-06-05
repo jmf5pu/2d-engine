@@ -37,8 +37,8 @@ void create_bullet_straight(Player *player, f32 angle)
 
 void create_scatter_shot(Player *player, f32 spread_angle, u8 shot_count)
 {
-    f32 angle_step = spread_angle / shot_count;
-    f32 angle = player->crosshair_angle - (angle_step / 2);
+    f32 angle_step = spread_angle / (shot_count - 1);
+    f32 angle = player->crosshair_angle - (spread_angle / 2);
 
     for (int i = 0; i < shot_count; i++) {
         create_bullet_straight(player, angle);
@@ -48,9 +48,21 @@ void create_scatter_shot(Player *player, f32 spread_angle, u8 shot_count)
 
 void base_on_shoot(Player *player) { return; }
 
-void m16_on_shoot(Player *player) { create_bullet_straight(player, player->crosshair_angle); }
+void m16_on_shoot(Player *player)
+{
+    // create_bullet_straight(player, player->crosshair_angle);
+    const f32 scatter_angle = 0.5236; // 30 degrees in radians
+    const u8 num_shots = 7;
+    create_scatter_shot(player, scatter_angle, num_shots);
+}
 
-void glock_on_shoot(Player *player) { create_bullet_straight(player, player->crosshair_angle); }
+void glock_on_shoot(Player *player)
+{
+    // create_bullet_straight(player, player->crosshair_angle);
+    const f32 scatter_angle = 0.5236; // 30 degrees in radians
+    const u8 num_shots = 7;
+    create_scatter_shot(player, scatter_angle, num_shots);
+}
 
 void coach_gun_on_shoot(Player *player)
 {
