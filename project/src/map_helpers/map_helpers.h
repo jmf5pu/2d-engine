@@ -63,6 +63,8 @@ Animation_Definition *adef_teleporter_button_highlight;
 Sprite_Sheet sprite_sheet_m16_pickup;
 Animation_Definition *adef_m16_pickup;
 Animation *anim_m16_pickup;
+Sprite_Sheet sprite_sheet_m16_pickup_highlight;
+Animation_Definition *adef_m16_pickup_highlight;
 
 Sprite_Sheet sprite_sheet_glock_pickup;
 Animation_Definition *adef_glock_pickup;

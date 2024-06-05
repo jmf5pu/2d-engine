@@ -167,6 +167,13 @@ void init_map_assets(void)
     render_sprite_sheet_init(&sprite_sheet_m16_pickup, "assets/wip/m16_pickup.png", 20, 9);
     adef_m16_pickup = animation_definition_create(&sprite_sheet_m16_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_m16_pickup = animation_create(adef_m16_pickup, false);
+    render_sprite_sheet_init(&sprite_sheet_m16_pickup_highlight, "assets/wip/m16_pickup_highlight.png", 20, 9);
+    adef_m16_pickup_highlight = animation_definition_create(
+        &sprite_sheet_m16_pickup_highlight,
+        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        10);
     render_sprite_sheet_init(&sprite_sheet_glock_pickup, "assets/wip/glock_pickup.png", 7, 9);
     adef_glock_pickup = animation_definition_create(&sprite_sheet_glock_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_glock_pickup = animation_create(adef_glock_pickup, false);

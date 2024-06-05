@@ -38,38 +38,26 @@ void update_player_weapon(Player *player, Weapon_Type *weapon_type)
     player->weapon->on_shoot = weapon_type->on_shoot;
 }
 
-void weapon_pickup_base(Body *self, Body *other, Weapon_Type *weapon_type)
-{
-    Player *player = NULL;
-    if (other == player_one->entity->body)
-        player = player_one;
-    else if (other == player_two->entity->body)
-        player = player_two;
-
-    if (player) {
-        update_player_weapon(player, weapon_type);
-        self->is_active = false;
-    }
-}
-
-void m16_pickup_on_hit(Body *self, Body *other, Hit hit) { weapon_pickup_base(self, other, m16); }
-
-void glock_pickup_on_hit(Body *self, Body *other, Hit hit)
+void weapon_pickup_base(Body *self, Body *other, Animation_Definition *highlight_adef, Weapon_Type *weapon_type)
 {
     Player *player = get_player_from_body(other);
 
     if (self->first_frame_being_hit) {
         Entity *pickup_highlight = entity_create(self->aabb.position, (vec2){7, 9}, (vec2){0, 0}, 0, 0, NULL, NULL);
-        pickup_highlight->animation = animation_create(adef_glock_pickup_highlight, false);
+        pickup_highlight->animation = animation_create(highlight_adef, false);
         pickup_highlight->animation->z_index = 1;
         pickup_highlight->destroy_on_anim_completion = true;
     }
 
     if (player != NULL && player->input_state->key_state->use) {
-        update_player_weapon(player, glock);
+        update_player_weapon(player, weapon_type);
         self->is_active = false;
     }
 }
+
+void m16_pickup_on_hit(Body *self, Body *other, Hit hit) { weapon_pickup_base(self, other, adef_m16_pickup_highlight, m16); }
+
+void glock_pickup_on_hit(Body *self, Body *other, Hit hit) { weapon_pickup_base(self, other, adef_glock_pickup_highlight, glock); }
 
 void player_on_hit(Body *self, Body *other, Hit hit)
 {
