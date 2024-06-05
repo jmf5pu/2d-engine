@@ -19,7 +19,12 @@ void teleporter_update_state(DynamicProp *prop)
         if (prop->frames_on_state == 1) {
             animation_destroy(prop->entity->animation);
             prop->entity->animation = animation_create(adef_teleporter_active, true);
-            Entity *teleporter_glow = entity_create((vec2){150, 108}, (vec2){TELEPORTER_GLOW_DIMENSIONS[0], TELEPORTER_GLOW_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
+
+            vec2 teleporter_pos;
+            vec2_dup(teleporter_pos, prop->entity->body->aabb.position);
+
+            Entity *teleporter_glow = entity_create(
+                (vec2){teleporter_pos[0], teleporter_pos[1] + 8}, (vec2){TELEPORTER_GLOW_DIMENSIONS[0], TELEPORTER_GLOW_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
             teleporter_glow->animation = animation_create(adef_teleporter_glow, false);
             teleporter_glow->destroy_on_anim_completion = true;
         }

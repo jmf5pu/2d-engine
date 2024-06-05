@@ -10,7 +10,7 @@
 Map map;
 
 const u8 TELEPORTER_DIMENSIONS[] = {19, 19};
-const u8 TELEPORTER_BUTTON_DIMENSIONS[] = {20, 20};
+const f32 TELEPORTER_BUTTON_DIMENSIONS[] = {20, 20};
 const u8 TELEPORTER_GLOW_DIMENSIONS[] = {15, 32};
 
 const f32 TELEPORTER_ACTIVE_DURATIONS[] = {0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04};
@@ -170,6 +170,9 @@ void init_map_assets(void)
     render_sprite_sheet_init(&sprite_sheet_glock_pickup, "assets/wip/glock_pickup.png", 7, 9);
     adef_glock_pickup = animation_definition_create(&sprite_sheet_glock_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_glock_pickup = animation_create(adef_glock_pickup, false);
+    render_sprite_sheet_init(&sprite_sheet_glock_pickup_highlight, "assets/wip/glock_pickup_highlight.png", 7, 9);
+    adef_glock_pickup_highlight =
+        animation_definition_create(&sprite_sheet_glock_pickup_highlight, (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.1}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){1, 2, 3, 4, 5, 6}, 6);
 
     // teleporter
     render_sprite_sheet_init(&sprite_sheet_teleporter_inactive, "assets/wip/teleporter_spinning.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
@@ -236,7 +239,7 @@ void init_metal_table_props(void)
 DynamicProp *init_teleporter_prop(void)
 {
     DynamicProp *teleporter = malloc(sizeof(DynamicProp));
-    teleporter->entity = entity_create((vec2){150, 100}, (vec2){TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
+    teleporter->entity = entity_create((vec2){300, 85}, (vec2){TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
     teleporter->state.teleporter_state_enum = INACTIVE;
     teleporter->update_state = teleporter_update_state;
     teleporter->frames_on_state = 0;
@@ -249,9 +252,11 @@ DynamicProp *init_teleporter_prop(void)
 
 DynamicProp *init_button_prop(void)
 {
+    vec2 teleporter_button_pos = {100, 85};
+
     DynamicProp *teleporter_button = malloc(sizeof(DynamicProp));
     teleporter_button->entity = entity_create(
-        (vec2){80, 50},
+        teleporter_button_pos,
         (vec2){TELEPORTER_BUTTON_DIMENSIONS[0], TELEPORTER_BUTTON_DIMENSIONS[1]},
         (vec2){0, 0},
         COLLISION_LAYER_BUTTON,
@@ -265,6 +270,9 @@ DynamicProp *init_button_prop(void)
     teleporter_button->entity->animation = animation_create(adef_teleporter_button_unpressed, true);
     teleporter_button->entity->animation->z_index = 0;
     teleporter_button->entity->body->parent = teleporter_button;
+
+    // we don't want people walking over the button:
+    physics_static_body_create(teleporter_button_pos, (vec2){8, 17}, COLLISION_LAYER_TERRAIN);
     return teleporter_button;
 }
 

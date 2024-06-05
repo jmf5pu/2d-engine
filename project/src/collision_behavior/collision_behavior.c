@@ -54,7 +54,22 @@ void weapon_pickup_base(Body *self, Body *other, Weapon_Type *weapon_type)
 
 void m16_pickup_on_hit(Body *self, Body *other, Hit hit) { weapon_pickup_base(self, other, m16); }
 
-void glock_pickup_on_hit(Body *self, Body *other, Hit hit) { weapon_pickup_base(self, other, glock); }
+void glock_pickup_on_hit(Body *self, Body *other, Hit hit)
+{
+    Player *player = get_player_from_body(other);
+
+    if (self->first_frame_being_hit) {
+        Entity *pickup_highlight = entity_create(self->aabb.position, (vec2){7, 9}, (vec2){0, 0}, 0, 0, NULL, NULL);
+        pickup_highlight->animation = animation_create(adef_glock_pickup_highlight, false);
+        pickup_highlight->animation->z_index = 1;
+        pickup_highlight->destroy_on_anim_completion = true;
+    }
+
+    if (player != NULL && player->input_state->key_state->use) {
+        update_player_weapon(player, glock);
+        self->is_active = false;
+    }
+}
 
 void player_on_hit(Body *self, Body *other, Hit hit)
 {
@@ -156,15 +171,16 @@ void teleporter_button_on_hit(Body *self, Body *other, Hit hit)
 {
     Player *player = get_player_from_body(other);
     DynamicProp *teleporter_button = self->parent;
+    bool is_interactable = teleporter_button->state.button_state_enum == UNPRESSED;
 
-    if (self->first_frame_being_hit) {
+    if (is_interactable && self->first_frame_being_hit) { // TODO: pull this logic to a helper method
         Entity *button_highlight = entity_create(self->aabb.position, (vec2){TELEPORTER_BUTTON_DIMENSIONS[0], TELEPORTER_BUTTON_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
         button_highlight->animation = animation_create(adef_teleporter_button_highlight, false);
         button_highlight->animation->z_index = 1;
         button_highlight->destroy_on_anim_completion = true;
     }
 
-    if (teleporter_button->state.button_state_enum == UNPRESSED && player != NULL && player->input_state->key_state->use) {
+    if (is_interactable && player != NULL && player->input_state->key_state->use) { // TODO: pull this conditional to a helper method
         for (int i = 0; i < map.num_dynamic_props; i++) {
             if (map.dynamic_props[i]->type == TELEPORTER)
                 map.dynamic_props[i]->state.teleporter_state_enum = SPINNING_UP;

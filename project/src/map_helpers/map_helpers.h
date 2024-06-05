@@ -63,9 +63,12 @@ Animation_Definition *adef_teleporter_button_highlight;
 Sprite_Sheet sprite_sheet_m16_pickup;
 Animation_Definition *adef_m16_pickup;
 Animation *anim_m16_pickup;
+
 Sprite_Sheet sprite_sheet_glock_pickup;
 Animation_Definition *adef_glock_pickup;
 Animation *anim_glock_pickup;
+Sprite_Sheet sprite_sheet_glock_pickup_highlight;
+Animation_Definition *adef_glock_pickup_highlight;
 
 void init_map(Map *map);
 void init_map_assets(void);
