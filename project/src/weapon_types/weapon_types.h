@@ -12,10 +12,6 @@ extern Weapon_Type *m16;
 extern Weapon_Type *glock;
 extern Weapon_Type *coach_gun;
 
-// bullet sprite sheets/animation definitions
-Sprite_Sheet sprite_sheet_bullet_medium;
-Animation_Definition *adef_bullet_medium;
-
 Sprite_Sheet sprite_sheet_556_burst;
 Animation_Definition *adef_556_burst;
 Animation *anim_556_burst;

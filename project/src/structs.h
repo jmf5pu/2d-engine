@@ -68,6 +68,8 @@ typedef struct weapon {
     Animation *character_anim;
     vec2 position;
     OnShoot on_shoot;
+    Animation_Definition *bullet_adef;
+    Animation_Definition *bullet_impact_adef;
 } Weapon;
 
 typedef struct weapon_type {
@@ -81,6 +83,8 @@ typedef struct weapon_type {
     f32 burst_delay;   // in seconds
     i16 damage;
     i16 bullet_velocity;
+    Animation_Definition *bullet_adef;
+    Animation_Definition *bullet_impact_adef;
     Animation *hud_ammo_icon;
     OnShoot on_shoot; // handles bullet entity creation when the weapon is fired
 } Weapon_Type;
@@ -127,6 +131,7 @@ typedef struct player {
 
 typedef struct bullet {
     Entity *entity;
+    Animation_Definition *impact_adef;
     i32 damage;
 } Bullet;
 

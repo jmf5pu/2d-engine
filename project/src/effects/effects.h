@@ -17,9 +17,15 @@ Animation *anim_character_shadow;
 Sprite_Sheet sprite_sheet_brass_falling_1;
 Animation_Definition *adef_brass_falling_1;
 
-// bullet impact
-Sprite_Sheet sprite_sheet_bullet_impact_0;
-Animation_Definition *adef_bullet_impact_0;
+// bullets
+Sprite_Sheet sprite_sheet_bullet_small;
+Animation_Definition *adef_bullet_small;
+Sprite_Sheet sprite_sheet_bullet_medium;
+Animation_Definition *adef_bullet_medium;
+Sprite_Sheet sprite_sheet_bullet_impact_small;
+Animation_Definition *adef_bullet_impact_small;
+Sprite_Sheet sprite_sheet_bullet_impact_medium;
+Animation_Definition *adef_bullet_impact_medium;
 
 // muzzle flash
 Sprite_Sheet sprite_sheet_muzzle_flash_0;
@@ -56,7 +62,7 @@ Animation_Definition *adef_muzzle_flash_14;
 Animation_Definition *adef_muzzle_flash_15;
 
 void init_brass_animation_definitions(void);
-void init_bullet_impact_animation_definitions(void);
+void init_bullet_animation_definitions(void);
 void init_explosion_animation_definitions(void);
 void init_character_shadow_anim(void);
 void init_explosion_adef_hashmap(void);

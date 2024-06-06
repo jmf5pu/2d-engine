@@ -7,7 +7,8 @@
 
 static Hash_Map *explosion_adef_map;
 
-const u8 BULLET_IMPACT_DIMENSIONS[] = {7, 7};
+const u8 BULLET_IMPACT_DIMENSIONS_SMALL[] = {5, 5};
+const u8 BULLET_IMPACT_DIMENSIONS_MEDIUM[] = {7, 7};
 
 // extern variables from main
 u32 texture_slots[BATCH_SIZE];
@@ -17,7 +18,7 @@ SDL_Window *window;
 void init_effects(void)
 {
     init_brass_animation_definitions();
-    init_bullet_impact_animation_definitions();
+    init_bullet_animation_definitions();
     init_explosion_animation_definitions();
     init_explosion_adef_hashmap();
     init_character_shadow_anim();
@@ -47,7 +48,7 @@ void create_muzzle_flash_entity(f32 angle, vec2 position, vec2 size, vec2 veloci
 
 void create_bullet_impact_entity(vec2 position, Animation_Definition *adef)
 {
-    Entity *entity = entity_create(position, (vec2){BULLET_IMPACT_DIMENSIONS[0], BULLET_IMPACT_DIMENSIONS[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
+    Entity *entity = entity_create(position, (vec2){BULLET_IMPACT_DIMENSIONS_MEDIUM[0], BULLET_IMPACT_DIMENSIONS_MEDIUM[1]}, (vec2){0, 0}, 0, 0, NULL, NULL);
     entity->animation = animation_create(adef, false);
     entity->destroy_on_anim_completion = true;
 }
@@ -88,11 +89,18 @@ void render_character_shadow(vec2 character_position, f32 character_sprite_heigh
     animation_render(anim_character_shadow, window, shadow_position, WHITE, texture_slots);
 }
 
-void init_bullet_impact_animation_definitions(void)
+void init_bullet_animation_definitions(void)
 {
-    render_sprite_sheet_init(&sprite_sheet_bullet_impact_0, "assets/wip/bullet_impact_0.png", BULLET_IMPACT_DIMENSIONS[0], BULLET_IMPACT_DIMENSIONS[1]);
-    adef_bullet_impact_0 =
-        animation_definition_create(&sprite_sheet_bullet_impact_0, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_bullet_small, "assets/wip/bullet_small.png", 2, 2);
+    adef_bullet_small = animation_definition_create(&sprite_sheet_bullet_small, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_medium, "assets/wip/bullet_medium.png", 4, 4);
+    adef_bullet_medium = animation_definition_create(&sprite_sheet_bullet_medium, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_bullet_impact_small, "assets/wip/bullet_impact_small.png", BULLET_IMPACT_DIMENSIONS_SMALL[0], BULLET_IMPACT_DIMENSIONS_SMALL[1]);
+    adef_bullet_impact_small =
+        animation_definition_create(&sprite_sheet_bullet_impact_small, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_bullet_impact_medium, "assets/wip/bullet_impact_medium.png", BULLET_IMPACT_DIMENSIONS_MEDIUM[0], BULLET_IMPACT_DIMENSIONS_MEDIUM[1]);
+    adef_bullet_impact_medium =
+        animation_definition_create(&sprite_sheet_bullet_impact_medium, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
 }
 
 void init_explosion_animation_definitions(void)

@@ -48,12 +48,12 @@ int main(int argc, char *argv[])
     animation_init();        // creates animation storage
     init_all_player_anims(); // initializes all our animations
     game_state = GS_RUNNING;
+    init_effects(); // effects must be before weapon types because weapon types will store some of these adefs
     init_weapon_types();
     init_map(&map);
     init_hud(window);
     init_menus();
     init_game_controllers();
-    init_effects();
 
     // init game color
     vec4_dup(game_color, WHITE);

@@ -36,6 +36,8 @@ void update_player_weapon(Player *player, Weapon_Type *weapon_type)
     player->weapon->ready_to_fire = true;
     player->weapon->is_firing = false;
     player->weapon->on_shoot = weapon_type->on_shoot;
+    player->weapon->bullet_adef = weapon_type->bullet_adef;
+    player->weapon->bullet_impact_adef = weapon_type->bullet_impact_adef;
 }
 
 void weapon_pickup_base(Body *self, Body *other, Animation_Definition *highlight_adef, Weapon_Type *weapon_type)
@@ -147,7 +149,8 @@ void bullet_on_hit(Body *self, Body *other, Hit hit)
 /// @param hit
 void bullet_on_hit_static(Body *self, Static_Body *other, Hit hit)
 {
-    create_bullet_impact_entity(self->aabb.position, adef_bullet_impact_0);
+    Bullet *bullet = (Bullet *)self->parent;
+    create_bullet_impact_entity(self->aabb.position, bullet->impact_adef);
     self->is_active = false;
 }
 

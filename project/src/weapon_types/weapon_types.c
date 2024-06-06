@@ -1,5 +1,6 @@
 #include "weapon_types.h"
 #include "../collision_behavior/collision_behavior.h"
+#include "../effects/effects.h"
 #include "../engine/render.h"
 #include "../main_helpers/main_helpers.h"
 
@@ -21,15 +22,12 @@ void create_bullet_straight(Player *player, f32 angle)
     // Calculate velocity using angle
     get_xy_components_from_vector(player->weapon->bullet_velocity, angle, bullet_velocity);
 
-    // check which of 16 buckets it falls into, assign animation
-    char *bullet_adef_name;
-    bullet_adef_name = "bullet_0";
-
     // create bullet struct and calculated anim and velocity
     Bullet *bullet = malloc(sizeof(Bullet));
     bullet->entity = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
+    bullet->impact_adef = player->weapon->bullet_impact_adef;
     bullet->damage = player->weapon->damage;
-    bullet->entity->animation = animation_create(adef_bullet_medium, true);
+    bullet->entity->animation = animation_create(player->weapon->bullet_adef, true);
 
     vec2_dup(bullet->entity->body->velocity, bullet_velocity);
     bullet->entity->body->parent = bullet;
@@ -48,13 +46,7 @@ void create_scatter_shot(Player *player, f32 spread_angle, u8 shot_count)
 
 void base_on_shoot(Player *player) { return; }
 
-void m16_on_shoot(Player *player)
-{
-    // create_bullet_straight(player, player->crosshair_angle);
-    const f32 scatter_angle = 0.5236; // 30 degrees in radians
-    const u8 num_shots = 7;
-    create_scatter_shot(player, scatter_angle, num_shots);
-}
+void m16_on_shoot(Player *player) { create_bullet_straight(player, player->crosshair_angle); }
 
 void glock_on_shoot(Player *player) { create_bullet_straight(player, player->crosshair_angle); }
 
@@ -70,10 +62,6 @@ void init_weapon_types(void)
     render_sprite_sheet_init(&sprite_sheet_556_burst, "assets/hud/556_burst.png", 20, 44);
     adef_556_burst = animation_definition_create(&sprite_sheet_556_burst, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_556_burst = animation_create(adef_556_burst, false);
-
-    // init bullet anims
-    render_sprite_sheet_init(&sprite_sheet_bullet_medium, "assets/wip/bullet_v3.png", 2, 2);
-    adef_bullet_medium = animation_definition_create(&sprite_sheet_bullet_medium, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
     // Weapons
     base = malloc(sizeof(Weapon_Type));
@@ -96,6 +84,8 @@ void init_weapon_types(void)
     m16->burst_delay = 0.3; // seconds
     m16->damage = 30;
     m16->bullet_velocity = 800;
+    m16->bullet_adef = adef_bullet_medium;
+    m16->bullet_impact_adef = adef_bullet_impact_medium;
     m16->hud_ammo_icon = anim_556_burst;
     m16->on_shoot = m16_on_shoot;
 
@@ -107,6 +97,8 @@ void init_weapon_types(void)
     glock->max_fire_rate = 1200;
     glock->damage = 15;
     glock->bullet_velocity = 600;
+    glock->bullet_adef = adef_bullet_small;
+    glock->bullet_impact_adef = adef_bullet_impact_small;
     glock->hud_ammo_icon = anim_556_burst; // placeholder, update
     glock->on_shoot = glock_on_shoot;
 
@@ -118,6 +110,8 @@ void init_weapon_types(void)
     coach_gun->max_fire_rate = 400;
     coach_gun->damage = 15;
     coach_gun->bullet_velocity = 600;
+    coach_gun->bullet_adef = adef_bullet_small;
+    coach_gun->bullet_impact_adef = adef_bullet_impact_medium;
     coach_gun->hud_ammo_icon = anim_556_burst; // placeholder, update
     coach_gun->on_shoot = coach_gun_on_shoot;
 }
