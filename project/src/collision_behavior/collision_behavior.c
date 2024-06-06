@@ -36,6 +36,7 @@ void update_player_weapon(Player *player, Weapon_Type *weapon_type)
     player->weapon->ready_to_fire = true;
     player->weapon->is_firing = false;
     player->weapon->on_shoot = weapon_type->on_shoot;
+    player->weapon->muzzle_flash_id = weapon_type->muzzle_flash_id;
     player->weapon->bullet_adef = weapon_type->bullet_adef;
     player->weapon->bullet_impact_adef = weapon_type->bullet_impact_adef;
 }

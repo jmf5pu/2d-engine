@@ -285,8 +285,8 @@ DynamicProp *init_button_prop(void)
 
 void init_pickup_props(void)
 {
-    Entity *m16_pickup = entity_create((vec2){27, 55}, (vec2){20, 9}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, m16_pickup_on_hit, NULL);
+    Entity *m16_pickup = entity_create((vec2){27, 50}, (vec2){20, 9}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, m16_pickup_on_hit, NULL);
     m16_pickup->animation = anim_m16_pickup;
-    Entity *glock_pickup = entity_create((vec2){35, 70}, (vec2){7, 9}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, glock_pickup_on_hit, NULL);
+    Entity *glock_pickup = entity_create((vec2){35, 80}, (vec2){7, 9}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, glock_pickup_on_hit, NULL);
     glock_pickup->animation = anim_glock_pickup;
 }

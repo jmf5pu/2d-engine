@@ -24,12 +24,15 @@ void init_effects(void)
     init_character_shadow_anim();
 }
 
-void create_muzzle_flash_entity(f32 angle, vec2 position, vec2 size, vec2 velocity, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static)
+void create_muzzle_flash_entity(
+    char *muzzle_flash_id, f32 angle, vec2 position, vec2 size, vec2 velocity, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static)
 {
     Entity *entity = entity_create(position, size, velocity, collision_layer, collision_mask, on_hit, on_hit_static);
 
     char *adef_key = calloc(50, sizeof(char));
-    strcat(adef_key, "muzzle_flash_1_");
+    strcat(adef_key, "muzzle_flash_");
+    strcat(adef_key, muzzle_flash_id);
+    strcat(adef_key, "_");
 
     char *direction = calloc(5, sizeof(char));
 

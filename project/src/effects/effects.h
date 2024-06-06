@@ -66,7 +66,8 @@ void init_bullet_animation_definitions(void);
 void init_explosion_animation_definitions(void);
 void init_character_shadow_anim(void);
 void init_explosion_adef_hashmap(void);
-void create_muzzle_flash_entity(f32 angle, vec2 position, vec2 size, vec2 velocity, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static);
+void create_muzzle_flash_entity(
+    char *muzzle_flash_id, f32 angle, vec2 position, vec2 size, vec2 velocity, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static);
 void create_bullet_impact_entity(vec2 position, Animation_Definition *adef);
 void create_brass_entity(vec2 position, Animation_Definition *adef, i32 z_index);
 void brass_movement(Entity *entity);

@@ -761,7 +761,8 @@ void handle_player_shooting(Player *player, Key_State shoot)
         get_xy_components_from_vector(MUZZLE_FLASH_DISTANCE_FROM_PLAYER, player->crosshair_angle, muzzle_flash_offset);
         vec2_add(muzzle_flash_offset, muzzle_flash_offset, (vec2){0, CHARACTER_ARMS_Y_OFFSET_FROM_CENTER});
         vec2_add(muzzle_flash_position, player->relative_position, muzzle_flash_offset);
-        create_muzzle_flash_entity(player->crosshair_angle, muzzle_flash_position, (vec2){15, 15}, player->entity->body->velocity, 0, 0, NULL, NULL);
+        create_muzzle_flash_entity(
+            player->weapon->muzzle_flash_id, player->crosshair_angle, muzzle_flash_position, (vec2){15, 15}, player->entity->body->velocity, 0, 0, NULL, NULL);
 
         // ccalculate brass offset from the player and create brass effect entity
         vec2 brass_position = {0, 0};

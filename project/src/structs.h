@@ -68,6 +68,7 @@ typedef struct weapon {
     Animation *character_anim;
     vec2 position;
     OnShoot on_shoot;
+    char *muzzle_flash_id;
     Animation_Definition *bullet_adef;
     Animation_Definition *bullet_impact_adef;
 } Weapon;
@@ -83,6 +84,7 @@ typedef struct weapon_type {
     f32 burst_delay;   // in seconds
     i16 damage;
     i16 bullet_velocity;
+    char *muzzle_flash_id;
     Animation_Definition *bullet_adef;
     Animation_Definition *bullet_impact_adef;
     Animation *hud_ammo_icon;
