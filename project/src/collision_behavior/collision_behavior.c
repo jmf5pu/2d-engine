@@ -112,18 +112,6 @@ void enemy_on_hit(Body *self, Body *other, Hit hit)
     if (other->collision_layer == COLLISION_LAYER_PLAYER) {
         vec2_add(self->aabb.position, self->aabb.position, hit.normal);
     }
-
-    // update enemy health on bullet collisions
-    if (other->collision_layer == COLLISION_LAYER_BULLET) {
-        assert(other->parent);
-        assert(sizeof(other->parent) == sizeof(Bullet *));
-        Bullet *bullet = (Bullet *)other->parent;
-        if (other->is_active && self->is_active) {
-            zombie->health -= bullet->damage;
-            other->is_active = false;
-            free(bullet);
-        }
-    }
 }
 
 void enemy_on_hit_static(Body *self, Static_Body *other, Hit hit) {}
@@ -139,8 +127,14 @@ void pickup_on_hit_static(Body *self, Static_Body *other, Hit hit) {}
 /// @param hit
 void bullet_on_hit(Body *self, Body *other, Hit hit)
 {
-    if (other->is_active)
-        self->is_active = false;
+    if (other->collision_layer == COLLISION_LAYER_ENEMY) {
+        Bullet *bullet = (Bullet *)self->parent;
+        Zombie *zombie = (Zombie *)other->parent;
+        if (other->is_active && self->is_active) {
+            zombie->health -= bullet->damage;
+            self->is_active = false;
+        }
+    }
 }
 
 /// @brief Mark the bullet as inactive and create the impact effect's entity
