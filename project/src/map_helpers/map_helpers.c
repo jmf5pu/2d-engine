@@ -15,15 +15,15 @@ const u8 TELEPORTER_GLOW_DIMENSIONS[] = {15, 32};
 
 const f32 TELEPORTER_ACTIVE_DURATIONS[] = {0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04, 0.04};
 const u8 TELEPORTER_ACTIVE_ROWS[] = {0, 0, 0, 0, 0, 0, 0, 0};
-const u8 TELEPORTER_ACTIVE_COLS[] = {1, 2, 3, 4, 5, 6, 7, 8};
+const u8 TELEPORTER_ACTIVE_COLS[] = {0, 1, 2, 3, 4, 5, 6, 7};
 
 const f32 TELEPORTER_SPINNING_DURATIONS[] = {0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08};
 const u8 TELEPORTER_SPINNING_ROWS[] = {0, 0, 0, 0, 0, 0, 0, 0};
-const u8 TELEPORTER_SPINNING_COLS[] = {1, 2, 3, 4, 5, 6, 7, 8};
+const u8 TELEPORTER_SPINNING_COLS[] = {0, 1, 2, 3, 4, 5, 6, 7};
 
 const f32 TELEPORTER_GLOW_DURATIONS[] = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
 const u8 TELEPORTER_GLOW_ROWS[] = {0, 0, 0, 0, 0, 0, 0, 0};
-const u8 TELEPORTER_GLOW_COLS[] = {1, 2, 3, 4, 5, 6, 7, 8};
+const u8 TELEPORTER_GLOW_COLS[] = {0, 1, 2, 3, 4, 5, 6, 7};
 
 // set up map & props
 void init_map(Map *map)
@@ -170,16 +170,16 @@ void init_map_assets(void)
     render_sprite_sheet_init(&sprite_sheet_m16_pickup_highlight, "assets/wip/m16_pickup_highlight.png", 20, 9);
     adef_m16_pickup_highlight = animation_definition_create(
         &sprite_sheet_m16_pickup_highlight,
-        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1},
+        (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05},
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        (u8[]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        (u8[]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
         10);
     render_sprite_sheet_init(&sprite_sheet_glock_pickup, "assets/wip/glock_pickup.png", 7, 9);
     adef_glock_pickup = animation_definition_create(&sprite_sheet_glock_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_glock_pickup = animation_create(adef_glock_pickup, false);
     render_sprite_sheet_init(&sprite_sheet_glock_pickup_highlight, "assets/wip/glock_pickup_highlight.png", 7, 9);
     adef_glock_pickup_highlight =
-        animation_definition_create(&sprite_sheet_glock_pickup_highlight, (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.1}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){1, 2, 3, 4, 5, 6}, 6);
+        animation_definition_create(&sprite_sheet_glock_pickup_highlight, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
 
     // teleporter
     render_sprite_sheet_init(&sprite_sheet_teleporter_inactive, "assets/wip/teleporter_spinning.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
@@ -208,7 +208,7 @@ void init_map_assets(void)
     adef_teleporter_button_unpressed = animation_definition_create(&sprite_sheet_teleporter_button_unpressed, (f32[]){1, 1}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
     render_sprite_sheet_init(&sprite_sheet_teleporter_button_highlight, "assets/wip/teleporter_button_highlight.png", 20, 20);
     adef_teleporter_button_highlight = animation_definition_create(
-        &sprite_sheet_teleporter_button_highlight, (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1}, (u8[]){0, 0, 0, 0, 0, 0, 0}, (u8[]){1, 2, 3, 4, 5, 6, 7}, 7);
+        &sprite_sheet_teleporter_button_highlight, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5, 6}, 7);
 }
 
 void init_map_props(Map *map)

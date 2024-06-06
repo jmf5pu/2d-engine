@@ -7,7 +7,7 @@
 
 static Hash_Map *explosion_adef_map;
 
-const u8 BULLET_IMPACT_DIMENSIONS[] = {5, 5};
+const u8 BULLET_IMPACT_DIMENSIONS[] = {7, 7};
 
 // extern variables from main
 u32 texture_slots[BATCH_SIZE];
@@ -91,7 +91,8 @@ void render_character_shadow(vec2 character_position, f32 character_sprite_heigh
 void init_bullet_impact_animation_definitions(void)
 {
     render_sprite_sheet_init(&sprite_sheet_bullet_impact_0, "assets/wip/bullet_impact_0.png", BULLET_IMPACT_DIMENSIONS[0], BULLET_IMPACT_DIMENSIONS[1]);
-    adef_bullet_impact_0 = animation_definition_create(&sprite_sheet_bullet_impact_0, (f32[]){0.05, 0.05, 0.05}, (u8[]){0, 0, 0}, (u8[]){0, 1, 2}, 3);
+    adef_bullet_impact_0 =
+        animation_definition_create(&sprite_sheet_bullet_impact_0, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
 }
 
 void init_explosion_animation_definitions(void)

@@ -56,13 +56,7 @@ void m16_on_shoot(Player *player)
     create_scatter_shot(player, scatter_angle, num_shots);
 }
 
-void glock_on_shoot(Player *player)
-{
-    // create_bullet_straight(player, player->crosshair_angle);
-    const f32 scatter_angle = 0.5236; // 30 degrees in radians
-    const u8 num_shots = 7;
-    create_scatter_shot(player, scatter_angle, num_shots);
-}
+void glock_on_shoot(Player *player) { create_bullet_straight(player, player->crosshair_angle); }
 
 void coach_gun_on_shoot(Player *player)
 {
@@ -78,7 +72,7 @@ void init_weapon_types(void)
     anim_556_burst = animation_create(adef_556_burst, false);
 
     // init bullet anims
-    render_sprite_sheet_init(&sprite_sheet_bullet_medium, "assets/wip/bullet_v2.png", 4, 4);
+    render_sprite_sheet_init(&sprite_sheet_bullet_medium, "assets/wip/bullet_v3.png", 2, 2);
     adef_bullet_medium = animation_definition_create(&sprite_sheet_bullet_medium, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
     // Weapons
