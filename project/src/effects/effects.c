@@ -6,6 +6,7 @@
 #define GRAVITY_VELOCITY -7
 
 static Hash_Map *explosion_adef_map;
+static Hash_Map *blood_splatter_adef_map;
 
 const u8 BULLET_IMPACT_DIMENSIONS_SMALL[] = {5, 5};
 const u8 BULLET_IMPACT_DIMENSIONS_MEDIUM[] = {7, 7};
@@ -17,12 +18,16 @@ SDL_Window *window;
 
 void init_effects(void)
 {
+    // init animations and animation definitions
     init_brass_animation_definitions();
     init_bullet_animation_definitions();
     init_explosion_animation_definitions();
     init_blood_splatter_animation_definitions();
-    init_explosion_adef_hashmap();
     init_character_shadow_anim();
+
+    // init hashmaps
+    init_explosion_adef_hashmap();
+    init_blood_splatter_adef_hashmap();
 }
 
 void create_muzzle_flash_entity(
@@ -91,6 +96,23 @@ void render_character_shadow(vec2 character_position, f32 character_sprite_heigh
     vec2_add(shadow_position, character_position, (vec2){0, -0.5 * character_sprite_height});
     anim_character_shadow->z_index = 100;
     animation_render(anim_character_shadow, window, shadow_position, WHITE, texture_slots);
+}
+
+/// @brief Get a blood splatter adef by randomly selecting one that matches the provided prefix
+/// @param adef_prefix
+/// @return
+Animation_Definition *get_blood_splatter_adef(char *adef_prefix)
+{
+    char *adef_key = calloc(50, sizeof(char));
+    strcat(adef_key, "blood_splatter_");
+    int rand_int = get_random_int_in_range(1, BLOOD_SPLATTER_COUNT);
+    char rand_int_str[4]; // capped at 999
+    sprintf(rand_int_str, "%d", rand_int);
+    strcat(adef_key, rand_int_str);
+    strcat(adef_key, "\0");
+    Animation_Definition *adef = get(blood_splatter_adef_map, adef_key);
+    free(adef_key);
+    return adef;
 }
 
 void init_bullet_animation_definitions(void)
@@ -203,6 +225,13 @@ void init_explosion_adef_hashmap(void)
     insert(explosion_adef_map, "muzzle_flash_1_15", adef_muzzle_flash_15);
 }
 
+void init_blood_splatter_adef_hashmap(void)
+{
+    blood_splatter_adef_map = create_hash_map(BLOOD_SPLATTER_COUNT);
+    insert(blood_splatter_adef_map, "blood_splatter_1", adef_blood_splatter_1);
+    insert(blood_splatter_adef_map, "blood_splatter_2", adef_blood_splatter_2);
+}
+
 void init_brass_animation_definitions(void)
 {
     render_sprite_sheet_init(&sprite_sheet_brass_falling_1, "assets/wip/brass_falling_1.png", 3, 3);
@@ -220,4 +249,6 @@ void init_blood_splatter_animation_definitions(void)
 {
     render_sprite_sheet_init(&sprite_sheet_blood_splatter_1, "assets/wip/blood_splatter_1.png", 13, 13);
     adef_blood_splatter_1 = animation_definition_create(&sprite_sheet_blood_splatter_1, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4}, 5);
+    render_sprite_sheet_init(&sprite_sheet_blood_splatter_2, "assets/wip/blood_splatter_2.png", 13, 13);
+    adef_blood_splatter_2 = animation_definition_create(&sprite_sheet_blood_splatter_2, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4}, 5);
 }

@@ -6,6 +6,7 @@
 #include "../engine/render.h"
 
 #define EXPLOSION_COUNT 1
+#define BLOOD_SPLATTER_COUNT 2
 #define ANGLES 16
 
 // character shadow
@@ -64,6 +65,8 @@ Animation_Definition *adef_muzzle_flash_15;
 // blood splatters
 Sprite_Sheet sprite_sheet_blood_splatter_1;
 Animation_Definition *adef_blood_splatter_1;
+Sprite_Sheet sprite_sheet_blood_splatter_2;
+Animation_Definition *adef_blood_splatter_2;
 
 void init_brass_animation_definitions(void);
 void init_bullet_animation_definitions(void);
@@ -71,10 +74,12 @@ void init_explosion_animation_definitions(void);
 void init_blood_splatter_animation_definitions(void);
 void init_character_shadow_anim(void);
 void init_explosion_adef_hashmap(void);
+void init_blood_splatter_adef_hashmap(void);
 void create_muzzle_flash_entity(
     char *muzzle_flash_id, f32 angle, vec2 position, vec2 size, vec2 velocity, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static);
 void create_bullet_impact_entity(vec2 position, Animation_Definition *adef);
 void create_brass_entity(vec2 position, Animation_Definition *adef, i32 z_index);
+Animation_Definition *get_blood_splatter_adef(char *adef_prefix);
 void brass_movement(Entity *entity);
 void render_character_shadow(vec2 character_position, f32 character_sprite_height);
 

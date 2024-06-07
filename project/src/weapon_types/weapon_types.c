@@ -26,7 +26,7 @@ void create_bullet_straight(Player *player, f32 angle)
     Bullet *bullet = malloc(sizeof(Bullet));
     bullet->entity = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
     bullet->impact_adef = player->weapon->bullet_impact_adef;
-    bullet->splatter_adef = player->weapon->bullet_splatter_adef;
+    bullet->splatter_adef = get_blood_splatter_adef(player->weapon->blood_splatter_prefix);
     bullet->damage = player->weapon->damage;
     bullet->entity->animation = animation_create(player->weapon->bullet_adef, true);
 
@@ -88,7 +88,7 @@ void init_weapon_types(void)
     m16->muzzle_flash_id = "1";
     m16->bullet_adef = adef_bullet_medium;
     m16->bullet_impact_adef = adef_bullet_impact_medium;
-    m16->bullet_splatter_adef = adef_blood_splatter_1;
+    m16->blood_splatter_prefix = "blood_splatter_";
     m16->hud_ammo_icon = anim_556_burst;
     m16->on_shoot = m16_on_shoot;
 
@@ -103,7 +103,7 @@ void init_weapon_types(void)
     glock->muzzle_flash_id = "1";
     glock->bullet_adef = adef_bullet_small;
     glock->bullet_impact_adef = adef_bullet_impact_small;
-    glock->bullet_splatter_adef = adef_blood_splatter_1;
+    glock->blood_splatter_prefix = "blood_splatter_";
     glock->hud_ammo_icon = anim_556_burst; // placeholder, update
     glock->on_shoot = glock_on_shoot;
 
@@ -118,7 +118,7 @@ void init_weapon_types(void)
     coach_gun->muzzle_flash_id = "1";
     coach_gun->bullet_adef = adef_bullet_small;
     coach_gun->bullet_impact_adef = adef_bullet_impact_medium;
-    coach_gun->bullet_splatter_adef = adef_blood_splatter_1;
+    coach_gun->blood_splatter_prefix = "blood_splatter_";
     coach_gun->hud_ammo_icon = anim_556_burst; // placeholder, update
     coach_gun->on_shoot = coach_gun_on_shoot;
 }

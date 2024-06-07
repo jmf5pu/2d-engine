@@ -16,5 +16,6 @@ void get_xy_components_from_vector(f32 magnitude, f32 angle, vec2 components_res
 void render_physics_bodies(void);
 bool vec4_is_equal(vec4 first, vec4 second);
 bool vec4_color_cmp(vec4 first, vec4 second);
+int get_random_int_in_range(int min, int max);
 
 #endif
