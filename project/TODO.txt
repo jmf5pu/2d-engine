@@ -1,5 +1,5 @@
 TODO:
-* figure out why anims when *not* set to loop skip back to first frame at end
+* add logic to implement randomized impact, splatter, and muzzle flash animations
 * effects
     * dust after footsteps
     * add logic to assign different muzzle flashes to different guns (attach to weapon struct)

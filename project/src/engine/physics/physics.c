@@ -88,7 +88,7 @@ static void sweep_response(Body *body, vec2 velocity)
     Hit hit = sweep_static_bodies(body, velocity);
     Hit hit_moving = sweep_bodies(body, velocity);
     if (hit_moving.is_hit) {
-        if (body->on_hit != NULL) {
+        if (body->on_hit != NULL && body->is_active) {
             body->on_hit(body, physics_body_get(hit_moving.other_id), hit_moving);
         }
     }

@@ -39,6 +39,7 @@ void update_player_weapon(Player *player, Weapon_Type *weapon_type)
     player->weapon->muzzle_flash_id = weapon_type->muzzle_flash_id;
     player->weapon->bullet_adef = weapon_type->bullet_adef;
     player->weapon->bullet_impact_adef = weapon_type->bullet_impact_adef;
+    player->weapon->bullet_splatter_adef = weapon_type->bullet_splatter_adef;
 }
 
 void weapon_pickup_base(Body *self, Body *other, Animation_Definition *highlight_adef, Weapon_Type *weapon_type)
@@ -135,6 +136,12 @@ void bullet_on_hit(Body *self, Body *other, Hit hit)
             zombie->health -= bullet->damage;
             self->is_active = false;
         }
+
+        // create blood splatter effect entity
+        Entity *blood_splatter = entity_create(self->aabb.position, (vec2){13, 13}, (vec2){0, 0}, 0, 0, NULL, NULL);
+        blood_splatter->destroy_on_anim_completion = true;
+        blood_splatter->animation = animation_create(bullet->splatter_adef, false);
+        blood_splatter->animation->z_index = zombie->entity->animation->z_index + 1;
     }
 }
 

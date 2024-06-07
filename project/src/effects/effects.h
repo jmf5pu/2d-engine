@@ -61,9 +61,14 @@ Animation_Definition *adef_muzzle_flash_13;
 Animation_Definition *adef_muzzle_flash_14;
 Animation_Definition *adef_muzzle_flash_15;
 
+// blood splatters
+Sprite_Sheet sprite_sheet_blood_splatter_1;
+Animation_Definition *adef_blood_splatter_1;
+
 void init_brass_animation_definitions(void);
 void init_bullet_animation_definitions(void);
 void init_explosion_animation_definitions(void);
+void init_blood_splatter_animation_definitions(void);
 void init_character_shadow_anim(void);
 void init_explosion_adef_hashmap(void);
 void create_muzzle_flash_entity(

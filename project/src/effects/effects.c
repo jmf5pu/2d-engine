@@ -20,6 +20,7 @@ void init_effects(void)
     init_brass_animation_definitions();
     init_bullet_animation_definitions();
     init_explosion_animation_definitions();
+    init_blood_splatter_animation_definitions();
     init_explosion_adef_hashmap();
     init_character_shadow_anim();
 }
@@ -213,4 +214,10 @@ void init_character_shadow_anim(void)
     render_sprite_sheet_init(&sprite_sheet_character_shadow, "assets/wip/character_shadow.png", 16, 5);
     adef_character_shadow = animation_definition_create(&sprite_sheet_character_shadow, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_character_shadow = animation_create(adef_character_shadow, false);
+}
+
+void init_blood_splatter_animation_definitions(void)
+{
+    render_sprite_sheet_init(&sprite_sheet_blood_splatter_1, "assets/wip/blood_splatter_1.png", 13, 13);
+    adef_blood_splatter_1 = animation_definition_create(&sprite_sheet_blood_splatter_1, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4}, 5);
 }
