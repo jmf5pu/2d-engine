@@ -34,7 +34,7 @@ Animation *animation_create(Animation_Definition *adef, bool does_loop);
 void animation_destroy(Animation *animation);
 Animation *animation_get(usize id);
 void animation_update(f32 dt);
-void animation_render(Animation *animation, SDL_Window *window, vec2 position, vec4 color, u32 texture_slots[32]);
+void animation_render(Animation *animation, SDL_Window *window, vec2 position, vec4 color, u32 texture_slots[BATCH_SIZE]);
 void clear_animation_list(void);
 void clear_animation_definition_list(void);
 

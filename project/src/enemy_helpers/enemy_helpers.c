@@ -1,5 +1,6 @@
 #include "enemy_helpers.h"
 #include "../collision_behavior/collision_behavior.h"
+#include "../effects/effects.h"
 #include "../engine/array_list.h"
 #include "../player_helpers/player_helpers.h"
 #include <float.h>
@@ -22,14 +23,20 @@ bool player_visible(Player *player)
 Array_List *get_all_enemies(void) { return current_enemies; }
 
 // initializes enemy array list
-void init_enemies(usize item_size, usize initial_capacity) { current_enemies = array_list_create(sizeof(item_size), initial_capacity); }
+void init_enemies(usize item_size, usize initial_capacity)
+{
+    current_enemies = array_list_create(sizeof(item_size), initial_capacity);
+    init_enemy_adefs();
+    init_enemy_adef_hashmap();
+}
 
 // initializes a single enemy and adds to current_enemies
-void create_enemy(vec2 spawn_point, vec2 size)
+void create_enemy(vec2 spawn_point)
 {
     if (SPAWN_ENEMIES) {
         Zombie *enemy = malloc(sizeof(Zombie));
-        enemy->entity = entity_create(spawn_point, size, (vec2){0, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
+        enemy->entity = entity_create(spawn_point, (vec2){25, 25}, (vec2){0, 0}, COLLISION_LAYER_ENEMY, enemy_mask, enemy_on_hit, enemy_on_hit_static);
+        enemy->entity->animation = animation_create(adef_zombie_idle_4, true);
         enemy->entity->body->parent = enemy;
         enemy->despawn_time = 1;
         enemy->frames_on_status = 0;
@@ -56,31 +63,38 @@ void update_current_enemies(void)
         if (!player_visible(player_one) && !player_visible(player_two)) {
             zombie->entity->body->velocity[0] = 0;
             zombie->entity->body->velocity[1] = 0;
-            continue;
-        }
-
-        f32 p1_distance = player_visible(player_one) ? get_distance(player_one->relative_position, zombie->entity->body->aabb.position) : FLT_MAX;
-        f32 p2_distance = player_visible(player_two) ? get_distance(player_two->relative_position, zombie->entity->body->aabb.position) : FLT_MAX;
-        Player *closest_player = p1_distance < p2_distance ? player_one : player_two;
-
-        // calculate enemy movement vector
-        f32 x_dist = closest_player->relative_position[0] - zombie->entity->body->aabb.position[0];
-        f32 y_dist = closest_player->relative_position[1] - zombie->entity->body->aabb.position[1];
-
-        f32 angle;
-        if (x_dist != 0.0) {
-            angle = atan(y_dist / x_dist);
         }
         else {
-            angle = (y_dist >= 0.0) ? M_PI / 2.0 : -M_PI / 2.0;
-        }
+            f32 p1_distance = player_visible(player_one) ? get_distance(player_one->relative_position, zombie->entity->body->aabb.position) : FLT_MAX;
+            f32 p2_distance = player_visible(player_two) ? get_distance(player_two->relative_position, zombie->entity->body->aabb.position) : FLT_MAX;
+            Player *closest_player = p1_distance < p2_distance ? player_one : player_two;
 
-        // Adjust for quadrants
-        if (x_dist < 0) {
-            angle += M_PI;
-        }
+            // calculate enemy movement vector
+            f32 x_dist = closest_player->relative_position[0] - zombie->entity->body->aabb.position[0];
+            f32 y_dist = closest_player->relative_position[1] - zombie->entity->body->aabb.position[1];
 
-        zombie->entity->body->velocity[0] = ZOMBIE_MOVEMENT_SPEED * cos(angle);
-        zombie->entity->body->velocity[1] = ZOMBIE_MOVEMENT_SPEED * sin(angle);
+            f32 angle;
+            if (x_dist != 0.0)
+                angle = atan(y_dist / x_dist);
+            else
+                angle = (y_dist >= 0.0) ? M_PI / 2.0 : -M_PI / 2.0;
+
+            // Adjust for quadrants
+            if (x_dist < 0)
+                angle += M_PI;
+
+            zombie->entity->body->velocity[0] = ZOMBIE_MOVEMENT_SPEED * cos(angle);
+            zombie->entity->body->velocity[1] = ZOMBIE_MOVEMENT_SPEED * sin(angle);
+
+            update_enemy_anim(zombie);
+        }
+    }
+}
+
+void render_enemy_shadows(void)
+{
+    for (int i = 0; i < current_enemies->len; i++) {
+        Zombie *zombie = array_list_get(current_enemies, i);
+        render_character_shadow(zombie->entity->body->aabb.position, zombie->entity->animation->animation_definition->sprite_sheet->cell_height);
     }
 }

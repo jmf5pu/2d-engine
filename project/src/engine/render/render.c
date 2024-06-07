@@ -56,7 +56,7 @@ SDL_Window *render_init(void)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    list_batch = array_list_create(sizeof(Batch_Vertex *), 32);
+    list_batch = array_list_create(sizeof(Batch_Vertex *), BATCH_SIZE);
 
     stbi_set_flip_vertically_on_load(1);
 
@@ -76,10 +76,10 @@ void set_render_dimensions(f32 scale_factor, bool rendering_hud, bool update_sha
 }
 
 // checks if texture id is already present in texture slots array (for reuse)
-static i32 find_texture_slot(u32 texture_slots[32], u32 texture_id)
+static i32 find_texture_slot(u32 texture_slots[BATCH_SIZE], u32 texture_id)
 {
     // 1 - 8 because 0 is the reserved for the texture slot
-    for (i32 i = 1; i < 32; ++i) {
+    for (i32 i = 1; i < BATCH_SIZE; ++i) {
         if (texture_slots[i] == texture_id) {
             return i;
         }
@@ -90,7 +90,7 @@ static i32 find_texture_slot(u32 texture_slots[32], u32 texture_id)
 
 // checks if texture id is already in use or an open slot is present, if so,
 // returns index, returns -1 if buffer is full
-static i32 try_insert_texture(u32 texture_slots[32], u32 texture_id)
+static i32 try_insert_texture(u32 texture_slots[BATCH_SIZE], u32 texture_id)
 {
     i32 index = find_texture_slot(texture_slots, texture_id);
     if (index > 0) {
@@ -98,7 +98,7 @@ static i32 try_insert_texture(u32 texture_slots[32], u32 texture_id)
     }
 
     // 1 - 8 because 0 is the reserved for the texture slot
-    for (i32 i = 1; i < 32; ++i) {
+    for (i32 i = 1; i < BATCH_SIZE; ++i) {
         if (texture_slots[i] == 0) {
             texture_slots[i] = texture_id;
             return i;
@@ -150,7 +150,7 @@ void render_begin_hud(void)
     glViewport(0, 0, window_width, window_height);
 }
 
-static void render_batch(Batch_Vertex *vertices, usize count, u32 texture_ids[32])
+static void render_batch(Batch_Vertex *vertices, usize count, u32 texture_ids[BATCH_SIZE])
 {
     glBindBuffer(GL_ARRAY_BUFFER, vbo_batch);
     // Iterate through the list_batch array list and access each
@@ -187,8 +187,8 @@ static void render_batch(Batch_Vertex *vertices, usize count, u32 texture_ids[32
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_color);
 
-    // bind 8 textures at a time
-    for (u32 i = 1; i < 32; ++i) {
+    // bind BATCH_SIZE textures at a time
+    for (u32 i = 1; i < BATCH_SIZE; ++i) {
         glActiveTexture(GL_TEXTURE0 + i);
         glBindTexture(GL_TEXTURE_2D, texture_ids[i]);
     }
@@ -199,7 +199,7 @@ static void render_batch(Batch_Vertex *vertices, usize count, u32 texture_ids[32
     glDrawElements(GL_TRIANGLES, (count >> 2) * 6, GL_UNSIGNED_INT, NULL);
 }
 
-void render_end(SDL_Window *window, u32 batch_texture_ids[32], bool swap_window)
+void render_end(SDL_Window *window, u32 batch_texture_ids[BATCH_SIZE], bool swap_window)
 {
     render_batch(list_batch->items, list_batch->len, batch_texture_ids);
     if (swap_window)
@@ -331,11 +331,11 @@ void render_quad_line(vec2 pos, vec2 size, vec4 color)
     render_line_segment(points[3], points[0], color);
 }
 
-void render_aabb(f32 *aabb, vec4 color)
+void render_aabb(AABB *aabb, vec4 color)
 {
     vec2 size;
-    vec2_scale(size, &aabb[2], 2);
-    render_quad_line(&aabb[0], size, color);
+    vec2_scale(size, (f32 *)&aabb->half_size, 2);
+    render_quad_line((f32 *)&aabb->position, size, color);
 }
 
 f32 render_get_scale() { return scale; }
@@ -381,7 +381,8 @@ static void calculate_sprite_texture_coordinates(vec4 result, f32 row, f32 colum
     result[3] = y + h;
 }
 
-void render_sprite_sheet_frame(Sprite_Sheet *sprite_sheet, SDL_Window *window, f32 row, f32 column, vec2 position, i32 z_index, bool is_flipped, vec4 color, u32 texture_slots[32])
+void render_sprite_sheet_frame(
+    Sprite_Sheet *sprite_sheet, SDL_Window *window, f32 row, f32 column, vec2 position, i32 z_index, bool is_flipped, vec4 color, u32 texture_slots[BATCH_SIZE])
 {
     vec4 uvs;
     calculate_sprite_texture_coordinates(uvs, row, column, sprite_sheet->width, sprite_sheet->height, sprite_sheet->cell_width, sprite_sheet->cell_height);
@@ -403,12 +404,12 @@ void render_sprite_sheet_frame(Sprite_Sheet *sprite_sheet, SDL_Window *window, f
         render_end(
             window,
             texture_slots,
-            false);                   // render all the batched frames before resetting
-                                      // for another write
-        array_list_clear(list_batch); // free old batch vertices
+            false);                         // render all the batched frames before resetting
+                                            // for another write
+        array_list_clear(list_batch, true); // free old batch vertices
 
         // flush texture_slots array
-        memset(texture_slots, 0, sizeof(u32) * 32);
+        memset(texture_slots, 0, sizeof(u32) * BATCH_SIZE);
 
         // try to insert it again
         texture_slot = try_insert_texture(texture_slots, sprite_sheet->texture_id);

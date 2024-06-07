@@ -9,7 +9,6 @@ static const char *CONFIG_DEFAULT = "[controls]\n"
                                     "right = D\n"
                                     "up = W\n"
                                     "down = S\n"
-                                    "shoot = Space\n"
                                     "reload = R\n"
                                     "use = E\n"
                                     "pause = Escape\n";
@@ -58,7 +57,6 @@ static void load_controls(const char *config_buffer)
     config_key_bind(INPUT_KEY_RIGHT, config_get_value(config_buffer, "right"));
     config_key_bind(INPUT_KEY_UP, config_get_value(config_buffer, "up"));
     config_key_bind(INPUT_KEY_DOWN, config_get_value(config_buffer, "down"));
-    config_key_bind(INPUT_KEY_SHOOT, config_get_value(config_buffer, "shoot"));
     config_key_bind(INPUT_KEY_RELOAD, config_get_value(config_buffer, "reload"));
     config_key_bind(INPUT_KEY_USE, config_get_value(config_buffer, "use"));
     config_key_bind(INPUT_KEY_PAUSE, config_get_value(config_buffer, "pause"));

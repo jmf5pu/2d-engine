@@ -9,13 +9,13 @@
 
 struct entity;
 
-typedef void(MovementScript)(struct entity *entity);
+typedef void (*MovementScript)(struct entity *entity);
 typedef struct entity {
     Body *body;
     Animation *animation;
     bool is_active;
     bool destroy_on_anim_completion;
-    MovementScript *movement_script;
+    MovementScript movement_script;
     vec2 starting_position;
 } Entity;
 

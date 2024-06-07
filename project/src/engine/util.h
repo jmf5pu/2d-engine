@@ -40,4 +40,6 @@
 #define SEMI_TRANSPARENT                                                                                                                                                           \
     (vec4) { 1, 1, 1, 0.8 }
 
+#define ARRAY_LENGTH(array) (sizeof(array) / sizeof((array)[0]))
+
 #endif

@@ -27,6 +27,8 @@ typedef struct body {
     u8 collision_layer;
     u8 collision_mask;
     bool is_active;
+    bool is_being_hit;
+    bool first_frame_being_hit;
     void *parent; // used to associate a body with a bullet, player, etc.
 } Body;
 
@@ -65,5 +67,7 @@ AABB aabb_minkowski_difference(AABB a, AABB b);
 void aabb_penetration_vector(vec2 r, AABB aabb);
 void aabb_min_max(vec2 min, vec2 max, AABB aabb);
 Hit ray_intersect_aabb(vec2 position, vec2 magnitude, AABB aabb);
+void free_all_non_static_bodies(void);
+void free_all_static_bodies(void);
 
 #endif

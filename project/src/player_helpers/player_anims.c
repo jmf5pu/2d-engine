@@ -17,21 +17,16 @@ void update_player_character_anim(Player *player)
 
     // determine direction anim suffix
     char *direction;
-    if (player->crosshair_angle > -1 * M_PI / 4 && player->crosshair_angle <= M_PI / 4) {
+    if (player->crosshair_angle > -1 * M_PI / 4 && player->crosshair_angle <= M_PI / 4)
         direction = "1";
-    }
-    else if (player->crosshair_angle > M_PI / 4 && player->crosshair_angle <= 3 * M_PI / 4) {
+    else if (player->crosshair_angle > M_PI / 4 && player->crosshair_angle <= 3 * M_PI / 4)
         direction = "2";
-    }
-    else if (player->crosshair_angle > 3 * M_PI / 4 || player->crosshair_angle <= -3 * M_PI / 4) {
+    else if (player->crosshair_angle > 3 * M_PI / 4 || player->crosshair_angle <= -3 * M_PI / 4)
         direction = "3";
-    }
-    else if (player->crosshair_angle > -3 * M_PI / 4 && player->crosshair_angle < -1 * M_PI / 4) {
+    else if (player->crosshair_angle > -3 * M_PI / 4 && player->crosshair_angle < -1 * M_PI / 4)
         direction = "4";
-    }
-    else {
+    else
         printf("got unexpected crosshair angle: %f\n", player->crosshair_angle);
-    }
 
     // build the anim name from the suffixes
     strcat(anim_name, movement_state);

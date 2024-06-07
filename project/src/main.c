@@ -32,34 +32,28 @@
 #include "structs.h"
 #include "weapon_types/weapon_types.h"
 
-static u32 texture_slots[32] = {0}; // texture slots array for batch rendering
-static bool should_quit = false;    // quit flag
-vec4 game_color;
+bool should_quit = false;
 
-const u8 frame_rate = 60; // frame rate
-
-// TODO: move this out of main.c
-bool vec4_is_equal(vec4 first, vec4 second) { return first[0] == second[0] && first[1] == second[1] && first[2] == second[2] && first[3] == second[3]; }
-// returns TRUE if the first RGB value is less than the second for each value in
-// RGB, otherwise returns false
-bool vec4_color_cmp(vec4 first, vec4 second) { return first[0] < second[0] && first[1] < second[1] && first[2] < second[2]; }
+extern u32 texture_slots[BATCH_SIZE] = {0}; // texture slots array for batch rendering
+extern vec4 game_color;
+extern SDL_Window *window;
 
 int main(int argc, char *argv[])
 {
-    time_init(frame_rate);
+    time_init(FRAME_RATE);
     config_init();
-    SDL_Window *window = render_init();
+    window = render_init();
     physics_init();
     entity_init();
     animation_init();        // creates animation storage
     init_all_player_anims(); // initializes all our animations
     game_state = GS_RUNNING;
+    init_effects(); // effects must be before weapon types because weapon types will store some of these adefs
     init_weapon_types();
     init_map(&map);
     init_hud(window);
     init_menus();
     init_game_controllers();
-    init_effects();
 
     // init game color
     vec4_dup(game_color, WHITE);
@@ -74,24 +68,7 @@ int main(int argc, char *argv[])
         if (player_two)
             maintain_controller_keypresses(player_two);
 
-        // grab current inputs
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            switch (event.type) {
-            case SDL_QUIT:
-                should_quit = true;
-                break;
-            case SDL_JOYBUTTONDOWN:
-            case SDL_JOYBUTTONUP:
-                if (player_one && event.cbutton.which == player_one->input_state->controller_input_state->controller_id)
-                    update_player_input_state_via_controller(player_one, &event);
-                if (player_two && event.cbutton.which == player_two->input_state->controller_input_state->controller_id)
-                    update_player_input_state_via_controller(player_two, &event);
-                break;
-            default:
-                break;
-            }
-        }
+        poll_sdl_events_and_update_input_states();
 
         update_bound_key_states();
 
@@ -138,16 +115,14 @@ int main(int argc, char *argv[])
                 camera_init();
 
                 player_one = malloc(sizeof(Player));
-                init_player(player_one, &map, m16, 2.9, 5, 2, true);
-                spawn_player(player_one, m16);
-                update_player_anims(player_one);
+                init_player(player_one, &map, base, 2.9, 5, 2, true);
+                spawn_player(player_one, base);
             }
 
             if (SPLIT_SCREEN && !player_two) {
                 player_two = malloc(sizeof(Player));
-                init_player(player_two, &map, m16, 2.9, 5, 2, false);
-                spawn_player(player_two, m16);
-                update_player_anims(player_two);
+                init_player(player_two, &map, base, 2.9, 5, 2, false);
+                spawn_player(player_two, base);
             }
 
             // check if pause was hit, update game state
@@ -169,33 +144,17 @@ int main(int argc, char *argv[])
             // update relative position of players and their
             // crosshairs (transform of the position on the screen,
             // using camera as a vector)
-            if (SPLIT_SCREEN) // use left cam if screen is split
-            {
-                player_one->relative_position[0] = player_one->entity->body->aabb.position[0] + left_cam.position[0];
-                player_one->relative_position[1] = player_one->entity->body->aabb.position[1] + left_cam.position[1];
-            }
-            else // otherwise use main cam TODO: perhaps make
-                 // left_cam and main_cam the same object?
-            {
-                player_one->relative_position[0] = player_one->entity->body->aabb.position[0] + main_cam.position[0];
-                player_one->relative_position[1] = player_one->entity->body->aabb.position[1] + main_cam.position[1];
-            }
+            vec2_add(player_one->relative_position, player_one->entity->body->aabb.position, SPLIT_SCREEN ? left_cam.position : main_cam.position);
 
             // need to pass the RELATIVE position of the players
             // into the physics engine to properly detect collisions
-            p1_pos_holder[0] = player_one->entity->body->aabb.position[0];
-            p1_pos_holder[1] = player_one->entity->body->aabb.position[1];
-            player_one->entity->body->aabb.position[0] = player_one->relative_position[0];
-            player_one->entity->body->aabb.position[1] = player_one->relative_position[1];
+            vec2_dup(p1_pos_holder, player_one->entity->body->aabb.position);
+            vec2_dup(player_one->entity->body->aabb.position, player_one->relative_position);
 
             if (SPLIT_SCREEN) {
-                player_two->relative_position[0] = player_two->entity->body->aabb.position[0] + right_cam.position[0];
-                player_two->relative_position[1] = player_two->entity->body->aabb.position[1] + right_cam.position[1];
-
-                p2_pos_holder[0] = player_two->entity->body->aabb.position[0];
-                p2_pos_holder[1] = player_two->entity->body->aabb.position[1];
-                player_two->entity->body->aabb.position[0] = player_two->relative_position[0];
-                player_two->entity->body->aabb.position[1] = player_two->relative_position[1];
+                vec2_add(player_two->relative_position, player_two->entity->body->aabb.position, right_cam.position);
+                vec2_dup(p2_pos_holder, player_two->entity->body->aabb.position);
+                vec2_dup(player_two->entity->body->aabb.position, player_two->relative_position);
             }
 
             // update physics bodies
@@ -248,83 +207,37 @@ int main(int argc, char *argv[])
                 }
 
                 // save aabb positions again
-                p1_pos_holder[0] = player_one->entity->body->aabb.position[0];
-                p1_pos_holder[1] = player_one->entity->body->aabb.position[1];
+                vec2_dup(p1_pos_holder, player_one->entity->body->aabb.position);
 
-                if (SPLIT_SCREEN) {
-                    p2_pos_holder[0] = player_two->entity->body->aabb.position[0];
-                    p2_pos_holder[1] = player_two->entity->body->aabb.position[1];
-                }
+                if (SPLIT_SCREEN)
+                    vec2_dup(p2_pos_holder, player_two->entity->body->aabb.position);
 
                 // move all positions to relative position based
                 // on camera except for the active player and
                 // crosshairs
                 if (SPLIT_SCREEN && i == 0) {
-                    player_two->entity->body->aabb.position[0] = player_two->relative_position[0];
-                    player_two->entity->body->aabb.position[1] = player_two->relative_position[1];
+                    vec2_dup(player_two->entity->body->aabb.position, player_two->relative_position);
                     update_all_positions(&map, (vec2){-1 * left_cam.position[0], -1 * left_cam.position[1]}, true);
                 }
                 else if (SPLIT_SCREEN && i == 1) {
-                    player_one->entity->body->aabb.position[0] = player_one->relative_position[0];
-                    player_one->entity->body->aabb.position[1] = player_one->relative_position[1];
+                    vec2_dup(player_one->entity->body->aabb.position, player_one->relative_position);
                     update_all_positions(&map, (vec2){-1 * right_cam.position[0], -1 * right_cam.position[1]}, false);
                 }
-                else // not split
+                else { // not split
                     update_all_positions(&map, (vec2){-1 * main_cam.position[0], -1 * main_cam.position[1]}, true);
-
+                }
                 // render player's anims (characters + weapons)
                 render_player_anims(player_one, window, texture_slots, game_color);
                 if (SPLIT_SCREEN)
                     render_player_anims(player_two, window, texture_slots, game_color);
 
-                // render all other animated entities
-                render_all_non_player_entities_with_animations(window, texture_slots, game_color);
+                render_all_non_player_entities_with_animations(window, texture_slots, RENDER_PHYSICS_BODIES ? SEMI_TRANSPARENT : game_color);
 
-                // render map sprites
-                for (int l = 0; l < map.num_props; l++) {
-                    Prop prop = map.props[l];
+                render_enemy_shadows();
 
-                    /*
-                     * Determining the props z_index based
-                     * on position relative to player
-                     * z_index should be below the players
-                     * (0) if the lowest point of the player
-                     * is under the y threshold we set OR
-                     * they are above the prop entirely.
-                     * Also the main background, (index 0)
-                     * is rendered beneath the player no
-                     * matter what
-                     */
-                    f32 player_y_min;
-                    if (i == 0) { // rendering left side
-                        player_y_min = player_one->entity->body->aabb.position[1] - player_one->entity->body->aabb.half_size[1];
-                    }
-                    else { // rendering right side (if it
-                           // exists)
-                        player_y_min = player_two->entity->body->aabb.position[1] - player_two->entity->body->aabb.half_size[1];
-                    }
-                    bool is_below_player = player_y_min < (prop.sprite->position[1] - prop.sprite->half_size[1] + prop.layer_threshold) ||
-                                           player_y_min > (prop.sprite->position[1] + prop.sprite->half_size[1]) || l == 0;
-                    i32 z_index = is_below_player ? prop.sprite->z_index : 1;
-                    render_sprite_sheet_frame(
-                        prop.sprite->sprite_sheet,
-                        window,
-                        prop.sprite->row,
-                        prop.sprite->column,
-                        prop.sprite->position,
-                        z_index,
-                        prop.sprite->is_flipped,
-                        RENDER_PHYSICS_BODIES ? SEMI_TRANSPARENT : game_color,
-                        texture_slots);
-
-                    // render the static bodies
-                    if (RENDER_PHYSICS_BODIES) {
-                        for (int k = 0; k < prop.num_static_bodies; k++) {
-                            render_aabb((f32 *)&prop.static_bodies[k]->aabb, WHITE);
-                        }
-                    }
-                }
-
+                // render physics bodies:
+                if (RENDER_PHYSICS_BODIES)
+                    render_physics_bodies();
                 // throw left side stuff into the rendering
                 // buffer, without performing the screen swap
                 // yet
@@ -336,13 +249,11 @@ int main(int argc, char *argv[])
                 // back
                 if (SPLIT_SCREEN && i == 0) {
                     update_all_positions(&map, left_cam.position, true);
-                    player_two->entity->body->aabb.position[0] = p2_pos_holder[0];
-                    player_two->entity->body->aabb.position[1] = p2_pos_holder[1];
+                    vec2_dup(player_two->entity->body->aabb.position, p2_pos_holder);
                 }
                 else if (SPLIT_SCREEN && i == 1) {
                     update_all_positions(&map, right_cam.position, false);
-                    player_one->entity->body->aabb.position[0] = p1_pos_holder[0];
-                    player_one->entity->body->aabb.position[1] = p1_pos_holder[1];
+                    vec2_dup(player_one->entity->body->aabb.position, p1_pos_holder);
                 }
                 else // not split
                     update_all_positions(&map, (vec2){main_cam.position[0], main_cam.position[1]}, true);
@@ -364,7 +275,6 @@ int main(int argc, char *argv[])
             // destroy any entities that need to be destroyed:
             destroy_all_marked_entities(&map);
             update_entity_movements();
-
             break;
         case GS_EXITING:
             should_quit = true;
@@ -385,6 +295,8 @@ int main(int argc, char *argv[])
     free_all_entities_and_clear_array_list();
     clear_animation_definition_list();
     clear_animation_list();
+    free_all_non_static_bodies();
+    free_all_static_bodies();
     SDL_Quit();
     return 0;
 }

@@ -1,5 +1,4 @@
 #include "../camera.h"
-#include "../../structs.h"
 #include "../global.h"
 #include "../physics.h"
 #include "../physics/physics_internal.h"

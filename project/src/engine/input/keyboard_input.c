@@ -24,7 +24,6 @@ void update_bound_key_states(void)
     update_key_state(keyboard_state[global.config.keybinds[INPUT_KEY_DOWN]], &global.input.down);
     update_key_state(keyboard_state[global.config.keybinds[INPUT_KEY_LEFT]], &global.input.left);
     update_key_state(keyboard_state[global.config.keybinds[INPUT_KEY_RIGHT]], &global.input.right);
-    update_key_state(keyboard_state[global.config.keybinds[INPUT_KEY_SHOOT]], &global.input.shoot);
     update_key_state(keyboard_state[global.config.keybinds[INPUT_KEY_RELOAD]], &global.input.reload);
     update_key_state(keyboard_state[global.config.keybinds[INPUT_KEY_USE]], &global.input.use);
     update_key_state(keyboard_state[global.config.keybinds[INPUT_KEY_PAUSE]], &global.input.pause);

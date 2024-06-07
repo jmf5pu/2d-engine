@@ -1,5 +1,6 @@
 #include "menu_helpers.h"
 #include "../engine/util.h"
+#include "../main_helpers/main_helpers.h"
 #include <string.h>
 
 int game_state;
@@ -167,7 +168,7 @@ void free_menus(void) { free(pause_menu); }
 
 // renders a line of text letter by letter starting at the specified positon on
 // the screen
-void render_text_line(SDL_Window *window, u32 texture_slots[32], char *text, vec2 starting_position)
+void render_text_line(SDL_Window *window, u32 texture_slots[BATCH_SIZE], char *text, vec2 starting_position)
 {
     char *character = text;
 
@@ -196,7 +197,7 @@ void reset_selector_anims(void)
     anim_selected_bracket_right->is_active = false;
 }
 
-void render_menu_item(SDL_Window *window, u32 texture_slots[32], char *text, vec2 starting_position, bool is_selected)
+void render_menu_item(SDL_Window *window, u32 texture_slots[BATCH_SIZE], char *text, vec2 starting_position, bool is_selected)
 {
     // if selected render left bracket anim
     if (is_selected)
@@ -228,7 +229,7 @@ void update_menu(Menu *menu, Input_State input)
     }
 }
 
-void render_main_menu(SDL_Window *window, u32 texture_slots[32])
+void render_main_menu(SDL_Window *window, u32 texture_slots[BATCH_SIZE])
 {
     for (int i = 0; i < main_menu->items_count; i++) {
         render_menu_item(
@@ -254,7 +255,7 @@ void handle_main_menu_input(void)
     }
 }
 
-void render_mode_menu(SDL_Window *window, u32 texture_slots[32])
+void render_mode_menu(SDL_Window *window, u32 texture_slots[BATCH_SIZE])
 {
     for (int i = 0; i < mode_menu->items_count; i++) {
         render_menu_item(
@@ -280,7 +281,7 @@ void handle_mode_menu_input(void)
     }
 }
 
-void render_survival_menu(SDL_Window *window, u32 texture_slots[32])
+void render_survival_menu(SDL_Window *window, u32 texture_slots[BATCH_SIZE])
 {
     for (int i = 0; i < survival_menu->items_count; i++) {
         render_menu_item(
@@ -303,7 +304,7 @@ void handle_survival_menu_input(void)
     }
 }
 
-void render_pause_menu(SDL_Window *window, u32 texture_slots[32])
+void render_pause_menu(SDL_Window *window, u32 texture_slots[BATCH_SIZE])
 {
     for (int i = 0; i < pause_menu->items_count; i++) {
         render_menu_item(
