@@ -5,6 +5,8 @@ TODO:
     * add logic to assign different muzzle flashes to different guns (attach to weapon struct)
 * create enemies
     * create enemy sprites
+    * enemy attacking sprites/logic
+    * enemy death sprites/logic
 * update window, texture_slots, color parameters to now use extern variables from main.c instead
 * update animation struct so that animation_definition is copied, not a reference
 * add reloading timer and animation

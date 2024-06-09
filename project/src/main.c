@@ -115,14 +115,14 @@ int main(int argc, char *argv[])
                 camera_init();
 
                 player_one = malloc(sizeof(Player));
-                init_player(player_one, &map, base, 2.9, 5, 2, true);
-                spawn_player(player_one, base);
+                init_player(player_one, &map, coach_gun, 2.9, 5, 2, true);
+                spawn_player(player_one, coach_gun);
             }
 
             if (SPLIT_SCREEN && !player_two) {
                 player_two = malloc(sizeof(Player));
-                init_player(player_two, &map, base, 2.9, 5, 2, false);
-                spawn_player(player_two, base);
+                init_player(player_two, &map, coach_gun, 2.9, 5, 2, false);
+                spawn_player(player_two, coach_gun);
             }
 
             // check if pause was hit, update game state

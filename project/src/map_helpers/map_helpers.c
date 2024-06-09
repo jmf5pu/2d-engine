@@ -208,7 +208,7 @@ void init_map_assets(void)
     adef_teleporter_button_unpressed = animation_definition_create(&sprite_sheet_teleporter_button_unpressed, (f32[]){1, 1}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
     render_sprite_sheet_init(&sprite_sheet_teleporter_button_highlight, "assets/wip/teleporter_button_highlight.png", 20, 20);
     adef_teleporter_button_highlight = animation_definition_create(
-        &sprite_sheet_teleporter_button_highlight, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5, 6}, 7);
+        &sprite_sheet_teleporter_button_highlight, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5, 6}, 7);
 }
 
 void init_map_props(Map *map)

@@ -29,7 +29,6 @@ void create_bullet_straight(Player *player, f32 angle)
     bullet->splatter_adef = get_blood_splatter_adef(player->weapon->blood_splatter_prefix);
     bullet->damage = player->weapon->damage;
     bullet->entity->animation = animation_create(player->weapon->bullet_adef, true);
-
     vec2_dup(bullet->entity->body->velocity, bullet_velocity);
     bullet->entity->body->parent = bullet;
 }
@@ -53,7 +52,7 @@ void glock_on_shoot(Player *player) { create_bullet_straight(player, player->cro
 
 void coach_gun_on_shoot(Player *player)
 {
-    const f32 scatter_angle = 0.5236; // 30 degrees in radians
+    const f32 scatter_angle = 0.35; // 20 degrees in radians //0.5236; // 30 degrees in radians
     const u8 num_shots = 7;
     create_scatter_shot(player, scatter_angle, num_shots);
 }
@@ -115,7 +114,7 @@ void init_weapon_types(void)
     coach_gun->max_fire_rate = 400;
     coach_gun->damage = 15;
     coach_gun->bullet_velocity = 600;
-    coach_gun->muzzle_flash_id = "1";
+    coach_gun->muzzle_flash_id = "2";
     coach_gun->bullet_adef = adef_bullet_small;
     coach_gun->bullet_impact_adef = adef_bullet_impact_medium;
     coach_gun->blood_splatter_prefix = "blood_splatter_";

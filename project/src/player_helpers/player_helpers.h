@@ -6,6 +6,7 @@
 #include "../engine/global.h"
 #include "../engine/hash_map.h"
 #include "../structs.h"
+#include "../weapon_types/weapon_types.h"
 
 // number of animations to be stored in player_anim_map
 #define PLAYER_ANIM_COUNT 56
@@ -278,5 +279,6 @@ static i32 get_player_brass_z_index(f32 angle);
 
 void get_direction_from_angle(f32 angle, char *direction_result);
 Player *get_player_from_body(Body *body);
+void update_player_weapon(Player *player, Weapon_Type *weapon_type);
 
 #endif

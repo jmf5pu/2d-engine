@@ -155,7 +155,7 @@ void init_player_weapon_adefs(void)
 {
     init_player_m16_adefs();
     init_player_glock_adefs();
-    // init_player_coach_gun_adefs();
+    init_player_coach_gun_adefs();
 }
 
 void init_player_m16_adefs(void)
@@ -351,16 +351,16 @@ void init_player_coach_gun_adefs(void)
     adef_coach_gun_firing_9 = animation_definition_create(&sprite_sheet_coach_gun_firing_9, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
     render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_10, "assets/wip/coach_gun_firing_10.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_firing_10 = animation_definition_create(&sprite_sheet_coach_gun_firing_10, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_11, "assets/wip/coach_gun_static_11.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_coach_gun_static_11 = animation_definition_create(&sprite_sheet_coach_gun_static_11, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_12, "assets/wip/coach_gun_static_12.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_coach_gun_static_12 = animation_definition_create(&sprite_sheet_coach_gun_static_12, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_13, "assets/wip/coach_gun_static_13.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_coach_gun_static_13 = animation_definition_create(&sprite_sheet_coach_gun_static_13, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_14, "assets/wip/coach_gun_static_14.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_coach_gun_static_14 = animation_definition_create(&sprite_sheet_coach_gun_static_14, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_15, "assets/wip/coach_gun_static_15.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_coach_gun_static_15 = animation_definition_create(&sprite_sheet_coach_gun_static_15, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_11, "assets/wip/coach_gun_firing_11.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_coach_gun_firing_11 = animation_definition_create(&sprite_sheet_coach_gun_firing_11, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_12, "assets/wip/coach_gun_firing_12.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_coach_gun_firing_12 = animation_definition_create(&sprite_sheet_coach_gun_firing_12, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_13, "assets/wip/coach_gun_firing_13.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_coach_gun_firing_13 = animation_definition_create(&sprite_sheet_coach_gun_firing_13, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_14, "assets/wip/coach_gun_firing_14.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_coach_gun_firing_14 = animation_definition_create(&sprite_sheet_coach_gun_firing_14, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_15, "assets/wip/coach_gun_firing_15.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_coach_gun_firing_15 = animation_definition_create(&sprite_sheet_coach_gun_firing_15, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
 }
 
 // parent function for all the necessary player updates made each frame
@@ -436,6 +436,8 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
     player->weapon->is_firing = false;
     player->weapon->hud_ammo_icon = starting_weapon->hud_ammo_icon;
     player->weapon->on_shoot = starting_weapon->on_shoot;
+    player->weapon->blood_splatter_prefix = starting_weapon->blood_splatter_prefix;
+    player->weapon->muzzle_flash_id = starting_weapon->muzzle_flash_id;
 
     // weapon anims will be populated each frame based on the current player inputs
     player->weapon->character_anim = NULL;
@@ -509,20 +511,7 @@ void spawn_player(Player *player, Weapon_Type *starting_weapon)
     // reset player anims to default (may have changed from pickups)
 
     // reset weapon
-    player->weapon->name = starting_weapon->name;
-    player->weapon->fire_mode = starting_weapon->fire_mode;
-    player->weapon->capacity = starting_weapon->capacity;
-    player->weapon->max_capacity = starting_weapon->capacity;
-    player->weapon->reserve = starting_weapon->reserve;
-    player->weapon->max_reserve = starting_weapon->reserve;
-    player->weapon->max_fire_rate = starting_weapon->max_fire_rate;
-    player->weapon->damage = starting_weapon->damage;
-    player->weapon->bullet_velocity = starting_weapon->bullet_velocity;
-    player->weapon->burst_count = starting_weapon->burst_count;
-    player->weapon->burst_delay = starting_weapon->burst_delay;
-    player->weapon->frames_since_last_shot = 0;
-    player->weapon->ready_to_fire = true;
-    player->weapon->hud_ammo_icon = starting_weapon->hud_ammo_icon;
+    update_player_weapon(player, starting_weapon);
 
     // make player visible
     player->entity->is_active = true;
@@ -702,7 +691,6 @@ static void update_player_weapon_anim(Player *player)
     strcat(adef_name, "_");
     strcat(adef_name, direction);
     strcat(adef_name, "\0");
-
     Animation_Definition *weapon_character_adef = get(weapon_adef_map, adef_name);
     free(direction);
     free(adef_name);
@@ -877,4 +865,32 @@ Player *get_player_from_body(Body *body)
     else if (body == player_two->entity->body)
         player = player_two;
     return player;
+}
+
+/// @brief updates all the attributes of the player's weapon to the specified weapon type
+/// @param player relevant player
+/// @param weapon_type new weapon_type
+void update_player_weapon(Player *player, Weapon_Type *weapon_type)
+{
+    player->weapon->name = weapon_type->name;
+    player->weapon->fire_mode = weapon_type->fire_mode;
+    player->weapon->capacity = weapon_type->capacity;
+    player->weapon->max_capacity = weapon_type->capacity;
+    player->weapon->reserve = weapon_type->reserve;
+    player->weapon->max_reserve = weapon_type->reserve;
+    player->weapon->max_fire_rate = weapon_type->max_fire_rate;
+    player->weapon->damage = weapon_type->damage;
+    player->weapon->bullet_velocity = weapon_type->bullet_velocity;
+    player->weapon->burst_count = weapon_type->burst_count;
+    player->weapon->burst_shots_remaining = weapon_type->burst_count;
+    player->weapon->burst_delay = weapon_type->burst_delay;
+    player->weapon->frames_since_last_shot = 0;
+    player->weapon->hud_ammo_icon = weapon_type->hud_ammo_icon;
+    player->weapon->ready_to_fire = true;
+    player->weapon->is_firing = false;
+    player->weapon->on_shoot = weapon_type->on_shoot;
+    player->weapon->muzzle_flash_id = weapon_type->muzzle_flash_id;
+    player->weapon->bullet_adef = weapon_type->bullet_adef;
+    player->weapon->bullet_impact_adef = weapon_type->bullet_impact_adef;
+    player->weapon->blood_splatter_prefix = weapon_type->blood_splatter_prefix;
 }

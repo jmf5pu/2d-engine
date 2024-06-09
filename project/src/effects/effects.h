@@ -62,6 +62,9 @@ Animation_Definition *adef_muzzle_flash_13;
 Animation_Definition *adef_muzzle_flash_14;
 Animation_Definition *adef_muzzle_flash_15;
 
+Sprite_Sheet sprite_sheet_muzzle_flash_2_0;
+Animation_Definition *adef_muzzle_flash_2_0;
+
 // blood splatters
 Sprite_Sheet sprite_sheet_blood_splatter_1;
 Animation_Definition *adef_blood_splatter_1;

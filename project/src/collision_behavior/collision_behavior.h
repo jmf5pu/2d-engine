@@ -3,8 +3,8 @@
 
 #include "../engine/animation.h"
 #include "../engine/physics.h"
+#include "../player_helpers/player_helpers.h"
 #include "../weapon_types/weapon_types.h"
-
 typedef enum collision_layer {
     COLLISION_LAYER_PLAYER = 1,
     COLLISION_LAYER_ENEMY = 1 << 1,
