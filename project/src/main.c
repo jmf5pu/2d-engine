@@ -263,7 +263,7 @@ int main(int argc, char *argv[])
             set_render_dimensions(DEFAULT_RENDER_SCALE_FACTOR, true, true);
 
             render_begin_hud();
-            render_hud(window, texture_slots, game_color);
+            render_hud();
 
             // PAUSE MENU
             if (game_state == GS_PAUSE_MENU) {

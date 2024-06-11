@@ -1,7 +1,13 @@
 #include "hud.h"
 #include <float.h>
+#include <math.h>
 
 HUD *hud;
+
+// extern from main.c
+u32 texture_slots[BATCH_SIZE];
+vec4 game_color;
+SDL_Window *window;
 
 void init_ammo_anim_hashmap(void)
 {
@@ -71,19 +77,19 @@ void init_health_anims(void)
     anim_health_cross_9 = animation_create(adef_health_cross_9, false);
 
     render_sprite_sheet_init(&sprite_sheet_health_cross_10, "assets/hud/health_cross_10.png", 100, 100);
-    adef_health_cross_10 = animation_definition_create(&sprite_sheet_health_cross_10, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
+    adef_health_cross_10 = animation_definition_create(&sprite_sheet_health_cross_10, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
     anim_health_cross_10 = animation_create(adef_health_cross_10, true);
 
     render_sprite_sheet_init(&sprite_sheet_health_cross_11, "assets/hud/health_cross_11.png", 100, 100);
-    adef_health_cross_11 = animation_definition_create(&sprite_sheet_health_cross_11, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
+    adef_health_cross_11 = animation_definition_create(&sprite_sheet_health_cross_11, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
     anim_health_cross_11 = animation_create(adef_health_cross_11, true);
 
     render_sprite_sheet_init(&sprite_sheet_health_cross_12, "assets/hud/health_cross_12.png", 100, 100);
-    adef_health_cross_12 = animation_definition_create(&sprite_sheet_health_cross_12, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
+    adef_health_cross_12 = animation_definition_create(&sprite_sheet_health_cross_12, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
     anim_health_cross_12 = animation_create(adef_health_cross_12, true);
 
     render_sprite_sheet_init(&sprite_sheet_health_cross_13, "assets/hud/health_cross_13.png", 100, 100);
-    adef_health_cross_13 = animation_definition_create(&sprite_sheet_health_cross_13, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
+    adef_health_cross_13 = animation_definition_create(&sprite_sheet_health_cross_13, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
     anim_health_cross_13 = animation_create(adef_health_cross_13, true);
 
     render_sprite_sheet_init(&sprite_sheet_health_cross_14, "assets/hud/health_cross_14.png", 100, 100);
@@ -134,43 +140,43 @@ void init_ammo_anims(void)
     anim_ammo_9 = animation_create(adef_ammo_9, false);
 
     render_sprite_sheet_init(&sprite_sheet_ammo_0_blinking, "assets/hud/0_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
-    adef_ammo_0_blinking = animation_definition_create(&sprite_sheet_ammo_0_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
+    adef_ammo_0_blinking = animation_definition_create(&sprite_sheet_ammo_0_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
     anim_ammo_0_blinking = animation_create(adef_ammo_0_blinking, true);
 
     render_sprite_sheet_init(&sprite_sheet_ammo_1_blinking, "assets/hud/1_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
-    adef_ammo_1_blinking = animation_definition_create(&sprite_sheet_ammo_1_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
+    adef_ammo_1_blinking = animation_definition_create(&sprite_sheet_ammo_1_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
     anim_ammo_1_blinking = animation_create(adef_ammo_1_blinking, true);
 
     render_sprite_sheet_init(&sprite_sheet_ammo_2_blinking, "assets/hud/2_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
-    adef_ammo_2_blinking = animation_definition_create(&sprite_sheet_ammo_2_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
+    adef_ammo_2_blinking = animation_definition_create(&sprite_sheet_ammo_2_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
     anim_ammo_2_blinking = animation_create(adef_ammo_2_blinking, true);
 
     render_sprite_sheet_init(&sprite_sheet_ammo_3_blinking, "assets/hud/3_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
-    adef_ammo_3_blinking = animation_definition_create(&sprite_sheet_ammo_3_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
+    adef_ammo_3_blinking = animation_definition_create(&sprite_sheet_ammo_3_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
     anim_ammo_3_blinking = animation_create(adef_ammo_3_blinking, true);
 
     render_sprite_sheet_init(&sprite_sheet_ammo_4_blinking, "assets/hud/4_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
-    adef_ammo_4_blinking = animation_definition_create(&sprite_sheet_ammo_4_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
+    adef_ammo_4_blinking = animation_definition_create(&sprite_sheet_ammo_4_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
     anim_ammo_4_blinking = animation_create(adef_ammo_4_blinking, true);
 
     render_sprite_sheet_init(&sprite_sheet_ammo_5_blinking, "assets/hud/5_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
-    adef_ammo_5_blinking = animation_definition_create(&sprite_sheet_ammo_5_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
+    adef_ammo_5_blinking = animation_definition_create(&sprite_sheet_ammo_5_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
     anim_ammo_5_blinking = animation_create(adef_ammo_5_blinking, true);
 
     render_sprite_sheet_init(&sprite_sheet_ammo_6_blinking, "assets/hud/6_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
-    adef_ammo_6_blinking = animation_definition_create(&sprite_sheet_ammo_6_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
+    adef_ammo_6_blinking = animation_definition_create(&sprite_sheet_ammo_6_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
     anim_ammo_6_blinking = animation_create(adef_ammo_6_blinking, true);
 
     render_sprite_sheet_init(&sprite_sheet_ammo_7_blinking, "assets/hud/7_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
-    adef_ammo_7_blinking = animation_definition_create(&sprite_sheet_ammo_7_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
+    adef_ammo_7_blinking = animation_definition_create(&sprite_sheet_ammo_7_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
     anim_ammo_7_blinking = animation_create(adef_ammo_7_blinking, true);
 
     render_sprite_sheet_init(&sprite_sheet_ammo_8_blinking, "assets/hud/8_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
-    adef_ammo_8_blinking = animation_definition_create(&sprite_sheet_ammo_8_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
+    adef_ammo_8_blinking = animation_definition_create(&sprite_sheet_ammo_8_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
     anim_ammo_8_blinking = animation_create(adef_ammo_8_blinking, true);
 
     render_sprite_sheet_init(&sprite_sheet_ammo_9_blinking, "assets/hud/9_blinking.png", DIGIT_WIDTH, DIGIT_HEIGHT);
-    adef_ammo_9_blinking = animation_definition_create(&sprite_sheet_ammo_9_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
+    adef_ammo_9_blinking = animation_definition_create(&sprite_sheet_ammo_9_blinking, (f32[]){0.5, 0.5}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
     anim_ammo_9_blinking = animation_create(adef_ammo_9_blinking, true);
 
     render_sprite_sheet_init(&sprite_sheet_forward_slash, "assets/hud/forward_slash.png", DIGIT_WIDTH, DIGIT_HEIGHT);
@@ -330,6 +336,7 @@ void init_hud(SDL_Window *window)
     init_health_anims();
     init_ammo_anims();
     init_ammo_anim_hashmap();
+    init_interact_bar_adef();
     render_sprite_sheet_init(&sprite_sheet_divider, "assets/wip/divider.png", 2, 1500);
 
     // initialize struct
@@ -342,22 +349,34 @@ void init_hud(SDL_Window *window)
 }
 
 // renders the heads up display (should be called once per frame)
-void render_hud(SDL_Window *window, u32 texture_slots[BATCH_SIZE], vec4 color)
+void render_hud(void)
 {
     // render player one displays (health + ammo + crosshair)
     // render_health(window, texture_slots, player_one, (vec2){50, (window_height * DEFAULT_RENDER_SCALE_FACTOR) - 50}, color);
     // render_ammo(window, texture_slots, player_one, (vec2){0.5 * DIGIT_WIDTH + DIGIT_WIDTH * 7 + ICON_SPACE, 0.5 * DIGIT_HEIGHT}, color);
-    animation_render(player_one->crosshair->animation, window, player_one->crosshair->body->aabb.position, color, texture_slots);
+    animation_render(player_one->crosshair->animation, window, player_one->crosshair->body->aabb.position, game_color, texture_slots);
+
+    if (player_one->status == PLAYER_RELOADING) {
+        render_interact_bar(
+            (vec2){player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1] + 15},
+            player_one->frames_on_status / player_one->weapon->reload_frame_delay);
+    }
 
     // render player two displays if relevant
     if (SPLIT_SCREEN) {
         // render_health(window, texture_slots, player_two, (vec2){render_width - 50, render_height - 50}, color);
         // render_ammo(window, texture_slots, player_two, (vec2){render_width - 0.5 * DIGIT_WIDTH, 0.5 * DIGIT_HEIGHT}, color);
-        animation_render(player_two->crosshair->animation, window, player_two->crosshair->body->aabb.position, color, texture_slots);
+        animation_render(player_two->crosshair->animation, window, player_two->crosshair->body->aabb.position, game_color, texture_slots);
 
         // render viewport divider
         render_sprite_sheet_frame(
-            &sprite_sheet_divider, window, 0, 0, (vec2){render_width * 0.5, render_height * 0.5}, 0, false, RENDER_PHYSICS_BODIES ? SEMI_TRANSPARENT : color, texture_slots);
+            &sprite_sheet_divider, window, 0, 0, (vec2){render_width * 0.5, render_height * 0.5}, 0, false, RENDER_PHYSICS_BODIES ? SEMI_TRANSPARENT : game_color, texture_slots);
+
+        if (player_two->status == PLAYER_RELOADING) {
+            render_interact_bar(
+                (vec2){player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1] + 15},
+                player_two->frames_on_status / player_two->weapon->reload_frame_delay);
+        }
     }
 }
 
@@ -377,4 +396,13 @@ void fix_crosshair_position(Player *player)
         player->crosshair->body->aabb.position[1] = render_height - crosshair_buffer;
     if (player->crosshair->body->aabb.position[1] < crosshair_buffer)
         player->crosshair->body->aabb.position[1] = crosshair_buffer;
+}
+
+void init_interact_bar_adef(void) { render_sprite_sheet_init(&sprite_sheet_interact_bar, "assets/wip/interact_bar.png", 16, 3); }
+
+void render_interact_bar(vec2 position, f32 percentage)
+{
+    const interact_bar_frame_count = 15;
+    f32 frame_column = floor(percentage * interact_bar_frame_count);
+    render_sprite_sheet_frame(&sprite_sheet_interact_bar, window, 0, frame_column, position, 100, false, game_color, texture_slots);
 }

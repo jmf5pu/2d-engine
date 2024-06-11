@@ -133,16 +133,22 @@ Animation *anim_ammo_8_blinking;
 Animation *anim_ammo_9_blinking;
 Animation *anim_forward_slash;
 
-// diviiding line sprite sheet
+// divididing line sprite sheet
 Sprite_Sheet sprite_sheet_divider;
+
+Sprite_Sheet sprite_sheet_interact_bar;
+Animation_Definition *adef_interact_bar;
 
 extern HUD *hud;
 
 void init_hud(SDL_Window *window);
-void render_hud(SDL_Window *window, u32 texture_slots[BATCH_SIZE], vec4 color);
+void render_hud(void);
 void render_health(SDL_Window *window, u32 texture_slots[BATCH_SIZE], Player *player, vec2 position, vec4 color);
 void render_ammo(SDL_Window *window, u32 texture_slots[BATCH_SIZE], Player *player, vec2 position, vec4 color);
 void fix_crosshair_position(Player *player);
 void free_hud(void);
+
+void init_interact_bar_adef(void);
+void render_interact_bar(vec2 position, f32 percentage);
 
 #endif
