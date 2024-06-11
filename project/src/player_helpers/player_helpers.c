@@ -556,6 +556,7 @@ void update_player_status(Player *player)
     // WEAPON STATUS LOGIC
     // reloading logic
     if (player->status == PLAYER_RELOADING) {
+        printf("%u, %u\n", player->frames_on_status, player->weapon->reload_frame_delay);
         if (player->frames_on_status > player->weapon->reload_frame_delay) {
             // reload either the missing bullets in the magazine or whatever
             // the player has left in reserve
@@ -568,7 +569,7 @@ void update_player_status(Player *player)
     }
 
     // update weapon status (check if weapon is ready to fire again)
-    if (player->status != PLAYER_RELOADING && !player->weapon->ready_to_fire &&
+    if (player->status == PLAYER_ACTIVE && !player->weapon->ready_to_fire &&
         player->weapon->frames_since_last_shot >= ((1.0 / (player->weapon->max_fire_rate / 60.0)) * global.time.frame_rate)) {
         if (player->weapon->fire_mode == AUTO || player->weapon->fire_mode == SEMI) {
             player->weapon->ready_to_fire = true;
@@ -767,8 +768,14 @@ static i32 get_player_brass_z_index(f32 angle)
 /// @param player
 void apply_player_input_state(Player *player)
 {
-    if (player->input_state->key_state->reload == KS_HELD)
+    if (player->status != PLAYER_RELOADING && player->input_state->key_state->reload == KS_HELD) {
         player->status = PLAYER_RELOADING;
+        player->frames_on_status = 0;
+    }
+    else if (player->status == PLAYER_RELOADING && player->input_state->key_state->reload == KS_UNPRESSED) {
+        player->status = PLAYER_ACTIVE;
+        player->frames_on_status = 0;
+    }
 
     // only update velocity from keyboard if the joysticks weren't updated this frame (no controller associated)
     if (player->input_state->controller_input_state->controller_id == -1)
