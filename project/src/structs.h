@@ -62,6 +62,7 @@ typedef struct weapon {
     i16 damage;
     i16 bullet_velocity;
     u16 frames_since_last_shot;
+    u16 reload_frame_delay;
     bool ready_to_fire;
     bool is_firing;
     Animation *hud_ammo_icon;
@@ -85,6 +86,7 @@ typedef struct weapon_type {
     f32 burst_delay;   // in seconds
     i16 damage;
     i16 bullet_velocity;
+    u16 reload_frame_delay;
     char *muzzle_flash_id;
     Animation_Definition *bullet_adef;
     Animation_Definition *bullet_impact_adef;

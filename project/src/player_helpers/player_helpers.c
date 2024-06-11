@@ -524,7 +524,7 @@ void update_player_status(Player *player)
     // SPAWN LOGIC
     // check if spawn delay is up
     if (player->status == PLAYER_INACTIVE && player->frames_on_status >= (player->spawn_delay * global.time.frame_rate)) {
-        spawn_player(player, m16);
+        spawn_player(player, glock);
     }
 
     // check if spawn time is up
@@ -556,13 +556,15 @@ void update_player_status(Player *player)
     // WEAPON STATUS LOGIC
     // reloading logic
     if (player->status == PLAYER_RELOADING) {
-        // reload either the missing bullets in the magazine or whatever
-        // the player has left in reserve
-        u16 reload_amount = MIN(player->weapon->reserve, (player->weapon->max_capacity - player->weapon->capacity));
-        player->weapon->capacity += reload_amount;
-        player->weapon->reserve -= reload_amount;
-        // TODO: add animation / reload wait time logic
-        player->status = PLAYER_ACTIVE;
+        if (player->frames_on_status > player->weapon->reload_frame_delay) {
+            // reload either the missing bullets in the magazine or whatever
+            // the player has left in reserve
+            u16 reload_amount = MIN(player->weapon->reserve, (player->weapon->max_capacity - player->weapon->capacity));
+            player->weapon->capacity += reload_amount;
+            player->weapon->reserve -= reload_amount;
+            player->status = PLAYER_ACTIVE;
+            player->frames_on_status = 0;
+        }
     }
 
     // update weapon status (check if weapon is ready to fire again)
@@ -630,43 +632,30 @@ void get_direction_from_angle(f32 angle, char *direction_result)
         strcpy(direction_result, "2");
     else if (angle > 5 * M_PI / 16 && angle <= 7 * M_PI / 16)
         strcpy(direction_result, "3");
-
     else if (angle > 7 * M_PI / 16 && angle <= 9 * M_PI / 16)
         strcpy(direction_result, "4");
-
     else if (angle > 9 * M_PI / 16 && angle <= 11 * M_PI / 16)
         strcpy(direction_result, "5");
-
     else if (angle > 11 * M_PI / 16 && angle <= 13 * M_PI / 16)
         strcpy(direction_result, "6");
-
     else if (angle > 13 * M_PI / 16 && angle <= 15 * M_PI / 16)
         strcpy(direction_result, "7");
-
     else if (angle > 15 * M_PI / 16 || angle <= -15 * M_PI / 16)
         strcpy(direction_result, "8");
-
     else if (angle > -15 * M_PI / 16 && angle <= -13 * M_PI / 16)
         strcpy(direction_result, "9");
-
     else if (angle > -13 * M_PI / 16 && angle <= -11 * M_PI / 16)
         strcpy(direction_result, "10");
-
     else if (angle > -11 * M_PI / 16 && angle <= -9 * M_PI / 16)
         strcpy(direction_result, "11");
-
     else if (angle > -9 * M_PI / 16 && angle <= -7 * M_PI / 16)
         strcpy(direction_result, "12");
-
     else if (angle > -7 * M_PI / 16 && angle <= -5 * M_PI / 16)
         strcpy(direction_result, "13");
-
     else if (angle > -5 * M_PI / 16 && angle <= -3 * M_PI / 16)
         strcpy(direction_result, "14");
-
     else if (angle > -3 * M_PI / 16 && angle <= -1 * M_PI / 16)
         strcpy(direction_result, "15");
-
     else
         printf("got unexpected crosshair angle: %f\n", angle);
 }
@@ -778,7 +767,7 @@ static i32 get_player_brass_z_index(f32 angle)
 /// @param player
 void apply_player_input_state(Player *player)
 {
-    if (player->input_state->key_state->reload)
+    if (player->input_state->key_state->reload == KS_HELD)
         player->status = PLAYER_RELOADING;
 
     // only update velocity from keyboard if the joysticks weren't updated this frame (no controller associated)
@@ -881,6 +870,7 @@ void update_player_weapon(Player *player, Weapon_Type *weapon_type)
     player->weapon->max_fire_rate = weapon_type->max_fire_rate;
     player->weapon->damage = weapon_type->damage;
     player->weapon->bullet_velocity = weapon_type->bullet_velocity;
+    player->weapon->reload_frame_delay = weapon_type->reload_frame_delay;
     player->weapon->burst_count = weapon_type->burst_count;
     player->weapon->burst_shots_remaining = weapon_type->burst_count;
     player->weapon->burst_delay = weapon_type->burst_delay;
