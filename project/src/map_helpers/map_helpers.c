@@ -174,12 +174,20 @@ void init_map_assets(void)
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
         10);
+
     render_sprite_sheet_init(&sprite_sheet_glock_pickup, "assets/wip/glock_pickup.png", 7, 9);
     adef_glock_pickup = animation_definition_create(&sprite_sheet_glock_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_glock_pickup = animation_create(adef_glock_pickup, false);
     render_sprite_sheet_init(&sprite_sheet_glock_pickup_highlight, "assets/wip/glock_pickup_highlight.png", 7, 9);
     adef_glock_pickup_highlight =
         animation_definition_create(&sprite_sheet_glock_pickup_highlight, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_pickup, "assets/wip/coach_gun_pickup.png", 25, 18);
+    adef_coach_gun_pickup = animation_definition_create(&sprite_sheet_coach_gun_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_coach_gun_pickup = animation_create(adef_coach_gun_pickup, false);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_pickup_highlight, "assets/wip/coach_gun_pickup_highlight.png", 25, 18);
+    adef_coach_gun_pickup_highlight =
+        animation_definition_create(&sprite_sheet_coach_gun_pickup_highlight, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4}, 5);
 
     // teleporter
     render_sprite_sheet_init(&sprite_sheet_teleporter_inactive, "assets/wip/teleporter_spinning.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
@@ -285,8 +293,10 @@ DynamicProp *init_button_prop(void)
 
 void init_pickup_props(void)
 {
-    Entity *m16_pickup = entity_create((vec2){27, 50}, (vec2){20, 9}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, m16_pickup_on_hit, NULL);
+    Entity *m16_pickup = entity_create((vec2){27, 65}, (vec2){20, 9}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, m16_pickup_on_hit, NULL);
     m16_pickup->animation = anim_m16_pickup;
-    Entity *glock_pickup = entity_create((vec2){35, 80}, (vec2){7, 9}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, glock_pickup_on_hit, NULL);
+    Entity *glock_pickup = entity_create((vec2){35, 95}, (vec2){7, 9}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, glock_pickup_on_hit, NULL);
     glock_pickup->animation = anim_glock_pickup;
+    Entity *coach_gun_pickup = entity_create((vec2){27, 40}, (vec2){25, 18}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, coach_gun_pickup_on_hit, NULL);
+    coach_gun_pickup->animation = anim_coach_gun_pickup;
 }

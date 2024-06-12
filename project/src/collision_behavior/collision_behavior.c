@@ -14,12 +14,12 @@ const u8 bullet_mask = COLLISION_LAYER_ENEMY | COLLISION_LAYER_TERRAIN;
 const u8 pickup_mask = COLLISION_LAYER_PLAYER;
 const u8 crosshair_mask = 0;
 
-void weapon_pickup_base(Body *self, Body *other, Animation_Definition *highlight_adef, Weapon_Type *weapon_type)
+void weapon_pickup_base(Body *self, Body *other, Animation_Definition *highlight_adef, vec2 anim_size, Weapon_Type *weapon_type)
 {
     Player *player = get_player_from_body(other);
 
     if (self->first_frame_being_hit) {
-        Entity *pickup_highlight = entity_create(self->aabb.position, (vec2){7, 9}, (vec2){0, 0}, 0, 0, NULL, NULL);
+        Entity *pickup_highlight = entity_create(self->aabb.position, anim_size, (vec2){0, 0}, 0, 0, NULL, NULL);
         pickup_highlight->animation = animation_create(highlight_adef, false);
         pickup_highlight->animation->z_index = 1;
         pickup_highlight->destroy_on_anim_completion = true;
@@ -31,9 +31,11 @@ void weapon_pickup_base(Body *self, Body *other, Animation_Definition *highlight
     }
 }
 
-void m16_pickup_on_hit(Body *self, Body *other, Hit hit) { weapon_pickup_base(self, other, adef_m16_pickup_highlight, m16); }
+void m16_pickup_on_hit(Body *self, Body *other, Hit hit) { weapon_pickup_base(self, other, adef_m16_pickup_highlight, (vec2){20, 9}, m16); }
 
-void glock_pickup_on_hit(Body *self, Body *other, Hit hit) { weapon_pickup_base(self, other, adef_glock_pickup_highlight, glock); }
+void glock_pickup_on_hit(Body *self, Body *other, Hit hit) { weapon_pickup_base(self, other, adef_glock_pickup_highlight, (vec2){7, 9}, glock); }
+
+void coach_gun_pickup_on_hit(Body *self, Body *other, Hit hit) { weapon_pickup_base(self, other, adef_coach_gun_pickup_highlight, (vec2){25, 18}, coach_gun); }
 
 void player_on_hit(Body *self, Body *other, Hit hit)
 {

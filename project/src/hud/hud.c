@@ -404,6 +404,5 @@ void render_interact_bar(vec2 position, f32 percentage)
 {
     const interact_bar_frame_count = 18;
     f32 frame_column = floor(percentage * interact_bar_frame_count);
-    printf("%f\n", frame_column);
     render_sprite_sheet_frame(&sprite_sheet_interact_bar, window, 0, frame_column, position, 100, false, game_color, texture_slots);
 }

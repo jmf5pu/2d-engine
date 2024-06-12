@@ -31,7 +31,7 @@ void enemy_on_hit_static(Body *self, Static_Body *other, Hit hit);
 void pickup_on_hit(Body *self, Body *other, Hit hit);
 void pickup_on_hit_static(Body *self, Static_Body *other, Hit hit);
 
-void weapon_pickup_base(Body *self, Body *other, Animation_Definition *highlight_adef, Weapon_Type *weapon_type);
+void weapon_pickup_base(Body *self, Body *other, Animation_Definition *highlight_adef, vec2 anim_size, Weapon_Type *weapon_type);
 void m16_pickup_on_hit(Body *self, Body *other, Hit hit);
 void glock_pickup_on_hit(Body *self, Body *other, Hit hit);
 void coach_gun_pickup_on_hit(Body *self, Body *other, Hit hit);
