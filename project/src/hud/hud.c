@@ -1,4 +1,5 @@
 #include "hud.h"
+#include "../engine/util.h"
 #include <float.h>
 #include <math.h>
 
@@ -8,6 +9,9 @@ HUD *hud;
 u32 texture_slots[BATCH_SIZE];
 vec4 game_color;
 SDL_Window *window;
+
+f32 interact_bar_open_close_durations[] = {0.05, 0.05, 0.05};
+vec2 interact_bar_size = {16, 3};
 
 void init_ammo_anim_hashmap(void)
 {
@@ -351,15 +355,27 @@ void init_hud(SDL_Window *window)
 // renders the heads up display (should be called once per frame)
 void render_hud(void)
 {
+    static u32 player_one_reloading_frames = 0;
+    static u32 player_two_reloading_frames = 0;
+
+    vec2 player_one_interact_bar_position = {player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1] + 15};
+    vec2 player_two_interact_bar_position = {player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1] + 15};
+
     // render player one displays (health + ammo + crosshair)
     // render_health(window, texture_slots, player_one, (vec2){50, (window_height * DEFAULT_RENDER_SCALE_FACTOR) - 50}, color);
     // render_ammo(window, texture_slots, player_one, (vec2){0.5 * DIGIT_WIDTH + DIGIT_WIDTH * 7 + ICON_SPACE, 0.5 * DIGIT_HEIGHT}, color);
     animation_render(player_one->crosshair->animation, window, player_one->crosshair->body->aabb.position, game_color, texture_slots);
 
     if (player_one->status == PLAYER_RELOADING) {
-        render_interact_bar_progress(
-            (vec2){player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1] + 15},
-            (f32)player_one->frames_on_status / player_one->weapon->reload_frame_delay);
+        f32 opening_anim_frame_count = get_array_sum(interact_bar_open_close_durations, ARRAY_LENGTH(interact_bar_open_close_durations)) * FRAME_RATE;
+
+        if (player_one_reloading_frames > opening_anim_frame_count) {
+            render_interact_bar_progress(
+                player_one_interact_bar_position,
+                (f32)(player_one->frames_on_status - opening_anim_frame_count) / (player_one->weapon->reload_frame_delay - opening_anim_frame_count));
+        }
+
+        player_one_reloading_frames++;
     }
 
     // render player two displays if relevant
@@ -373,9 +389,7 @@ void render_hud(void)
             &sprite_sheet_divider, window, 0, 0, (vec2){render_width * 0.5, render_height * 0.5}, 0, false, RENDER_PHYSICS_BODIES ? SEMI_TRANSPARENT : game_color, texture_slots);
 
         if (player_two->status == PLAYER_RELOADING) {
-            render_interact_bar_progress(
-                (vec2){player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1] + 15},
-                player_two->frames_on_status / player_two->weapon->reload_frame_delay);
+            render_interact_bar_progress(player_two_interact_bar_position, player_two->frames_on_status / player_two->weapon->reload_frame_delay);
         }
     }
 }
@@ -409,7 +423,7 @@ void init_interact_bar_adefs(void)
 
 void render_interact_bar_progress(vec2 position, f32 percentage)
 {
-    const interact_bar_frame_count = 18;
+    const interact_bar_frame_count = 14;
     f32 frame_column = floor(percentage * interact_bar_frame_count);
     render_sprite_sheet_frame(&sprite_sheet_interact_bar, window, 0, frame_column, position, 100, false, game_color, texture_slots);
 }

@@ -4,6 +4,7 @@
 #include "../engine/camera.h"
 #include "../engine/global.h"
 #include "../engine/util.h"
+#include "../hud/hud.h"
 #include "../main_helpers/main_helpers.h"
 #include "../structs.h"
 #include "../weapon_types/weapon_types.h"
@@ -767,15 +768,7 @@ static i32 get_player_brass_z_index(f32 angle)
 /// @param player
 void apply_player_input_state(Player *player)
 {
-    bool can_reload = player->weapon->capacity < player->weapon->max_capacity;
-    if (player->status != PLAYER_RELOADING && player->input_state->key_state->reload == KS_HELD && can_reload) {
-        player->status = PLAYER_RELOADING;
-        player->frames_on_status = 0;
-    }
-    else if (player->status == PLAYER_RELOADING && player->input_state->key_state->reload == KS_UNPRESSED) {
-        player->status = PLAYER_ACTIVE;
-        player->frames_on_status = 0;
-    }
+    update_player_status_from_input_state(player);
 
     // only update velocity from keyboard if the joysticks weren't updated this frame (no controller associated)
     if (player->input_state->controller_input_state->controller_id == -1)
@@ -785,6 +778,29 @@ void apply_player_input_state(Player *player)
         handle_player_shooting(player, player->input_state->key_state->shoot);
     else
         player->weapon->is_firing = false;
+}
+
+void update_player_status_from_input_state(Player *player)
+{
+    vec2 interact_bar_position = {player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1] + 15};
+    bool can_reload = player->weapon->capacity < player->weapon->max_capacity;
+
+    if (player->status != PLAYER_RELOADING && player->input_state->key_state->reload == KS_HELD && can_reload) {
+        player->status = PLAYER_RELOADING;
+        player->frames_on_status = 0;
+
+        Entity *interact_bar_open_entity = entity_create(interact_bar_position, (vec2){16, 3}, (vec2){0, 0}, 0, 0, NULL, NULL);
+        interact_bar_open_entity->animation = animation_create(adef_interact_bar_open, false);
+        interact_bar_open_entity->destroy_on_anim_completion = true;
+    }
+    else if (player->status == PLAYER_RELOADING && player->input_state->key_state->reload == KS_UNPRESSED) {
+        player->status = PLAYER_ACTIVE;
+        player->frames_on_status = 0;
+
+        Entity *interact_bar_close_entity = entity_create(interact_bar_position, (vec2){16, 3}, (vec2){0, 0}, 0, 0, NULL, NULL);
+        interact_bar_close_entity->animation = animation_create(adef_interact_bar_close, false);
+        interact_bar_close_entity->destroy_on_anim_completion = true;
+    }
 }
 
 /// @brief Update the player's entity's velocity from its current key state. Supports 8 directional movement
