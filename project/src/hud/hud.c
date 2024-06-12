@@ -359,7 +359,7 @@ void render_hud(void)
     if (player_one->status == PLAYER_RELOADING) {
         render_interact_bar(
             (vec2){player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1] + 15},
-            player_one->frames_on_status / player_one->weapon->reload_frame_delay);
+            (f32)player_one->frames_on_status / player_one->weapon->reload_frame_delay);
     }
 
     // render player two displays if relevant

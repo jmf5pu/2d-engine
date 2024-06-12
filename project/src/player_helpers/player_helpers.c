@@ -556,7 +556,6 @@ void update_player_status(Player *player)
     // WEAPON STATUS LOGIC
     // reloading logic
     if (player->status == PLAYER_RELOADING) {
-        printf("%u, %u\n", player->frames_on_status, player->weapon->reload_frame_delay);
         if (player->frames_on_status > player->weapon->reload_frame_delay) {
             // reload either the missing bullets in the magazine or whatever
             // the player has left in reserve
