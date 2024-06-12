@@ -767,7 +767,8 @@ static i32 get_player_brass_z_index(f32 angle)
 /// @param player
 void apply_player_input_state(Player *player)
 {
-    if (player->status != PLAYER_RELOADING && player->input_state->key_state->reload == KS_HELD) {
+    bool can_reload = player->weapon->capacity < player->weapon->max_capacity;
+    if (player->status != PLAYER_RELOADING && player->input_state->key_state->reload == KS_HELD && can_reload) {
         player->status = PLAYER_RELOADING;
         player->frames_on_status = 0;
     }

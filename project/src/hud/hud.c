@@ -398,11 +398,12 @@ void fix_crosshair_position(Player *player)
         player->crosshair->body->aabb.position[1] = crosshair_buffer;
 }
 
-void init_interact_bar_adef(void) { render_sprite_sheet_init(&sprite_sheet_interact_bar, "assets/wip/interact_bar.png", 16, 3); }
+void init_interact_bar_adef(void) { render_sprite_sheet_init(&sprite_sheet_interact_bar, "assets/wip/interact_bar_v3.png", 16, 3); }
 
 void render_interact_bar(vec2 position, f32 percentage)
 {
-    const interact_bar_frame_count = 15;
+    const interact_bar_frame_count = 18;
     f32 frame_column = floor(percentage * interact_bar_frame_count);
+    printf("%f\n", frame_column);
     render_sprite_sheet_frame(&sprite_sheet_interact_bar, window, 0, frame_column, position, 100, false, game_color, texture_slots);
 }
