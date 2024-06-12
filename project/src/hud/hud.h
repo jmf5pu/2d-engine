@@ -136,6 +136,12 @@ Animation *anim_forward_slash;
 // divididing line sprite sheet
 Sprite_Sheet sprite_sheet_divider;
 
+Sprite_Sheet sprite_sheet_interact_bar_open;
+Animation_Definition *adef_interact_bar_open;
+
+Sprite_Sheet sprite_sheet_interact_bar_close;
+Animation_Definition *adef_interact_bar_close;
+
 Sprite_Sheet sprite_sheet_interact_bar;
 Animation_Definition *adef_interact_bar;
 
@@ -148,7 +154,7 @@ void render_ammo(SDL_Window *window, u32 texture_slots[BATCH_SIZE], Player *play
 void fix_crosshair_position(Player *player);
 void free_hud(void);
 
-void init_interact_bar_adef(void);
-void render_interact_bar(vec2 position, f32 percentage);
+void init_interact_bar_adefs(void);
+void render_interact_bar_progress(vec2 position, f32 percentage);
 
 #endif

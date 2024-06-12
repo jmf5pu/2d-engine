@@ -336,7 +336,7 @@ void init_hud(SDL_Window *window)
     init_health_anims();
     init_ammo_anims();
     init_ammo_anim_hashmap();
-    init_interact_bar_adef();
+    init_interact_bar_adefs();
     render_sprite_sheet_init(&sprite_sheet_divider, "assets/wip/divider.png", 2, 1500);
 
     // initialize struct
@@ -357,7 +357,7 @@ void render_hud(void)
     animation_render(player_one->crosshair->animation, window, player_one->crosshair->body->aabb.position, game_color, texture_slots);
 
     if (player_one->status == PLAYER_RELOADING) {
-        render_interact_bar(
+        render_interact_bar_progress(
             (vec2){player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1] + 15},
             (f32)player_one->frames_on_status / player_one->weapon->reload_frame_delay);
     }
@@ -373,7 +373,7 @@ void render_hud(void)
             &sprite_sheet_divider, window, 0, 0, (vec2){render_width * 0.5, render_height * 0.5}, 0, false, RENDER_PHYSICS_BODIES ? SEMI_TRANSPARENT : game_color, texture_slots);
 
         if (player_two->status == PLAYER_RELOADING) {
-            render_interact_bar(
+            render_interact_bar_progress(
                 (vec2){player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1] + 15},
                 player_two->frames_on_status / player_two->weapon->reload_frame_delay);
         }
@@ -398,9 +398,16 @@ void fix_crosshair_position(Player *player)
         player->crosshair->body->aabb.position[1] = crosshair_buffer;
 }
 
-void init_interact_bar_adef(void) { render_sprite_sheet_init(&sprite_sheet_interact_bar, "assets/wip/interact_bar_v3.png", 16, 3); }
+void init_interact_bar_adefs(void)
+{
+    render_sprite_sheet_init(&sprite_sheet_interact_bar_open, "assets/wip/interact_bar_open.png", 16, 3);
+    adef_interact_bar_open = animation_definition_create(&sprite_sheet_interact_bar_open, (f32[]){0.05, 0.05, 0.05}, (u8[]){0, 0, 0}, (u8[]){0, 1, 2}, 3);
+    render_sprite_sheet_init(&sprite_sheet_interact_bar_close, "assets/wip/interact_bar_close.png", 16, 3);
+    adef_interact_bar_close = animation_definition_create(&sprite_sheet_interact_bar_close, (f32[]){0.05, 0.05, 0.05}, (u8[]){0, 0, 0}, (u8[]){0, 1, 2}, 3);
+    render_sprite_sheet_init(&sprite_sheet_interact_bar, "assets/wip/interact_bar_v3.png", 16, 3);
+}
 
-void render_interact_bar(vec2 position, f32 percentage)
+void render_interact_bar_progress(vec2 position, f32 percentage)
 {
     const interact_bar_frame_count = 18;
     f32 frame_column = floor(percentage * interact_bar_frame_count);
