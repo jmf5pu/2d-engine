@@ -43,6 +43,8 @@
 
 #define ARRAY_LENGTH(array) (sizeof(array) / sizeof((array)[0]))
 
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
 inline f32 get_array_sum(f32 *array, int size)
 {
     f32 sum = 0;

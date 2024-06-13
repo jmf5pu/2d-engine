@@ -113,6 +113,7 @@ typedef struct camera {
 typedef struct player {
     Entity *entity;
     Entity *crosshair;
+    Entity *interact_bar;
     Camera *camera;
     Weapon *weapon;
     Armor *armor;

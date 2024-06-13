@@ -416,7 +416,10 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
         NULL,
         NULL);
     player->crosshair->animation = player->is_left_player ? anim_p1_crosshair : anim_p2_crosshair;
-    player->crosshair->is_active = true;
+    player->interact_bar = malloc(sizeof(Entity));
+    player->interact_bar =
+        entity_create((vec2){player->entity->body->aabb.position[0], player->entity->body->aabb.position[1] + 15}, (vec2){16, 3}, (vec2){0, 0}, 0, 0, NULL, NULL);
+    player->interact_bar->is_active = false;
 
     // populate weapon
     player->weapon = malloc(sizeof(Weapon));
@@ -782,24 +785,26 @@ void apply_player_input_state(Player *player)
 
 void update_player_status_from_input_state(Player *player)
 {
-    vec2 interact_bar_position = {player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1] + 15};
+    vec2 interact_bar_position = {player->relative_position[0], player->relative_position[1] + 15};
     bool can_reload = player->weapon->capacity < player->weapon->max_capacity;
 
     if (player->status != PLAYER_RELOADING && player->input_state->key_state->reload == KS_HELD && can_reload) {
         player->status = PLAYER_RELOADING;
         player->frames_on_status = 0;
 
-        Entity *interact_bar_open_entity = entity_create(interact_bar_position, (vec2){16, 3}, (vec2){0, 0}, 0, 0, NULL, NULL);
-        interact_bar_open_entity->animation = animation_create(adef_interact_bar_open, false);
-        interact_bar_open_entity->destroy_on_anim_completion = true;
+        if (player->interact_bar->animation != NULL)
+            animation_destroy(player->interact_bar->animation);
+        player->interact_bar->animation = animation_create(adef_interact_bar_open, false);
+        player->interact_bar->is_active = true;
     }
     else if (player->status == PLAYER_RELOADING && player->input_state->key_state->reload == KS_UNPRESSED) {
         player->status = PLAYER_ACTIVE;
         player->frames_on_status = 0;
 
-        Entity *interact_bar_close_entity = entity_create(interact_bar_position, (vec2){16, 3}, (vec2){0, 0}, 0, 0, NULL, NULL);
-        interact_bar_close_entity->animation = animation_create(adef_interact_bar_close, false);
-        interact_bar_close_entity->destroy_on_anim_completion = true;
+        if (player->interact_bar->animation != NULL)
+            animation_destroy(player->interact_bar->animation);
+        player->interact_bar->animation = animation_create(adef_interact_bar_open, false);
+        player->interact_bar->is_active = true;
     }
 }
 

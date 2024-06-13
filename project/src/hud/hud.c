@@ -10,7 +10,7 @@ u32 texture_slots[BATCH_SIZE];
 vec4 game_color;
 SDL_Window *window;
 
-f32 interact_bar_open_close_durations[] = {0.05, 0.05, 0.05};
+f32 interact_bar_open_close_durations[] = {0.05, 0.05, 0.05, 0.05};
 vec2 interact_bar_size = {16, 3};
 
 void init_ammo_anim_hashmap(void)
@@ -357,9 +357,7 @@ void render_hud(void)
 {
     static u32 player_one_reloading_frames = 0;
     static u32 player_two_reloading_frames = 0;
-
     vec2 player_one_interact_bar_position = {player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1] + 15};
-    vec2 player_two_interact_bar_position = {player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1] + 15};
 
     // render player one displays (health + ammo + crosshair)
     // render_health(window, texture_slots, player_one, (vec2){50, (window_height * DEFAULT_RENDER_SCALE_FACTOR) - 50}, color);
@@ -369,17 +367,26 @@ void render_hud(void)
     if (player_one->status == PLAYER_RELOADING) {
         f32 opening_anim_frame_count = get_array_sum(interact_bar_open_close_durations, ARRAY_LENGTH(interact_bar_open_close_durations)) * FRAME_RATE;
 
-        if (player_one_reloading_frames > opening_anim_frame_count) {
-            render_interact_bar_progress(
-                player_one_interact_bar_position,
-                (f32)(player_one->frames_on_status - opening_anim_frame_count) / (player_one->weapon->reload_frame_delay - opening_anim_frame_count));
+        if (player_one_reloading_frames < opening_anim_frame_count) {
+            vec2_dup(player_one->interact_bar->body->aabb.position, player_one->relative_position);
+            animation_render(player_one->interact_bar->animation, window, player_one->interact_bar->body->aabb.position, game_color, texture_slots);
         }
-
-        player_one_reloading_frames++;
+        else if (player_one_reloading_frames >= opening_anim_frame_count) {
+            player_one->interact_bar->animation = animation_create(adef_interact_bar, false);
+            render_interact_bar_progress(
+                player_one->interact_bar, (f32)(player_one->frames_on_status - opening_anim_frame_count) / (player_one->weapon->reload_frame_delay - opening_anim_frame_count));
+        }
+        else
+            player_one_reloading_frames++;
+    }
+    else {
+        player_one_reloading_frames = 0;
     }
 
     // render player two displays if relevant
     if (SPLIT_SCREEN) {
+        vec2 player_two_interact_bar_position = {player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1] + 15};
+
         // render_health(window, texture_slots, player_two, (vec2){render_width - 50, render_height - 50}, color);
         // render_ammo(window, texture_slots, player_two, (vec2){render_width - 0.5 * DIGIT_WIDTH, 0.5 * DIGIT_HEIGHT}, color);
         animation_render(player_two->crosshair->animation, window, player_two->crosshair->body->aabb.position, game_color, texture_slots);
@@ -415,15 +422,21 @@ void fix_crosshair_position(Player *player)
 void init_interact_bar_adefs(void)
 {
     render_sprite_sheet_init(&sprite_sheet_interact_bar_open, "assets/wip/interact_bar_open.png", 16, 3);
-    adef_interact_bar_open = animation_definition_create(&sprite_sheet_interact_bar_open, (f32[]){0.05, 0.05, 0.05}, (u8[]){0, 0, 0}, (u8[]){0, 1, 2}, 3);
+    adef_interact_bar_open = animation_definition_create(&sprite_sheet_interact_bar_open, interact_bar_open_close_durations, (u8[]){0, 0, 0, 0}, (u8[]){0, 1, 2, 3}, 4);
     render_sprite_sheet_init(&sprite_sheet_interact_bar_close, "assets/wip/interact_bar_close.png", 16, 3);
-    adef_interact_bar_close = animation_definition_create(&sprite_sheet_interact_bar_close, (f32[]){0.05, 0.05, 0.05}, (u8[]){0, 0, 0}, (u8[]){0, 1, 2}, 3);
-    render_sprite_sheet_init(&sprite_sheet_interact_bar, "assets/wip/interact_bar_v3.png", 16, 3);
+    adef_interact_bar_close = animation_definition_create(&sprite_sheet_interact_bar_close, interact_bar_open_close_durations, (u8[]){0, 0, 0, 0}, (u8[]){0, 1, 2, 3}, 4);
+    render_sprite_sheet_init(&sprite_sheet_interact_bar, "assets/wip/interact_bar.png", 16, 3);
+    adef_interact_bar = animation_definition_create(
+        &sprite_sheet_interact_bar,
+        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13},
+        14);
 }
 
 void render_interact_bar_progress(vec2 position, f32 percentage)
 {
     const interact_bar_frame_count = 14;
-    f32 frame_column = floor(percentage * interact_bar_frame_count);
+    f32 frame_column = MAX(floor(percentage * interact_bar_frame_count), 0);
     render_sprite_sheet_frame(&sprite_sheet_interact_bar, window, 0, frame_column, position, 100, false, game_color, texture_slots);
 }
