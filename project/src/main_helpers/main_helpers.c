@@ -67,7 +67,7 @@ void render_all_non_player_entities_with_animations(SDL_Window *window, u32 text
         Entity *entity = entity_get(j);
 
         // skip inactive entities, entities that are players or crosshairs or entities with no animation
-        if (!entity->animation || !entity->is_active || !entity->body->is_active || entity_is_player_or_crosshair(entity)) {
+        if (!entity->animation || !entity->is_active || !entity->body->is_active || entity_is_player_interact_bar_or_crosshair(entity)) {
             continue;
         }
 

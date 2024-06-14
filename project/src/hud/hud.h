@@ -155,6 +155,6 @@ void fix_crosshair_position(Player *player);
 void free_hud(void);
 
 void init_interact_bar_adefs(void);
-void render_interact_bar_progress(vec2 position, f32 percentage);
+void render_interact_bar_progress(Entity *entity, f32 percentage);
 
 #endif
