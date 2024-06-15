@@ -80,6 +80,8 @@ Animation *animation_create(Animation_Definition *adef, bool does_loop)
         .is_active = true,
         .z_index = 0,
         .reset_count = 0,
+        .current_frame_index = 0,
+        .current_frame_time = adef->frames[0].duration,
     };
 
     return animation;

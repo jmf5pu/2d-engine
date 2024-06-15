@@ -137,7 +137,7 @@ void init_explosion_animation_definitions(void)
     u8 muzzle_flash_1_frame_count = ARRAY_LENGTH(MUZZLE_FLASH_1_COLS);
 
     const u8 MUZZLE_FLASH_2_DIMENSIONS[] = {24, 11};
-    const f32 MUZZLE_FLASH_2_DURATIONS[] = {0.5, 0.5, 0.5, 0.5};
+    const f32 MUZZLE_FLASH_2_DURATIONS[] = {0.05, 0.05, 0.1, 0.1};
     const u8 MUZZLE_FLASH_2_ROWS[] = {0, 0, 0, 0};
     const u8 MUZZLE_FLASH_2_COLS[] = {0, 1, 2, 3};
     u8 muzzle_flash_2_frame_count = ARRAY_LENGTH(MUZZLE_FLASH_2_COLS);
@@ -207,7 +207,8 @@ void init_explosion_animation_definitions(void)
         &sprite_sheet_muzzle_flash_15, (f32 *)MUZZLE_FLASH_1_DURATIONS, (u8 *)MUZZLE_FLASH_1_ROWS, (u8 *)MUZZLE_FLASH_1_COLS, muzzle_flash_1_frame_count);
 
     render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_0, "assets/wip/muzzle_flash_2_0.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
-    adef_muzzle_flash_2_0 = animation_definition_create(&sprite_sheet_muzzle_flash_2_0, (f32 *)MUZZLE_FLASH_2_DURATIONS, (u8 *)MUZZLE_FLASH_2_ROWS, (u8 *)MUZZLE_FLASH_2_COLS, 4);
+    adef_muzzle_flash_2_0 = animation_definition_create(
+        &sprite_sheet_muzzle_flash_2_0, (f32 *)MUZZLE_FLASH_2_DURATIONS, (u8 *)MUZZLE_FLASH_2_ROWS, (u8 *)MUZZLE_FLASH_2_COLS, muzzle_flash_2_frame_count);
 }
 
 void init_explosion_adef_hashmap(void)

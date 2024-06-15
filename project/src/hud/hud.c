@@ -372,8 +372,10 @@ void render_hud(void)
             animation_render(player_one->interact_bar->animation, window, player_one->interact_bar->body->aabb.position, game_color, texture_slots);
         }
         else if (player_one_reloading_frames >= opening_anim_frame_count) {
-            if (player_one_reloading_frames == opening_anim_frame_count)
+            if (player_one_reloading_frames == opening_anim_frame_count) {
                 animation_destroy(player_one->interact_bar->animation);
+                player_one->interact_bar->animation = NULL;
+            }
             render_interact_bar_progress(
                 player_one->interact_bar, (f32)(player_one->frames_on_status - opening_anim_frame_count) / (player_one->weapon->reload_frame_delay - opening_anim_frame_count));
         }

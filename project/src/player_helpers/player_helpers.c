@@ -791,20 +791,20 @@ void update_player_status_from_input_state(Player *player)
     if (player->status != PLAYER_RELOADING && player->input_state->key_state->reload == KS_HELD && can_reload) {
         player->status = PLAYER_RELOADING;
         player->frames_on_status = 0;
-
-        if (player->interact_bar->animation != NULL)
+        if (player->interact_bar->animation != NULL) {
             animation_destroy(player->interact_bar->animation);
+            player->interact_bar->animation = NULL;
+        }
         player->interact_bar->animation = animation_create(adef_interact_bar_open, false);
         player->interact_bar->is_active = true;
     }
     else if (player->status == PLAYER_RELOADING && player->input_state->key_state->reload == KS_UNPRESSED) {
         player->status = PLAYER_ACTIVE;
         player->frames_on_status = 0;
-
-        if (player->interact_bar->animation != NULL)
+        if (player->interact_bar->animation != NULL) {
             animation_destroy(player->interact_bar->animation);
-        player->interact_bar->animation = animation_create(adef_interact_bar_open, false);
-        player->interact_bar->is_active = true;
+            player->interact_bar->animation = NULL;
+        }
     }
 }
 
