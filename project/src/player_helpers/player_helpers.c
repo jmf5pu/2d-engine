@@ -724,7 +724,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
         // update flag on the weapon struct (used for anim assignment)
         player->weapon->is_firing = true;
 
-        // create bullet(s) [anims and direction will be specific to the weapon's type]
+        // create bullet(s) [anims and direction will be specific to the weapon's type] and muzzle flash/brass effects
         player->weapon->on_shoot(player);
 
         // decrement weapon capacity
@@ -737,34 +737,7 @@ void handle_player_shooting(Player *player, Key_State shoot)
         // restart rounds per minute timer
         player->weapon->ready_to_fire = false;
         player->weapon->frames_since_last_shot = 0;
-
-        // Note the lack of collision masks and on hit methods - collisions aren't relevant for muzzle flash entities
-        vec2 muzzle_flash_position = {0, 0};
-        vec2 muzzle_flash_offset = {0, 0};
-        get_xy_components_from_vector(MUZZLE_FLASH_DISTANCE_FROM_PLAYER, player->crosshair_angle, muzzle_flash_offset);
-        vec2_add(muzzle_flash_offset, muzzle_flash_offset, (vec2){0, CHARACTER_ARMS_Y_OFFSET_FROM_CENTER});
-        vec2_add(muzzle_flash_position, player->relative_position, muzzle_flash_offset);
-        create_muzzle_flash_entity(
-            player->weapon->muzzle_flash_id, player->crosshair_angle, muzzle_flash_position, (vec2){15, 15}, player->entity->body->velocity, 0, 0, NULL, NULL);
-
-        // ccalculate brass offset from the player and create brass effect entity
-        vec2 brass_position = {0, 0};
-        vec2_dup(brass_position, player->relative_position);
-        vec2 brass_offset = {0, 0};
-        get_xy_components_from_vector(BRASS_EJECT_DISTANCE_FROM_PLAYER, player->crosshair_angle, brass_offset);
-        vec2_add(brass_position, brass_position, brass_offset);
-        vec2_add(brass_position, brass_position, (vec2){0, CHARACTER_ARMS_Y_OFFSET_FROM_CENTER});
-        create_brass_entity(brass_position, adef_brass_falling_1, get_player_brass_z_index(player->crosshair_angle));
     }
-}
-
-/// @brief helper to get the z_index of brass entities based on player direction. If the player is facing up, we want to render the brass underneath the player sprite
-/// @param angle player to crosshair angle
-/// @return z index for the brass entity (1 or -1)
-static i32 get_player_brass_z_index(f32 angle)
-{
-    bool player_facing_up = angle > M_PI / 4 && angle < 3 * M_PI / 4;
-    return player_facing_up ? -1 : 1;
 }
 
 /// @brief Applies the player's input state to other relevant members, such as moving, shooting, and reloading states

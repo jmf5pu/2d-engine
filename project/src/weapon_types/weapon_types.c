@@ -46,17 +46,29 @@ void create_scatter_shot(Player *player, f32 spread_angle, u8 shot_count)
 
 void base_on_shoot(Player *player) { return; }
 
-void m16_on_shoot(Player *player) { create_bullet_straight(player, player->crosshair_angle); }
+void m16_on_shoot(Player *player)
+{
+    create_player_muzzle_flash_effect(player);
+    create_player_brass_effect(player, adef_brass_falling_1);
+    create_bullet_straight(player, player->crosshair_angle);
+}
 
-void glock_on_shoot(Player *player) { create_bullet_straight(player, player->crosshair_angle); }
+void glock_on_shoot(Player *player)
+{
+    create_player_muzzle_flash_effect(player);
+    create_player_brass_effect(player, adef_brass_falling_1);
+    create_bullet_straight(player, player->crosshair_angle);
+}
 
 void coach_gun_on_shoot(Player *player)
 {
     const f32 scatter_angle = 0.35; // 20 degrees in radians //0.5236; // 30 degrees in radians
     const u8 num_shots = 7;
+    create_player_muzzle_flash_effect(player);
     create_scatter_shot(player, scatter_angle, num_shots);
 }
 
+// when modifying weapon types be sure to update weapon_type and weapon structs as well as update_player_weapon
 void init_weapon_types(void)
 {
     render_sprite_sheet_init(&sprite_sheet_556_burst, "assets/hud/556_burst.png", 20, 44);
@@ -116,7 +128,7 @@ void init_weapon_types(void)
     coach_gun->max_fire_rate = 400;
     coach_gun->damage = 15;
     coach_gun->bullet_velocity = 600;
-    coach_gun->reload_frame_delay = 180;
+    coach_gun->reload_frame_delay = 120;
     coach_gun->muzzle_flash_id = "2";
     coach_gun->bullet_adef = adef_bullet_small;
     coach_gun->bullet_impact_adef = adef_bullet_impact_medium;
