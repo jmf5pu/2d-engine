@@ -179,6 +179,7 @@ typedef struct time_spawner {
 typedef enum {
     TELEPORTER,
     TELEPORTER_BUTTON,
+    WEAPON_PICKUP,
 } DynamicPropType;
 
 typedef enum {
@@ -192,9 +193,12 @@ typedef enum {
     PRESSED,
     UNPRESSED,
 } ButtonStateEnum;
+
+typedef enum { UNHIGHLIGHTED, HIGHLIGHTING, HIGHLIGHTED } PickupStateEnum;
 typedef union {
     TeleporterStateEnum teleporter_state_enum;
     ButtonStateEnum button_state_enum;
+    PickupStateEnum pickup_state_enum;
 } StateEnum;
 
 typedef struct dynamic_prop DynamicProp;

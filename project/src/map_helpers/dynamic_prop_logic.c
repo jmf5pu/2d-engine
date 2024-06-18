@@ -83,6 +83,11 @@ void teleporter_button_update_state(DynamicProp *prop)
     prop->frames_on_state++;
 }
 
+void weapon_pickup_update_state(DynamicProp *prop)
+{
+    // TODO: fill this in ;)
+}
+
 /// @brief Helper method for logic between active and inactive states for the teleporter
 /// @param entity
 /// @param teleporter_state_enum
