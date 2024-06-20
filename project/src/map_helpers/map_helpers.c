@@ -298,9 +298,11 @@ DynamicProp *init_weapon_pickup_prop(Weapon_Type *weapon_type, Animation *anim, 
     DynamicProp *pickup = malloc(sizeof(DynamicProp));
     pickup->entity = entity_create(position, size, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, on_hit, NULL);
     pickup->entity->animation = anim;
-    pickup->state.pickup_state_enum = UNHIGHLIGHTED;
+    pickup->entity->body->parent = pickup;
+    pickup->state.pickup_state_enum = NORMAL;
     pickup->update_state = weapon_pickup_update_state;
     pickup->frames_on_state = 0;
     pickup->type = WEAPON_PICKUP;
+    pickup->colliding_player = NULL;
     return pickup;
 }

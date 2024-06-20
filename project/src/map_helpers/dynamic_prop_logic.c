@@ -85,7 +85,56 @@ void teleporter_button_update_state(DynamicProp *prop)
 
 void weapon_pickup_update_state(DynamicProp *prop)
 {
-    // TODO: fill this in ;)
+    printf("%d\n", prop->state.pickup_state_enum);
+
+    // This logic could be buggy if props *can* have collisions with other bodies aside from players as a collisio
+    if (!prop->entity->body->is_being_hit) {
+        prop->colliding_player = NULL;
+    }
+
+    switch (prop->state.pickup_state_enum) {
+    case NORMAL:
+        break;
+    case HIGHLIGHTING:
+        if (prop->entity->body->first_frame_being_hit) {
+            Entity *pickup_highlight = entity_create(prop->entity->body->aabb.position, (vec2){7, 9}, (vec2){0, 0}, 0, 0, NULL, NULL);
+            pickup_highlight->animation = animation_create(adef_glock_pickup_highlight, false);
+            pickup_highlight->animation->z_index = 1;
+            pickup_highlight->destroy_on_anim_completion = true;
+        }
+        if (prop->colliding_player->input_state->key_state->use == KS_HELD) {
+            prop->state.pickup_state_enum = INTERACTING;
+        }
+        break;
+    case INTERACTING:
+        if (prop->colliding_player && prop->colliding_player->input_state->key_state->use == KS_UNPRESSED) {
+            prop->state.pickup_state_enum = NORMAL;
+        }
+        break;
+    default:
+        break;
+    }
+    // vec2 interact_bar_position = {player->relative_position[0], player->relative_position[1] + 15};
+    // bool can_reload = player->weapon->capacity < player->weapon->max_capacity;
+
+    // if (player->status != PLAYER_RELOADING && player->input_state->key_state->reload == KS_HELD && can_reload) {
+    //     player->status = PLAYER_RELOADING;
+    //     player->frames_on_status = 0;
+    //     if (player->interact_bar->animation != NULL) {
+    //         animation_destroy(player->interact_bar->animation);
+    //         player->interact_bar->animation = NULL;
+    //     }
+    //     player->interact_bar->animation = animation_create(adef_interact_bar_open, false);
+    //     player->interact_bar->is_active = true;
+    // }
+    // else if (player->status == PLAYER_RELOADING && player->input_state->key_state->reload == KS_UNPRESSED) {
+    //     player->status = PLAYER_ACTIVE;
+    //     player->frames_on_status = 0;
+    //     if (player->interact_bar->animation != NULL) {
+    //         animation_destroy(player->interact_bar->animation);
+    //         player->interact_bar->animation = NULL;
+    //     }
+    // }
 }
 
 /// @brief Helper method for logic between active and inactive states for the teleporter

@@ -194,7 +194,7 @@ typedef enum {
     UNPRESSED,
 } ButtonStateEnum;
 
-typedef enum { UNHIGHLIGHTED, HIGHLIGHTING, HIGHLIGHTED } PickupStateEnum;
+typedef enum { NORMAL, HIGHLIGHTING, INTERACTING } PickupStateEnum;
 typedef union {
     TeleporterStateEnum teleporter_state_enum;
     ButtonStateEnum button_state_enum;
@@ -209,7 +209,8 @@ typedef struct dynamic_prop {
     StateEnum state;
     u32 frames_on_state;
     UpdateState update_state;
-    DynamicPropType type; // used to group types of dynamic props when controller interactions between them
+    DynamicPropType type;     // used to group types of dynamic props when controller interactions between them
+    Player *colliding_player; // who is able to interact with this prop
 } DynamicProp;
 
 typedef struct map {
