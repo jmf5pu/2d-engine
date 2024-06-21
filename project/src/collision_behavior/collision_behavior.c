@@ -36,9 +36,10 @@ void glock_pickup_on_hit(Body *self, Body *other, Hit hit)
 {
     Player *player = get_player_from_body(other);
     DynamicProp *pickup = self->parent;
-    if (player) {
+    if (player && self->first_frame_being_hit) {
         pickup->colliding_player = player;
         pickup->state.pickup_state_enum = HIGHLIGHTING;
+        pickup->frames_on_state = 0;
     }
     // weapon_pickup_base(self, other, adef_glock_pickup_highlight, (vec2){7, 9}, glock);
 }

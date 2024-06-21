@@ -97,6 +97,7 @@ void init_weapon_types(void)
     m16->damage = 30;
     m16->bullet_velocity = 800;
     m16->reload_frame_delay = 60;
+    m16->pickup_frame_delay = 120;
     m16->muzzle_flash_id = "1";
     m16->bullet_adef = adef_bullet_medium;
     m16->bullet_impact_adef = adef_bullet_impact_medium;
@@ -113,6 +114,7 @@ void init_weapon_types(void)
     glock->damage = 15;
     glock->bullet_velocity = 600;
     glock->reload_frame_delay = 90;
+    glock->pickup_frame_delay = 120;
     glock->muzzle_flash_id = "1";
     glock->bullet_adef = adef_bullet_small;
     glock->bullet_impact_adef = adef_bullet_impact_small;
@@ -129,6 +131,7 @@ void init_weapon_types(void)
     coach_gun->damage = 15;
     coach_gun->bullet_velocity = 600;
     coach_gun->reload_frame_delay = 120;
+    coach_gun->pickup_frame_delay = 120;
     coach_gun->muzzle_flash_id = "2";
     coach_gun->bullet_adef = adef_bullet_small;
     coach_gun->bullet_impact_adef = adef_bullet_impact_medium;

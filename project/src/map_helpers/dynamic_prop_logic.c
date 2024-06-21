@@ -1,5 +1,6 @@
 #include "../enemy_helpers/enemy_helpers.h"
 #include "../structs.h"
+#include "../weapon_types/weapon_types.h"
 #include "map_helpers.h"
 
 /// @brief state machine for teleporter
@@ -85,35 +86,46 @@ void teleporter_button_update_state(DynamicProp *prop)
 
 void weapon_pickup_update_state(DynamicProp *prop)
 {
-    printf("%d\n", prop->state.pickup_state_enum);
-
-    // This logic could be buggy if props *can* have collisions with other bodies aside from players as a collisio
+    // This logic could be buggy if props *can* have collisions with other bodies aside from players
     if (!prop->entity->body->is_being_hit) {
         prop->colliding_player = NULL;
+        prop->state.pickup_state_enum = NORMAL;
     }
 
     switch (prop->state.pickup_state_enum) {
     case NORMAL:
+        if (prop->colliding_player && prop->colliding_player->input_state->key_state->use == KS_HELD) {
+            prop->state.pickup_state_enum = INTERACTING;
+        }
         break;
     case HIGHLIGHTING:
-        if (prop->entity->body->first_frame_being_hit) {
+        if (prop->frames_on_state == 0) {
             Entity *pickup_highlight = entity_create(prop->entity->body->aabb.position, (vec2){7, 9}, (vec2){0, 0}, 0, 0, NULL, NULL);
             pickup_highlight->animation = animation_create(adef_glock_pickup_highlight, false);
             pickup_highlight->animation->z_index = 1;
             pickup_highlight->destroy_on_anim_completion = true;
         }
-        if (prop->colliding_player->input_state->key_state->use == KS_HELD) {
+        if (prop->colliding_player && prop->colliding_player->input_state->key_state->use == KS_HELD) {
             prop->state.pickup_state_enum = INTERACTING;
+            prop->frames_on_state = 0;
         }
         break;
     case INTERACTING:
         if (prop->colliding_player && prop->colliding_player->input_state->key_state->use == KS_UNPRESSED) {
             prop->state.pickup_state_enum = NORMAL;
+            prop->frames_on_state = 0;
+        }
+        if (prop->colliding_player && prop->frames_on_state >= glock->pickup_frame_delay) {
+            update_player_weapon(prop->colliding_player, glock);
+            prop->state.pickup_state_enum = USED;
         }
         break;
+    case USED:
     default:
         break;
     }
+
+    prop->frames_on_state++;
     // vec2 interact_bar_position = {player->relative_position[0], player->relative_position[1] + 15};
     // bool can_reload = player->weapon->capacity < player->weapon->max_capacity;
 

@@ -88,6 +88,7 @@ typedef struct weapon_type {
     i16 damage;
     i16 bullet_velocity;
     u16 reload_frame_delay;
+    u16 pickup_frame_delay;
     char *muzzle_flash_id;
     Animation_Definition *bullet_adef;
     Animation_Definition *bullet_impact_adef;
@@ -194,7 +195,7 @@ typedef enum {
     UNPRESSED,
 } ButtonStateEnum;
 
-typedef enum { NORMAL, HIGHLIGHTING, INTERACTING } PickupStateEnum;
+typedef enum { NORMAL, HIGHLIGHTING, INTERACTING, USED } PickupStateEnum;
 typedef union {
     TeleporterStateEnum teleporter_state_enum;
     ButtonStateEnum button_state_enum;
