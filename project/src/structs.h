@@ -49,31 +49,18 @@ typedef struct player_input_state {
 
 typedef struct player Player; // forward dec for OnShoot
 typedef void (*OnShoot)(Player *player);
+
+typedef struct weapon_type Weapon_Type;
 typedef struct weapon {
-    char *name;
-    enum Fire_Mode fire_mode;
     u16 capacity;
-    u16 max_capacity;
     u16 reserve;
-    u16 max_reserve;
-    u16 max_fire_rate;
     i8 burst_shots_remaining;
-    u16 burst_count;
-    f32 burst_delay;
-    i16 damage;
-    i16 bullet_velocity;
     u16 frames_since_last_shot;
-    u16 reload_frame_delay;
     bool ready_to_fire;
     bool is_firing;
-    Animation *hud_ammo_icon;
     Animation *character_anim;
     vec2 position;
-    OnShoot on_shoot;
-    char *muzzle_flash_id;
-    Animation_Definition *bullet_adef;
-    Animation_Definition *bullet_impact_adef;
-    char *blood_splatter_prefix;
+    Weapon_Type *weapon_type;
 } Weapon;
 
 typedef struct weapon_type {

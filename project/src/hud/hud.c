@@ -264,7 +264,7 @@ u16 render_ammo_digit(SDL_Window *window, u32 texture_slots[BATCH_SIZE], vec2 po
 // Renders the ammo display. Renders the digits in each value from left to right
 void render_ammo(SDL_Window *window, u32 texture_slots[BATCH_SIZE], Player *player, vec2 position, vec4 color)
 {
-    f32 current_ammo_fraction = (f32)player->weapon->capacity / player->weapon->max_capacity;
+    f32 current_ammo_fraction = (f32)player->weapon->capacity / player->weapon->weapon_type->capacity;
 
     u16 capacity = player->weapon->capacity;
     u16 reserve = player->weapon->reserve;
@@ -275,8 +275,8 @@ void render_ammo(SDL_Window *window, u32 texture_slots[BATCH_SIZE], Player *play
 
     // render the player's weapon's ammo icon before numbers if on left side
     // of the screen
-    if (player->weapon->hud_ammo_icon && player->is_left_player) {
-        animation_render(player->weapon->hud_ammo_icon, window, position, color, texture_slots);
+    if (player->weapon->weapon_type->hud_ammo_icon && player->is_left_player) {
+        animation_render(player->weapon->weapon_type->hud_ammo_icon, window, position, color, texture_slots);
         position[0] -= DIGIT_WIDTH + ICON_SPACE; // add a bit of space between
                                                  // icon and the numbers
     }
@@ -318,9 +318,9 @@ void render_ammo(SDL_Window *window, u32 texture_slots[BATCH_SIZE], Player *play
 
     // render the player's weapon's ammo icon after numbers if on right side
     // of the screen
-    if (player->weapon->hud_ammo_icon && !player->is_left_player) {
+    if (player->weapon->weapon_type->hud_ammo_icon && !player->is_left_player) {
         position[0] -= ICON_SPACE;
-        animation_render(player->weapon->hud_ammo_icon, window, position, color, texture_slots);
+        animation_render(player->weapon->weapon_type->hud_ammo_icon, window, position, color, texture_slots);
         position[0] -= DIGIT_WIDTH; // add a bit of space between icon
                                     // and the numbers
     }
@@ -363,7 +363,7 @@ void render_hud(void)
     animation_render(player_one->crosshair->animation, window, player_one->crosshair->body->aabb.position, game_color, texture_slots);
 
     if (player_one->status == PLAYER_RELOADING || player_one->status == PLAYER_INTERACTING) {
-        u16 interact_bar_frame_delay = player_one->status == PLAYER_RELOADING ? player_one->weapon->reload_frame_delay : player_one->interact_frame_delay;
+        u16 interact_bar_frame_delay = player_one->status == PLAYER_RELOADING ? player_one->weapon->weapon_type->reload_frame_delay : player_one->interact_frame_delay;
         f32 opening_anim_frame_count = get_array_sum(interact_bar_open_close_durations, ARRAY_LENGTH(interact_bar_open_close_durations)) * FRAME_RATE;
         vec2_dup(player_one->interact_bar->body->aabb.position, player_one->entity->body->aabb.position);
         player_one->interact_bar->body->aabb.position[1] += 15;

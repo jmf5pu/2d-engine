@@ -20,15 +20,15 @@ void create_bullet_straight(Player *player, f32 angle)
     vec2_add(bullet_position, bullet_position, bullet_start_offset);
 
     // Calculate velocity using angle
-    get_xy_components_from_vector(player->weapon->bullet_velocity, angle, bullet_velocity);
+    get_xy_components_from_vector(player->weapon->weapon_type->bullet_velocity, angle, bullet_velocity);
 
     // create bullet struct and calculated anim and velocity
     Bullet *bullet = malloc(sizeof(Bullet));
     bullet->entity = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
-    bullet->impact_adef = player->weapon->bullet_impact_adef;
-    bullet->splatter_adef = get_blood_splatter_adef(player->weapon->blood_splatter_prefix);
-    bullet->damage = player->weapon->damage;
-    bullet->entity->animation = animation_create(player->weapon->bullet_adef, true);
+    bullet->impact_adef = player->weapon->weapon_type->bullet_impact_adef;
+    bullet->splatter_adef = get_blood_splatter_adef(player->weapon->weapon_type->blood_splatter_prefix);
+    bullet->damage = player->weapon->weapon_type->damage;
+    bullet->entity->animation = animation_create(player->weapon->weapon_type->bullet_adef, true);
     vec2_dup(bullet->entity->body->velocity, bullet_velocity);
     bullet->entity->body->parent = bullet;
 }
