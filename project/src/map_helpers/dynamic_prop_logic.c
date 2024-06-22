@@ -89,14 +89,18 @@ void weapon_pickup_update_state(DynamicProp *prop)
 {
     // This logic could be buggy if props *can* have collisions with other bodies aside from players
     if (!prop->entity->body->is_being_hit) {
+        if (prop->colliding_player && prop->colliding_player->status == PLAYER_INTERACTING) {
+            prop->colliding_player->status = PLAYER_ACTIVE;
+        }
         prop->colliding_player = NULL;
-        prop->state.pickup_state_enum = NORMAL;
+        if (prop->state.pickup_state_enum != USED)
+            prop->state.pickup_state_enum = NORMAL;
     }
 
     switch (prop->state.pickup_state_enum) {
     case NORMAL:
-        if (prop->colliding_player && prop->colliding_player->input_state->key_state->use == KS_HELD) {
-            prop->state.pickup_state_enum = INTERACTING;
+        if (!prop->entity->is_active) {
+            prop->entity->is_active = true;
         }
         break;
     case HIGHLIGHTING:
@@ -107,20 +111,12 @@ void weapon_pickup_update_state(DynamicProp *prop)
             pickup_highlight->destroy_on_anim_completion = true;
         }
         if (prop->colliding_player && prop->colliding_player->input_state->key_state->use == KS_HELD) {
+            prop->colliding_player->status = PLAYER_INTERACTING;
+            prop->colliding_player->frames_on_status = 0;
+        }
+        if (prop->colliding_player && prop->colliding_player->status == PLAYER_INTERACTING) {
             prop->state.pickup_state_enum = INTERACTING;
             prop->frames_on_state = 0;
-        }
-        break;
-    case INTERACTING:
-        if (prop->colliding_player && prop->colliding_player->input_state->key_state->use == KS_UNPRESSED) {
-            prop->state.pickup_state_enum = NORMAL;
-            prop->frames_on_state = 0;
-            if (prop->colliding_player->interact_bar->animation != NULL) {
-                animation_destroy(prop->colliding_player->interact_bar->animation);
-                prop->colliding_player->interact_bar->animation = NULL;
-            }
-        }
-        if (prop->frames_on_state == 0) {
             if (prop->colliding_player->interact_bar->animation != NULL) {
                 animation_destroy(prop->colliding_player->interact_bar->animation);
                 prop->colliding_player->interact_bar->animation = NULL;
@@ -128,7 +124,17 @@ void weapon_pickup_update_state(DynamicProp *prop)
             prop->colliding_player->interact_bar->animation = animation_create(adef_interact_bar_open, false);
             prop->colliding_player->interact_bar->is_active = true;
         }
-        if (prop->colliding_player && prop->frames_on_state >= glock->pickup_frame_delay) {
+        break;
+    case INTERACTING:
+        if (prop->colliding_player && prop->colliding_player->status != PLAYER_INTERACTING) {
+            prop->state.pickup_state_enum = NORMAL;
+            prop->frames_on_state = 0;
+            if (prop->colliding_player->interact_bar->animation != NULL) {
+                animation_destroy(prop->colliding_player->interact_bar->animation);
+                prop->colliding_player->interact_bar->animation = NULL;
+            }
+        }
+        if (prop->colliding_player && prop->colliding_player->frames_on_status >= glock->pickup_frame_delay) {
             update_player_weapon(prop->colliding_player, glock);
             prop->state.pickup_state_enum = USED;
             if (prop->colliding_player->interact_bar->animation != NULL) {
@@ -138,6 +144,11 @@ void weapon_pickup_update_state(DynamicProp *prop)
         }
         break;
     case USED:
+        prop->entity->is_active = false;
+        if (prop->colliding_player && prop->colliding_player->status == PLAYER_INTERACTING) {
+            prop->colliding_player->status = PLAYER_ACTIVE;
+        }
+        break;
     default:
         break;
     }

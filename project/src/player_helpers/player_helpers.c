@@ -456,6 +456,7 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
     player->despawn_time = despawn_time;
     player->spawn_delay = spawn_delay;
     player->spawn_time = spawn_time;
+    player->interact_frame_delay = 0;
     player->is_left_player = is_left_player;
     if (is_left_player) {
         player->camera = SPLIT_SCREEN ? &left_cam : &main_cam;
@@ -488,9 +489,10 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
 // Spawns the player and resets their attributes to default values
 void spawn_player(Player *player, Weapon_Type *starting_weapon)
 {
-    // update status & reset counter
+    // update status & reset counters
     player->status = PLAYER_SPAWNING;
     player->frames_on_status = 0;
+    player->interact_frame_delay = 0;
 
     // move player to respawn point
     player->relative_position[0] = player->spawn_point[0];
@@ -569,6 +571,10 @@ void update_player_status(Player *player)
             player->status = PLAYER_ACTIVE;
             player->frames_on_status = 0;
         }
+    }
+
+    if (player->status == PLAYER_INTERACTING && player->input_state->key_state->use == KS_UNPRESSED) {
+        player->status = PLAYER_ACTIVE;
     }
 
     // update weapon status (check if weapon is ready to fire again)
@@ -761,7 +767,12 @@ void update_player_status_from_input_state(Player *player)
     vec2 interact_bar_position = {player->relative_position[0], player->relative_position[1] + 15};
     bool can_reload = player->weapon->capacity < player->weapon->max_capacity;
 
-    if (player->status != PLAYER_RELOADING && player->input_state->key_state->reload == KS_HELD && can_reload) {
+    bool first_frame_reloading = player->status != PLAYER_RELOADING && player->input_state->key_state->reload == KS_HELD && can_reload;
+    bool first_frame_interacting = player->status != PLAYER_INTERACTING && player->input_state->key_state->use == KS_HELD;
+    bool last_frame_reloading = player->status == PLAYER_RELOADING && player->input_state->key_state->reload == KS_UNPRESSED;
+    bool last_frame_interacting = player->status == PLAYER_INTERACTING && player->input_state->key_state->use == KS_UNPRESSED;
+
+    if (first_frame_reloading) {
         player->status = PLAYER_RELOADING;
         player->frames_on_status = 0;
         if (player->interact_bar->animation != NULL) {
@@ -771,7 +782,7 @@ void update_player_status_from_input_state(Player *player)
         player->interact_bar->animation = animation_create(adef_interact_bar_open, false);
         player->interact_bar->is_active = true;
     }
-    else if (player->status == PLAYER_RELOADING && player->input_state->key_state->reload == KS_UNPRESSED) {
+    else if (last_frame_reloading || last_frame_interacting) {
         player->status = PLAYER_ACTIVE;
         player->frames_on_status = 0;
         if (player->interact_bar->animation != NULL) {

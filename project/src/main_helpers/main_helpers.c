@@ -45,7 +45,13 @@ void poll_sdl_events_and_update_input_states(void)
 bool should_destroy_entity(Entity *entity, Map *map)
 {
     bool anim_requesting_destroy = entity->destroy_on_anim_completion && entity->animation->current_frame_index == entity->animation->animation_definition->frame_count - 1;
-    bool is_pickup = false; // what?
+    bool is_pickup = false;
+    for (int i = 0; i < map->num_dynamic_props; i++) {
+        if (entity == map->dynamic_props[i]->entity) {
+            is_pickup = true;
+            break;
+        }
+    }
     bool is_inactive = !entity->is_active || !entity->body->is_active;
     return (anim_requesting_destroy || is_inactive) && !is_pickup && !entity_is_player_interact_bar_or_crosshair(entity);
 }

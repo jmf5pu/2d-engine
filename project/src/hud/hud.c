@@ -355,8 +355,6 @@ void init_hud(SDL_Window *window)
 // renders the heads up display (should be called once per frame)
 void render_hud(void)
 {
-    static u32 player_one_reloading_frames = 0;
-    static u32 player_two_reloading_frames = 0;
     vec2 player_one_interact_bar_position = {player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1] + 15};
 
     // render player one displays (health + ammo + crosshair)
@@ -364,25 +362,26 @@ void render_hud(void)
     // render_ammo(window, texture_slots, player_one, (vec2){0.5 * DIGIT_WIDTH + DIGIT_WIDTH * 7 + ICON_SPACE, 0.5 * DIGIT_HEIGHT}, color);
     animation_render(player_one->crosshair->animation, window, player_one->crosshair->body->aabb.position, game_color, texture_slots);
 
-    if (player_one->status == PLAYER_RELOADING) {
+    if (player_one->status == PLAYER_RELOADING || player_one->status == PLAYER_INTERACTING) {
+        u16 interact_bar_frame_delay = player_one->status == PLAYER_RELOADING ? player_one->weapon->reload_frame_delay : player_one->interact_frame_delay;
         f32 opening_anim_frame_count = get_array_sum(interact_bar_open_close_durations, ARRAY_LENGTH(interact_bar_open_close_durations)) * FRAME_RATE;
         vec2_dup(player_one->interact_bar->body->aabb.position, player_one->entity->body->aabb.position);
         player_one->interact_bar->body->aabb.position[1] += 15;
-        if (player_one_reloading_frames < opening_anim_frame_count) {
+        if (player_one->frames_on_status < opening_anim_frame_count) {
             animation_render(player_one->interact_bar->animation, window, player_one->interact_bar->body->aabb.position, game_color, texture_slots);
         }
-        else if (player_one_reloading_frames >= opening_anim_frame_count) {
-            if (player_one_reloading_frames == opening_anim_frame_count) {
+        else if (player_one->frames_on_status >= opening_anim_frame_count) {
+            if (player_one->frames_on_status == opening_anim_frame_count) {
                 animation_destroy(player_one->interact_bar->animation);
                 player_one->interact_bar->animation = NULL;
             }
             render_interact_bar_progress(
-                player_one->interact_bar, (f32)(player_one->frames_on_status - opening_anim_frame_count) / (player_one->weapon->reload_frame_delay - opening_anim_frame_count));
+                player_one->interact_bar, (f32)(player_one->frames_on_status - opening_anim_frame_count) / (interact_bar_frame_delay - opening_anim_frame_count));
         }
-        player_one_reloading_frames++;
+        player_one->frames_on_status++;
     }
     else {
-        player_one_reloading_frames = 0;
+        player_one->frames_on_status = 0;
     }
 
     // render player two displays if relevant
