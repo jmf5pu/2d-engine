@@ -1,4 +1,5 @@
 #include "../enemy_helpers/enemy_helpers.h"
+#include "../hud/hud.h"
 #include "../structs.h"
 #include "../weapon_types/weapon_types.h"
 #include "map_helpers.h"
@@ -114,10 +115,26 @@ void weapon_pickup_update_state(DynamicProp *prop)
         if (prop->colliding_player && prop->colliding_player->input_state->key_state->use == KS_UNPRESSED) {
             prop->state.pickup_state_enum = NORMAL;
             prop->frames_on_state = 0;
+            if (prop->colliding_player->interact_bar->animation != NULL) {
+                animation_destroy(prop->colliding_player->interact_bar->animation);
+                prop->colliding_player->interact_bar->animation = NULL;
+            }
+        }
+        if (prop->frames_on_state == 0) {
+            if (prop->colliding_player->interact_bar->animation != NULL) {
+                animation_destroy(prop->colliding_player->interact_bar->animation);
+                prop->colliding_player->interact_bar->animation = NULL;
+            }
+            prop->colliding_player->interact_bar->animation = animation_create(adef_interact_bar_open, false);
+            prop->colliding_player->interact_bar->is_active = true;
         }
         if (prop->colliding_player && prop->frames_on_state >= glock->pickup_frame_delay) {
             update_player_weapon(prop->colliding_player, glock);
             prop->state.pickup_state_enum = USED;
+            if (prop->colliding_player->interact_bar->animation != NULL) {
+                animation_destroy(prop->colliding_player->interact_bar->animation);
+                prop->colliding_player->interact_bar->animation = NULL;
+            }
         }
         break;
     case USED:
