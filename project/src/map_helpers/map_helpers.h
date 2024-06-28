@@ -71,6 +71,9 @@ Animation_Definition *adef_glock_pickup;
 Animation *anim_glock_pickup;
 Sprite_Sheet sprite_sheet_glock_pickup_highlight;
 Animation_Definition *adef_glock_pickup_highlight;
+Sprite_Sheet sprite_sheet_glock_pickup_highlighted;
+Animation_Definition *adef_glock_pickup_highlighted;
+Animation *anim_glock_pickup_highlighted;
 
 Sprite_Sheet sprite_sheet_coach_gun_pickup;
 Animation_Definition *adef_coach_gun_pickup;

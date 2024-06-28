@@ -4,6 +4,11 @@
 #include "../weapon_types/weapon_types.h"
 #include "map_helpers.h"
 
+// extern from main.c
+u32 texture_slots[BATCH_SIZE];
+vec4 game_color;
+SDL_Window *window;
+
 /// @brief state machine for teleporter
 /// @param entity
 /// @param state
@@ -126,6 +131,8 @@ void weapon_pickup_update_state(DynamicProp *prop)
         }
         break;
     case INTERACTING:
+        animation_render(anim_glock_pickup_highlighted, window, prop->entity->body->aabb.position, game_color, texture_slots);
+
         if (prop->colliding_player && prop->colliding_player->status != PLAYER_INTERACTING) {
             prop->state.pickup_state_enum = NORMAL;
             prop->frames_on_state = 0;
