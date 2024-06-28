@@ -185,7 +185,6 @@ void init_map_assets(void)
     render_sprite_sheet_init(&sprite_sheet_glock_pickup_highlighted, "assets/wip/glock_pickup_highlighted.png", 7, 9);
     adef_glock_pickup_highlighted = animation_definition_create(&sprite_sheet_glock_pickup_highlighted, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_glock_pickup_highlighted = animation_create(adef_glock_pickup_highlighted, false);
-    anim_glock_pickup_highlighted->z_index = 5;
 
     render_sprite_sheet_init(&sprite_sheet_coach_gun_pickup, "assets/wip/coach_gun_pickup.png", 25, 18);
     adef_coach_gun_pickup = animation_definition_create(&sprite_sheet_coach_gun_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);

@@ -92,21 +92,23 @@ void teleporter_button_update_state(DynamicProp *prop)
 
 void weapon_pickup_update_state(DynamicProp *prop)
 {
+    bool state_changed = false;
+
     // This logic could be buggy if props *can* have collisions with other bodies aside from players
     if (!prop->entity->body->is_being_hit) {
-        if (prop->colliding_player && prop->colliding_player->status == PLAYER_INTERACTING) {
-            prop->colliding_player->status = PLAYER_ACTIVE;
-        }
+        if (prop->colliding_player && prop->colliding_player->status == PLAYER_INTERACTING)
+            set_player_status(prop->colliding_player, PLAYER_ACTIVE);
         prop->colliding_player = NULL;
-        if (prop->state.pickup_state_enum != USED)
-            prop->state.pickup_state_enum = NORMAL;
+        if (prop->state.pickup_state_enum != USED && prop->state.pickup_state_enum != NORMAL)
+            state_changed = set_prop_pickup_state_and_get_changed(prop, NORMAL);
     }
 
     switch (prop->state.pickup_state_enum) {
     case NORMAL:
-        if (!prop->entity->is_active) {
+        if (prop->frames_on_state == 0)
+            prop->entity->animation = anim_glock_pickup;
+        if (!prop->entity->is_active)
             prop->entity->is_active = true;
-        }
         break;
     case HIGHLIGHTING:
         if (prop->frames_on_state == 0) {
@@ -115,39 +117,26 @@ void weapon_pickup_update_state(DynamicProp *prop)
             pickup_highlight->animation->z_index = 1;
             pickup_highlight->destroy_on_anim_completion = true;
         }
-        if (prop->colliding_player && prop->colliding_player->input_state->key_state->use == KS_HELD) {
-            prop->colliding_player->status = PLAYER_INTERACTING;
-            prop->colliding_player->frames_on_status = 0;
-        }
+        if (prop->colliding_player && prop->colliding_player->input_state->key_state->use == KS_HELD)
+            set_player_status(prop->colliding_player, PLAYER_INTERACTING);
         if (prop->colliding_player && prop->colliding_player->status == PLAYER_INTERACTING) {
-            prop->state.pickup_state_enum = INTERACTING;
-            prop->frames_on_state = 0;
-            if (prop->colliding_player->interact_bar->animation != NULL) {
-                animation_destroy(prop->colliding_player->interact_bar->animation);
-                prop->colliding_player->interact_bar->animation = NULL;
-            }
+            state_changed = set_prop_pickup_state_and_get_changed(prop, INTERACTING);
+            destroy_player_interact_bar_anim_if_present(prop->colliding_player->interact_bar);
             prop->colliding_player->interact_bar->animation = animation_create(adef_interact_bar_open, false);
             prop->colliding_player->interact_bar->is_active = true;
         }
         break;
     case INTERACTING:
-        animation_render(anim_glock_pickup_highlighted, window, prop->entity->body->aabb.position, game_color, texture_slots);
-
+        if (prop->frames_on_state == 0)
+            prop->entity->animation = anim_glock_pickup_highlighted;
         if (prop->colliding_player && prop->colliding_player->status != PLAYER_INTERACTING) {
-            prop->state.pickup_state_enum = NORMAL;
-            prop->frames_on_state = 0;
-            if (prop->colliding_player->interact_bar->animation != NULL) {
-                animation_destroy(prop->colliding_player->interact_bar->animation);
-                prop->colliding_player->interact_bar->animation = NULL;
-            }
+            state_changed = set_prop_pickup_state_and_get_changed(prop, NORMAL);
+            destroy_player_interact_bar_anim_if_present(prop->colliding_player->interact_bar);
         }
         if (prop->colliding_player && prop->colliding_player->frames_on_status >= glock->pickup_frame_delay) {
             update_player_weapon(prop->colliding_player, glock);
-            prop->state.pickup_state_enum = USED;
-            if (prop->colliding_player->interact_bar->animation != NULL) {
-                animation_destroy(prop->colliding_player->interact_bar->animation);
-                prop->colliding_player->interact_bar->animation = NULL;
-            }
+            state_changed = set_prop_pickup_state_and_get_changed(prop, USED);
+            destroy_player_interact_bar_anim_if_present(prop->colliding_player->interact_bar);
         }
         break;
     case USED:
@@ -159,29 +148,8 @@ void weapon_pickup_update_state(DynamicProp *prop)
     default:
         break;
     }
-
-    prop->frames_on_state++;
-    // vec2 interact_bar_position = {player->relative_position[0], player->relative_position[1] + 15};
-    // bool can_reload = player->weapon->capacity < player->weapon->max_capacity;
-
-    // if (player->status != PLAYER_RELOADING && player->input_state->key_state->reload == KS_HELD && can_reload) {
-    //     player->status = PLAYER_RELOADING;
-    //     player->frames_on_status = 0;
-    //     if (player->interact_bar->animation != NULL) {
-    //         animation_destroy(player->interact_bar->animation);
-    //         player->interact_bar->animation = NULL;
-    //     }
-    //     player->interact_bar->animation = animation_create(adef_interact_bar_open, false);
-    //     player->interact_bar->is_active = true;
-    // }
-    // else if (player->status == PLAYER_RELOADING && player->input_state->key_state->reload == KS_UNPRESSED) {
-    //     player->status = PLAYER_ACTIVE;
-    //     player->frames_on_status = 0;
-    //     if (player->interact_bar->animation != NULL) {
-    //         animation_destroy(player->interact_bar->animation);
-    //         player->interact_bar->animation = NULL;
-    //     }
-    // }
+    if (!state_changed)
+        prop->frames_on_state++;
 }
 
 /// @brief Helper method for logic between active and inactive states for the teleporter

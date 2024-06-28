@@ -281,4 +281,10 @@ void get_direction_from_angle(f32 angle, char *direction_result);
 Player *get_player_from_body(Body *body);
 void update_player_weapon(Player *player, Weapon_Type *weapon_type);
 
+inline void set_player_status(Player *player, enum Player_Status status)
+{
+    player->status = status;
+    player->frames_on_status = 0;
+}
+
 #endif

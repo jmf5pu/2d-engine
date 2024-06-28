@@ -107,4 +107,20 @@ void teleporter_spin_up_and_down_states(
     Entity *entity, TeleporterStateEnum *teleporter_state_enum, u32 *frames_on_state, TeleporterStateEnum next_state, f32 first_duration, f32 second_duration, f32 third_duration);
 void update_adef_frame_durations(Animation_Definition *adef, f32 duration);
 
+inline void destroy_player_interact_bar_anim_if_present(Entity *interact_bar)
+{
+    if (interact_bar->animation != NULL) {
+        animation_destroy(interact_bar->animation);
+        interact_bar->animation = NULL;
+    }
+}
+
+inline bool set_prop_pickup_state_and_get_changed(DynamicProp *prop, enum PickupStateEnum state)
+{
+    PickupStateEnum prev_state = prop->state.pickup_state_enum;
+    prop->state.pickup_state_enum = state;
+    prop->frames_on_state = 0;
+    return prev_state != state;
+}
+
 #endif
