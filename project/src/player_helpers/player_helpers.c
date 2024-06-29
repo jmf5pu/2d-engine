@@ -669,7 +669,7 @@ static void update_player_weapon_anim(Player *player)
     strcat(adef_name, "_");
 
     bool show_firing_anim = player->weapon->is_firing ||
-                            (player->weapon->character_anim && player->weapon->character_anim->current_frame_index > 0 && player->weapon->character_anim->reset_count == 0);
+                            (player->weapon->character_anim && player->weapon->character_anim->current_frame_index >= 0 && player->weapon->character_anim->reset_count == 0);
     char *firing_state = show_firing_anim ? "firing" : "static";
 
     char *direction = calloc(5, sizeof(char));
