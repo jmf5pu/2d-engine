@@ -5,6 +5,11 @@
 
 int game_state;
 
+// extern variables from main
+u32 texture_slots[BATCH_SIZE];
+vec4 game_color;
+SDL_Window *window;
+
 void init_letter_hashmap(void)
 {
     letter_anim_map = create_hash_map(LETTER_ANIM_COUNT);
@@ -39,127 +44,119 @@ void init_letter_hashmap(void)
 void init_menu_anims(void)
 {
     // CAPITAL LETTERS
-    render_sprite_sheet_init(&sprite_sheet_A, "assets/letters/A.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_A, "assets/letters/A_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_A = animation_definition_create(&sprite_sheet_A, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_A = animation_create(adef_A, false);
 
-    render_sprite_sheet_init(&sprite_sheet_B, "assets/letters/B.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_B, "assets/letters/B_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_B = animation_definition_create(&sprite_sheet_B, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_B = animation_create(adef_B, false);
 
-    render_sprite_sheet_init(&sprite_sheet_C, "assets/letters/C.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_C, "assets/letters/C_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_C = animation_definition_create(&sprite_sheet_C, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_C = animation_create(adef_C, false);
 
-    render_sprite_sheet_init(&sprite_sheet_D, "assets/letters/D.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_D, "assets/letters/D_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_D = animation_definition_create(&sprite_sheet_D, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_D = animation_create(adef_D, false);
 
-    render_sprite_sheet_init(&sprite_sheet_E, "assets/letters/E.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_E, "assets/letters/E_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_E = animation_definition_create(&sprite_sheet_E, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_E = animation_create(adef_E, false);
 
-    render_sprite_sheet_init(&sprite_sheet_F, "assets/letters/F.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_F, "assets/letters/F_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_F = animation_definition_create(&sprite_sheet_F, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_F = animation_create(adef_F, false);
 
-    render_sprite_sheet_init(&sprite_sheet_G, "assets/letters/G.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_G, "assets/letters/G_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_G = animation_definition_create(&sprite_sheet_G, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_G = animation_create(adef_G, false);
 
-    render_sprite_sheet_init(&sprite_sheet_H, "assets/letters/H.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_H, "assets/letters/H_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_H = animation_definition_create(&sprite_sheet_H, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_H = animation_create(adef_H, false);
 
-    render_sprite_sheet_init(&sprite_sheet_I, "assets/letters/I.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_I, "assets/letters/I_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_I = animation_definition_create(&sprite_sheet_I, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_I = animation_create(adef_I, false);
 
-    render_sprite_sheet_init(&sprite_sheet_J, "assets/letters/J.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_J, "assets/letters/J_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_J = animation_definition_create(&sprite_sheet_J, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_J = animation_create(adef_J, false);
 
-    render_sprite_sheet_init(&sprite_sheet_K, "assets/letters/K.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_K, "assets/letters/K_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_K = animation_definition_create(&sprite_sheet_K, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_K = animation_create(adef_K, false);
 
-    render_sprite_sheet_init(&sprite_sheet_L, "assets/letters/L.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_L, "assets/letters/L_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_L = animation_definition_create(&sprite_sheet_L, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_L = animation_create(adef_L, false);
 
-    render_sprite_sheet_init(&sprite_sheet_M, "assets/letters/M.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_M, "assets/letters/M_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_M = animation_definition_create(&sprite_sheet_M, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_M = animation_create(adef_M, false);
 
-    render_sprite_sheet_init(&sprite_sheet_N, "assets/letters/N.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_N, "assets/letters/N_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_N = animation_definition_create(&sprite_sheet_N, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_N = animation_create(adef_N, false);
 
-    render_sprite_sheet_init(&sprite_sheet_O, "assets/letters/O.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_O, "assets/letters/O_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_O = animation_definition_create(&sprite_sheet_O, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_O = animation_create(adef_O, false);
 
-    render_sprite_sheet_init(&sprite_sheet_P, "assets/letters/P.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_P, "assets/letters/P_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_P = animation_definition_create(&sprite_sheet_P, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_P = animation_create(adef_P, false);
 
-    render_sprite_sheet_init(&sprite_sheet_Q, "assets/letters/Q.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_Q, "assets/letters/Q_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_Q = animation_definition_create(&sprite_sheet_Q, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_Q = animation_create(adef_Q, false);
 
-    render_sprite_sheet_init(&sprite_sheet_R, "assets/letters/R.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_R, "assets/letters/R_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_R = animation_definition_create(&sprite_sheet_R, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_R = animation_create(adef_R, false);
 
-    render_sprite_sheet_init(&sprite_sheet_S, "assets/letters/S.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_S, "assets/letters/S_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_S = animation_definition_create(&sprite_sheet_S, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_S = animation_create(adef_S, false);
 
-    render_sprite_sheet_init(&sprite_sheet_T, "assets/letters/T.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_T, "assets/letters/T_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_T = animation_definition_create(&sprite_sheet_T, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_T = animation_create(adef_T, false);
-    render_sprite_sheet_init(&sprite_sheet_U, "assets/letters/U.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_U, "assets/letters/U_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_U = animation_definition_create(&sprite_sheet_U, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_U = animation_create(adef_U, false);
 
-    render_sprite_sheet_init(&sprite_sheet_V, "assets/letters/V.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_V, "assets/letters/V_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_V = animation_definition_create(&sprite_sheet_V, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_V = animation_create(adef_V, false);
 
-    render_sprite_sheet_init(&sprite_sheet_W, "assets/letters/W.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_W, "assets/letters/W_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_W = animation_definition_create(&sprite_sheet_W, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_W = animation_create(adef_W, false);
 
-    render_sprite_sheet_init(&sprite_sheet_X, "assets/letters/X.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_X, "assets/letters/X_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_X = animation_definition_create(&sprite_sheet_X, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_X = animation_create(adef_X, false);
 
-    render_sprite_sheet_init(&sprite_sheet_Y, "assets/letters/Y.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_Y, "assets/letters/Y_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_Y = animation_definition_create(&sprite_sheet_Y, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_Y = animation_create(adef_Y, false);
 
-    render_sprite_sheet_init(&sprite_sheet_Z, "assets/letters/Z.png", 40, 50);
+    render_sprite_sheet_init(&sprite_sheet_Z, "assets/letters/Z_white.png", LETTER_WIDTH, LETTER_HEIGHT);
     adef_Z = animation_definition_create(&sprite_sheet_Z, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_Z = animation_create(adef_Z, false);
 
     // SELECTED ITEM INDICATORS
-    render_sprite_sheet_init(&sprite_sheet_selected_bracket_left, "assets/menus/selected_bracket_left.png", 62, 62);
-    adef_selected_bracket_left = animation_definition_create(
-        &sprite_sheet_selected_bracket_left,
-        (f32[]){0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005},
-        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        (u8[]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
-        11);
+    render_sprite_sheet_init(&sprite_sheet_selected_bracket_left, "assets/menus/selected_bracket_left.png", SELECTED_ANIM_WIDTH, SELECTED_ANIM_HEIGHT);
+    adef_selected_bracket_left =
+        animation_definition_create(&sprite_sheet_selected_bracket_left, (f32[]){0.005, 0.005, 0.005, 0.005, 0.005}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
     anim_selected_bracket_left = animation_create(adef_selected_bracket_left, false);
     anim_selected_bracket_left->is_active = false;
 
-    render_sprite_sheet_init(&sprite_sheet_selected_bracket_right, "assets/menus/selected_bracket_right.png", 62, 62);
-    adef_selected_bracket_right = animation_definition_create(
-        &sprite_sheet_selected_bracket_right,
-        (f32[]){0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005},
-        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        (u8[]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
-        11);
+    render_sprite_sheet_init(&sprite_sheet_selected_bracket_right, "assets/menus/selected_bracket_right.png", SELECTED_ANIM_WIDTH, SELECTED_ANIM_HEIGHT);
+    adef_selected_bracket_right =
+        animation_definition_create(&sprite_sheet_selected_bracket_right, (f32[]){0.005, 0.005, 0.005, 0.005, 0.005}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
     anim_selected_bracket_right = animation_create(adef_selected_bracket_right, false);
     anim_selected_bracket_right->is_active = false;
 }
@@ -181,7 +178,7 @@ void render_text_line(SDL_Window *window, u32 texture_slots[BATCH_SIZE], char *t
         }
 
         // update the starting position and go to next character
-        vec2_add(starting_position, starting_position, (vec2){LETTER_WIDTH, 0});
+        vec2_add(starting_position, starting_position, (vec2){LETTER_WIDTH + LETTER_SPACING, 0});
         character++;
     }
     // back track by half a character to leave the "cursor" at the exact end
@@ -204,13 +201,23 @@ void render_menu_item(SDL_Window *window, u32 texture_slots[BATCH_SIZE], char *t
         animation_render(anim_selected_bracket_left, window, starting_position, WHITE, texture_slots);
 
     // render the item's text
-    vec2_add(starting_position, starting_position, (vec2){(SELECTED_ANIM_WIDTH * 0.5) + (LETTER_WIDTH * 0.5), 0});
+    vec2_add(starting_position, starting_position, (vec2){(SELECTED_ANIM_WIDTH * 0.5) + (LETTER_WIDTH * 0.5) + LETTER_SPACING, 0});
     render_text_line(window, texture_slots, text, starting_position);
 
     // if selected render left bracket anim
     if (is_selected) {
         vec2_add(starting_position, starting_position, (vec2){(SELECTED_ANIM_WIDTH * 0.5), 0});
         animation_render(anim_selected_bracket_right, window, starting_position, WHITE, texture_slots);
+    }
+}
+
+void render_menu(Menu *menu)
+{
+    for (int i = 0; i < main_menu->items_count; i++) {
+        f32 x_pos = SELECTED_ANIM_WIDTH * 0.5;
+        f32 y_pos = render_height - LINE_SPACING - (SELECTED_ANIM_HEIGHT * 0.5) - (i * (SELECTED_ANIM_HEIGHT + LINE_SPACING));
+
+        render_menu_item(window, texture_slots, menu->items[i], (vec2){x_pos, y_pos}, menu->selected_item == i);
     }
 }
 
@@ -229,18 +236,6 @@ void update_menu(Menu *menu, Input_State input)
     }
 }
 
-void render_main_menu(SDL_Window *window, u32 texture_slots[BATCH_SIZE])
-{
-    for (int i = 0; i < main_menu->items_count; i++) {
-        render_menu_item(
-            window,
-            texture_slots,
-            main_menu->items[i],
-            (vec2){SELECTED_ANIM_WIDTH * 0.5, render_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
-            main_menu->selected_item == i);
-    }
-}
-
 void handle_main_menu_input(void)
 {
     switch (main_menu->selected_item) {
@@ -252,18 +247,6 @@ void handle_main_menu_input(void)
         break;
     default:
         ERROR_EXIT("Got unexpected case on pause menu: %d\n", main_menu->selected_item);
-    }
-}
-
-void render_mode_menu(SDL_Window *window, u32 texture_slots[BATCH_SIZE])
-{
-    for (int i = 0; i < mode_menu->items_count; i++) {
-        render_menu_item(
-            window,
-            texture_slots,
-            mode_menu->items[i],
-            (vec2){SELECTED_ANIM_WIDTH * 0.5, render_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
-            mode_menu->selected_item == i);
     }
 }
 
@@ -281,18 +264,6 @@ void handle_mode_menu_input(void)
     }
 }
 
-void render_survival_menu(SDL_Window *window, u32 texture_slots[BATCH_SIZE])
-{
-    for (int i = 0; i < survival_menu->items_count; i++) {
-        render_menu_item(
-            window,
-            texture_slots,
-            survival_menu->items[i],
-            (vec2){SELECTED_ANIM_WIDTH * 0.5, render_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
-            survival_menu->selected_item == i);
-    }
-}
-
 void handle_survival_menu_input(void)
 {
     switch (survival_menu->selected_item) {
@@ -301,18 +272,6 @@ void handle_survival_menu_input(void)
         break;
     default:
         ERROR_EXIT("Got unexpected case on pause menu: %d\n", survival_menu->selected_item);
-    }
-}
-
-void render_pause_menu(SDL_Window *window, u32 texture_slots[BATCH_SIZE])
-{
-    for (int i = 0; i < pause_menu->items_count; i++) {
-        render_menu_item(
-            window,
-            texture_slots,
-            pause_menu->items[i],
-            (vec2){SELECTED_ANIM_WIDTH * 0.5, render_height - SELECTED_ANIM_HEIGHT * 0.5 - i * SELECTED_ANIM_HEIGHT},
-            pause_menu->selected_item == i);
     }
 }
 

@@ -8,10 +8,12 @@
 #include "../structs.h"
 
 #define LETTER_ANIM_COUNT 26
-#define LETTER_WIDTH 40
-#define LETTER_HEIGHT 50
-#define SELECTED_ANIM_WIDTH 62
-#define SELECTED_ANIM_HEIGHT 62
+#define LETTER_WIDTH 5
+#define LETTER_HEIGHT 7
+#define LETTER_SPACING 1
+#define LINE_SPACING 2
+#define SELECTED_ANIM_WIDTH 7
+#define SELECTED_ANIM_HEIGHT 7
 #define COLOR_DELTA 0.05
 
 // used to determine when to render (or not render) whichS menus
@@ -126,16 +128,13 @@ Menu *pause_menu;
 
 extern int game_state;
 
+void render_menu(Menu *menu);
 void init_menus(void);
 void reset_selector_anims(void);
 void update_menu(Menu *menu, Input_State input);
-void render_main_menu(SDL_Window *window, u32 texture_slots[BATCH_SIZE]);
 void handle_main_menu_input(void);
-void render_mode_menu(SDL_Window *window, u32 texture_slots[BATCH_SIZE]);
 void handle_mode_menu_input(void);
-void render_survival_menu(SDL_Window *window, u32 texture_slots[BATCH_SIZE]);
 void handle_survival_menu_input(void);
-void render_pause_menu(SDL_Window *window, u32 texture_slots[BATCH_SIZE]);
 void handle_pause_menu_input(void);
 void update_game_color(vec4 game_color);
 void free_menus(void);
