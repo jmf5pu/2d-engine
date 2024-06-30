@@ -165,11 +165,7 @@ typedef struct time_spawner {
     Spawn spawn;
 } TimeSpawner;
 
-typedef enum {
-    TELEPORTER,
-    TELEPORTER_BUTTON,
-    WEAPON_PICKUP,
-} DynamicPropType;
+typedef enum { TELEPORTER, TELEPORTER_BUTTON, WEAPON_PICKUP_GLOCK, WEAPON_PICKUP_M16, WEAPON_PICKUP_COACH_GUN } DynamicPropType;
 
 typedef enum {
     ACTIVE,

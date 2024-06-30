@@ -65,6 +65,9 @@ Animation_Definition *adef_m16_pickup;
 Animation *anim_m16_pickup;
 Sprite_Sheet sprite_sheet_m16_pickup_highlight;
 Animation_Definition *adef_m16_pickup_highlight;
+Sprite_Sheet sprite_sheet_m16_pickup_highlighted;
+Animation_Definition *adef_m16_pickup_highlighted;
+Animation *anim_m16_pickup_highlighted;
 
 Sprite_Sheet sprite_sheet_glock_pickup;
 Animation_Definition *adef_glock_pickup;
@@ -80,6 +83,9 @@ Animation_Definition *adef_coach_gun_pickup;
 Animation *anim_coach_gun_pickup;
 Sprite_Sheet sprite_sheet_coach_gun_pickup_highlight;
 Animation_Definition *adef_coach_gun_pickup_highlight;
+Sprite_Sheet sprite_sheet_coach_gun_pickup_highlighted;
+Animation_Definition *adef_coach_gun_pickup_highlighted;
+Animation *anim_coach_gun_pickup_highlighted;
 
 void init_map(Map *map);
 void init_map_assets(void);
@@ -94,7 +100,7 @@ void update_dynamic_props(Map *map);
 void update_spawner(TimeSpawner *spawner);
 void free_map_attributes(Map *map);
 void update_all_positions(Map *map, vec2 shift, bool left_player_is_active);
-DynamicProp *init_weapon_pickup_prop(Weapon_Type *weapon_type, Animation *anim, vec2 position, vec2 size, On_Hit on_hit);
+DynamicProp *init_weapon_pickup_prop(DynamicPropType pickup_type, vec2 position, vec2 size, On_Hit on_hit);
 
 // spawning logic callbacks
 void spawn_zombie(vec2 spawn_point);

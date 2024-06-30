@@ -79,13 +79,13 @@ void init_enemy_adefs(void)
     render_sprite_sheet_init(&sprite_sheet_zombie_moving_1, "assets/wip/zombie_moving_1.png", size_x, size_y);
     adef_zombie_moving_1 =
         animation_definition_create(&sprite_sheet_zombie_moving_1, (f32[]){0.07, 0.07, 0.07, 0.07, 0.07, 0.07}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
-    render_sprite_sheet_init(&sprite_sheet_zombie_moving_2, "assets/wip/player_skinhead_moving_2.png", 18, 26);
+    render_sprite_sheet_init(&sprite_sheet_zombie_moving_2, "assets/wip/zombie_moving_2.png", size_x, size_y);
     adef_zombie_moving_2 =
         animation_definition_create(&sprite_sheet_zombie_moving_2, (f32[]){0.07, 0.07, 0.07, 0.07, 0.07, 0.07}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
-    render_sprite_sheet_init(&sprite_sheet_zombie_moving_3, "assets/wip/zombie_moving_2.png", size_x, size_y);
+    render_sprite_sheet_init(&sprite_sheet_zombie_moving_3, "assets/wip/zombie_moving_3.png", size_x, size_y);
     adef_zombie_moving_3 =
         animation_definition_create(&sprite_sheet_zombie_moving_3, (f32[]){0.07, 0.07, 0.07, 0.07, 0.07, 0.07}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
-    render_sprite_sheet_init(&sprite_sheet_zombie_moving_4, "assets/wip/player_skinhead_moving_4.png", 18, 26);
+    render_sprite_sheet_init(&sprite_sheet_zombie_moving_4, "assets/wip/zombie_moving_4.png", size_x, size_y);
     adef_zombie_moving_4 =
         animation_definition_create(&sprite_sheet_zombie_moving_4, (f32[]){0.07, 0.07, 0.07, 0.07, 0.07, 0.07}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
 }

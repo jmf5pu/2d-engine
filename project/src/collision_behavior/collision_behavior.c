@@ -30,7 +30,17 @@ void weapon_pickup_base(Body *self, Body *other, Animation_Definition *highlight
     }
 }
 
-void m16_pickup_on_hit(Body *self, Body *other, Hit hit) { weapon_pickup_base(self, other, adef_m16_pickup_highlight, (vec2){20, 9}, m16); }
+void m16_pickup_on_hit(Body *self, Body *other, Hit hit)
+{
+    Player *player = get_player_from_body(other);
+    DynamicProp *pickup = self->parent;
+    if (player && self->first_frame_being_hit && pickup->state.pickup_state_enum == NORMAL) {
+        pickup->colliding_player = player;
+        pickup->state.pickup_state_enum = HIGHLIGHTING;
+        pickup->frames_on_state = 0;
+        player->interact_frame_delay = m16->pickup_frame_delay;
+    }
+}
 
 void glock_pickup_on_hit(Body *self, Body *other, Hit hit)
 {
@@ -42,10 +52,19 @@ void glock_pickup_on_hit(Body *self, Body *other, Hit hit)
         pickup->frames_on_state = 0;
         player->interact_frame_delay = glock->pickup_frame_delay;
     }
-    // weapon_pickup_base(self, other, adef_glock_pickup_highlight, (vec2){7, 9}, glock);
 }
 
-void coach_gun_pickup_on_hit(Body *self, Body *other, Hit hit) { weapon_pickup_base(self, other, adef_coach_gun_pickup_highlight, (vec2){25, 18}, coach_gun); }
+void coach_gun_pickup_on_hit(Body *self, Body *other, Hit hit)
+{
+    Player *player = get_player_from_body(other);
+    DynamicProp *pickup = self->parent;
+    if (player && self->first_frame_being_hit && pickup->state.pickup_state_enum == NORMAL) {
+        pickup->colliding_player = player;
+        pickup->state.pickup_state_enum = HIGHLIGHTING;
+        pickup->frames_on_state = 0;
+        player->interact_frame_delay = coach_gun->pickup_frame_delay;
+    }
+}
 
 void player_on_hit(Body *self, Body *other, Hit hit)
 {
