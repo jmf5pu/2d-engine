@@ -3,12 +3,11 @@
 
 #define SPLIT_SCREEN false
 #define RENDER_PHYSICS_BODIES false
-#define RENDER_FULLSCREEN true // TODO: does nothing, fix this
+#define RENDER_FULLSCREEN false
 #define DEFAULT_RENDER_SCALE_FACTOR 0.25
 #define FRAME_RATE 60
 
 #define BATCH_SIZE 32
-#define MAX_BATCH_QUADS 10000
 #define MAX_BATCH_VERTICES 40000
 #define MAX_BATCH_ELEMENTS 60000
 

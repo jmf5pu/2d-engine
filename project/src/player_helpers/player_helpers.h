@@ -267,6 +267,7 @@ void update_player_velocity_from_key_state(Player *player);
 void apply_player_joystick_movement(Player *player);
 void update_entity_velocity_from_joystick_input(Joystick_State input, Entity *entity, int max_velocity);
 void apply_player_input_state(Player *player);
+void update_player_status_from_input_state(Player *player);
 void update_crosshair_position_from_cursor(Player *player);
 void maintain_controller_keypresses(Player *player);
 void maintain_controller_keypress(Key_State *key_state);
@@ -275,10 +276,15 @@ void update_player_anims(Player *player);
 static void update_player_weapon_anim(Player *player);
 static void update_player_crosshair_angle(Player *player);
 static void update_player_weapon_position(Player *player);
-static i32 get_player_brass_z_index(f32 angle);
 
 void get_direction_from_angle(f32 angle, char *direction_result);
 Player *get_player_from_body(Body *body);
 void update_player_weapon(Player *player, Weapon_Type *weapon_type);
+
+inline void set_player_status(Player *player, enum Player_Status status)
+{
+    player->status = status;
+    player->frames_on_status = 0;
+}
 
 #endif

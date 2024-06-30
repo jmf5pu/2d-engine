@@ -1,6 +1,7 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#include "types.h"
 #include <stdio.h>
 
 #define ERROR_EXIT(...)                                                                                                                                                            \
@@ -41,5 +42,16 @@
     (vec4) { 1, 1, 1, 0.8 }
 
 #define ARRAY_LENGTH(array) (sizeof(array) / sizeof((array)[0]))
+
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
+inline f32 get_array_sum(f32 *array, int size)
+{
+    f32 sum = 0;
+    for (int i = 0; i < size; i++) {
+        sum += array[i];
+    }
+    return sum;
+}
 
 #endif

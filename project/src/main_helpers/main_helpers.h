@@ -9,7 +9,7 @@
 
 void poll_sdl_events_and_update_input_states(void);
 bool should_destroy_entity(Entity *entity, Map *map);
-bool entity_is_player_or_crosshair(Entity *entity);
+bool entity_is_player_interact_bar_or_crosshair(Entity *entity);
 void render_all_non_player_entities_with_animations(SDL_Window *window, u32 texture_slots[BATCH_SIZE], vec4 color);
 void destroy_all_marked_entities(Map *map);
 void get_xy_components_from_vector(f32 magnitude, f32 angle, vec2 components_result);

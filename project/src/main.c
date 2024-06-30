@@ -81,19 +81,19 @@ int main(int argc, char *argv[])
             //  from menu -> running -> menu -> running
             render_begin();
             update_menu(main_menu, global.input);
-            render_main_menu(window, texture_slots);
+            render_menu(main_menu);
             render_end(window, texture_slots, true);
             break;
         case GS_GAME_MODE_MENU:
             render_begin();
             update_menu(mode_menu, global.input);
-            render_mode_menu(window, texture_slots);
+            render_menu(mode_menu);
             render_end(window, texture_slots, true);
             break;
         case GS_SURVIVAL_MENU:
             render_begin();
             update_menu(survival_menu, global.input);
-            render_survival_menu(window, texture_slots);
+            render_menu(survival_menu);
             render_end(window, texture_slots, true);
             break;
         case GS_PAUSE_MENU:
@@ -268,7 +268,7 @@ int main(int argc, char *argv[])
             // PAUSE MENU
             if (game_state == GS_PAUSE_MENU) {
                 update_menu(pause_menu, global.input);
-                render_pause_menu(window, texture_slots);
+                render_menu(pause_menu);
             }
             render_end(window, texture_slots, true);
 

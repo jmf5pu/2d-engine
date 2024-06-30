@@ -18,7 +18,7 @@ SDL_Window *render_init_window(u32 width, u32 height)
     }
 
     // Hide the cursor
-    SDL_ShowCursor(SDL_ENABLE);
+    SDL_ShowCursor(SDL_DISABLE);
 
     SDL_Window *window = SDL_CreateWindow("MyGame", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL);
 
@@ -26,7 +26,8 @@ SDL_Window *render_init_window(u32 width, u32 height)
         ERROR_EXIT("Failed to init window: %s\n", SDL_GetError());
     }
 
-    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+    if (RENDER_FULLSCREEN)
+        SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
     SDL_GL_CreateContext(window);
 
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
@@ -59,7 +60,7 @@ void update_projection_matrix(u32 *shader_default, u32 *shader_batch, f32 render
     glUseProgram(*shader_batch);
     glUniformMatrix4fv(glGetUniformLocation(*shader_batch, "projection"), 1, GL_FALSE, &projection[0][0]);
 
-    for (u32 i = 0; i < 32; ++i) {
+    for (u32 i = 0; i < BATCH_SIZE; ++i) {
         char name[] = "texture_slot_N";
         sprintf(name, "texture_slot_%u", i);
         glUniform1i(glGetUniformLocation(*shader_batch, name), i);

@@ -16,6 +16,7 @@ enum Player_Status {
     PLAYER_SPAWNING,
     PLAYER_ACTIVE,
     PLAYER_RELOADING,
+    PLAYER_INTERACTING,
     PLAYER_DESPAWNING,
     PLAYER_INACTIVE,
 };
@@ -48,31 +49,18 @@ typedef struct player_input_state {
 
 typedef struct player Player; // forward dec for OnShoot
 typedef void (*OnShoot)(Player *player);
+
+typedef struct weapon_type Weapon_Type;
 typedef struct weapon {
-    char *name;
-    enum Fire_Mode fire_mode;
     u16 capacity;
-    u16 max_capacity;
     u16 reserve;
-    u16 max_reserve;
-    u16 max_fire_rate;
     i8 burst_shots_remaining;
-    u16 burst_count;
-    f32 burst_delay;
-    i16 damage;
-    i16 bullet_velocity;
     u16 frames_since_last_shot;
-    u16 reload_frame_delay;
     bool ready_to_fire;
     bool is_firing;
-    Animation *hud_ammo_icon;
     Animation *character_anim;
     vec2 position;
-    OnShoot on_shoot;
-    char *muzzle_flash_id;
-    Animation_Definition *bullet_adef;
-    Animation_Definition *bullet_impact_adef;
-    char *blood_splatter_prefix;
+    Weapon_Type *weapon_type;
 } Weapon;
 
 typedef struct weapon_type {
@@ -87,6 +75,7 @@ typedef struct weapon_type {
     i16 damage;
     i16 bullet_velocity;
     u16 reload_frame_delay;
+    u16 pickup_frame_delay;
     char *muzzle_flash_id;
     Animation_Definition *bullet_adef;
     Animation_Definition *bullet_impact_adef;
@@ -113,6 +102,7 @@ typedef struct camera {
 typedef struct player {
     Entity *entity;
     Entity *crosshair;
+    Entity *interact_bar;
     Camera *camera;
     Weapon *weapon;
     Armor *armor;
@@ -129,6 +119,7 @@ typedef struct player {
                              // 0
     f32 spawn_delay;         // time in s from INACTIVE status to SPAWNING status
     f32 spawn_time;          // time in s from SPAWNING status to ACTIVE status
+    u16 interact_frame_delay;
     f32 crosshair_angle;
     u32 frames_on_status; // # of frames since last status change
     i16 health;
@@ -174,10 +165,7 @@ typedef struct time_spawner {
     Spawn spawn;
 } TimeSpawner;
 
-typedef enum {
-    TELEPORTER,
-    TELEPORTER_BUTTON,
-} DynamicPropType;
+typedef enum { TELEPORTER, TELEPORTER_BUTTON, WEAPON_PICKUP_GLOCK, WEAPON_PICKUP_M16, WEAPON_PICKUP_COACH_GUN } DynamicPropType;
 
 typedef enum {
     ACTIVE,
@@ -190,9 +178,12 @@ typedef enum {
     PRESSED,
     UNPRESSED,
 } ButtonStateEnum;
+
+typedef enum { NORMAL, HIGHLIGHTING, INTERACTING, USED } PickupStateEnum;
 typedef union {
     TeleporterStateEnum teleporter_state_enum;
     ButtonStateEnum button_state_enum;
+    PickupStateEnum pickup_state_enum;
 } StateEnum;
 
 typedef struct dynamic_prop DynamicProp;
@@ -203,7 +194,8 @@ typedef struct dynamic_prop {
     StateEnum state;
     u32 frames_on_state;
     UpdateState update_state;
-    DynamicPropType type; // used to group types of dynamic props when controller interactions between them
+    DynamicPropType type;     // used to group types of dynamic props when controller interactions between them
+    Player *colliding_player; // who is able to interact with this prop
 } DynamicProp;
 
 typedef struct map {

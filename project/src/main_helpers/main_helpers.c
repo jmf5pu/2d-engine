@@ -45,20 +45,26 @@ void poll_sdl_events_and_update_input_states(void)
 bool should_destroy_entity(Entity *entity, Map *map)
 {
     bool anim_requesting_destroy = entity->destroy_on_anim_completion && entity->animation->current_frame_index == entity->animation->animation_definition->frame_count - 1;
-    bool is_player = SPLIT_SCREEN ? (entity == player_one->entity || entity == player_two->entity) : (entity == player_one->entity);
     bool is_pickup = false;
+    for (int i = 0; i < map->num_dynamic_props; i++) {
+        if (entity == map->dynamic_props[i]->entity) {
+            is_pickup = true;
+            break;
+        }
+    }
     bool is_inactive = !entity->is_active || !entity->body->is_active;
-    return (anim_requesting_destroy || is_inactive) && !is_player && !is_pickup && !entity_is_player_or_crosshair(entity);
+    return (anim_requesting_destroy || is_inactive) && !is_pickup && !entity_is_player_interact_bar_or_crosshair(entity);
 }
 
 /// @brief Checks if an entity is a crosshair
 /// @param entity
 /// @return boolean representing if the entity is a crosshair
-bool entity_is_player_or_crosshair(Entity *entity)
+bool entity_is_player_interact_bar_or_crosshair(Entity *entity)
 {
     bool is_player = SPLIT_SCREEN ? entity == player_one->entity || entity == player_two->entity : entity == player_one->entity;
     bool is_crosshair = SPLIT_SCREEN ? entity == player_one->crosshair || entity == player_two->crosshair : entity == player_one->crosshair;
-    return is_player || is_crosshair;
+    bool is_interact_bar = SPLIT_SCREEN ? (entity == player_one->interact_bar || entity == player_two->interact_bar) : entity == player_one->interact_bar;
+    return is_player || is_crosshair || is_interact_bar;
 }
 
 void render_all_non_player_entities_with_animations(SDL_Window *window, u32 texture_slots[BATCH_SIZE], vec4 color)
@@ -67,7 +73,7 @@ void render_all_non_player_entities_with_animations(SDL_Window *window, u32 text
         Entity *entity = entity_get(j);
 
         // skip inactive entities, entities that are players or crosshairs or entities with no animation
-        if (!entity->animation || !entity->is_active || !entity->body->is_active || entity_is_player_or_crosshair(entity)) {
+        if (!entity->animation || !entity->is_active || !entity->body->is_active || entity_is_player_interact_bar_or_crosshair(entity)) {
             continue;
         }
 

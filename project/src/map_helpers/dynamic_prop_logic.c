@@ -1,6 +1,13 @@
 #include "../enemy_helpers/enemy_helpers.h"
+#include "../hud/hud.h"
 #include "../structs.h"
+#include "../weapon_types/weapon_types.h"
 #include "map_helpers.h"
+
+// extern from main.c
+u32 texture_slots[BATCH_SIZE];
+vec4 game_color;
+SDL_Window *window;
 
 /// @brief state machine for teleporter
 /// @param entity
@@ -81,6 +88,95 @@ void teleporter_button_update_state(DynamicProp *prop)
         break;
     }
     prop->frames_on_state++;
+}
+
+void weapon_pickup_update_state(DynamicProp *prop)
+{
+    bool state_changed = false;
+
+    Animation *normal_anim;
+    Animation_Definition *highlighting_adef;
+    Animation *highlighted_anim;
+    Weapon_Type *weapon_type;
+
+    switch (prop->type) {
+    case WEAPON_PICKUP_GLOCK:
+        normal_anim = anim_glock_pickup;
+        highlighting_adef = adef_glock_pickup_highlight;
+        highlighted_anim = anim_glock_pickup_highlighted;
+        weapon_type = glock;
+        break;
+    case WEAPON_PICKUP_M16:
+        normal_anim = anim_m16_pickup;
+        highlighting_adef = adef_m16_pickup_highlight;
+        highlighted_anim = anim_m16_pickup_highlighted;
+        weapon_type = m16;
+        break;
+    case WEAPON_PICKUP_COACH_GUN:
+        normal_anim = anim_coach_gun_pickup;
+        highlighting_adef = adef_coach_gun_pickup_highlight;
+        highlighted_anim = anim_coach_gun_pickup_highlighted;
+        weapon_type = coach_gun;
+        break;
+    }
+
+    // This logic could be buggy if props *can* have collisions with other bodies aside from players
+    if (!prop->entity->body->is_being_hit) {
+        if (prop->colliding_player && prop->colliding_player->status == PLAYER_INTERACTING)
+            set_player_status(prop->colliding_player, PLAYER_ACTIVE);
+        prop->colliding_player = NULL;
+        if (prop->state.pickup_state_enum != USED && prop->state.pickup_state_enum != NORMAL)
+            state_changed = set_prop_pickup_state_and_get_changed(prop, NORMAL);
+    }
+
+    switch (prop->state.pickup_state_enum) {
+    case NORMAL:
+        if (prop->frames_on_state == 0)
+            prop->entity->animation = normal_anim;
+        if (!prop->entity->is_active)
+            prop->entity->is_active = true;
+        break;
+    case HIGHLIGHTING:
+        if (prop->frames_on_state == 0) {
+            Entity *pickup_highlight = entity_create(prop->entity->body->aabb.position, prop->entity->body->aabb.half_size, (vec2){0, 0}, 0, 0, NULL, NULL);
+            pickup_highlight->animation = animation_create(highlighting_adef, false);
+            pickup_highlight->animation->z_index = 1;
+            pickup_highlight->destroy_on_anim_completion = true;
+        }
+        if (prop->colliding_player && prop->colliding_player->input_state->key_state->use == KS_HELD)
+            set_player_status(prop->colliding_player, PLAYER_INTERACTING);
+        if (prop->colliding_player && prop->colliding_player->status == PLAYER_INTERACTING) {
+            state_changed = set_prop_pickup_state_and_get_changed(prop, INTERACTING);
+            destroy_player_interact_bar_anim_if_present(prop->colliding_player->interact_bar);
+            prop->colliding_player->interact_bar->animation = animation_create(adef_interact_bar_open, false);
+            prop->colliding_player->interact_bar->is_active = true;
+        }
+        break;
+    case INTERACTING:
+        if (prop->frames_on_state == 0)
+            prop->entity->animation = highlighted_anim;
+        if (prop->colliding_player && prop->colliding_player->status != PLAYER_INTERACTING) {
+            set_prop_pickup_state_and_get_changed(prop, HIGHLIGHTING);
+            prop->entity->animation = normal_anim;
+            destroy_player_interact_bar_anim_if_present(prop->colliding_player->interact_bar);
+        }
+        if (prop->colliding_player && prop->colliding_player->frames_on_status >= weapon_type->pickup_frame_delay) {
+            update_player_weapon(prop->colliding_player, weapon_type);
+            state_changed = set_prop_pickup_state_and_get_changed(prop, USED);
+            destroy_player_interact_bar_anim_if_present(prop->colliding_player->interact_bar);
+        }
+        break;
+    case USED:
+        prop->entity->is_active = false;
+        if (prop->colliding_player && prop->colliding_player->status == PLAYER_INTERACTING) {
+            prop->colliding_player->status = PLAYER_ACTIVE;
+        }
+        break;
+    default:
+        break;
+    }
+    if (!state_changed)
+        prop->frames_on_state++;
 }
 
 /// @brief Helper method for logic between active and inactive states for the teleporter

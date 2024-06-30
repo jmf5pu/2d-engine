@@ -1,4 +1,5 @@
 #include "hud.h"
+#include "../engine/util.h"
 #include <float.h>
 #include <math.h>
 
@@ -8,6 +9,9 @@ HUD *hud;
 u32 texture_slots[BATCH_SIZE];
 vec4 game_color;
 SDL_Window *window;
+
+f32 interact_bar_open_close_durations[] = {0.05, 0.05, 0.05, 0.05};
+vec2 interact_bar_size = {16, 3};
 
 void init_ammo_anim_hashmap(void)
 {
@@ -260,7 +264,7 @@ u16 render_ammo_digit(SDL_Window *window, u32 texture_slots[BATCH_SIZE], vec2 po
 // Renders the ammo display. Renders the digits in each value from left to right
 void render_ammo(SDL_Window *window, u32 texture_slots[BATCH_SIZE], Player *player, vec2 position, vec4 color)
 {
-    f32 current_ammo_fraction = (f32)player->weapon->capacity / player->weapon->max_capacity;
+    f32 current_ammo_fraction = (f32)player->weapon->capacity / player->weapon->weapon_type->capacity;
 
     u16 capacity = player->weapon->capacity;
     u16 reserve = player->weapon->reserve;
@@ -271,8 +275,8 @@ void render_ammo(SDL_Window *window, u32 texture_slots[BATCH_SIZE], Player *play
 
     // render the player's weapon's ammo icon before numbers if on left side
     // of the screen
-    if (player->weapon->hud_ammo_icon && player->is_left_player) {
-        animation_render(player->weapon->hud_ammo_icon, window, position, color, texture_slots);
+    if (player->weapon->weapon_type->hud_ammo_icon && player->is_left_player) {
+        animation_render(player->weapon->weapon_type->hud_ammo_icon, window, position, color, texture_slots);
         position[0] -= DIGIT_WIDTH + ICON_SPACE; // add a bit of space between
                                                  // icon and the numbers
     }
@@ -314,9 +318,9 @@ void render_ammo(SDL_Window *window, u32 texture_slots[BATCH_SIZE], Player *play
 
     // render the player's weapon's ammo icon after numbers if on right side
     // of the screen
-    if (player->weapon->hud_ammo_icon && !player->is_left_player) {
+    if (player->weapon->weapon_type->hud_ammo_icon && !player->is_left_player) {
         position[0] -= ICON_SPACE;
-        animation_render(player->weapon->hud_ammo_icon, window, position, color, texture_slots);
+        animation_render(player->weapon->weapon_type->hud_ammo_icon, window, position, color, texture_slots);
         position[0] -= DIGIT_WIDTH; // add a bit of space between icon
                                     // and the numbers
     }
@@ -351,32 +355,51 @@ void init_hud(SDL_Window *window)
 // renders the heads up display (should be called once per frame)
 void render_hud(void)
 {
+    vec2 player_one_interact_bar_position = {player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1] + 15};
+
     // render player one displays (health + ammo + crosshair)
     // render_health(window, texture_slots, player_one, (vec2){50, (window_height * DEFAULT_RENDER_SCALE_FACTOR) - 50}, color);
     // render_ammo(window, texture_slots, player_one, (vec2){0.5 * DIGIT_WIDTH + DIGIT_WIDTH * 7 + ICON_SPACE, 0.5 * DIGIT_HEIGHT}, color);
     animation_render(player_one->crosshair->animation, window, player_one->crosshair->body->aabb.position, game_color, texture_slots);
 
-    if (player_one->status == PLAYER_RELOADING) {
-        render_interact_bar_progress(
-            (vec2){player_one->entity->body->aabb.position[0], player_one->entity->body->aabb.position[1] + 15},
-            (f32)player_one->frames_on_status / player_one->weapon->reload_frame_delay);
+    if (player_one->status == PLAYER_RELOADING || player_one->status == PLAYER_INTERACTING) {
+        u16 interact_bar_frame_delay = player_one->status == PLAYER_RELOADING ? player_one->weapon->weapon_type->reload_frame_delay : player_one->interact_frame_delay;
+        f32 opening_anim_frame_count = get_array_sum(interact_bar_open_close_durations, ARRAY_LENGTH(interact_bar_open_close_durations)) * FRAME_RATE;
+        vec2_dup(player_one->interact_bar->body->aabb.position, player_one->entity->body->aabb.position);
+        player_one->interact_bar->body->aabb.position[1] += 15;
+        if (player_one->frames_on_status < opening_anim_frame_count) {
+            animation_render(player_one->interact_bar->animation, window, player_one->interact_bar->body->aabb.position, game_color, texture_slots);
+        }
+        else if (player_one->frames_on_status >= opening_anim_frame_count) {
+            if (player_one->frames_on_status == opening_anim_frame_count) {
+                animation_destroy(player_one->interact_bar->animation);
+                player_one->interact_bar->animation = NULL;
+            }
+            render_interact_bar_progress(
+                player_one->interact_bar, (f32)(player_one->frames_on_status - opening_anim_frame_count) / (interact_bar_frame_delay - opening_anim_frame_count));
+        }
+        player_one->frames_on_status++;
+    }
+    else {
+        player_one->frames_on_status = 0;
     }
 
     // render player two displays if relevant
     if (SPLIT_SCREEN) {
-        // render_health(window, texture_slots, player_two, (vec2){render_width - 50, render_height - 50}, color);
-        // render_ammo(window, texture_slots, player_two, (vec2){render_width - 0.5 * DIGIT_WIDTH, 0.5 * DIGIT_HEIGHT}, color);
-        animation_render(player_two->crosshair->animation, window, player_two->crosshair->body->aabb.position, game_color, texture_slots);
+        // vec2 player_two_interact_bar_position = {player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1] + 15};
 
-        // render viewport divider
-        render_sprite_sheet_frame(
-            &sprite_sheet_divider, window, 0, 0, (vec2){render_width * 0.5, render_height * 0.5}, 0, false, RENDER_PHYSICS_BODIES ? SEMI_TRANSPARENT : game_color, texture_slots);
+        // // render_health(window, texture_slots, player_two, (vec2){render_width - 50, render_height - 50}, color);
+        // // render_ammo(window, texture_slots, player_two, (vec2){render_width - 0.5 * DIGIT_WIDTH, 0.5 * DIGIT_HEIGHT}, color);
+        // animation_render(player_two->crosshair->animation, window, player_two->crosshair->body->aabb.position, game_color, texture_slots);
 
-        if (player_two->status == PLAYER_RELOADING) {
-            render_interact_bar_progress(
-                (vec2){player_two->entity->body->aabb.position[0], player_two->entity->body->aabb.position[1] + 15},
-                player_two->frames_on_status / player_two->weapon->reload_frame_delay);
-        }
+        // // render viewport divider
+        // render_sprite_sheet_frame(
+        //     &sprite_sheet_divider, window, 0, 0, (vec2){render_width * 0.5, render_height * 0.5}, 0, false, RENDER_PHYSICS_BODIES ? SEMI_TRANSPARENT : game_color,
+        //     texture_slots);
+
+        // if (player_two->status == PLAYER_RELOADING) {
+        //     render_interact_bar_progress(player_two_interact_bar_position, player_two->frames_on_status / player_two->weapon->reload_frame_delay);
+        // }
     }
 }
 
@@ -401,15 +424,21 @@ void fix_crosshair_position(Player *player)
 void init_interact_bar_adefs(void)
 {
     render_sprite_sheet_init(&sprite_sheet_interact_bar_open, "assets/wip/interact_bar_open.png", 16, 3);
-    adef_interact_bar_open = animation_definition_create(&sprite_sheet_interact_bar_open, (f32[]){0.05, 0.05, 0.05}, (u8[]){0, 0, 0}, (u8[]){0, 1, 2}, 3);
+    adef_interact_bar_open = animation_definition_create(&sprite_sheet_interact_bar_open, interact_bar_open_close_durations, (u8[]){0, 0, 0, 0}, (u8[]){0, 1, 2, 3}, 4);
     render_sprite_sheet_init(&sprite_sheet_interact_bar_close, "assets/wip/interact_bar_close.png", 16, 3);
-    adef_interact_bar_close = animation_definition_create(&sprite_sheet_interact_bar_close, (f32[]){0.05, 0.05, 0.05}, (u8[]){0, 0, 0}, (u8[]){0, 1, 2}, 3);
-    render_sprite_sheet_init(&sprite_sheet_interact_bar, "assets/wip/interact_bar_v3.png", 16, 3);
+    adef_interact_bar_close = animation_definition_create(&sprite_sheet_interact_bar_close, interact_bar_open_close_durations, (u8[]){0, 0, 0, 0}, (u8[]){0, 1, 2, 3}, 4);
+    render_sprite_sheet_init(&sprite_sheet_interact_bar, "assets/wip/interact_bar.png", 16, 3);
+    adef_interact_bar = animation_definition_create(
+        &sprite_sheet_interact_bar,
+        (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1},
+        (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        (u8[]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13},
+        14);
 }
 
-void render_interact_bar_progress(vec2 position, f32 percentage)
+void render_interact_bar_progress(Entity *entity, f32 percentage)
 {
-    const interact_bar_frame_count = 18;
-    f32 frame_column = floor(percentage * interact_bar_frame_count);
-    render_sprite_sheet_frame(&sprite_sheet_interact_bar, window, 0, frame_column, position, 100, false, game_color, texture_slots);
+    const interact_bar_frame_count = 14;
+    f32 frame_column = MAX(floor(percentage * interact_bar_frame_count), 0);
+    render_sprite_sheet_frame(&sprite_sheet_interact_bar, window, 0, frame_column, entity->body->aabb.position, 100, false, game_color, texture_slots);
 }

@@ -32,15 +32,12 @@ SDL_Window *render_init(void)
     // initialize video subsystem
     SDL_Init(SDL_INIT_VIDEO);
 
-    // hide cursor
-    SDL_ShowCursor(false);
-
     // create main window
     SDL_DisplayMode display_mode;
     SDL_GetCurrentDisplayMode(0, &display_mode);
     printf("Display Mode Resolution: %dx%d\n", display_mode.w, display_mode.h);
-    window_width = display_mode.w;
-    window_height = display_mode.h;
+    window_width = RENDER_FULLSCREEN ? display_mode.w : display_mode.w * 0.5;
+    window_height = RENDER_FULLSCREEN ? display_mode.h : display_mode.h * 0.5;
 
     set_render_dimensions(DEFAULT_RENDER_SCALE_FACTOR, true, false);
     if (!render_height || !render_width)

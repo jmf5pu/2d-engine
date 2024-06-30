@@ -35,7 +35,7 @@ void init_map(Map *map)
     map->num_p2_spawns = 1;
     map->num_enemy_spawners = 0;
     map->max_enemies = 1; // max number of enemies that can be present at the same time
-    map->num_dynamic_props = 2;
+    map->num_dynamic_props = 5;
 
     init_map_props(map);
 
@@ -174,6 +174,9 @@ void init_map_assets(void)
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
         10);
+    render_sprite_sheet_init(&sprite_sheet_m16_pickup_highlighted, "assets/wip/m16_pickup_highlighted.png", 20, 9);
+    adef_m16_pickup_highlighted = animation_definition_create(&sprite_sheet_m16_pickup_highlighted, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_m16_pickup_highlighted = animation_create(adef_m16_pickup_highlighted, false);
 
     render_sprite_sheet_init(&sprite_sheet_glock_pickup, "assets/wip/glock_pickup.png", 7, 9);
     adef_glock_pickup = animation_definition_create(&sprite_sheet_glock_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
@@ -181,6 +184,9 @@ void init_map_assets(void)
     render_sprite_sheet_init(&sprite_sheet_glock_pickup_highlight, "assets/wip/glock_pickup_highlight.png", 7, 9);
     adef_glock_pickup_highlight =
         animation_definition_create(&sprite_sheet_glock_pickup_highlight, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+    render_sprite_sheet_init(&sprite_sheet_glock_pickup_highlighted, "assets/wip/glock_pickup_highlighted.png", 7, 9);
+    adef_glock_pickup_highlighted = animation_definition_create(&sprite_sheet_glock_pickup_highlighted, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_glock_pickup_highlighted = animation_create(adef_glock_pickup_highlighted, false);
 
     render_sprite_sheet_init(&sprite_sheet_coach_gun_pickup, "assets/wip/coach_gun_pickup.png", 25, 18);
     adef_coach_gun_pickup = animation_definition_create(&sprite_sheet_coach_gun_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
@@ -188,6 +194,9 @@ void init_map_assets(void)
     render_sprite_sheet_init(&sprite_sheet_coach_gun_pickup_highlight, "assets/wip/coach_gun_pickup_highlight.png", 25, 18);
     adef_coach_gun_pickup_highlight =
         animation_definition_create(&sprite_sheet_coach_gun_pickup_highlight, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4}, 5);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_pickup_highlighted, "assets/wip/coach_gun_pickup_highlighted.png", 25, 18);
+    adef_coach_gun_pickup_highlighted = animation_definition_create(&sprite_sheet_coach_gun_pickup_highlighted, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
+    anim_coach_gun_pickup_highlighted = animation_create(adef_coach_gun_pickup_highlighted, false);
 
     // teleporter
     render_sprite_sheet_init(&sprite_sheet_teleporter_inactive, "assets/wip/teleporter_spinning.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
@@ -223,11 +232,13 @@ void init_map_props(Map *map)
 {
     init_map_background_prop();
     init_metal_table_props();
-    init_pickup_props();
 
     map->dynamic_props = malloc(sizeof(DynamicProp *) * map->num_dynamic_props);
     map->dynamic_props[0] = init_teleporter_prop();
     map->dynamic_props[1] = init_button_prop();
+    map->dynamic_props[2] = init_weapon_pickup_prop(WEAPON_PICKUP_M16, (vec2){27, 65}, (vec2){20, 9}, m16_pickup_on_hit);
+    map->dynamic_props[3] = init_weapon_pickup_prop(WEAPON_PICKUP_GLOCK, (vec2){35, 95}, (vec2){7, 9}, glock_pickup_on_hit);
+    map->dynamic_props[4] = init_weapon_pickup_prop(WEAPON_PICKUP_COACH_GUN, (vec2){27, 40}, (vec2){25, 18}, coach_gun_pickup_on_hit);
 }
 
 void init_map_background_prop(void)
@@ -291,12 +302,15 @@ DynamicProp *init_button_prop(void)
     return teleporter_button;
 }
 
-void init_pickup_props(void)
+DynamicProp *init_weapon_pickup_prop(DynamicPropType pickup_type, vec2 position, vec2 size, On_Hit on_hit)
 {
-    Entity *m16_pickup = entity_create((vec2){27, 65}, (vec2){20, 9}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, m16_pickup_on_hit, NULL);
-    m16_pickup->animation = anim_m16_pickup;
-    Entity *glock_pickup = entity_create((vec2){35, 95}, (vec2){7, 9}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, glock_pickup_on_hit, NULL);
-    glock_pickup->animation = anim_glock_pickup;
-    Entity *coach_gun_pickup = entity_create((vec2){27, 40}, (vec2){25, 18}, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, coach_gun_pickup_on_hit, NULL);
-    coach_gun_pickup->animation = anim_coach_gun_pickup;
+    DynamicProp *pickup = malloc(sizeof(DynamicProp));
+    pickup->entity = entity_create(position, size, (vec2){0, 0}, COLLISION_LAYER_PICKUP, COLLISION_LAYER_PLAYER, on_hit, NULL);
+    pickup->entity->body->parent = pickup;
+    pickup->state.pickup_state_enum = NORMAL;
+    pickup->update_state = weapon_pickup_update_state;
+    pickup->frames_on_state = 0;
+    pickup->type = pickup_type;
+    pickup->colliding_player = NULL;
+    return pickup;
 }

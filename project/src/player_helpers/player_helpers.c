@@ -4,6 +4,7 @@
 #include "../engine/camera.h"
 #include "../engine/global.h"
 #include "../engine/util.h"
+#include "../hud/hud.h"
 #include "../main_helpers/main_helpers.h"
 #include "../structs.h"
 #include "../weapon_types/weapon_types.h"
@@ -415,29 +416,20 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
         NULL,
         NULL);
     player->crosshair->animation = player->is_left_player ? anim_p1_crosshair : anim_p2_crosshair;
-    player->crosshair->is_active = true;
+    player->interact_bar = malloc(sizeof(Entity));
+    player->interact_bar =
+        entity_create((vec2){player->entity->body->aabb.position[0], player->entity->body->aabb.position[1] + 15}, (vec2){16, 3}, (vec2){0, 0}, 0, 0, NULL, NULL);
+    player->interact_bar->is_active = false;
 
     // populate weapon
     player->weapon = malloc(sizeof(Weapon));
-    player->weapon->name = starting_weapon->name;
-    player->weapon->fire_mode = starting_weapon->fire_mode;
     player->weapon->capacity = starting_weapon->capacity;
-    player->weapon->max_capacity = starting_weapon->capacity;
     player->weapon->reserve = starting_weapon->reserve;
-    player->weapon->max_reserve = starting_weapon->reserve;
-    player->weapon->max_fire_rate = starting_weapon->max_fire_rate;
-    player->weapon->damage = starting_weapon->damage;
-    player->weapon->bullet_velocity = starting_weapon->bullet_velocity;
-    player->weapon->burst_count = starting_weapon->burst_count;
     player->weapon->burst_shots_remaining = starting_weapon->burst_count;
-    player->weapon->burst_delay = starting_weapon->burst_delay;
     player->weapon->frames_since_last_shot = 0;
     player->weapon->ready_to_fire = true;
     player->weapon->is_firing = false;
-    player->weapon->hud_ammo_icon = starting_weapon->hud_ammo_icon;
-    player->weapon->on_shoot = starting_weapon->on_shoot;
-    player->weapon->blood_splatter_prefix = starting_weapon->blood_splatter_prefix;
-    player->weapon->muzzle_flash_id = starting_weapon->muzzle_flash_id;
+    player->weapon->weapon_type = starting_weapon;
 
     // weapon anims will be populated each frame based on the current player inputs
     player->weapon->character_anim = NULL;
@@ -452,6 +444,7 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
     player->despawn_time = despawn_time;
     player->spawn_delay = spawn_delay;
     player->spawn_time = spawn_time;
+    player->interact_frame_delay = 0;
     player->is_left_player = is_left_player;
     if (is_left_player) {
         player->camera = SPLIT_SCREEN ? &left_cam : &main_cam;
@@ -484,9 +477,10 @@ void init_player(Player *player, Map *map, Weapon_Type *starting_weapon, f32 des
 // Spawns the player and resets their attributes to default values
 void spawn_player(Player *player, Weapon_Type *starting_weapon)
 {
-    // update status & reset counter
+    // update status & reset counters
     player->status = PLAYER_SPAWNING;
     player->frames_on_status = 0;
+    player->interact_frame_delay = 0;
 
     // move player to respawn point
     player->relative_position[0] = player->spawn_point[0];
@@ -556,10 +550,10 @@ void update_player_status(Player *player)
     // WEAPON STATUS LOGIC
     // reloading logic
     if (player->status == PLAYER_RELOADING) {
-        if (player->frames_on_status > player->weapon->reload_frame_delay) {
+        if (player->frames_on_status > player->weapon->weapon_type->reload_frame_delay) {
             // reload either the missing bullets in the magazine or whatever
             // the player has left in reserve
-            u16 reload_amount = MIN(player->weapon->reserve, (player->weapon->max_capacity - player->weapon->capacity));
+            u16 reload_amount = MIN(player->weapon->reserve, (player->weapon->weapon_type->capacity - player->weapon->capacity));
             player->weapon->capacity += reload_amount;
             player->weapon->reserve -= reload_amount;
             player->status = PLAYER_ACTIVE;
@@ -567,20 +561,25 @@ void update_player_status(Player *player)
         }
     }
 
+    if (player->status == PLAYER_INTERACTING && player->input_state->key_state->use == KS_UNPRESSED) {
+        player->status = PLAYER_ACTIVE;
+    }
+
     // update weapon status (check if weapon is ready to fire again)
     if (player->status == PLAYER_ACTIVE && !player->weapon->ready_to_fire &&
-        player->weapon->frames_since_last_shot >= ((1.0 / (player->weapon->max_fire_rate / 60.0)) * global.time.frame_rate)) {
-        if (player->weapon->fire_mode == AUTO || player->weapon->fire_mode == SEMI) {
+        player->weapon->frames_since_last_shot >= ((1.0 / (player->weapon->weapon_type->max_fire_rate / 60.0)) * global.time.frame_rate)) {
+        if (player->weapon->weapon_type->fire_mode == AUTO || player->weapon->weapon_type->fire_mode == SEMI) {
             player->weapon->ready_to_fire = true;
         }
 
         // need an additional check for burst weapons, is ready to fire
         // if burst shots are left OR if burst delay is complete
         else if (
-            player->weapon->fire_mode == BURST &&
-            (player->weapon->burst_shots_remaining > 0 || (player->weapon->frames_since_last_shot * (1.0 / global.time.frame_rate)) >= player->weapon->burst_delay)) {
-            if (player->weapon->burst_shots_remaining == 0 && (player->weapon->frames_since_last_shot * (1.0 / global.time.frame_rate) >= player->weapon->burst_delay)) {
-                player->weapon->burst_shots_remaining = player->weapon->burst_count; // reset burst
+            player->weapon->weapon_type->fire_mode == BURST &&
+            (player->weapon->burst_shots_remaining > 0 || (player->weapon->frames_since_last_shot * (1.0 / global.time.frame_rate)) >= player->weapon->weapon_type->burst_delay)) {
+            if (player->weapon->burst_shots_remaining == 0 &&
+                (player->weapon->frames_since_last_shot * (1.0 / global.time.frame_rate) >= player->weapon->weapon_type->burst_delay)) {
+                player->weapon->burst_shots_remaining = player->weapon->weapon_type->burst_count; // reset burst
             }
             player->weapon->ready_to_fire = true;
         }
@@ -666,11 +665,11 @@ static void update_player_weapon_anim(Player *player)
     Animation_Definition *prev_adef = player->weapon->character_anim ? player->weapon->character_anim->animation_definition : NULL;
 
     char *adef_name = calloc(50, sizeof(char));
-    strcat(adef_name, player->weapon->name);
+    strcat(adef_name, player->weapon->weapon_type->name);
     strcat(adef_name, "_");
 
     bool show_firing_anim = player->weapon->is_firing ||
-                            (player->weapon->character_anim && player->weapon->character_anim->current_frame_index > 0 && player->weapon->character_anim->reset_count == 0);
+                            (player->weapon->character_anim && player->weapon->character_anim->current_frame_index >= 0 && player->weapon->character_anim->reset_count == 0);
     char *firing_state = show_firing_anim ? "firing" : "static";
 
     char *direction = calloc(5, sizeof(char));
@@ -705,12 +704,12 @@ void handle_player_shooting(Player *player, Key_State shoot)
 {
     // check if key presses are correct based on fire mode
     bool key_state_ready = false;
-    if ((player->weapon->fire_mode == AUTO && shoot == KS_HELD) || (player->weapon->fire_mode == SEMI && shoot == KS_PRESSED)) {
+    if ((player->weapon->weapon_type->fire_mode == AUTO && shoot == KS_HELD) || (player->weapon->weapon_type->fire_mode == SEMI && shoot == KS_PRESSED)) {
         key_state_ready = true;
     }
     else if (
-        player->weapon->fire_mode == BURST && ((player->weapon->burst_shots_remaining == player->weapon->burst_count && shoot == KS_PRESSED) ||
-                                               (player->weapon->burst_shots_remaining < player->weapon->burst_count && shoot == KS_HELD))) {
+        player->weapon->weapon_type->fire_mode == BURST && ((player->weapon->burst_shots_remaining == player->weapon->weapon_type->burst_count && shoot == KS_PRESSED) ||
+                                                            (player->weapon->burst_shots_remaining < player->weapon->weapon_type->burst_count && shoot == KS_HELD))) {
         key_state_ready = true;
     }
 
@@ -720,62 +719,27 @@ void handle_player_shooting(Player *player, Key_State shoot)
         // update flag on the weapon struct (used for anim assignment)
         player->weapon->is_firing = true;
 
-        // create bullet(s) [anims and direction will be specific to the weapon's type]
-        player->weapon->on_shoot(player);
+        // create bullet(s) [anims and direction will be specific to the weapon's type] and muzzle flash/brass effects
+        player->weapon->weapon_type->on_shoot(player);
 
         // decrement weapon capacity
         player->weapon->capacity -= 1;
 
-        if (player->weapon->fire_mode == BURST) {
+        if (player->weapon->weapon_type->fire_mode == BURST) {
             player->weapon->burst_shots_remaining -= 1;
         }
 
         // restart rounds per minute timer
         player->weapon->ready_to_fire = false;
         player->weapon->frames_since_last_shot = 0;
-
-        // Note the lack of collision masks and on hit methods - collisions aren't relevant for muzzle flash entities
-        vec2 muzzle_flash_position = {0, 0};
-        vec2 muzzle_flash_offset = {0, 0};
-        get_xy_components_from_vector(MUZZLE_FLASH_DISTANCE_FROM_PLAYER, player->crosshair_angle, muzzle_flash_offset);
-        vec2_add(muzzle_flash_offset, muzzle_flash_offset, (vec2){0, CHARACTER_ARMS_Y_OFFSET_FROM_CENTER});
-        vec2_add(muzzle_flash_position, player->relative_position, muzzle_flash_offset);
-        create_muzzle_flash_entity(
-            player->weapon->muzzle_flash_id, player->crosshair_angle, muzzle_flash_position, (vec2){15, 15}, player->entity->body->velocity, 0, 0, NULL, NULL);
-
-        // ccalculate brass offset from the player and create brass effect entity
-        vec2 brass_position = {0, 0};
-        vec2_dup(brass_position, player->relative_position);
-        vec2 brass_offset = {0, 0};
-        get_xy_components_from_vector(BRASS_EJECT_DISTANCE_FROM_PLAYER, player->crosshair_angle, brass_offset);
-        vec2_add(brass_position, brass_position, brass_offset);
-        vec2_add(brass_position, brass_position, (vec2){0, CHARACTER_ARMS_Y_OFFSET_FROM_CENTER});
-        create_brass_entity(brass_position, adef_brass_falling_1, get_player_brass_z_index(player->crosshair_angle));
     }
-}
-
-/// @brief helper to get the z_index of brass entities based on player direction. If the player is facing up, we want to render the brass underneath the player sprite
-/// @param angle player to crosshair angle
-/// @return z index for the brass entity (1 or -1)
-static i32 get_player_brass_z_index(f32 angle)
-{
-    bool player_facing_up = angle > M_PI / 4 && angle < 3 * M_PI / 4;
-    return player_facing_up ? -1 : 1;
 }
 
 /// @brief Applies the player's input state to other relevant members, such as moving, shooting, and reloading states
 /// @param player
 void apply_player_input_state(Player *player)
 {
-    bool can_reload = player->weapon->capacity < player->weapon->max_capacity;
-    if (player->status != PLAYER_RELOADING && player->input_state->key_state->reload == KS_HELD && can_reload) {
-        player->status = PLAYER_RELOADING;
-        player->frames_on_status = 0;
-    }
-    else if (player->status == PLAYER_RELOADING && player->input_state->key_state->reload == KS_UNPRESSED) {
-        player->status = PLAYER_ACTIVE;
-        player->frames_on_status = 0;
-    }
+    update_player_status_from_input_state(player);
 
     // only update velocity from keyboard if the joysticks weren't updated this frame (no controller associated)
     if (player->input_state->controller_input_state->controller_id == -1)
@@ -785,6 +749,36 @@ void apply_player_input_state(Player *player)
         handle_player_shooting(player, player->input_state->key_state->shoot);
     else
         player->weapon->is_firing = false;
+}
+
+void update_player_status_from_input_state(Player *player)
+{
+    vec2 interact_bar_position = {player->relative_position[0], player->relative_position[1] + 15};
+    bool can_reload = player->weapon->capacity < player->weapon->weapon_type->capacity;
+
+    bool first_frame_reloading = player->status != PLAYER_RELOADING && player->input_state->key_state->reload == KS_HELD && can_reload;
+    bool first_frame_interacting = player->status != PLAYER_INTERACTING && player->input_state->key_state->use == KS_HELD;
+    bool last_frame_reloading = player->status == PLAYER_RELOADING && player->input_state->key_state->reload == KS_UNPRESSED;
+    bool last_frame_interacting = player->status == PLAYER_INTERACTING && player->input_state->key_state->use == KS_UNPRESSED;
+
+    if (first_frame_reloading) {
+        player->status = PLAYER_RELOADING;
+        player->frames_on_status = 0;
+        if (player->interact_bar->animation != NULL) {
+            animation_destroy(player->interact_bar->animation);
+            player->interact_bar->animation = NULL;
+        }
+        player->interact_bar->animation = animation_create(adef_interact_bar_open, false);
+        player->interact_bar->is_active = true;
+    }
+    else if (last_frame_reloading || last_frame_interacting) {
+        player->status = PLAYER_ACTIVE;
+        player->frames_on_status = 0;
+        if (player->interact_bar->animation != NULL) {
+            animation_destroy(player->interact_bar->animation);
+            player->interact_bar->animation = NULL;
+        }
+    }
 }
 
 /// @brief Update the player's entity's velocity from its current key state. Supports 8 directional movement
@@ -868,26 +862,11 @@ Player *get_player_from_body(Body *body)
 /// @param weapon_type new weapon_type
 void update_player_weapon(Player *player, Weapon_Type *weapon_type)
 {
-    player->weapon->name = weapon_type->name;
-    player->weapon->fire_mode = weapon_type->fire_mode;
     player->weapon->capacity = weapon_type->capacity;
-    player->weapon->max_capacity = weapon_type->capacity;
     player->weapon->reserve = weapon_type->reserve;
-    player->weapon->max_reserve = weapon_type->reserve;
-    player->weapon->max_fire_rate = weapon_type->max_fire_rate;
-    player->weapon->damage = weapon_type->damage;
-    player->weapon->bullet_velocity = weapon_type->bullet_velocity;
-    player->weapon->reload_frame_delay = weapon_type->reload_frame_delay;
-    player->weapon->burst_count = weapon_type->burst_count;
     player->weapon->burst_shots_remaining = weapon_type->burst_count;
-    player->weapon->burst_delay = weapon_type->burst_delay;
     player->weapon->frames_since_last_shot = 0;
-    player->weapon->hud_ammo_icon = weapon_type->hud_ammo_icon;
     player->weapon->ready_to_fire = true;
     player->weapon->is_firing = false;
-    player->weapon->on_shoot = weapon_type->on_shoot;
-    player->weapon->muzzle_flash_id = weapon_type->muzzle_flash_id;
-    player->weapon->bullet_adef = weapon_type->bullet_adef;
-    player->weapon->bullet_impact_adef = weapon_type->bullet_impact_adef;
-    player->weapon->blood_splatter_prefix = weapon_type->blood_splatter_prefix;
+    player->weapon->weapon_type = weapon_type;
 }

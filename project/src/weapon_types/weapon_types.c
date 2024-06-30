@@ -20,15 +20,15 @@ void create_bullet_straight(Player *player, f32 angle)
     vec2_add(bullet_position, bullet_position, bullet_start_offset);
 
     // Calculate velocity using angle
-    get_xy_components_from_vector(player->weapon->bullet_velocity, angle, bullet_velocity);
+    get_xy_components_from_vector(player->weapon->weapon_type->bullet_velocity, angle, bullet_velocity);
 
     // create bullet struct and calculated anim and velocity
     Bullet *bullet = malloc(sizeof(Bullet));
     bullet->entity = entity_create(bullet_position, (vec2){5, 5}, (vec2){0, 0}, COLLISION_LAYER_BULLET, bullet_mask, bullet_on_hit, bullet_on_hit_static);
-    bullet->impact_adef = player->weapon->bullet_impact_adef;
-    bullet->splatter_adef = get_blood_splatter_adef(player->weapon->blood_splatter_prefix);
-    bullet->damage = player->weapon->damage;
-    bullet->entity->animation = animation_create(player->weapon->bullet_adef, true);
+    bullet->impact_adef = player->weapon->weapon_type->bullet_impact_adef;
+    bullet->splatter_adef = get_blood_splatter_adef(player->weapon->weapon_type->blood_splatter_prefix);
+    bullet->damage = player->weapon->weapon_type->damage;
+    bullet->entity->animation = animation_create(player->weapon->weapon_type->bullet_adef, true);
     vec2_dup(bullet->entity->body->velocity, bullet_velocity);
     bullet->entity->body->parent = bullet;
 }
@@ -46,17 +46,29 @@ void create_scatter_shot(Player *player, f32 spread_angle, u8 shot_count)
 
 void base_on_shoot(Player *player) { return; }
 
-void m16_on_shoot(Player *player) { create_bullet_straight(player, player->crosshair_angle); }
+void m16_on_shoot(Player *player)
+{
+    create_player_muzzle_flash_effect(player);
+    create_player_brass_effect(player, adef_brass_falling_1);
+    create_bullet_straight(player, player->crosshair_angle);
+}
 
-void glock_on_shoot(Player *player) { create_bullet_straight(player, player->crosshair_angle); }
+void glock_on_shoot(Player *player)
+{
+    create_player_muzzle_flash_effect(player);
+    create_player_brass_effect(player, adef_brass_falling_1);
+    create_bullet_straight(player, player->crosshair_angle);
+}
 
 void coach_gun_on_shoot(Player *player)
 {
     const f32 scatter_angle = 0.35; // 20 degrees in radians //0.5236; // 30 degrees in radians
     const u8 num_shots = 7;
+    create_player_muzzle_flash_effect(player);
     create_scatter_shot(player, scatter_angle, num_shots);
 }
 
+// when modifying weapon types be sure to update weapon_type and weapon structs as well as update_player_weapon
 void init_weapon_types(void)
 {
     render_sprite_sheet_init(&sprite_sheet_556_burst, "assets/hud/556_burst.png", 20, 44);
@@ -85,6 +97,7 @@ void init_weapon_types(void)
     m16->damage = 30;
     m16->bullet_velocity = 800;
     m16->reload_frame_delay = 60;
+    m16->pickup_frame_delay = 120;
     m16->muzzle_flash_id = "1";
     m16->bullet_adef = adef_bullet_medium;
     m16->bullet_impact_adef = adef_bullet_impact_medium;
@@ -101,6 +114,7 @@ void init_weapon_types(void)
     glock->damage = 15;
     glock->bullet_velocity = 600;
     glock->reload_frame_delay = 90;
+    glock->pickup_frame_delay = 120;
     glock->muzzle_flash_id = "1";
     glock->bullet_adef = adef_bullet_small;
     glock->bullet_impact_adef = adef_bullet_impact_small;
@@ -116,7 +130,8 @@ void init_weapon_types(void)
     coach_gun->max_fire_rate = 400;
     coach_gun->damage = 15;
     coach_gun->bullet_velocity = 600;
-    coach_gun->reload_frame_delay = 180;
+    coach_gun->reload_frame_delay = 120;
+    coach_gun->pickup_frame_delay = 120;
     coach_gun->muzzle_flash_id = "2";
     coach_gun->bullet_adef = adef_bullet_small;
     coach_gun->bullet_impact_adef = adef_bullet_impact_medium;
