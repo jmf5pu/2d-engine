@@ -60,7 +60,7 @@ void update_projection_matrix(u32 *shader_default, u32 *shader_batch, f32 render
     glUseProgram(*shader_batch);
     glUniformMatrix4fv(glGetUniformLocation(*shader_batch, "projection"), 1, GL_FALSE, &projection[0][0]);
 
-    for (u32 i = 0; i < 32; ++i) {
+    for (u32 i = 0; i < BATCH_SIZE; ++i) {
         char name[] = "texture_slot_N";
         sprintf(name, "texture_slot_%u", i);
         glUniform1i(glGetUniformLocation(*shader_batch, name), i);

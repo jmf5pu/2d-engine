@@ -150,13 +150,13 @@ void init_menu_anims(void)
     // SELECTED ITEM INDICATORS
     render_sprite_sheet_init(&sprite_sheet_selected_bracket_left, "assets/menus/selected_bracket_left.png", SELECTED_ANIM_WIDTH, SELECTED_ANIM_HEIGHT);
     adef_selected_bracket_left =
-        animation_definition_create(&sprite_sheet_selected_bracket_left, (f32[]){0.005, 0.005, 0.005, 0.005, 0.005}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+        animation_definition_create(&sprite_sheet_selected_bracket_left, (f32[]){0.005, 0.005, 0.005, 0.005, 0.005, 0.005}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
     anim_selected_bracket_left = animation_create(adef_selected_bracket_left, false);
     anim_selected_bracket_left->is_active = false;
 
     render_sprite_sheet_init(&sprite_sheet_selected_bracket_right, "assets/menus/selected_bracket_right.png", SELECTED_ANIM_WIDTH, SELECTED_ANIM_HEIGHT);
     adef_selected_bracket_right =
-        animation_definition_create(&sprite_sheet_selected_bracket_right, (f32[]){0.005, 0.005, 0.005, 0.005, 0.005}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+        animation_definition_create(&sprite_sheet_selected_bracket_right, (f32[]){0.005, 0.005, 0.005, 0.005, 0.005, 0.005}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
     anim_selected_bracket_right = animation_create(adef_selected_bracket_right, false);
     anim_selected_bracket_right->is_active = false;
 }
