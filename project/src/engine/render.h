@@ -63,9 +63,10 @@ typedef struct sprite_sheet_frame {
 
 SDL_Window *render_init(void);
 void set_render_dimensions(f32 scale_factor, bool rendering_hud, bool update_shaders);
-void render_begin(void);
-void render_begin_left(void);
-void render_begin_right(void);
+void render_begin(u32 texture_slots[BATCH_SIZE]);
+void render_begin_left(u32 texture_slots[BATCH_SIZE]);
+void render_begin_right(u32 texture_slots[BATCH_SIZE]);
+void render_begin_hud(u32 texture_slots[BATCH_SIZE]);
 void render_end(SDL_Window *window, u32 batch_texture_ids[32], bool swap_window);
 void render_quad(vec2 pos, vec2 state, vec4 color);
 void render_line_segment(vec2 start, vec2 end, vec4 color);

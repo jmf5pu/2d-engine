@@ -119,31 +119,39 @@ static int compare_vertices(const void *a, const void *b)
     return (vertex_a->vertex_idx > vertex_b->vertex_idx) - (vertex_a->vertex_idx < vertex_b->vertex_idx);
 }
 
-void render_begin(void)
+void render_begin(u32 texture_slots[BATCH_SIZE])
 {
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
-    list_batch->len = 0; // clears batch vertices buffer
+    glFinish();
+    array_list_clear(list_batch, true);
+    memset(texture_slots, 0, sizeof(u32) * BATCH_SIZE);
     glViewport(0, 0, window_width, window_height);
 }
 
-void render_begin_left(void)
+void render_begin_left(u32 texture_slots[BATCH_SIZE])
 {
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
-    list_batch->len = 0; // clears batch vertices buffer from previous frame
+    glFinish();
+    array_list_clear(list_batch, true);
+    memset(texture_slots, 0, sizeof(u32) * BATCH_SIZE);
     glViewport(0, 0, window_width * 0.5, window_height);
 }
 
-void render_begin_right(void)
+void render_begin_right(u32 texture_slots[BATCH_SIZE])
 {
-    list_batch->len = 0;
+    glFinish();
+    array_list_clear(list_batch, true);
+    memset(texture_slots, 0, sizeof(u32) * BATCH_SIZE);
     glViewport(window_width * 0.5, 0, window_width * 0.5, window_height);
 }
 
-void render_begin_hud(void)
+void render_begin_hud(u32 texture_slots[BATCH_SIZE])
 {
-    list_batch->len = 0;
+    glFinish();
+    array_list_clear(list_batch, true);
+    memset(texture_slots, 0, sizeof(u32) * BATCH_SIZE);
     glViewport(0, 0, window_width, window_height);
 }
 
@@ -192,8 +200,11 @@ static void render_batch(Batch_Vertex *vertices, usize count, u32 texture_ids[BA
 
     glUseProgram(shader_batch);
     glBindVertexArray(vao_batch);
-
+    glFinish();
     glDrawElements(GL_TRIANGLES, (count >> 2) * 6, GL_UNSIGNED_INT, NULL);
+    glFinish();
+    array_list_clear(list_batch, true);
+    memset(texture_ids, 0, sizeof(u32) * BATCH_SIZE);
 }
 
 void render_end(SDL_Window *window, u32 batch_texture_ids[BATCH_SIZE], bool swap_window)
@@ -398,14 +409,14 @@ void render_sprite_sheet_frame(
     // check if buffer is full, is so, flush buffer and try again TODO:
     // implement some sort of LRU here
     if (texture_slot == -1) {
+        // printf("flushing\n");
         render_end(
             window,
             texture_slots,
-            false);                         // render all the batched frames before resetting
-                                            // for another write
-        array_list_clear(list_batch, true); // free old batch vertices
+            false); // render all the batched frames before resetting
+                    // for another write
 
-        // flush texture_slots array
+        array_list_clear(list_batch, true);
         memset(texture_slots, 0, sizeof(u32) * BATCH_SIZE);
 
         // try to insert it again

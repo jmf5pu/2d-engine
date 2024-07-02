@@ -79,19 +79,19 @@ int main(int argc, char *argv[])
             // free_players(); // reset players when exit back to main menu.
             //  Important so that we don't malloc twice if we go
             //  from menu -> running -> menu -> running
-            render_begin();
+            render_begin(texture_slots);
             update_menu(main_menu, global.input);
             render_menu(main_menu);
             render_end(window, texture_slots, true);
             break;
         case GS_GAME_MODE_MENU:
-            render_begin();
+            render_begin(texture_slots);
             update_menu(mode_menu, global.input);
             render_menu(mode_menu);
             render_end(window, texture_slots, true);
             break;
         case GS_SURVIVAL_MENU:
-            render_begin();
+            render_begin(texture_slots);
             update_menu(survival_menu, global.input);
             render_menu(survival_menu);
             render_end(window, texture_slots, true);
@@ -188,20 +188,20 @@ int main(int argc, char *argv[])
                 // created in `handle_player_shooting`
                 if (SPLIT_SCREEN && i == 0) {
                     camera_update(player_one, &map);
-                    render_begin_left();
+                    render_begin_left(texture_slots);
                     if (game_state == GS_RUNNING)
                         player_per_frame_updates(player_one);
                 }
                 else if (SPLIT_SCREEN && i == 1) {
                     camera_update(player_two, &map);
-                    render_begin_right();
+                    render_begin_right(texture_slots);
                     if (game_state == GS_RUNNING)
                         player_per_frame_updates(player_two);
                 }
                 else // hit when screen is not being split
                 {
                     camera_update(player_one, &map);
-                    render_begin();
+                    render_begin(texture_slots);
                     if (game_state == GS_RUNNING)
                         player_per_frame_updates(player_one);
                 }
@@ -262,7 +262,7 @@ int main(int argc, char *argv[])
 
             set_render_dimensions(DEFAULT_RENDER_SCALE_FACTOR, true, true);
 
-            render_begin_hud();
+            render_begin_hud(texture_slots);
             render_hud();
 
             // PAUSE MENU
