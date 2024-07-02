@@ -518,6 +518,7 @@ void update_player_status(Player *player)
     // SPAWN LOGIC
     // check if spawn delay is up
     if (player->status == PLAYER_INACTIVE && player->frames_on_status >= (player->spawn_delay * global.time.frame_rate)) {
+        printf("spawning");
         spawn_player(player, glock);
     }
 
@@ -530,17 +531,16 @@ void update_player_status(Player *player)
     // DESPAWN LOGIC
     // check if health is 0
     else if (player->health <= 0 && player->status == PLAYER_ACTIVE) {
-        player->status = PLAYER_DESPAWNING;
-        player->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
-        player->frames_on_status = 0;
+        printf("despawning\n");
+        set_player_status(player, PLAYER_DESPAWNING);
 
         // shouldn't be moving on death anim
         vec2_dup(player->entity->body->velocity, (vec2){0, 0});
     }
     // check if death animation is complete
     else if (player->status == PLAYER_DESPAWNING && player->frames_on_status >= (player->despawn_time * global.time.frame_rate)) {
-        player->status = PLAYER_INACTIVE;
-        player->frames_on_status = 0;
+        printf("inactive\n");
+        set_player_status(player, PLAYER_INACTIVE);
 
         // hide sprites
         player->entity->is_active = false;
@@ -556,13 +556,12 @@ void update_player_status(Player *player)
             u16 reload_amount = MIN(player->weapon->reserve, (player->weapon->weapon_type->capacity - player->weapon->capacity));
             player->weapon->capacity += reload_amount;
             player->weapon->reserve -= reload_amount;
-            player->status = PLAYER_ACTIVE;
-            player->frames_on_status = 0;
+            set_player_status(player, PLAYER_ACTIVE);
         }
     }
 
     if (player->status == PLAYER_INTERACTING && player->input_state->key_state->use == KS_UNPRESSED) {
-        player->status = PLAYER_ACTIVE;
+        set_player_status(player, PLAYER_ACTIVE);
     }
 
     // update weapon status (check if weapon is ready to fire again)

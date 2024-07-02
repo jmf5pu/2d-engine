@@ -115,6 +115,13 @@ void enemy_on_hit(Body *self, Body *other, Hit hit)
 
     // prevent enemy from overlapping with player
     if (other->collision_layer == COLLISION_LAYER_PLAYER) {
+        Player *player = get_player_from_body(other);
+        if (player != NULL) {
+            printf("player->health %d\n", player->health);
+            player->health -= 100;
+        }
+
+        // keep enemies from overlapping with player sprite
         vec2_add(self->aabb.position, self->aabb.position, hit.normal);
     }
 }
