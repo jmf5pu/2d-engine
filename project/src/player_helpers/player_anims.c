@@ -76,8 +76,8 @@ void init_player_character_anims(void)
     adef_player_skinhead_idle_3 = animation_definition_create(&sprite_sheet_player_skinhead_idle_3, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_player_skinhead_idle_3 = animation_create(adef_player_skinhead_idle_3, false);
     render_sprite_sheet_init(&sprite_sheet_player_skinhead_idle_4, "assets/wip/player_soldier_idle_3.png", 18, 26);
-    adef_player_skinhead_idle_4 = animation_definition_create(&sprite_sheet_player_skinhead_idle_4, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    anim_player_skinhead_idle_4 = animation_create(adef_player_skinhead_idle_4, false);
+    adef_player_skinhead_idle_4 = animation_definition_create(&sprite_sheet_player_skinhead_idle_4, (f32[]){1, 1}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    anim_player_skinhead_idle_4 = animation_create(adef_player_skinhead_idle_4, true);
 
     render_sprite_sheet_init(&sprite_sheet_player_skinhead_moving_1, "assets/wip/player_soldier_moving_0.png", 18, 26);
     adef_player_skinhead_moving_1 =
