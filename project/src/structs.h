@@ -211,4 +211,9 @@ typedef struct map {
     DynamicProp **dynamic_props;
 } Map;
 
+typedef struct muzzle_flash {
+    Entity *entity;
+    Body *parent; // body to tie movement to
+} MuzzleFlash;
+
 #endif

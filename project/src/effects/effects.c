@@ -55,6 +55,10 @@ void create_muzzle_flash_entity(
     entity->destroy_on_anim_completion = true;
 }
 
+/// @brief update muzzle flash entity velocities to follow player, remove old ones from the arraylist
+/// @param
+void update_muzzle_flash_entities(void) {}
+
 void create_player_muzzle_flash_effect(Player *player)
 {
     vec2 muzzle_flash_position = {0, 0};
