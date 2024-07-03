@@ -3,7 +3,7 @@
 
 #define SPLIT_SCREEN false
 #define RENDER_PHYSICS_BODIES false
-#define RENDER_FULLSCREEN true
+#define RENDER_FULLSCREEN false
 #define DEFAULT_RENDER_SCALE_FACTOR 0.25
 #define FRAME_RATE 60
 
