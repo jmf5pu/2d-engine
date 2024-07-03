@@ -1,4 +1,7 @@
 TODO:
+* add logic to tie muzzle flash directly to player's current velocity during all frames
+* add health meter with heart beating anim
+* add ammo meter
 * add logic to implement randomized impact, splatter, and muzzle flash animations
 * effects
     * dust after footsteps
