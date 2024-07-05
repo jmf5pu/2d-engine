@@ -112,8 +112,9 @@ void init_character_shadow_anim(void);
 void init_explosion_adef_hashmap(void);
 void init_blood_splatter_adef_hashmap(void);
 void create_muzzle_flash_entity(
-    char *muzzle_flash_id, f32 angle, vec2 position, vec2 size, vec2 velocity, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static);
+    Player *player, char *muzzle_flash_id, f32 angle, vec2 position, vec2 size, vec2 velocity, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static);
 void create_player_muzzle_flash_effect(Player *player);
+void update_muzzle_flash_entities(void);
 void create_bullet_impact_entity(vec2 position, Animation_Definition *adef);
 void create_brass_entity(vec2 position, Animation_Definition *adef, i32 z_index);
 void create_player_brass_effect(Player *player, Animation_Definition *brass_adef);

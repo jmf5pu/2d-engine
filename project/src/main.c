@@ -275,6 +275,9 @@ int main(int argc, char *argv[])
             // destroy any entities that need to be destroyed:
             destroy_all_marked_entities(&map);
             update_entity_movements();
+
+            // update muzzle flash movements, and delete old ones
+            update_muzzle_flash_entities();
             break;
         case GS_EXITING:
             should_quit = true;
