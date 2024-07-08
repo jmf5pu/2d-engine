@@ -60,7 +60,7 @@ void create_muzzle_flash(
     entity->destroy_on_anim_completion = false;
     MuzzleFlash *muzzle_flash = malloc(sizeof(MuzzleFlash));
     muzzle_flash->entity = entity;
-    muzzle_flash->parent = player->entity->body;
+    muzzle_flash->player = player;
     array_list_append(muzzle_flashes, muzzle_flash);
 }
 
@@ -71,12 +71,13 @@ void update_muzzle_flash_entities(void)
     for (int i = muzzle_flashes->len - 1; i >= 0; i--) {
         MuzzleFlash *muzzle_flash = array_list_get(muzzle_flashes, i);
 
-        if (muzzle_flash->entity->animation->current_frame_index == muzzle_flash->entity->animation->animation_definition->frame_count) {
+        if (animation_on_last_frame(muzzle_flash->entity->animation)) {
+            muzzle_flash->entity->is_active = false;
             array_list_remove(muzzle_flashes, i);
             free(muzzle_flash);
         }
         else {
-            vec2_dup(muzzle_flash->entity->body->velocity, muzzle_flash->parent->velocity);
+            get_muzzle_flash_position(muzzle_flash->player, &muzzle_flash->entity->body->aabb.position);
         }
     }
 }
@@ -84,10 +85,7 @@ void update_muzzle_flash_entities(void)
 void create_player_muzzle_flash_effect(Player *player)
 {
     vec2 muzzle_flash_position = {0, 0};
-    vec2 muzzle_flash_offset = {0, 0};
-    get_xy_components_from_vector(MUZZLE_FLASH_DISTANCE_FROM_PLAYER, player->crosshair_angle, muzzle_flash_offset);
-    vec2_add(muzzle_flash_offset, muzzle_flash_offset, (vec2){0, CHARACTER_ARMS_Y_OFFSET_FROM_CENTER});
-    vec2_add(muzzle_flash_position, player->relative_position, muzzle_flash_offset);
+    get_muzzle_flash_position(player, &muzzle_flash_position);
     create_muzzle_flash(
         player, player->weapon->weapon_type->muzzle_flash_id, player->crosshair_angle, muzzle_flash_position, (vec2){15, 15}, player->entity->body->velocity, 0, 0, NULL, NULL);
 }
@@ -184,6 +182,14 @@ void init_bullet_animation_definitions(void)
     render_sprite_sheet_init(&sprite_sheet_bullet_impact_medium, "assets/wip/bullet_impact_medium.png", BULLET_IMPACT_DIMENSIONS_MEDIUM[0], BULLET_IMPACT_DIMENSIONS_MEDIUM[1]);
     adef_bullet_impact_medium =
         animation_definition_create(&sprite_sheet_bullet_impact_medium, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+}
+
+void get_muzzle_flash_position(Player *player, vec2 *muzzle_flash_position)
+{
+    vec2 muzzle_flash_offset = {0, 0};
+    get_xy_components_from_vector(MUZZLE_FLASH_DISTANCE_FROM_PLAYER, player->crosshair_angle, muzzle_flash_offset);
+    vec2_add(muzzle_flash_offset, muzzle_flash_offset, (vec2){0, CHARACTER_ARMS_Y_OFFSET_FROM_CENTER});
+    vec2_add(*muzzle_flash_position, player->relative_position, muzzle_flash_offset);
 }
 
 void init_explosion_animation_definitions(void)

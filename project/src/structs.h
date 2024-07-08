@@ -213,7 +213,7 @@ typedef struct map {
 
 typedef struct muzzle_flash {
     Entity *entity;
-    Body *parent; // body to tie movement to
+    Player *player; // player associated with this muzzle flash, used for calculating position each frame
 } MuzzleFlash;
 
 #endif
