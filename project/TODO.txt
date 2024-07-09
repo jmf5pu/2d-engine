@@ -1,4 +1,7 @@
 TODO:
+* add logic to tie muzzle flash directly to player's current velocity during all frames
+* add health meter with heart beating anim
+* add ammo meter
 * add logic to implement randomized impact, splatter, and muzzle flash animations
 * effects
     * dust after footsteps
@@ -9,7 +12,7 @@ TODO:
     * enemy death sprites/logic
 * update window, texture_slots, color parameters to now use extern variables from main.c instead
 * update animation struct so that animation_definition is copied, not a reference
-* add reloading timer and animation
+* add reloading animation
 * debug sprite flickers
 * remove Sprite_Sheet_Frame struct, replace occurrences with animations
 * redo hud sprites

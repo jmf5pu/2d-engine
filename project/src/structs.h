@@ -211,4 +211,9 @@ typedef struct map {
     DynamicProp **dynamic_props;
 } Map;
 
+typedef struct muzzle_flash {
+    Entity *entity;
+    Player *player; // player associated with this muzzle flash, used for calculating position each frame
+} MuzzleFlash;
+
 #endif

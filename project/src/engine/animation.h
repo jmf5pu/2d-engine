@@ -38,4 +38,6 @@ void animation_render(Animation *animation, SDL_Window *window, vec2 position, v
 void clear_animation_list(void);
 void clear_animation_definition_list(void);
 
+inline bool animation_on_last_frame(Animation *animation) { return animation->current_frame_index == animation->animation_definition->frame_count - 1; }
+
 #endif

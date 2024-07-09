@@ -12,6 +12,8 @@ static Hash_Map *blood_splatter_adef_map;
 const u8 BULLET_IMPACT_DIMENSIONS_SMALL[] = {5, 5};
 const u8 BULLET_IMPACT_DIMENSIONS_MEDIUM[] = {7, 7};
 
+static Array_List *muzzle_flashes;
+
 // extern variables from main
 u32 texture_slots[BATCH_SIZE];
 vec4 game_color;
@@ -29,10 +31,13 @@ void init_effects(void)
     // init hashmaps
     init_explosion_adef_hashmap();
     init_blood_splatter_adef_hashmap();
+
+    // init muzzle flash storage
+    muzzle_flashes = array_list_create(sizeof(MuzzleFlash *), 0);
 }
 
-void create_muzzle_flash_entity(
-    char *muzzle_flash_id, f32 angle, vec2 position, vec2 size, vec2 velocity, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static)
+void create_muzzle_flash(
+    Player *player, char *muzzle_flash_id, f32 angle, vec2 position, vec2 size, vec2 velocity, u8 collision_layer, u8 collision_mask, On_Hit on_hit, On_Hit_Static on_hit_static)
 {
     Entity *entity = entity_create(position, size, velocity, collision_layer, collision_mask, on_hit, on_hit_static);
 
@@ -52,18 +57,37 @@ void create_muzzle_flash_entity(
     free(adef_key);
 
     entity->animation = animation_create(adef, false);
-    entity->destroy_on_anim_completion = true;
+    entity->destroy_on_anim_completion = false;
+    MuzzleFlash *muzzle_flash = malloc(sizeof(MuzzleFlash));
+    muzzle_flash->entity = entity;
+    muzzle_flash->player = player;
+    array_list_append(muzzle_flashes, muzzle_flash);
+}
+
+/// @brief update muzzle flash entity velocities to follow player, remove old ones from the arraylist
+/// @param
+void update_muzzle_flash_entities(void)
+{
+    for (int i = muzzle_flashes->len - 1; i >= 0; i--) {
+        MuzzleFlash *muzzle_flash = array_list_get(muzzle_flashes, i);
+
+        if (animation_on_last_frame(muzzle_flash->entity->animation)) {
+            muzzle_flash->entity->is_active = false;
+            array_list_remove(muzzle_flashes, i);
+            free(muzzle_flash);
+        }
+        else {
+            get_muzzle_flash_position(muzzle_flash->player, &muzzle_flash->entity->body->aabb.position);
+        }
+    }
 }
 
 void create_player_muzzle_flash_effect(Player *player)
 {
     vec2 muzzle_flash_position = {0, 0};
-    vec2 muzzle_flash_offset = {0, 0};
-    get_xy_components_from_vector(MUZZLE_FLASH_DISTANCE_FROM_PLAYER, player->crosshair_angle, muzzle_flash_offset);
-    vec2_add(muzzle_flash_offset, muzzle_flash_offset, (vec2){0, CHARACTER_ARMS_Y_OFFSET_FROM_CENTER});
-    vec2_add(muzzle_flash_position, player->relative_position, muzzle_flash_offset);
-    create_muzzle_flash_entity(
-        player->weapon->weapon_type->muzzle_flash_id, player->crosshair_angle, muzzle_flash_position, (vec2){15, 15}, player->entity->body->velocity, 0, 0, NULL, NULL);
+    get_muzzle_flash_position(player, &muzzle_flash_position);
+    create_muzzle_flash(
+        player, player->weapon->weapon_type->muzzle_flash_id, player->crosshair_angle, muzzle_flash_position, (vec2){15, 15}, player->entity->body->velocity, 0, 0, NULL, NULL);
 }
 void create_bullet_impact_entity(vec2 position, Animation_Definition *adef)
 {
@@ -148,16 +172,24 @@ Animation_Definition *get_blood_splatter_adef(char *adef_prefix)
 
 void init_bullet_animation_definitions(void)
 {
-    render_sprite_sheet_init(&sprite_sheet_bullet_small, "assets/wip/bullet_small.png", 2, 2);
+    render_sprite_sheet_init(&sprite_sheet_bullet_small, "assets/bullet_small.png", 2, 2);
     adef_bullet_small = animation_definition_create(&sprite_sheet_bullet_small, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_bullet_medium, "assets/wip/bullet_medium.png", 4, 4);
+    render_sprite_sheet_init(&sprite_sheet_bullet_medium, "assets/bullet_medium.png", 4, 4);
     adef_bullet_medium = animation_definition_create(&sprite_sheet_bullet_medium, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_bullet_impact_small, "assets/wip/bullet_impact_small.png", BULLET_IMPACT_DIMENSIONS_SMALL[0], BULLET_IMPACT_DIMENSIONS_SMALL[1]);
+    render_sprite_sheet_init(&sprite_sheet_bullet_impact_small, "assets/bullet_impact_small.png", BULLET_IMPACT_DIMENSIONS_SMALL[0], BULLET_IMPACT_DIMENSIONS_SMALL[1]);
     adef_bullet_impact_small =
         animation_definition_create(&sprite_sheet_bullet_impact_small, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
-    render_sprite_sheet_init(&sprite_sheet_bullet_impact_medium, "assets/wip/bullet_impact_medium.png", BULLET_IMPACT_DIMENSIONS_MEDIUM[0], BULLET_IMPACT_DIMENSIONS_MEDIUM[1]);
+    render_sprite_sheet_init(&sprite_sheet_bullet_impact_medium, "assets/bullet_impact_medium.png", BULLET_IMPACT_DIMENSIONS_MEDIUM[0], BULLET_IMPACT_DIMENSIONS_MEDIUM[1]);
     adef_bullet_impact_medium =
         animation_definition_create(&sprite_sheet_bullet_impact_medium, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
+}
+
+void get_muzzle_flash_position(Player *player, vec2 *muzzle_flash_position)
+{
+    vec2 muzzle_flash_offset = {0, 0};
+    get_xy_components_from_vector(MUZZLE_FLASH_DISTANCE_FROM_PLAYER, player->crosshair_angle, muzzle_flash_offset);
+    vec2_add(muzzle_flash_offset, muzzle_flash_offset, (vec2){0, CHARACTER_ARMS_Y_OFFSET_FROM_CENTER});
+    vec2_add(*muzzle_flash_position, player->relative_position, muzzle_flash_offset);
 }
 
 void init_explosion_animation_definitions(void)
@@ -174,101 +206,101 @@ void init_explosion_animation_definitions(void)
     const u8 MUZZLE_FLASH_2_COLS[] = {0, 1, 2, 3};
     u8 muzzle_flash_2_frame_count = ARRAY_LENGTH(MUZZLE_FLASH_2_COLS);
 
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_0, "assets/wip/muzzle_flash_v3_0.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_0, "assets/muzzle_flash_v3_0.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
     adef_muzzle_flash_0 = animation_definition_create(
         &sprite_sheet_muzzle_flash_0, (f32 *)MUZZLE_FLASH_1_DURATIONS, (u8 *)MUZZLE_FLASH_1_ROWS, (u8 *)MUZZLE_FLASH_1_COLS, muzzle_flash_1_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_1, "assets/wip/muzzle_flash_v3_1.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_1, "assets/muzzle_flash_v3_1.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
     adef_muzzle_flash_1 = animation_definition_create(
         &sprite_sheet_muzzle_flash_1, (f32 *)MUZZLE_FLASH_1_DURATIONS, (u8 *)MUZZLE_FLASH_1_ROWS, (u8 *)MUZZLE_FLASH_1_COLS, muzzle_flash_1_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2, "assets/wip/muzzle_flash_v3_2.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2, "assets/muzzle_flash_v3_2.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
     adef_muzzle_flash_2 = animation_definition_create(
         &sprite_sheet_muzzle_flash_2, (f32 *)MUZZLE_FLASH_1_DURATIONS, (u8 *)MUZZLE_FLASH_1_ROWS, (u8 *)MUZZLE_FLASH_1_COLS, muzzle_flash_1_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_3, "assets/wip/muzzle_flash_v3_3.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_3, "assets/muzzle_flash_v3_3.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
     adef_muzzle_flash_3 = animation_definition_create(
         &sprite_sheet_muzzle_flash_3, (f32 *)MUZZLE_FLASH_1_DURATIONS, (u8 *)MUZZLE_FLASH_1_ROWS, (u8 *)MUZZLE_FLASH_1_COLS, muzzle_flash_1_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_4, "assets/wip/muzzle_flash_v3_4.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_4, "assets/muzzle_flash_v3_4.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
     adef_muzzle_flash_4 = animation_definition_create(
         &sprite_sheet_muzzle_flash_4, (f32 *)MUZZLE_FLASH_1_DURATIONS, (u8 *)MUZZLE_FLASH_1_ROWS, (u8 *)MUZZLE_FLASH_1_COLS, muzzle_flash_1_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_5, "assets/wip/muzzle_flash_v3_5.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_5, "assets/muzzle_flash_v3_5.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
     adef_muzzle_flash_5 = animation_definition_create(
         &sprite_sheet_muzzle_flash_5, (f32 *)MUZZLE_FLASH_1_DURATIONS, (u8 *)MUZZLE_FLASH_1_ROWS, (u8 *)MUZZLE_FLASH_1_COLS, muzzle_flash_1_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_6, "assets/wip/muzzle_flash_v3_6.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_6, "assets/muzzle_flash_v3_6.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
     adef_muzzle_flash_6 = animation_definition_create(
         &sprite_sheet_muzzle_flash_6, (f32 *)MUZZLE_FLASH_1_DURATIONS, (u8 *)MUZZLE_FLASH_1_ROWS, (u8 *)MUZZLE_FLASH_1_COLS, muzzle_flash_1_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_7, "assets/wip/muzzle_flash_v3_7.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_7, "assets/muzzle_flash_v3_7.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
     adef_muzzle_flash_7 = animation_definition_create(
         &sprite_sheet_muzzle_flash_7, (f32 *)MUZZLE_FLASH_1_DURATIONS, (u8 *)MUZZLE_FLASH_1_ROWS, (u8 *)MUZZLE_FLASH_1_COLS, muzzle_flash_1_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_8, "assets/wip/muzzle_flash_v3_8.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_8, "assets/muzzle_flash_v3_8.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
     adef_muzzle_flash_8 = animation_definition_create(
         &sprite_sheet_muzzle_flash_8, (f32 *)MUZZLE_FLASH_1_DURATIONS, (u8 *)MUZZLE_FLASH_1_ROWS, (u8 *)MUZZLE_FLASH_1_COLS, muzzle_flash_1_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_9, "assets/wip/muzzle_flash_v3_9.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_9, "assets/muzzle_flash_v3_9.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
     adef_muzzle_flash_9 = animation_definition_create(
         &sprite_sheet_muzzle_flash_9, (f32 *)MUZZLE_FLASH_1_DURATIONS, (u8 *)MUZZLE_FLASH_1_ROWS, (u8 *)MUZZLE_FLASH_1_COLS, muzzle_flash_1_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_10, "assets/wip/muzzle_flash_v3_10.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_10, "assets/muzzle_flash_v3_10.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
     adef_muzzle_flash_10 = animation_definition_create(
         &sprite_sheet_muzzle_flash_10, (f32 *)MUZZLE_FLASH_1_DURATIONS, (u8 *)MUZZLE_FLASH_1_ROWS, (u8 *)MUZZLE_FLASH_1_COLS, muzzle_flash_1_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_11, "assets/wip/muzzle_flash_v3_11.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_11, "assets/muzzle_flash_v3_11.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
     adef_muzzle_flash_11 = animation_definition_create(
         &sprite_sheet_muzzle_flash_11, (f32 *)MUZZLE_FLASH_1_DURATIONS, (u8 *)MUZZLE_FLASH_1_ROWS, (u8 *)MUZZLE_FLASH_1_COLS, muzzle_flash_1_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_12, "assets/wip/muzzle_flash_v3_12.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_12, "assets/muzzle_flash_v3_12.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
     adef_muzzle_flash_12 = animation_definition_create(
         &sprite_sheet_muzzle_flash_12, (f32 *)MUZZLE_FLASH_1_DURATIONS, (u8 *)MUZZLE_FLASH_1_ROWS, (u8 *)MUZZLE_FLASH_1_COLS, muzzle_flash_1_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_13, "assets/wip/muzzle_flash_v3_13.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_13, "assets/muzzle_flash_v3_13.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
     adef_muzzle_flash_13 = animation_definition_create(
         &sprite_sheet_muzzle_flash_13, (f32 *)MUZZLE_FLASH_1_DURATIONS, (u8 *)MUZZLE_FLASH_1_ROWS, (u8 *)MUZZLE_FLASH_1_COLS, muzzle_flash_1_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_14, "assets/wip/muzzle_flash_v3_14.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_14, "assets/muzzle_flash_v3_14.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
     adef_muzzle_flash_14 = animation_definition_create(
         &sprite_sheet_muzzle_flash_14, (f32 *)MUZZLE_FLASH_1_DURATIONS, (u8 *)MUZZLE_FLASH_1_ROWS, (u8 *)MUZZLE_FLASH_1_COLS, muzzle_flash_1_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_15, "assets/wip/muzzle_flash_v3_15.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_15, "assets/muzzle_flash_v3_15.png", MUZZLE_FLASH_1_DIMENSIONS[0], MUZZLE_FLASH_1_DIMENSIONS[1]);
     adef_muzzle_flash_15 = animation_definition_create(
         &sprite_sheet_muzzle_flash_15, (f32 *)MUZZLE_FLASH_1_DURATIONS, (u8 *)MUZZLE_FLASH_1_ROWS, (u8 *)MUZZLE_FLASH_1_COLS, muzzle_flash_1_frame_count);
 
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_0, "assets/wip/muzzle_flash_2_0.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_0, "assets/muzzle_flash_2_0.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
     adef_muzzle_flash_2_0 = animation_definition_create(
         &sprite_sheet_muzzle_flash_2_0, (f32 *)MUZZLE_FLASH_2_DURATIONS, (u8 *)MUZZLE_FLASH_2_ROWS, (u8 *)MUZZLE_FLASH_2_COLS, muzzle_flash_2_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_1, "assets/wip/muzzle_flash_2_1.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_1, "assets/muzzle_flash_2_1.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
     adef_muzzle_flash_2_1 = animation_definition_create(
         &sprite_sheet_muzzle_flash_2_1, (f32 *)MUZZLE_FLASH_2_DURATIONS, (u8 *)MUZZLE_FLASH_2_ROWS, (u8 *)MUZZLE_FLASH_2_COLS, muzzle_flash_2_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_2, "assets/wip/muzzle_flash_2_2.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_2, "assets/muzzle_flash_2_2.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
     adef_muzzle_flash_2_2 = animation_definition_create(
         &sprite_sheet_muzzle_flash_2_2, (f32 *)MUZZLE_FLASH_2_DURATIONS, (u8 *)MUZZLE_FLASH_2_ROWS, (u8 *)MUZZLE_FLASH_2_COLS, muzzle_flash_2_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_3, "assets/wip/muzzle_flash_2_3.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_3, "assets/muzzle_flash_2_3.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
     adef_muzzle_flash_2_3 = animation_definition_create(
         &sprite_sheet_muzzle_flash_2_3, (f32 *)MUZZLE_FLASH_2_DURATIONS, (u8 *)MUZZLE_FLASH_2_ROWS, (u8 *)MUZZLE_FLASH_2_COLS, muzzle_flash_2_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_4, "assets/wip/muzzle_flash_2_4.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_4, "assets/muzzle_flash_2_4.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
     adef_muzzle_flash_2_4 = animation_definition_create(
         &sprite_sheet_muzzle_flash_2_4, (f32 *)MUZZLE_FLASH_2_DURATIONS, (u8 *)MUZZLE_FLASH_2_ROWS, (u8 *)MUZZLE_FLASH_2_COLS, muzzle_flash_2_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_5, "assets/wip/muzzle_flash_2_5.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_5, "assets/muzzle_flash_2_5.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
     adef_muzzle_flash_2_5 = animation_definition_create(
         &sprite_sheet_muzzle_flash_2_5, (f32 *)MUZZLE_FLASH_2_DURATIONS, (u8 *)MUZZLE_FLASH_2_ROWS, (u8 *)MUZZLE_FLASH_2_COLS, muzzle_flash_2_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_6, "assets/wip/muzzle_flash_2_6.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_6, "assets/muzzle_flash_2_6.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
     adef_muzzle_flash_2_6 = animation_definition_create(
         &sprite_sheet_muzzle_flash_2_6, (f32 *)MUZZLE_FLASH_2_DURATIONS, (u8 *)MUZZLE_FLASH_2_ROWS, (u8 *)MUZZLE_FLASH_2_COLS, muzzle_flash_2_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_7, "assets/wip/muzzle_flash_2_7.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_7, "assets/muzzle_flash_2_7.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
     adef_muzzle_flash_2_7 = animation_definition_create(
         &sprite_sheet_muzzle_flash_2_7, (f32 *)MUZZLE_FLASH_2_DURATIONS, (u8 *)MUZZLE_FLASH_2_ROWS, (u8 *)MUZZLE_FLASH_2_COLS, muzzle_flash_2_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_8, "assets/wip/muzzle_flash_2_8.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_8, "assets/muzzle_flash_2_8.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
     adef_muzzle_flash_2_8 = animation_definition_create(
         &sprite_sheet_muzzle_flash_2_8, (f32 *)MUZZLE_FLASH_2_DURATIONS, (u8 *)MUZZLE_FLASH_2_ROWS, (u8 *)MUZZLE_FLASH_2_COLS, muzzle_flash_2_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_9, "assets/wip/muzzle_flash_2_9.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_9, "assets/muzzle_flash_2_9.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
     adef_muzzle_flash_2_9 = animation_definition_create(
         &sprite_sheet_muzzle_flash_2_9, (f32 *)MUZZLE_FLASH_2_DURATIONS, (u8 *)MUZZLE_FLASH_2_ROWS, (u8 *)MUZZLE_FLASH_2_COLS, muzzle_flash_2_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_10, "assets/wip/muzzle_flash_2_10.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_10, "assets/muzzle_flash_2_10.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
     adef_muzzle_flash_2_10 = animation_definition_create(
         &sprite_sheet_muzzle_flash_2_10, (f32 *)MUZZLE_FLASH_2_DURATIONS, (u8 *)MUZZLE_FLASH_2_ROWS, (u8 *)MUZZLE_FLASH_2_COLS, muzzle_flash_2_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_11, "assets/wip/muzzle_flash_2_11.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_11, "assets/muzzle_flash_2_11.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
     adef_muzzle_flash_2_11 = animation_definition_create(
         &sprite_sheet_muzzle_flash_2_11, (f32 *)MUZZLE_FLASH_2_DURATIONS, (u8 *)MUZZLE_FLASH_2_ROWS, (u8 *)MUZZLE_FLASH_2_COLS, muzzle_flash_2_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_12, "assets/wip/muzzle_flash_2_12.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_12, "assets/muzzle_flash_2_12.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
     adef_muzzle_flash_2_12 = animation_definition_create(
         &sprite_sheet_muzzle_flash_2_12, (f32 *)MUZZLE_FLASH_2_DURATIONS, (u8 *)MUZZLE_FLASH_2_ROWS, (u8 *)MUZZLE_FLASH_2_COLS, muzzle_flash_2_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_13, "assets/wip/muzzle_flash_2_13.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_13, "assets/muzzle_flash_2_13.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
     adef_muzzle_flash_2_13 = animation_definition_create(
         &sprite_sheet_muzzle_flash_2_13, (f32 *)MUZZLE_FLASH_2_DURATIONS, (u8 *)MUZZLE_FLASH_2_ROWS, (u8 *)MUZZLE_FLASH_2_COLS, muzzle_flash_2_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_14, "assets/wip/muzzle_flash_2_14.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_14, "assets/muzzle_flash_2_14.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
     adef_muzzle_flash_2_14 = animation_definition_create(
         &sprite_sheet_muzzle_flash_2_14, (f32 *)MUZZLE_FLASH_2_DURATIONS, (u8 *)MUZZLE_FLASH_2_ROWS, (u8 *)MUZZLE_FLASH_2_COLS, muzzle_flash_2_frame_count);
-    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_15, "assets/wip/muzzle_flash_2_15.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_muzzle_flash_2_15, "assets/muzzle_flash_2_15.png", MUZZLE_FLASH_2_DIMENSIONS[0], MUZZLE_FLASH_2_DIMENSIONS[1]);
     adef_muzzle_flash_2_15 = animation_definition_create(
         &sprite_sheet_muzzle_flash_2_15, (f32 *)MUZZLE_FLASH_2_DURATIONS, (u8 *)MUZZLE_FLASH_2_ROWS, (u8 *)MUZZLE_FLASH_2_COLS, muzzle_flash_2_frame_count);
 }
@@ -320,24 +352,24 @@ void init_blood_splatter_adef_hashmap(void)
 
 void init_brass_animation_definitions(void)
 {
-    render_sprite_sheet_init(&sprite_sheet_brass_falling_1, "assets/wip/brass_falling_1.png", 3, 3);
+    render_sprite_sheet_init(&sprite_sheet_brass_falling_1, "assets/brass_falling_1.png", 3, 3);
     adef_brass_falling_1 = animation_definition_create(&sprite_sheet_brass_falling_1, (f32[]){0.06, 0.06, 0.06, 0.06}, (u8[]){0, 0, 0, 0}, (u8[]){0, 1, 2, 3}, 4);
-    render_sprite_sheet_init(&sprite_sheet_shotgun_shell_falling_1, "assets/wip/shotgun_shell_falling_1.png", 3, 3);
+    render_sprite_sheet_init(&sprite_sheet_shotgun_shell_falling_1, "assets/shotgun_shell_falling_1.png", 3, 3);
     adef_shotgun_shell_falling_1 = animation_definition_create(
         &sprite_sheet_shotgun_shell_falling_1, (f32[]){0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06}, (u8[]){0, 0, 0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5, 6, 7}, 8);
 }
 
 void init_character_shadow_anim(void)
 {
-    render_sprite_sheet_init(&sprite_sheet_character_shadow, "assets/wip/character_shadow.png", 16, 5);
+    render_sprite_sheet_init(&sprite_sheet_character_shadow, "assets/character_shadow.png", 16, 5);
     adef_character_shadow = animation_definition_create(&sprite_sheet_character_shadow, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_character_shadow = animation_create(adef_character_shadow, false);
 }
 
 void init_blood_splatter_animation_definitions(void)
 {
-    render_sprite_sheet_init(&sprite_sheet_blood_splatter_1, "assets/wip/blood_splatter_1.png", 13, 13);
+    render_sprite_sheet_init(&sprite_sheet_blood_splatter_1, "assets/blood_splatter_1.png", 13, 13);
     adef_blood_splatter_1 = animation_definition_create(&sprite_sheet_blood_splatter_1, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4}, 5);
-    render_sprite_sheet_init(&sprite_sheet_blood_splatter_2, "assets/wip/blood_splatter_2.png", 13, 13);
+    render_sprite_sheet_init(&sprite_sheet_blood_splatter_2, "assets/blood_splatter_2.png", 13, 13);
     adef_blood_splatter_2 = animation_definition_create(&sprite_sheet_blood_splatter_2, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4}, 5);
 }

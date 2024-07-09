@@ -139,9 +139,9 @@ void init_all_player_anims(void)
     missing_anim_placeholder = animation_create(adef_missing_anim_placeholder, false);
 
     // init crosshair anims
-    render_sprite_sheet_init(&sprite_sheet_player_1_crosshair, "assets/wip/crosshair_mock.png", 11, 11);
+    render_sprite_sheet_init(&sprite_sheet_player_1_crosshair, "assets/crosshair_mock.png", 11, 11);
     adef_player_1_crosshair = animation_definition_create(&sprite_sheet_player_1_crosshair, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_player_2_crosshair, "assets/wip/crosshair_mock.png", 11, 11);
+    render_sprite_sheet_init(&sprite_sheet_player_2_crosshair, "assets/crosshair_mock.png", 11, 11);
     adef_player_2_crosshair = animation_definition_create(&sprite_sheet_player_2_crosshair, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_p1_crosshair = animation_create(adef_player_1_crosshair, false);
     anim_p2_crosshair = animation_create(adef_player_2_crosshair, false);
@@ -161,206 +161,206 @@ void init_player_weapon_adefs(void)
 
 void init_player_m16_adefs(void)
 {
-    render_sprite_sheet_init(&sprite_sheet_m16_static_0, "assets/wip/m16_static_0.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_0, "assets/m16_static_0.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_m16_static_0 = animation_definition_create(&sprite_sheet_m16_static_0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_m16_static_1, "assets/wip/m16_static_1.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_1, "assets/m16_static_1.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_m16_static_1 = animation_definition_create(&sprite_sheet_m16_static_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_m16_static_2, "assets/wip/m16_static_2.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_2, "assets/m16_static_2.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_m16_static_2 = animation_definition_create(&sprite_sheet_m16_static_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_m16_static_3, "assets/wip/m16_static_3.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_3, "assets/m16_static_3.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_m16_static_3 = animation_definition_create(&sprite_sheet_m16_static_3, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_m16_static_4, "assets/wip/m16_static_4.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_4, "assets/m16_static_4.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_m16_static_4 = animation_definition_create(&sprite_sheet_m16_static_4, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_m16_static_5, "assets/wip/m16_static_5.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_5, "assets/m16_static_5.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_m16_static_5 = animation_definition_create(&sprite_sheet_m16_static_5, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_m16_static_6, "assets/wip/m16_static_6.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_6, "assets/m16_static_6.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_m16_static_6 = animation_definition_create(&sprite_sheet_m16_static_6, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_m16_static_7, "assets/wip/m16_static_7.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_7, "assets/m16_static_7.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_m16_static_7 = animation_definition_create(&sprite_sheet_m16_static_7, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_m16_static_8, "assets/wip/m16_static_8.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_8, "assets/m16_static_8.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_m16_static_8 = animation_definition_create(&sprite_sheet_m16_static_8, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_m16_static_9, "assets/wip/m16_static_9.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_9, "assets/m16_static_9.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_m16_static_9 = animation_definition_create(&sprite_sheet_m16_static_9, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_m16_static_10, "assets/wip/m16_static_10.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_10, "assets/m16_static_10.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_m16_static_10 = animation_definition_create(&sprite_sheet_m16_static_10, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_m16_static_11, "assets/wip/m16_static_11.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_11, "assets/m16_static_11.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_m16_static_11 = animation_definition_create(&sprite_sheet_m16_static_11, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_m16_static_12, "assets/wip/m16_static_12.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_12, "assets/m16_static_12.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_m16_static_12 = animation_definition_create(&sprite_sheet_m16_static_12, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_m16_static_13, "assets/wip/m16_static_13.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_13, "assets/m16_static_13.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_m16_static_13 = animation_definition_create(&sprite_sheet_m16_static_13, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_m16_static_14, "assets/wip/m16_static_14.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_14, "assets/m16_static_14.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_m16_static_14 = animation_definition_create(&sprite_sheet_m16_static_14, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_m16_static_15, "assets/wip/m16_static_15.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_m16_static_15, "assets/m16_static_15.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_m16_static_15 = animation_definition_create(&sprite_sheet_m16_static_15, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_m16_firing_0, "assets/wip/m16_firing_0.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_m16_firing_0 = animation_definition_create(&sprite_sheet_m16_firing_0, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_m16_firing_1, "assets/wip/m16_firing_1.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_m16_firing_1 = animation_definition_create(&sprite_sheet_m16_firing_1, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_m16_firing_2, "assets/wip/m16_firing_2.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_m16_firing_2 = animation_definition_create(&sprite_sheet_m16_firing_2, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_m16_firing_3, "assets/wip/m16_firing_3.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_m16_firing_3 = animation_definition_create(&sprite_sheet_m16_firing_3, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_m16_firing_4, "assets/wip/m16_firing_4.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_m16_firing_4 = animation_definition_create(&sprite_sheet_m16_firing_4, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_m16_firing_5, "assets/wip/m16_firing_5.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_m16_firing_5 = animation_definition_create(&sprite_sheet_m16_firing_5, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_m16_firing_6, "assets/wip/m16_firing_6.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_m16_firing_6 = animation_definition_create(&sprite_sheet_m16_firing_6, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_m16_firing_7, "assets/wip/m16_firing_7.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_m16_firing_7 = animation_definition_create(&sprite_sheet_m16_firing_7, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_m16_firing_8, "assets/wip/m16_firing_8.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_m16_firing_8 = animation_definition_create(&sprite_sheet_m16_firing_8, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_m16_firing_9, "assets/wip/m16_firing_9.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_m16_firing_9 = animation_definition_create(&sprite_sheet_m16_firing_9, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_m16_firing_10, "assets/wip/m16_firing_10.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_m16_firing_10 = animation_definition_create(&sprite_sheet_m16_firing_10, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_m16_firing_11, "assets/wip/m16_firing_11.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_m16_firing_11 = animation_definition_create(&sprite_sheet_m16_firing_11, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_m16_firing_12, "assets/wip/m16_firing_12.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_m16_firing_12 = animation_definition_create(&sprite_sheet_m16_firing_12, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_m16_firing_13, "assets/wip/m16_firing_13.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_m16_firing_13 = animation_definition_create(&sprite_sheet_m16_firing_13, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_m16_firing_14, "assets/wip/m16_firing_14.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_m16_firing_14 = animation_definition_create(&sprite_sheet_m16_firing_14, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_m16_firing_15, "assets/wip/m16_firing_15.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
-    adef_m16_firing_15 = animation_definition_create(&sprite_sheet_m16_firing_15, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_0, "assets/m16_firing_0.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_m16_firing_0 = animation_definition_create(&sprite_sheet_m16_firing_0, (f32[]){0.02, 0.02}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_1, "assets/m16_firing_1.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_m16_firing_1 = animation_definition_create(&sprite_sheet_m16_firing_1, (f32[]){0.02, 0.02}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_2, "assets/m16_firing_2.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_m16_firing_2 = animation_definition_create(&sprite_sheet_m16_firing_2, (f32[]){0.02, 0.02}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_3, "assets/m16_firing_3.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_m16_firing_3 = animation_definition_create(&sprite_sheet_m16_firing_3, (f32[]){0.02, 0.02}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_4, "assets/m16_firing_4.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_m16_firing_4 = animation_definition_create(&sprite_sheet_m16_firing_4, (f32[]){0.02, 0.02}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_5, "assets/m16_firing_5.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_m16_firing_5 = animation_definition_create(&sprite_sheet_m16_firing_5, (f32[]){0.02, 0.02}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_6, "assets/m16_firing_6.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_m16_firing_6 = animation_definition_create(&sprite_sheet_m16_firing_6, (f32[]){0.02, 0.02}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_7, "assets/m16_firing_7.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_m16_firing_7 = animation_definition_create(&sprite_sheet_m16_firing_7, (f32[]){0.02, 0.02}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_8, "assets/m16_firing_8.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_m16_firing_8 = animation_definition_create(&sprite_sheet_m16_firing_8, (f32[]){0.02, 0.02}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_9, "assets/m16_firing_9.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_m16_firing_9 = animation_definition_create(&sprite_sheet_m16_firing_9, (f32[]){0.02, 0.02}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_10, "assets/m16_firing_10.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_m16_firing_10 = animation_definition_create(&sprite_sheet_m16_firing_10, (f32[]){0.02, 0.02}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_11, "assets/m16_firing_11.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_m16_firing_11 = animation_definition_create(&sprite_sheet_m16_firing_11, (f32[]){0.02, 0.02}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_12, "assets/m16_firing_12.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_m16_firing_12 = animation_definition_create(&sprite_sheet_m16_firing_12, (f32[]){0.02, 0.02}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_13, "assets/m16_firing_13.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_m16_firing_13 = animation_definition_create(&sprite_sheet_m16_firing_13, (f32[]){0.02, 0.02}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_14, "assets/m16_firing_14.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_m16_firing_14 = animation_definition_create(&sprite_sheet_m16_firing_14, (f32[]){0.02, 0.02}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
+    render_sprite_sheet_init(&sprite_sheet_m16_firing_15, "assets/m16_firing_15.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    adef_m16_firing_15 = animation_definition_create(&sprite_sheet_m16_firing_15, (f32[]){0.02, 0.02}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
 }
 
 void init_player_glock_adefs(void)
 {
     const f32 xy_len = 25;
-    render_sprite_sheet_init(&sprite_sheet_glock_static_0, "assets/wip/glock_static_0.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_static_0, "assets/glock_static_0.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_static_0 = animation_definition_create(&sprite_sheet_glock_static_0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_glock_static_1, "assets/wip/glock_static_1.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_static_1, "assets/glock_static_1.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_static_1 = animation_definition_create(&sprite_sheet_glock_static_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_glock_static_2, "assets/wip/glock_static_2.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_static_2, "assets/glock_static_2.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_static_2 = animation_definition_create(&sprite_sheet_glock_static_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_glock_static_3, "assets/wip/glock_static_3.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_static_3, "assets/glock_static_3.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_static_3 = animation_definition_create(&sprite_sheet_glock_static_3, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_glock_static_4, "assets/wip/glock_static_4.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_static_4, "assets/glock_static_4.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_static_4 = animation_definition_create(&sprite_sheet_glock_static_4, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_glock_static_5, "assets/wip/glock_static_5.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_static_5, "assets/glock_static_5.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_static_5 = animation_definition_create(&sprite_sheet_glock_static_5, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_glock_static_6, "assets/wip/glock_static_6.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_static_6, "assets/glock_static_6.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_static_6 = animation_definition_create(&sprite_sheet_glock_static_6, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_glock_static_7, "assets/wip/glock_static_7.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_static_7, "assets/glock_static_7.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_static_7 = animation_definition_create(&sprite_sheet_glock_static_7, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_glock_static_8, "assets/wip/glock_static_8.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_static_8, "assets/glock_static_8.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_static_8 = animation_definition_create(&sprite_sheet_glock_static_8, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_glock_static_9, "assets/wip/glock_static_9.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_static_9, "assets/glock_static_9.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_static_9 = animation_definition_create(&sprite_sheet_glock_static_9, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_glock_static_10, "assets/wip/glock_static_10.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_static_10, "assets/glock_static_10.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_static_10 = animation_definition_create(&sprite_sheet_glock_static_10, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_glock_static_11, "assets/wip/glock_static_11.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_static_11, "assets/glock_static_11.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_static_11 = animation_definition_create(&sprite_sheet_glock_static_11, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_glock_static_12, "assets/wip/glock_static_12.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_static_12, "assets/glock_static_12.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_static_12 = animation_definition_create(&sprite_sheet_glock_static_12, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_glock_static_13, "assets/wip/glock_static_13.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_static_13, "assets/glock_static_13.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_static_13 = animation_definition_create(&sprite_sheet_glock_static_13, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_glock_static_14, "assets/wip/glock_static_14.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_static_14, "assets/glock_static_14.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_static_14 = animation_definition_create(&sprite_sheet_glock_static_14, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_glock_static_15, "assets/wip/glock_static_15.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_static_15, "assets/glock_static_15.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_static_15 = animation_definition_create(&sprite_sheet_glock_static_15, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_glock_firing_0, "assets/wip/glock_firing_0.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_0, "assets/glock_firing_0.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_firing_0 = animation_definition_create(&sprite_sheet_glock_firing_0, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_glock_firing_1, "assets/wip/glock_firing_1.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_1, "assets/glock_firing_1.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_firing_1 = animation_definition_create(&sprite_sheet_glock_firing_1, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_glock_firing_2, "assets/wip/glock_firing_2.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_2, "assets/glock_firing_2.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_firing_2 = animation_definition_create(&sprite_sheet_glock_firing_2, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_glock_firing_3, "assets/wip/glock_firing_3.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_3, "assets/glock_firing_3.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_firing_3 = animation_definition_create(&sprite_sheet_glock_firing_3, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_glock_firing_4, "assets/wip/glock_firing_4.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_4, "assets/glock_firing_4.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_firing_4 = animation_definition_create(&sprite_sheet_glock_firing_4, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_glock_firing_5, "assets/wip/glock_firing_5.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_5, "assets/glock_firing_5.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_firing_5 = animation_definition_create(&sprite_sheet_glock_firing_5, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_glock_firing_6, "assets/wip/glock_firing_6.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_6, "assets/glock_firing_6.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_firing_6 = animation_definition_create(&sprite_sheet_glock_firing_6, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_glock_firing_7, "assets/wip/glock_firing_7.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_7, "assets/glock_firing_7.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_firing_7 = animation_definition_create(&sprite_sheet_glock_firing_7, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_glock_firing_8, "assets/wip/glock_firing_8.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_8, "assets/glock_firing_8.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_firing_8 = animation_definition_create(&sprite_sheet_glock_firing_8, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_glock_firing_9, "assets/wip/glock_firing_9.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_9, "assets/glock_firing_9.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_firing_9 = animation_definition_create(&sprite_sheet_glock_firing_9, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_glock_firing_10, "assets/wip/glock_firing_10.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_10, "assets/glock_firing_10.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_firing_10 = animation_definition_create(&sprite_sheet_glock_firing_10, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_glock_firing_11, "assets/wip/glock_firing_11.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_11, "assets/glock_firing_11.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_firing_11 = animation_definition_create(&sprite_sheet_glock_firing_11, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_glock_firing_12, "assets/wip/glock_firing_12.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_12, "assets/glock_firing_12.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_firing_12 = animation_definition_create(&sprite_sheet_glock_firing_12, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_glock_firing_13, "assets/wip/glock_firing_13.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_13, "assets/glock_firing_13.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_firing_13 = animation_definition_create(&sprite_sheet_glock_firing_13, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_glock_firing_14, "assets/wip/glock_firing_14.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_14, "assets/glock_firing_14.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_firing_14 = animation_definition_create(&sprite_sheet_glock_firing_14, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_glock_firing_15, "assets/wip/glock_firing_15.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_glock_firing_15, "assets/glock_firing_15.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_glock_firing_15 = animation_definition_create(&sprite_sheet_glock_firing_15, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
 }
 
 void init_player_coach_gun_adefs(void)
 {
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_0, "assets/wip/coach_gun_static_0.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_0, "assets/coach_gun_static_0.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_static_0 = animation_definition_create(&sprite_sheet_coach_gun_static_0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_1, "assets/wip/coach_gun_static_1.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_1, "assets/coach_gun_static_1.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_static_1 = animation_definition_create(&sprite_sheet_coach_gun_static_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_2, "assets/wip/coach_gun_static_2.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_2, "assets/coach_gun_static_2.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_static_2 = animation_definition_create(&sprite_sheet_coach_gun_static_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_3, "assets/wip/coach_gun_static_3.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_3, "assets/coach_gun_static_3.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_static_3 = animation_definition_create(&sprite_sheet_coach_gun_static_3, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_4, "assets/wip/coach_gun_static_4.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_4, "assets/coach_gun_static_4.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_static_4 = animation_definition_create(&sprite_sheet_coach_gun_static_4, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_5, "assets/wip/coach_gun_static_5.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_5, "assets/coach_gun_static_5.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_static_5 = animation_definition_create(&sprite_sheet_coach_gun_static_5, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_6, "assets/wip/coach_gun_static_6.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_6, "assets/coach_gun_static_6.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_static_6 = animation_definition_create(&sprite_sheet_coach_gun_static_6, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_7, "assets/wip/coach_gun_static_7.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_7, "assets/coach_gun_static_7.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_static_7 = animation_definition_create(&sprite_sheet_coach_gun_static_7, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_8, "assets/wip/coach_gun_static_8.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_8, "assets/coach_gun_static_8.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_static_8 = animation_definition_create(&sprite_sheet_coach_gun_static_8, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_9, "assets/wip/coach_gun_static_9.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_9, "assets/coach_gun_static_9.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_static_9 = animation_definition_create(&sprite_sheet_coach_gun_static_9, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_10, "assets/wip/coach_gun_static_10.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_10, "assets/coach_gun_static_10.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_static_10 = animation_definition_create(&sprite_sheet_coach_gun_static_10, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_11, "assets/wip/coach_gun_static_11.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_11, "assets/coach_gun_static_11.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_static_11 = animation_definition_create(&sprite_sheet_coach_gun_static_11, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_12, "assets/wip/coach_gun_static_12.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_12, "assets/coach_gun_static_12.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_static_12 = animation_definition_create(&sprite_sheet_coach_gun_static_12, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_13, "assets/wip/coach_gun_static_13.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_13, "assets/coach_gun_static_13.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_static_13 = animation_definition_create(&sprite_sheet_coach_gun_static_13, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_14, "assets/wip/coach_gun_static_14.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_14, "assets/coach_gun_static_14.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_static_14 = animation_definition_create(&sprite_sheet_coach_gun_static_14, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_15, "assets/wip/coach_gun_static_15.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_static_15, "assets/coach_gun_static_15.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_static_15 = animation_definition_create(&sprite_sheet_coach_gun_static_15, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_0, "assets/wip/coach_gun_firing_0.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_0, "assets/coach_gun_firing_0.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_firing_0 = animation_definition_create(&sprite_sheet_coach_gun_firing_0, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_1, "assets/wip/coach_gun_firing_1.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_1, "assets/coach_gun_firing_1.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_firing_1 = animation_definition_create(&sprite_sheet_coach_gun_firing_1, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_2, "assets/wip/coach_gun_firing_2.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_2, "assets/coach_gun_firing_2.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_firing_2 = animation_definition_create(&sprite_sheet_coach_gun_firing_2, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_3, "assets/wip/coach_gun_firing_3.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_3, "assets/coach_gun_firing_3.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_firing_3 = animation_definition_create(&sprite_sheet_coach_gun_firing_3, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_4, "assets/wip/coach_gun_firing_4.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_4, "assets/coach_gun_firing_4.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_firing_4 = animation_definition_create(&sprite_sheet_coach_gun_firing_4, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_5, "assets/wip/coach_gun_firing_5.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_5, "assets/coach_gun_firing_5.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_firing_5 = animation_definition_create(&sprite_sheet_coach_gun_firing_5, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_6, "assets/wip/coach_gun_firing_6.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_6, "assets/coach_gun_firing_6.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_firing_6 = animation_definition_create(&sprite_sheet_coach_gun_firing_6, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_7, "assets/wip/coach_gun_firing_7.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_7, "assets/coach_gun_firing_7.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_firing_7 = animation_definition_create(&sprite_sheet_coach_gun_firing_7, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_8, "assets/wip/coach_gun_firing_8.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_8, "assets/coach_gun_firing_8.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_firing_8 = animation_definition_create(&sprite_sheet_coach_gun_firing_8, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_9, "assets/wip/coach_gun_firing_9.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_9, "assets/coach_gun_firing_9.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_firing_9 = animation_definition_create(&sprite_sheet_coach_gun_firing_9, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_10, "assets/wip/coach_gun_firing_10.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_10, "assets/coach_gun_firing_10.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_firing_10 = animation_definition_create(&sprite_sheet_coach_gun_firing_10, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_11, "assets/wip/coach_gun_firing_11.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_11, "assets/coach_gun_firing_11.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_firing_11 = animation_definition_create(&sprite_sheet_coach_gun_firing_11, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_12, "assets/wip/coach_gun_firing_12.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_12, "assets/coach_gun_firing_12.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_firing_12 = animation_definition_create(&sprite_sheet_coach_gun_firing_12, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_13, "assets/wip/coach_gun_firing_13.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_13, "assets/coach_gun_firing_13.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_firing_13 = animation_definition_create(&sprite_sheet_coach_gun_firing_13, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_14, "assets/wip/coach_gun_firing_14.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_14, "assets/coach_gun_firing_14.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_firing_14 = animation_definition_create(&sprite_sheet_coach_gun_firing_14, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_15, "assets/wip/coach_gun_firing_15.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_firing_15, "assets/coach_gun_firing_15.png", WEAPON_XY_LEN, WEAPON_XY_LEN);
     adef_coach_gun_firing_15 = animation_definition_create(&sprite_sheet_coach_gun_firing_15, (f32[]){0.05, 0.05}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
 }
 
@@ -518,6 +518,7 @@ void update_player_status(Player *player)
     // SPAWN LOGIC
     // check if spawn delay is up
     if (player->status == PLAYER_INACTIVE && player->frames_on_status >= (player->spawn_delay * global.time.frame_rate)) {
+        printf("spawning");
         spawn_player(player, glock);
     }
 
@@ -530,17 +531,16 @@ void update_player_status(Player *player)
     // DESPAWN LOGIC
     // check if health is 0
     else if (player->health <= 0 && player->status == PLAYER_ACTIVE) {
-        player->status = PLAYER_DESPAWNING;
-        player->render_scale_factor = DEFAULT_RENDER_SCALE_FACTOR;
-        player->frames_on_status = 0;
+        printf("despawning\n");
+        set_player_status(player, PLAYER_DESPAWNING);
 
         // shouldn't be moving on death anim
         vec2_dup(player->entity->body->velocity, (vec2){0, 0});
     }
     // check if death animation is complete
     else if (player->status == PLAYER_DESPAWNING && player->frames_on_status >= (player->despawn_time * global.time.frame_rate)) {
-        player->status = PLAYER_INACTIVE;
-        player->frames_on_status = 0;
+        printf("inactive\n");
+        set_player_status(player, PLAYER_INACTIVE);
 
         // hide sprites
         player->entity->is_active = false;
@@ -556,13 +556,12 @@ void update_player_status(Player *player)
             u16 reload_amount = MIN(player->weapon->reserve, (player->weapon->weapon_type->capacity - player->weapon->capacity));
             player->weapon->capacity += reload_amount;
             player->weapon->reserve -= reload_amount;
-            player->status = PLAYER_ACTIVE;
-            player->frames_on_status = 0;
+            set_player_status(player, PLAYER_ACTIVE);
         }
     }
 
     if (player->status == PLAYER_INTERACTING && player->input_state->key_state->use == KS_UNPRESSED) {
-        player->status = PLAYER_ACTIVE;
+        set_player_status(player, PLAYER_ACTIVE);
     }
 
     // update weapon status (check if weapon is ready to fire again)
