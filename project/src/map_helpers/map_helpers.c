@@ -146,7 +146,7 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
 void init_map_assets(void)
 {
     const u8 teleporter_num_frames = (u8)ARRAY_LENGTH(TELEPORTER_ACTIVE_COLS);
-    render_sprite_sheet_init(&sprite_sheet_bunker_background, "assets/wip/street_map.png", 125, 246); //"assets/wip/bunker_map.png", 327, 195);
+    render_sprite_sheet_init(&sprite_sheet_bunker_background, "assets/street_map.png", 125, 246); //"assets/bunker_map.png", 327, 195);
 
     // map background
     adef_bunker_background = animation_definition_create(&sprite_sheet_bunker_background, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
@@ -154,57 +154,57 @@ void init_map_assets(void)
     anim_bunker_background->z_index = INT32_MIN;
 
     // tables
-    render_sprite_sheet_init(&sprite_sheet_metal_table_vertical_1, "assets/wip/metal_table_vertical_1.png", 23, 48);
+    render_sprite_sheet_init(&sprite_sheet_metal_table_vertical_1, "assets/metal_table_vertical_1.png", 23, 48);
     adef_metal_table_vertical_1 = animation_definition_create(&sprite_sheet_metal_table_vertical_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_metal_table_vertical_1 = animation_create(adef_metal_table_vertical_1, false);
     anim_metal_table_vertical_1->z_index = -5;
-    render_sprite_sheet_init(&sprite_sheet_metal_table_vertical_2, "assets/wip/metal_table_vertical_2.png", 23, 48);
+    render_sprite_sheet_init(&sprite_sheet_metal_table_vertical_2, "assets/metal_table_vertical_2.png", 23, 48);
     adef_metal_table_vertical_2 = animation_definition_create(&sprite_sheet_metal_table_vertical_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_metal_table_vertical_2 = animation_create(adef_metal_table_vertical_2, false);
     anim_metal_table_vertical_2->z_index = anim_metal_table_vertical_1->z_index + 1;
 
     // weapon pickups
-    render_sprite_sheet_init(&sprite_sheet_m16_pickup, "assets/wip/m16_pickup.png", 20, 9);
+    render_sprite_sheet_init(&sprite_sheet_m16_pickup, "assets/m16_pickup.png", 20, 9);
     adef_m16_pickup = animation_definition_create(&sprite_sheet_m16_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_m16_pickup = animation_create(adef_m16_pickup, false);
-    render_sprite_sheet_init(&sprite_sheet_m16_pickup_highlight, "assets/wip/m16_pickup_highlight.png", 20, 9);
+    render_sprite_sheet_init(&sprite_sheet_m16_pickup_highlight, "assets/m16_pickup_highlight.png", 20, 9);
     adef_m16_pickup_highlight = animation_definition_create(
         &sprite_sheet_m16_pickup_highlight,
         (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05},
         (u8[]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         (u8[]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
         10);
-    render_sprite_sheet_init(&sprite_sheet_m16_pickup_highlighted, "assets/wip/m16_pickup_highlighted.png", 20, 9);
+    render_sprite_sheet_init(&sprite_sheet_m16_pickup_highlighted, "assets/m16_pickup_highlighted.png", 20, 9);
     adef_m16_pickup_highlighted = animation_definition_create(&sprite_sheet_m16_pickup_highlighted, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_m16_pickup_highlighted = animation_create(adef_m16_pickup_highlighted, false);
 
-    render_sprite_sheet_init(&sprite_sheet_glock_pickup, "assets/wip/glock_pickup.png", 7, 9);
+    render_sprite_sheet_init(&sprite_sheet_glock_pickup, "assets/glock_pickup.png", 7, 9);
     adef_glock_pickup = animation_definition_create(&sprite_sheet_glock_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_glock_pickup = animation_create(adef_glock_pickup, false);
-    render_sprite_sheet_init(&sprite_sheet_glock_pickup_highlight, "assets/wip/glock_pickup_highlight.png", 7, 9);
+    render_sprite_sheet_init(&sprite_sheet_glock_pickup_highlight, "assets/glock_pickup_highlight.png", 7, 9);
     adef_glock_pickup_highlight =
         animation_definition_create(&sprite_sheet_glock_pickup_highlight, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
-    render_sprite_sheet_init(&sprite_sheet_glock_pickup_highlighted, "assets/wip/glock_pickup_highlighted.png", 7, 9);
+    render_sprite_sheet_init(&sprite_sheet_glock_pickup_highlighted, "assets/glock_pickup_highlighted.png", 7, 9);
     adef_glock_pickup_highlighted = animation_definition_create(&sprite_sheet_glock_pickup_highlighted, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_glock_pickup_highlighted = animation_create(adef_glock_pickup_highlighted, false);
 
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_pickup, "assets/wip/coach_gun_pickup.png", 25, 18);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_pickup, "assets/coach_gun_pickup.png", 25, 18);
     adef_coach_gun_pickup = animation_definition_create(&sprite_sheet_coach_gun_pickup, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_coach_gun_pickup = animation_create(adef_coach_gun_pickup, false);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_pickup_highlight, "assets/wip/coach_gun_pickup_highlight.png", 25, 18);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_pickup_highlight, "assets/coach_gun_pickup_highlight.png", 25, 18);
     adef_coach_gun_pickup_highlight =
         animation_definition_create(&sprite_sheet_coach_gun_pickup_highlight, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4}, 5);
-    render_sprite_sheet_init(&sprite_sheet_coach_gun_pickup_highlighted, "assets/wip/coach_gun_pickup_highlighted.png", 25, 18);
+    render_sprite_sheet_init(&sprite_sheet_coach_gun_pickup_highlighted, "assets/coach_gun_pickup_highlighted.png", 25, 18);
     adef_coach_gun_pickup_highlighted = animation_definition_create(&sprite_sheet_coach_gun_pickup_highlighted, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_coach_gun_pickup_highlighted = animation_create(adef_coach_gun_pickup_highlighted, false);
 
     // teleporter
-    render_sprite_sheet_init(&sprite_sheet_teleporter_inactive, "assets/wip/teleporter_spinning.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_teleporter_inactive, "assets/teleporter_spinning.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
     adef_teleporter_inactive = animation_definition_create(&sprite_sheet_teleporter_inactive, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_teleporter_active, "assets/wip/teleporter_active.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_teleporter_active, "assets/teleporter_active.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
     adef_teleporter_active = animation_definition_create(
         &sprite_sheet_teleporter_active, (f32 *)TELEPORTER_ACTIVE_DURATIONS, (u8 *)TELEPORTER_ACTIVE_ROWS, (u8 *)TELEPORTER_ACTIVE_COLS, (u8)ARRAY_LENGTH(TELEPORTER_ACTIVE_COLS));
-    render_sprite_sheet_init(&sprite_sheet_teleporter_spinning, "assets/wip/teleporter_spinning.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_teleporter_spinning, "assets/teleporter_spinning.png", TELEPORTER_DIMENSIONS[0], TELEPORTER_DIMENSIONS[1]);
     adef_teleporter_spinning = animation_definition_create(
         &sprite_sheet_teleporter_spinning,
         (f32 *)TELEPORTER_SPINNING_DURATIONS,
@@ -213,17 +213,16 @@ void init_map_assets(void)
         (u8)ARRAY_LENGTH(TELEPORTER_SPINNING_COLS));
 
     // teleporter glow
-    render_sprite_sheet_init(&sprite_sheet_teleporter_glow, "assets/wip/teleporter_glow.png", TELEPORTER_GLOW_DIMENSIONS[0], TELEPORTER_GLOW_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_teleporter_glow, "assets/teleporter_glow.png", TELEPORTER_GLOW_DIMENSIONS[0], TELEPORTER_GLOW_DIMENSIONS[1]);
     adef_teleporter_glow = animation_definition_create(
         &sprite_sheet_teleporter_glow, (f32 *)TELEPORTER_GLOW_DURATIONS, (u8 *)TELEPORTER_GLOW_ROWS, (u8 *)TELEPORTER_GLOW_COLS, (u8)ARRAY_LENGTH(TELEPORTER_GLOW_COLS));
 
     // teleporter button
-    render_sprite_sheet_init(&sprite_sheet_teleporter_button_pressed, "assets/wip/teleporter_button_pressed.png", TELEPORTER_BUTTON_DIMENSIONS[0], TELEPORTER_BUTTON_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_teleporter_button_pressed, "assets/teleporter_button_pressed.png", TELEPORTER_BUTTON_DIMENSIONS[0], TELEPORTER_BUTTON_DIMENSIONS[1]);
     adef_teleporter_button_pressed = animation_definition_create(&sprite_sheet_teleporter_button_pressed, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(
-        &sprite_sheet_teleporter_button_unpressed, "assets/wip/teleporter_button_unpressed.png", TELEPORTER_BUTTON_DIMENSIONS[0], TELEPORTER_BUTTON_DIMENSIONS[1]);
+    render_sprite_sheet_init(&sprite_sheet_teleporter_button_unpressed, "assets/teleporter_button_unpressed.png", TELEPORTER_BUTTON_DIMENSIONS[0], TELEPORTER_BUTTON_DIMENSIONS[1]);
     adef_teleporter_button_unpressed = animation_definition_create(&sprite_sheet_teleporter_button_unpressed, (f32[]){1, 1}, (u8[]){0, 0}, (u8[]){1, 2}, 2);
-    render_sprite_sheet_init(&sprite_sheet_teleporter_button_highlight, "assets/wip/teleporter_button_highlight.png", 20, 20);
+    render_sprite_sheet_init(&sprite_sheet_teleporter_button_highlight, "assets/teleporter_button_highlight.png", 20, 20);
     adef_teleporter_button_highlight = animation_definition_create(
         &sprite_sheet_teleporter_button_highlight, (f32[]){0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05}, (u8[]){0, 0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5, 6}, 7);
 }

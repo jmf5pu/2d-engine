@@ -170,7 +170,7 @@ void init_hud(SDL_Window *window)
     init_ammo_anims();
     init_ammo_anim_hashmap();
     init_interact_bar_adefs();
-    render_sprite_sheet_init(&sprite_sheet_divider, "assets/wip/divider.png", 2, 1500);
+    render_sprite_sheet_init(&sprite_sheet_divider, "assets/divider.png", 2, 1500);
 
     // initialize struct
     hud = malloc(sizeof(HUD));
@@ -201,11 +201,11 @@ void fix_crosshair_position(Player *player)
 
 void init_interact_bar_adefs(void)
 {
-    render_sprite_sheet_init(&sprite_sheet_interact_bar_open, "assets/wip/interact_bar_open.png", 16, 3);
+    render_sprite_sheet_init(&sprite_sheet_interact_bar_open, "assets/interact_bar_open.png", 16, 3);
     adef_interact_bar_open = animation_definition_create(&sprite_sheet_interact_bar_open, interact_bar_open_close_durations, (u8[]){0, 0, 0, 0}, (u8[]){0, 1, 2, 3}, 4);
-    render_sprite_sheet_init(&sprite_sheet_interact_bar_close, "assets/wip/interact_bar_close.png", 16, 3);
+    render_sprite_sheet_init(&sprite_sheet_interact_bar_close, "assets/interact_bar_close.png", 16, 3);
     adef_interact_bar_close = animation_definition_create(&sprite_sheet_interact_bar_close, interact_bar_open_close_durations, (u8[]){0, 0, 0, 0}, (u8[]){0, 1, 2, 3}, 4);
-    render_sprite_sheet_init(&sprite_sheet_interact_bar, "assets/wip/interact_bar.png", 16, 3);
+    render_sprite_sheet_init(&sprite_sheet_interact_bar, "assets/interact_bar.png", 16, 3);
     adef_interact_bar = animation_definition_create(
         &sprite_sheet_interact_bar,
         (f32[]){0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1},
@@ -248,7 +248,7 @@ void init_ammo_anim_hashmap(void)
 
 void init_health_anims(void)
 {
-    render_sprite_sheet_init(&sprite_sheet_health_meter_0, "assets/wip/health_meter_med.png", 44, 8);
+    render_sprite_sheet_init(&sprite_sheet_health_meter_0, "assets/health_meter_med.png", 44, 8);
     adef_health_meter_0 = animation_definition_create(&sprite_sheet_health_meter_0, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_health_meter_0 = animation_create(adef_health_meter_0, false);
 }

@@ -66,32 +66,32 @@ void init_player_character_anim_hashmap(void)
 /// @param
 void init_player_character_anims(void)
 {
-    render_sprite_sheet_init(&sprite_sheet_player_skinhead_idle_1, "assets/wip/player_soldier_idle_0.png", 18, 26);
+    render_sprite_sheet_init(&sprite_sheet_player_skinhead_idle_1, "assets/player_soldier_idle_0.png", 18, 26);
     adef_player_skinhead_idle_1 = animation_definition_create(&sprite_sheet_player_skinhead_idle_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_player_skinhead_idle_1 = animation_create(adef_player_skinhead_idle_1, false);
-    render_sprite_sheet_init(&sprite_sheet_player_skinhead_idle_2, "assets/wip/player_soldier_idle_1.png", 18, 26);
+    render_sprite_sheet_init(&sprite_sheet_player_skinhead_idle_2, "assets/player_soldier_idle_1.png", 18, 26);
     adef_player_skinhead_idle_2 = animation_definition_create(&sprite_sheet_player_skinhead_idle_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_player_skinhead_idle_2 = animation_create(adef_player_skinhead_idle_2, false);
-    render_sprite_sheet_init(&sprite_sheet_player_skinhead_idle_3, "assets/wip/player_soldier_idle_2.png", 18, 26);
+    render_sprite_sheet_init(&sprite_sheet_player_skinhead_idle_3, "assets/player_soldier_idle_2.png", 18, 26);
     adef_player_skinhead_idle_3 = animation_definition_create(&sprite_sheet_player_skinhead_idle_3, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
     anim_player_skinhead_idle_3 = animation_create(adef_player_skinhead_idle_3, false);
-    render_sprite_sheet_init(&sprite_sheet_player_skinhead_idle_4, "assets/wip/player_soldier_idle_3.png", 18, 26);
+    render_sprite_sheet_init(&sprite_sheet_player_skinhead_idle_4, "assets/player_soldier_idle_3.png", 18, 26);
     adef_player_skinhead_idle_4 = animation_definition_create(&sprite_sheet_player_skinhead_idle_4, (f32[]){1, 1}, (u8[]){0, 0}, (u8[]){0, 1}, 2);
     anim_player_skinhead_idle_4 = animation_create(adef_player_skinhead_idle_4, true);
 
-    render_sprite_sheet_init(&sprite_sheet_player_skinhead_moving_1, "assets/wip/player_soldier_moving_0.png", 18, 26);
+    render_sprite_sheet_init(&sprite_sheet_player_skinhead_moving_1, "assets/player_soldier_moving_0.png", 18, 26);
     adef_player_skinhead_moving_1 =
         animation_definition_create(&sprite_sheet_player_skinhead_moving_1, (f32[]){0.07, 0.07, 0.07, 0.07, 0.07, 0.07}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
     anim_player_skinhead_moving_1 = animation_create(adef_player_skinhead_moving_1, true);
-    render_sprite_sheet_init(&sprite_sheet_player_skinhead_moving_2, "assets/wip/player_soldier_moving_1.png", 18, 26);
+    render_sprite_sheet_init(&sprite_sheet_player_skinhead_moving_2, "assets/player_soldier_moving_1.png", 18, 26);
     adef_player_skinhead_moving_2 =
         animation_definition_create(&sprite_sheet_player_skinhead_moving_2, (f32[]){0.07, 0.07, 0.07, 0.07, 0.07, 0.07}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
     anim_player_skinhead_moving_2 = animation_create(adef_player_skinhead_moving_2, true);
-    render_sprite_sheet_init(&sprite_sheet_player_skinhead_moving_3, "assets/wip/player_soldier_moving_2.png", 18, 26);
+    render_sprite_sheet_init(&sprite_sheet_player_skinhead_moving_3, "assets/player_soldier_moving_2.png", 18, 26);
     adef_player_skinhead_moving_3 =
         animation_definition_create(&sprite_sheet_player_skinhead_moving_3, (f32[]){0.07, 0.07, 0.07, 0.07, 0.07, 0.07}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
     anim_player_skinhead_moving_3 = animation_create(adef_player_skinhead_moving_3, true);
-    render_sprite_sheet_init(&sprite_sheet_player_skinhead_moving_4, "assets/wip/player_soldier_moving_3.png", 18, 26);
+    render_sprite_sheet_init(&sprite_sheet_player_skinhead_moving_4, "assets/player_soldier_moving_3.png", 18, 26);
     adef_player_skinhead_moving_4 =
         animation_definition_create(&sprite_sheet_player_skinhead_moving_4, (f32[]){0.07, 0.07, 0.07, 0.07, 0.07, 0.07}, (u8[]){0, 0, 0, 0, 0, 0}, (u8[]){0, 1, 2, 3, 4, 5}, 6);
     anim_player_skinhead_moving_4 = animation_create(adef_player_skinhead_moving_4, true);
