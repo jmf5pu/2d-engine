@@ -115,7 +115,7 @@ void init_weapon_types(void)
     glock->bullet_velocity = 600;
     glock->reload_frame_delay = 90;
     glock->pickup_frame_delay = 120;
-    glock->muzzle_flash_id = "1";
+    glock->muzzle_flash_id = "2";
     glock->bullet_adef = adef_bullet_small;
     glock->bullet_impact_adef = adef_bullet_impact_small;
     glock->blood_splatter_prefix = "blood_splatter_";
