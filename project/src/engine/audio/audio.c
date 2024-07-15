@@ -35,3 +35,5 @@ void audio_music_load(Mix_Music **music, const char *path)
 void audio_sound_play(Mix_Chunk *sound) { Mix_PlayChannel(-1, sound, 0); }
 
 void audio_music_play(Mix_Music *music) { Mix_PlayMusic(music, -1); }
+
+// TODO Add logic to free sounds

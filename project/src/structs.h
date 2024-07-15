@@ -9,6 +9,7 @@
 #include "engine/input/input.h"
 #include "engine/render.h"
 #include "engine/types.h"
+#include <SDL2/SDL_mixer.h>
 
 enum Pickup_Name { M44_PICKUP, BREWSTER_PICKUP };
 
@@ -81,7 +82,8 @@ typedef struct weapon_type {
     Animation_Definition *bullet_impact_adef;
     char *blood_splatter_prefix;
     Animation *hud_ammo_icon;
-    OnShoot on_shoot; // handles bullet entity creation when the weapon is fired
+    OnShoot on_shoot;       // handles bullet entity creation when the weapon is fired
+    Mix_Chunk *shoot_chunk; // audio on gunshot
 } Weapon_Type;
 
 typedef struct pickup_animation_set {
