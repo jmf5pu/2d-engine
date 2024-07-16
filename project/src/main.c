@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     time_init(FRAME_RATE);
     config_init();
     window = render_init();
-    audio_init();
+    init_audio();
     physics_init();
     entity_init();
     animation_init();        // creates animation storage

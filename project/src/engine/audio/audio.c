@@ -4,7 +4,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 
-void audio_init(void)
+void init_audio(void)
 {
     SDL_Init(SDL_INIT_AUDIO);
 
@@ -16,7 +16,7 @@ void audio_init(void)
     Mix_VolumeMusic(2);
 }
 
-void audio_sound_load(Mix_Chunk **chunk, const char *path)
+void load_audio_sound(Mix_Chunk **chunk, const char *path)
 {
     *chunk = Mix_LoadWAV(path);
     if (!*chunk) {
@@ -24,7 +24,7 @@ void audio_sound_load(Mix_Chunk **chunk, const char *path)
     }
 }
 
-void audio_music_load(Mix_Music **music, const char *path)
+void load_audio_music(Mix_Music **music, const char *path)
 {
     *music = Mix_LoadMUS(path);
     if (!*music) {
@@ -32,8 +32,16 @@ void audio_music_load(Mix_Music **music, const char *path)
     }
 }
 
-void audio_sound_play(Mix_Chunk *sound) { Mix_PlayChannel(-1, sound, 0); }
+void play_audio_sound(Mix_Chunk *sound)
+{
+    if (PLAY_AUDIO)
+        Mix_PlayChannel(-1, sound, 0);
+}
 
-void audio_music_play(Mix_Music *music) { Mix_PlayMusic(music, -1); }
+void play_audio_music(Mix_Music *music)
+{
+    if (PLAY_AUDIO)
+        Mix_PlayMusic(music, -1);
+}
 
 // TODO Add logic to free sounds

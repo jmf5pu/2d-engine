@@ -53,7 +53,7 @@ void m16_on_shoot(Player *player)
     create_player_muzzle_flash_effect(player);
     create_player_brass_effect(player, adef_brass_falling_1);
     create_bullet_straight(player, player->crosshair_angle);
-    audio_sound_play(player->weapon->weapon_type->shoot_chunk);
+    play_audio_sound(player->weapon->weapon_type->shoot_chunk);
 }
 
 void glock_on_shoot(Player *player)
@@ -61,7 +61,7 @@ void glock_on_shoot(Player *player)
     create_player_muzzle_flash_effect(player);
     create_player_brass_effect(player, adef_brass_falling_1);
     create_bullet_straight(player, player->crosshair_angle);
-    audio_sound_play(player->weapon->weapon_type->shoot_chunk);
+    play_audio_sound(player->weapon->weapon_type->shoot_chunk);
 }
 
 void coach_gun_on_shoot(Player *player)
@@ -70,7 +70,7 @@ void coach_gun_on_shoot(Player *player)
     const u8 num_shots = 7;
     create_player_muzzle_flash_effect(player);
     create_scatter_shot(player, scatter_angle, num_shots);
-    audio_sound_play(player->weapon->weapon_type->shoot_chunk);
+    play_audio_sound(player->weapon->weapon_type->shoot_chunk);
 }
 
 // when modifying weapon types be sure to update weapon_type and weapon structs as well as update_player_weapon
@@ -110,7 +110,7 @@ void init_weapon_types(void)
     m16->blood_splatter_prefix = "blood_splatter_";
     m16->hud_ammo_icon = anim_556_burst;
     m16->on_shoot = m16_on_shoot;
-    audio_sound_load(&m16->shoot_chunk, "assets/audio/gunshots/556.wav");
+    load_audio_sound(&m16->shoot_chunk, "assets/audio/gunshots/556.wav");
 
     glock = malloc(sizeof(Weapon_Type));
     glock->name = "glock";
@@ -128,7 +128,7 @@ void init_weapon_types(void)
     glock->blood_splatter_prefix = "blood_splatter_";
     glock->hud_ammo_icon = anim_556_burst; // placeholder, update
     glock->on_shoot = glock_on_shoot;
-    audio_sound_load(&glock->shoot_chunk, "assets/audio/gunshots/9mm.wav");
+    load_audio_sound(&glock->shoot_chunk, "assets/audio/gunshots/9mm.wav");
 
     coach_gun = malloc(sizeof(Weapon_Type));
     coach_gun->name = "coach_gun";
@@ -146,7 +146,7 @@ void init_weapon_types(void)
     coach_gun->blood_splatter_prefix = "blood_splatter_";
     coach_gun->hud_ammo_icon = anim_556_burst; // placeholder, update
     coach_gun->on_shoot = coach_gun_on_shoot;
-    audio_sound_load(&coach_gun->shoot_chunk, "assets/audio/gunshots/20ga.wav");
+    load_audio_sound(&coach_gun->shoot_chunk, "assets/audio/gunshots/20ga.wav");
 }
 
 void free_weapon_types(void)
