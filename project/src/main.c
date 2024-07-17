@@ -9,6 +9,7 @@
 // engine headers
 #include "engine/animation.h"
 #include "engine/array_list.h"
+#include "engine/audio/audio.h"
 #include "engine/camera.h"
 #include "engine/config.h"
 #include "engine/entity.h"
@@ -43,6 +44,7 @@ int main(int argc, char *argv[])
     time_init(FRAME_RATE);
     config_init();
     window = render_init();
+    init_audio();
     physics_init();
     entity_init();
     animation_init();        // creates animation storage
