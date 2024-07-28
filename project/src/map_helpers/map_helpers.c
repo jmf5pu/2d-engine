@@ -146,7 +146,7 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
 void init_map_assets(void)
 {
     const u8 teleporter_num_frames = (u8)ARRAY_LENGTH(TELEPORTER_ACTIVE_COLS);
-    render_sprite_sheet_init(&sprite_sheet_bunker_background, "assets/street_map_v3.png", 218, 421); //"assets/bunker_map.png", 327, 195);
+    render_sprite_sheet_init(&sprite_sheet_bunker_background, "assets/street_map_v4.png", 435, 421); //"assets/bunker_map.png", 327, 195);
 
     // map background
     adef_bunker_background = animation_definition_create(&sprite_sheet_bunker_background, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
