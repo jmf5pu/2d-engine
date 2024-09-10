@@ -63,17 +63,17 @@ void init_enemy_adef_hashmap(void)
 
 void init_enemy_adefs(void)
 {
-    const int size_x = 11;
-    const int size_y = 9;
+    const int size_x = 16;
+    const int size_y = 16;
 
     // TODO: update to the correct .png files once they are created
-    render_sprite_sheet_init(&sprite_sheet_zombie_idle_1, "assets/rat_0.png", size_x, size_y);
+    render_sprite_sheet_init(&sprite_sheet_zombie_idle_1, "assets/large_rat_0.png", size_x, size_y);
     adef_zombie_idle_1 = animation_definition_create(&sprite_sheet_zombie_idle_1, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_zombie_idle_2, "assets/rat_1.png", size_x, size_y);
+    render_sprite_sheet_init(&sprite_sheet_zombie_idle_2, "assets/large_rat_3.png", size_x, size_y);
     adef_zombie_idle_2 = animation_definition_create(&sprite_sheet_zombie_idle_2, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_zombie_idle_3, "assets/rat_2.png", size_x, size_y);
+    render_sprite_sheet_init(&sprite_sheet_zombie_idle_3, "assets/large_rat_2.png", size_x, size_y);
     adef_zombie_idle_3 = animation_definition_create(&sprite_sheet_zombie_idle_3, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
-    render_sprite_sheet_init(&sprite_sheet_zombie_idle_4, "assets/rat_3.png", size_x, size_y);
+    render_sprite_sheet_init(&sprite_sheet_zombie_idle_4, "assets/large_rat_1.png", size_x, size_y);
     adef_zombie_idle_4 = animation_definition_create(&sprite_sheet_zombie_idle_4, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
     adef_zombie_moving_1 = adef_zombie_idle_1;
