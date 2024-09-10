@@ -146,7 +146,7 @@ void update_all_positions(Map *map, vec2 shift, bool left_player_is_active)
 void init_map_assets(void)
 {
     const u8 teleporter_num_frames = (u8)ARRAY_LENGTH(TELEPORTER_ACTIVE_COLS);
-    render_sprite_sheet_init(&sprite_sheet_bunker_background, "assets/street_map.png", 125, 246); //"assets/bunker_map.png", 327, 195);
+    render_sprite_sheet_init(&sprite_sheet_bunker_background, "assets/street_map_v4.png", 435, 421); //"assets/bunker_map.png", 327, 195);
 
     // map background
     adef_bunker_background = animation_definition_create(&sprite_sheet_bunker_background, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
@@ -244,12 +244,12 @@ void init_map_background_prop(void)
 {
     Entity *bunker_background = entity_create((vec2){163.5, 97.5}, (vec2){327, 195}, (vec2){0, 0}, 0, 0, NULL, NULL);
     bunker_background->animation = anim_bunker_background;
-    physics_static_body_create((vec2){163.5, 10}, (vec2){327, 5},
-                               COLLISION_LAYER_TERRAIN);                                     // bottom
-    physics_static_body_create((vec2){163.5, 185}, (vec2){327, 5}, COLLISION_LAYER_TERRAIN); // top
-    physics_static_body_create((vec2){5, 97.5}, (vec2){5, 195}, COLLISION_LAYER_TERRAIN);    // left
-    physics_static_body_create((vec2){322, 97.5}, (vec2){5, 195},
-                               COLLISION_LAYER_TERRAIN); // right
+    // physics_static_body_create((vec2){163.5, 10}, (vec2){327, 5},
+    //                            COLLISION_LAYER_TERRAIN);                                     // bottom
+    // physics_static_body_create((vec2){163.5, 185}, (vec2){327, 5}, COLLISION_LAYER_TERRAIN); // top
+    // physics_static_body_create((vec2){5, 97.5}, (vec2){5, 195}, COLLISION_LAYER_TERRAIN);    // left
+    // physics_static_body_create((vec2){322, 97.5}, (vec2){5, 195},
+    //                            COLLISION_LAYER_TERRAIN); // right
 }
 
 void init_metal_table_props(void)

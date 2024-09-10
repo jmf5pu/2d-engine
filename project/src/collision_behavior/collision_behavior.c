@@ -118,7 +118,7 @@ void enemy_on_hit(Body *self, Body *other, Hit hit)
         Player *player = get_player_from_body(other);
         if (player != NULL) {
             printf("player->health %d\n", player->health);
-            player->health -= 100;
+            player->health -= 0;
         }
 
         // keep enemies from overlapping with player sprite
