@@ -4,7 +4,7 @@
 #include "../structs.h"
 
 #define SPAWN_ENEMIES true
-#define ZOMBIE_MOVEMENT_SPEED 150
+#define ZOMBIE_MOVEMENT_SPEED 250
 #define NUM_ENEMY_TYPES 1
 #define NUM_ENEMY_STATES 2
 #define NUM_ENEMY_DIRECTIONS 4

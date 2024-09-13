@@ -93,8 +93,8 @@ void update_current_enemies(void)
 
 void render_enemy_shadows(void)
 {
-    for (int i = 0; i < current_enemies->len; i++) {
-        Zombie *zombie = array_list_get(current_enemies, i);
-        render_character_shadow(zombie->entity->body->aabb.position, zombie->entity->animation->animation_definition->sprite_sheet->cell_height);
-    }
+    // for (int i = 0; i < current_enemies->len; i++) {
+    //     Zombie *zombie = array_list_get(current_enemies, i);
+    //     render_character_shadow(zombie->entity->body->aabb.position, zombie->entity->animation->animation_definition->sprite_sheet->cell_height);
+    // }
 }

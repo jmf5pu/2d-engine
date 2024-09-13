@@ -76,8 +76,12 @@ void init_enemy_adefs(void)
     render_sprite_sheet_init(&sprite_sheet_zombie_idle_4, "assets/large_rat_1.png", size_x, size_y);
     adef_zombie_idle_4 = animation_definition_create(&sprite_sheet_zombie_idle_4, (f32[]){0}, (u8[]){0}, (u8[]){0}, 1);
 
-    adef_zombie_moving_1 = adef_zombie_idle_1;
-    adef_zombie_moving_2 = adef_zombie_idle_2;
-    adef_zombie_moving_3 = adef_zombie_idle_3;
-    adef_zombie_moving_4 = adef_zombie_idle_4;
+    render_sprite_sheet_init(&sprite_sheet_zombie_moving_1, "assets/large_rat_moving_right.png", size_x, size_y);
+    adef_zombie_moving_1 = animation_definition_create(&sprite_sheet_zombie_moving_1, (f32[]){0.07,0.07,0.07,0.07,0.07}, (u8[]){0,0,0,0,0}, (u8[]){0,1,2,3,4}, 5);
+    render_sprite_sheet_init(&sprite_sheet_zombie_moving_2, "assets/large_rat_moving_up.png", size_x, size_y);
+    adef_zombie_moving_2 = animation_definition_create(&sprite_sheet_zombie_moving_2, (f32[]){0.1,0.1,0.1,0.1}, (u8[]){0,0,0,0}, (u8[]){0,1,2,3}, 4);
+    render_sprite_sheet_init(&sprite_sheet_zombie_moving_3, "assets/large_rat_moving_left.png", size_x, size_y);
+    adef_zombie_moving_3 = animation_definition_create(&sprite_sheet_zombie_moving_3, (f32[]){0.07,0.07,0.07,0.07,0.07}, (u8[]){0,0,0,0,0}, (u8[]){0,1,2,3,4}, 5);
+    render_sprite_sheet_init(&sprite_sheet_zombie_moving_4, "assets/large_rat_moving_down.png", size_x, size_y);
+    adef_zombie_moving_4 = animation_definition_create(&sprite_sheet_zombie_moving_4, (f32[]){0.1,0.1,0.1,0.1}, (u8[]){0,0,0,0}, (u8[]){0,1,2,3}, 4);
 }
